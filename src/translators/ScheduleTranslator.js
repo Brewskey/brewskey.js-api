@@ -1,7 +1,7 @@
 // @flow
 import type { Schedule, ScheduleMutator } from '../types';
 
-import DefaultTranslator from './Default';
+import DefaultTranslator from './DefaultTranslator';
 
 const SCHEDULE_DAY_BIT_MAP = {
   All: 127,

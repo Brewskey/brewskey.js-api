@@ -3,7 +3,7 @@ import type { Permission, PermissionMutator } from '../types';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import PermissionTranslator from '../translators/Permission';
+import PermissionTranslator from '../translators/PermissionTranslator';
 
 class PermissionDAO extends DAO<Permission, PermissionMutator> {
   constructor() {

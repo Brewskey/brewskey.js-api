@@ -1,7 +1,7 @@
 // @flow
 import type { Permission, PermissionMutator } from '../types';
 
-import DefaultTranslator from './Default';
+import DefaultTranslator from './DefaultTranslator';
 
 class PermissionTranslator extends DefaultTranslator<
   Permission,

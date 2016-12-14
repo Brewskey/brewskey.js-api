@@ -3,7 +3,7 @@ import type { Device } from '../types';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import DefaultTranslator from '../translators/Default';
+import DefaultTranslator from '../translators/DefaultTranslator';
 
 class DeviceDAO extends DAO<Device, Device> {
   constructor() {

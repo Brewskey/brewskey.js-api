@@ -1,6 +1,6 @@
 // @flow
 import type { Beverage } from '../types';
-import DefaultTranslator from './Default';
+import DefaultTranslator from './DefaultTranslator';
 
 const ID_FIELDS = [
   'availableId',

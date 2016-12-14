@@ -3,7 +3,7 @@ import type { Schedule, ScheduleMutator } from '../types';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import ScheduleTranslator from '../translators/Schedule';
+import ScheduleTranslator from '../translators/ScheduleTranslator';
 
 class ScheduleDAO extends DAO<Schedule, ScheduleMutator> {
   constructor() {

@@ -4,7 +4,7 @@ import type { Pour, ODataAction, ODataChartParams } from '../types';
 import DAO from './DAO';
 import oHandler from '../handler';
 import { DAO_ACTIONS, DAO_ENTITIES } from '../constants';
-import DefaultTranslator from '../translators/Default';
+import DefaultTranslator from '../translators/DefaultTranslator';
 
 class PourDAO extends DAO<Pour, Pour> {
   constructor() {

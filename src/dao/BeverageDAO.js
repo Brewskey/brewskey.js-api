@@ -3,7 +3,7 @@ import type { Beverage } from '../types';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import BeverageTranslator from '../translators/Beverage';
+import BeverageTranslator from '../translators/BeverageTranslator';
 
 class BeverageDAO extends DAO<Beverage, Beverage> {
   constructor() {

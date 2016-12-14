@@ -1,7 +1,7 @@
 // @flow
 import type { Tap, TapMutator } from '../types';
 
-import DefaultTranslator from './Default';
+import DefaultTranslator from './DefaultTranslator';
 
 class TapsTranslator extends DefaultTranslator<Tap, TapMutator> {
   toForm(model: Tap): TapMutator {

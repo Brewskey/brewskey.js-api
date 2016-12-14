@@ -3,7 +3,7 @@ import type { Availability } from '../types';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import DefaultTranslator from '../translators/Default';
+import DefaultTranslator from '../translators/DefaultTranslator';
 
 class AvailabilityDAO extends DAO<Availability, Availability> {
   constructor() {

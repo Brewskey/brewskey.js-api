@@ -1,7 +1,7 @@
 // @flow
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import DefaultTranslator from '../translators/Default';
+import DefaultTranslator from '../translators/DefaultTranslator';
 
 export type Account = {
   accessFailedCount: number,
