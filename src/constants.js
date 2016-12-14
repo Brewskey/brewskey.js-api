@@ -1,7 +1,24 @@
 // @flow
-import type { FilterOperator } from './types';
+import type { EntityName, FilterOperator } from './types';
 
 const ODATA_API: string = 'ODATA_API';
+
+export const DAO_ENTITIES: { [key: string]: EntityName } = {
+  ACCOUNTS: 'accounts',
+  BEVERAGE_AVAILABILITIES: 'beverage-availabilities',
+  BEVERAGE_GLASSES: 'beverage-glasses',
+  BEVERAGE_SRMS: 'beverage-srms',
+  BEVERAGE_STYLES: 'beverage-styles',
+  BEVERAGES: 'beverages',
+  DEVICES: 'devices',
+  KEGS: 'kegs',
+  LOCATIONS: 'locations',
+  PERMISSIONS: 'permissions',
+  POURS: 'pours',
+  SCHEDULE_GROUPS: 'schedule-groups',
+  SCHEDULES: 'schedules',
+  TAPS: 'taps',
+};
 
 const FILTER_OPERATORS: { [key: string]: FilterOperator } = {
   CONTAINS: 'contains',

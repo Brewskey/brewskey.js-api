@@ -18,9 +18,9 @@ export type EntityName =
   'taps';
 
 export type DAOTranslator<TModel, TModelMutator> = {
-  fromApi: (apiValue: Object) => TModel,
-  toApi: (model: TModelMutator) => Object,
-  toForm: (model: TModel) => TModelMutator,
+  +fromApi: (apiValue: Object) => TModel,
+  +toApi: (model: TModelMutator) => Object,
+  +toForm: (model: TModel) => TModelMutator,
 };
 
 export type DAOConfig<TModel, TModelMutator> = {

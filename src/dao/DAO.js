@@ -9,19 +9,19 @@ import type {
   RequestStatus,
   QueryOptions,
   DAOTranslator,
-} from './types';
+} from '../types';
 
 import {
   DAO_ACTIONS,
   FILTER_OPERATORS,
   FILTER_FUNCTION_OPERATORS,
-} from './constants';
+} from '../constants';
 
 import {
   createODataAction,
-} from './actions';
+} from '../actions';
 
-import oHandler from './handler';
+import oHandler from '../handler';
 
 class DAO<TModel, TModelMutator> {
   _config: DAOConfig<TModel, TModelMutator>;
