@@ -1,4 +1,6 @@
 // @flow
+import _ from 'lodash';
+
 import type {
   EntityName,
   QueryFilter,
@@ -168,12 +170,12 @@ class DAO<TModel, TModelMutator> {
       handler = handler.inlineCount('true');
     }
 
-    if (typeof skip === 'number') {
-      handler = handler.skip(skip);
+    if (_.isNumber(skip)) {
+      handler = handler.skip(skip || 0);
     }
 
-    if (typeof take === 'number') {
-      handler = handler.top(take);
+    if (_.isNumber(take)) {
+      handler = handler.top(take || 0);
     }
 
     if (queryOptions.filters) {
