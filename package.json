@@ -1,0 +1,23 @@
+{
+  "name": "brewskey.js-api",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/Brewskey/brewskey.js-api.git",
+  "author": "Brewskey",
+  "scripts": {
+    "build": "babel src -d build"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-syntax-flow": "^6.18.0",
+    "babel-plugin-transform-flow-strip-types": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
+    "eslint": "^3.12.1",
+    "eslint-config-airbnb-base": "^11.0.0",
+    "eslint-plugin-flowtype": "^2.29.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-sorting": "^0.3.0",
+    "flow-bin": "^0.37.0"
+  }
+}
