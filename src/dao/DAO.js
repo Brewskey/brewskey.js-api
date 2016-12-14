@@ -3,13 +3,16 @@ import _ from 'lodash';
 
 import type {
   EntityName,
+  DAOConfig,
+  DAOTranslator,
+} from '../types/dao';
+
+import type {
   QueryFilter,
   ODataAction,
-  DAOConfig,
   RequestStatus,
   QueryOptions,
-  DAOTranslator,
-} from '../types';
+} from '../types/odata';
 
 import {
   DAO_ACTIONS,

@@ -8,7 +8,7 @@ import type {
   RequestAction,
   RequestStatus,
   SuccessAction,
-} from './types';
+} from './types/odata';
 
 import { ODATA_API } from './constants';
 

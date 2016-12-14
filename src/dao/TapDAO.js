@@ -1,5 +1,5 @@
 // @flow
-import type { Tap, TapMutator } from '../types';
+import type { Tap, TapMutator } from '../types/entities/Tap';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';

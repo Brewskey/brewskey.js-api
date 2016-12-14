@@ -1,5 +1,6 @@
 // @flow
-import type { Keg, ODataAction } from '../types';
+import type { ODataAction } from '../types/odata';
+import type { Keg } from '../types/entities/Keg';
 
 import DefaultTranslator from '../translators/DefaultTranslator';
 import DAO from './DAO';

@@ -1,5 +1,6 @@
 // @flow
-import type { EntityName, FilterOperator } from './types';
+import type { FilterOperator } from './types/odata';
+import type { EntityName } from './types/dao';
 
 const ODATA_API: string = 'ODATA_API';
 

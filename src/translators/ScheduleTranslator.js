@@ -1,5 +1,5 @@
 // @flow
-import type { Schedule, ScheduleMutator } from '../types';
+import type { Schedule, ScheduleMutator } from '../types/entities/Schedule';
 
 import DefaultTranslator from './DefaultTranslator';
 
