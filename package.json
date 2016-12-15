@@ -23,7 +23,6 @@
     "flow-bin": "^0.37.0"
   },
   "dependencies": {
-    "lodash": "^4.17.2",
     "odata": "^0.3.0"
   }
 }

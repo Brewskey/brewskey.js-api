@@ -1,17 +1,15 @@
 // @flow
-import _ from 'lodash';
-
 const deepIdCast = (node: any): any => {
-  if (_.isArray(node)) {
-    return _.map(node, (item: any): any => deepIdCast(item));
-  } else if (_.isPlainObject(node)) {
-    return _.mapValues(
-      node,
-      (value: any, key: string): any =>
-        key === 'id'
-          ? value.toString()
-          : deepIdCast(value)
-    );
+  if (Array.isArray(node)) {
+    return node.map(deepIdCast);
+  } else if (node && typeof node === 'object' && node.constructor === Object) {
+    const newNode = {};
+    Object.keys(node).forEach((key: string) => {
+      newNode[key] = key === 'id'
+        ? node[key].toString()
+        : node[key];
+    });
+    return newNode;
   }
 
   return node;
