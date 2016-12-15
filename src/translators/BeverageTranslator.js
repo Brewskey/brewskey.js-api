@@ -1,5 +1,5 @@
 // @flow
-import type { Beverage } from '../types';
+import type { Beverage } from '../types/entities/Beverage';
 import DefaultTranslator from './DefaultTranslator';
 
 const ID_FIELDS = [

@@ -1,5 +1,8 @@
 // @flow
-import type { Permission, PermissionMutator } from '../types';
+import type {
+  Permission,
+  PermissionMutator,
+} from '../types/entities/Permission';
 
 import DefaultTranslator from './DefaultTranslator';
 

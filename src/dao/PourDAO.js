@@ -1,5 +1,6 @@
 // @flow
-import type { Pour, ODataAction, ODataChartParams } from '../types';
+import type { ODataAction, ODataChartParams } from '../types/odata';
+import type { Pour } from '../types/entities/Pour';
 
 import DAO from './DAO';
 import oHandler from '../handler';

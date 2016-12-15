@@ -1,5 +1,5 @@
 // @flow
-import type { Availability } from '../types';
+import type { Availability } from '../types/entities/Availability';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';

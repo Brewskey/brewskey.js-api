@@ -1,5 +1,8 @@
 // @flow
-import type { Permission, PermissionMutator } from '../types';
+import type {
+  Permission,
+  PermissionMutator,
+} from '../types/entities/Permission';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';

@@ -1,5 +1,5 @@
 // @flow
-import type { Srm } from '../types';
+import type { Srm } from '../types/entities/Srm';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
