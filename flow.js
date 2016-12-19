@@ -429,6 +429,7 @@ declare module 'brewskey.js-api' {
   */
 
   declare class DAO<TModel, TModelMutator> {
+    _config: DAOConfig<TModel, TModelMutator>;
     count(queryOptions: QueryOptions): ODataAction<TModel>;
     deleteByID: (id: string) => ODataAction<TModel>;
     fetchByID(id: string): ODataAction<TModel>;
