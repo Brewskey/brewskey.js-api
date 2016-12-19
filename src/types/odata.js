@@ -7,13 +7,6 @@ export type RequestStatus = {
   SUCCESS: string
 };
 
-export type RequestMethods =
-  'delete' |
-  'get' |
-  'patch' |
-  'post' |
-  'put';
-
 export type RequestMethod =
   'delete' |
   'get' |
