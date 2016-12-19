@@ -424,4 +424,43 @@ declare module 'brewskey.js-api' {
     name: string,
     requiresPourPrivilege: boolean,
   };
+
+  /* DAO implementation
+  */
+
+  declare class DAO<TModel, TModelMutator> {
+    count(queryOptions: QueryOptions): ODataAction<TModel>;
+    deleteByID: (id: string) => ODataAction<TModel>;
+    fetchByID(id: string): ODataAction<TModel>;
+    fetchByIDs(ids: Array<string>, meta?: Object): ODataAction<TModel>;
+    fetchMany(queryOptions: QueryOptions): ODataAction<TModel>;
+    getEntityName(): EntityName;
+    getTranslator(): DAOTranslator<TModel, TModelMutator>;
+    patch(id: string, params: TModelMutator): ODataAction<TModel>;
+    post(params: TModelMutator): ODataAction<TModel>;
+    put(id: string, params: TModelMutator): ODataAction<TModel>;
+  }
+
+  declare class AccountDAO extends DAO<Account, Account> {}
+  declare class AvailabilityDAO extends DAO<Availability, Availability> {}
+  declare class BeverageDAO extends DAO<Beverage, Beverage> {}
+  declare class DeviceDAO extends DAO<Device, Device> {}
+  declare class GlassDAO extends DAO<Glass, Glass> {}
+  declare class LocationDAO extends DAO<Location, Location> {}
+  declare class PermissionDAO extends DAO<Permission, PermissionMutator> {}
+  declare class ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
+  declare class SrmDAO extends DAO<Srm, Srm> {}
+  declare class StyleDAO extends DAO<Style, Style> {}
+  declare class TapDAO extends DAO<Tap, TapMutator> {}
+
+  declare class KegDAO extends DAO<Keg, Keg> {
+    fetchKegByTapID(tapId: string): ODataAction<Keg>;
+  }
+
+  declare class PourDAO extends DAO<Pour, Pour> {
+    fetchChartData(
+      params: ODataChartParams,
+      chartName: string,
+    ): ODataAction<Pour>;
+  }
 }
