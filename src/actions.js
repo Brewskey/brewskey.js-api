@@ -8,7 +8,7 @@ import type {
   RequestAction,
   RequestStatus,
   SuccessAction,
-} from './types/odata';
+} from 'brewskey.js-api';
 
 import { ODATA_API } from './constants';
 

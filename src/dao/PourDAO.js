@@ -1,6 +1,5 @@
 // @flow
-import type { ODataAction, ODataChartParams } from '../types/odata';
-import type { Pour } from '../types/entities/Pour';
+import type { ODataAction, ODataChartParams, Pour } from 'brewskey.js-api';
 
 import DAO from './DAO';
 import oHandler from '../handler';

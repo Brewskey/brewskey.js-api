@@ -2,7 +2,7 @@
 import type {
   Permission,
   PermissionMutator,
-} from '../types/entities/Permission';
+} from 'brewskey.js-api';
 
 import DefaultTranslator from './DefaultTranslator';
 

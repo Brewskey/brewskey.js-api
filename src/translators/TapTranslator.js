@@ -1,5 +1,5 @@
 // @flow
-import type { Tap, TapMutator } from '../types/entities/Tap';
+import type { Tap, TapMutator } from 'brewskey.js-api';
 
 import DefaultTranslator from './DefaultTranslator';
 
