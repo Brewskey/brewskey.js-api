@@ -4,6 +4,10 @@
   "main": "build/index.js",
   "repository": "https://github.com/Brewskey/brewskey.js-api.git",
   "author": "Brewskey",
+  "files": [
+    "flow.js",
+    "build/"
+  ],
   "scripts": {
     "build": "babel src -d build",
     "check:types": "flow",
