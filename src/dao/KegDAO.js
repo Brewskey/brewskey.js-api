@@ -1,6 +1,5 @@
 // @flow
-import type { ODataAction } from '../types/odata';
-import type { Keg } from '../types/entities/Keg';
+import type { ODataAction, Keg } from 'brewskey.js-api';
 
 import DefaultTranslator from '../translators/DefaultTranslator';
 import DAO from './DAO';

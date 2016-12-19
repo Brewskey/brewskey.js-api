@@ -3,14 +3,11 @@ import type {
   EntityName,
   DAOConfig,
   DAOTranslator,
-} from '../types/dao';
-
-import type {
   QueryFilter,
   ODataAction,
   RequestStatus,
   QueryOptions,
-} from '../types/odata';
+} from 'brewskey.js-api';
 
 import {
   DAO_ACTIONS,
