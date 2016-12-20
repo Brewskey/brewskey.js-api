@@ -1,13 +1,9 @@
 // @flow
 import type {
   ConfigType,
-  FailureAction,
   QueryOptions,
   ODataAction,
-  ResultSet,
-  RequestAction,
   RequestStatus,
-  SuccessAction,
 } from 'brewskey.js-api';
 
 import { ODATA_API } from './constants';
@@ -33,43 +29,4 @@ const createODataAction = <TModel>(
   return method === 'get' ? oDataAction : { ...oDataAction, params: data };
 };
 
-const createRequestAction = <TModel>(
-  { types, meta, method, params, queryOptions }: ODataAction<TModel>,
-): RequestAction => ({
-  meta,
-  method,
-  params,
-  queryOptions,
-  type: types.REQUEST,
-});
-
-const createSuccessAction = <TModel>(
-  { types, meta, method, params, queryOptions }: ODataAction<TModel>,
-  result: ResultSet<TModel>,
-): SuccessAction<TModel> => ({
-  meta,
-  method,
-  params,
-  queryOptions,
-  result,
-  type: types.SUCCESS,
-});
-
-const createFailureAction = <TModel>(
-  { types, meta, method, params, queryOptions }: ODataAction<TModel>,
-  error: Error,
-): FailureAction => ({
-  error,
-  meta,
-  method,
-  params,
-  queryOptions,
-  type: types.FAILURE,
-});
-
-export {
-  createODataAction,
-  createRequestAction,
-  createSuccessAction,
-  createFailureAction,
-};
+export default createODataAction;
