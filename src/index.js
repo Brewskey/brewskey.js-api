@@ -1,6 +1,7 @@
 // @flow
 export { default as apiFetch } from './fetch';
 export { default as apiFilter } from './filters';
+export { default as oHandler } from './handler';
 
 export { default as AccountDAO } from './dao/AccountDAO';
 export { default as AvailabilityDAO } from './dao/AvailabilityDAO';
