@@ -458,4 +458,11 @@ declare module 'brewskey.js-api' {
   declare type FilterCreators = ({ [string]: any=> QueryFilter });
   declare function apiFilter(params: any): FilterCreators;
   declare function apiFetch(path: string, init: ?Object): Promise<*>;
+  declare function createODataAction<TModel>(
+    config: ConfigType<TModel>,
+    types: RequestStatus,
+    queryOptions: QueryOptions,
+    params?: Object,
+    meta?: Object,
+  ): ODataAction<TModel>;
 }
