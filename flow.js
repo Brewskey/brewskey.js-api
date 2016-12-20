@@ -476,4 +476,9 @@ declare module 'brewskey.js-api' {
   declare var SrmDAO: brewskey$SrmDAO;
   declare var StyleDAO: brewskey$StyleDAO;
   declare var TapDAO: brewskey$TapDAO;
+
+  /* Utilities
+  */
+
+  declare function fetch(path: string, init: ?Object): Promise<*>;
 }
