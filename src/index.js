@@ -3,7 +3,12 @@ export { default as apiFetch } from './fetch';
 export { default as apiFilter } from './filters';
 export { default as oHandler } from './handler';
 export { default as createODataAction } from './actions';
-export { DAO_ENTITIES, DAO_ACTIONS, ODATA_API } from './constants';
+export {
+  DAO_ENTITIES,
+  DAO_ACTIONS,
+  FILTER_OPERATORS,
+  ODATA_API,
+} from './constants';
 
 export { default as AccountDAO } from './dao/AccountDAO';
 export { default as AvailabilityDAO } from './dao/AvailabilityDAO';

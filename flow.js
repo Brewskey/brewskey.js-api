@@ -456,6 +456,7 @@ declare module 'brewskey.js-api' {
 
   declare var DAO_ACTIONS: { [string]: RequestStatus };
   declare var DAO_ENTITIES: { [string]: EntityName };
+  declare var FILTER_OPERATORS: { [key: string]: FilterOperator };
   declare var ODATA_API: string;
 
   declare var oHandler: OHandler;
