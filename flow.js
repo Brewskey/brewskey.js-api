@@ -454,8 +454,9 @@ declare module 'brewskey.js-api' {
   /* Utilities
   */
 
-  declare var DAO_ACTIONS: { [string]: RequestStatus }
-  declare var DAO_ENTITIES: { [string]: EntityName }
+  declare var DAO_ACTIONS: { [string]: RequestStatus };
+  declare var DAO_ENTITIES: { [string]: EntityName };
+  declare var ODATA_API: string;
 
   declare var oHandler: OHandler;
   declare type FilterCreators = ({ [string]: any=> QueryFilter });
