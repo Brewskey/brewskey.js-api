@@ -15,9 +15,7 @@ import {
   FILTER_FUNCTION_OPERATORS,
 } from '../constants';
 
-import {
-  createODataAction,
-} from '../actions';
+import createODataAction from '../actions';
 
 import oHandler from '../handler';
 

@@ -97,32 +97,6 @@ declare module 'brewskey.js-api' {
     types: RequestStatus,
   };
 
-  declare type ResultSet<TModel> = OHandler<TModel> & {
-    data: Array<TModel>,
-    inlinecount?: number,
-  };
-
-  declare type RequestAction = {
-    method: RequestMethod,
-    type: string,
-  };
-
-  declare type SuccessAction<TModel> = {
-    method: RequestMethod,
-    params?: Object,
-    queryOptions: QueryOptions,
-    result: ResultSet<TModel>,
-    type: string,
-  };
-
-  declare type FailureAction = {
-    error: Error,
-    method: RequestMethod,
-    params?: Object,
-    queryOptions: QueryOptions,
-    type: string,
-  };
-
   declare type ODataChartParams = {
     beginDate?: ?Date,
     endDate?: ?Date,
