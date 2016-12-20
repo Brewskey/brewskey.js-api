@@ -1,5 +1,9 @@
 // @flow
-import type { EntityName, FilterOperator } from 'brewskey.js-api';
+import type {
+  EntityName,
+  FilterOperator,
+  RequestStatus,
+} from 'brewskey.js-api';
 
 const ODATA_API: string = 'ODATA_API';
 
@@ -42,7 +46,7 @@ const FILTER_FUNCTION_OPERATORS = [
   FILTER_OPERATORS.STARTS_WITH,
 ];
 
-const DAO_ACTIONS = {
+const DAO_ACTIONS: { [string]: RequestStatus } = {
   COUNT: {
     FAILURE: 'DAO_ACTIONS/COUNT_FAILURE',
     REQUEST: 'DAO_ACTIONS/COUNT_REQUEST',
