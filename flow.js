@@ -480,5 +480,7 @@ declare module 'brewskey.js-api' {
   /* Utilities
   */
 
+  declare type FilterCreators = ({ [string]: any=> QueryFilter });
   declare function fetch(path: string, init: ?Object): Promise<*>;
+  declare function filter(params: any): FilterCreators;
 }
