@@ -429,6 +429,7 @@ declare module 'brewskey.js-api' {
   */
 
   declare class DAO<TModel, TModelMutator> {
+    _config: DAOConfig<TModel, TModelMutator>;
     count(queryOptions: QueryOptions): ODataAction<TModel>;
     deleteByID: (id: string) => ODataAction<TModel>;
     fetchByID(id: string): ODataAction<TModel>;
@@ -441,26 +442,38 @@ declare module 'brewskey.js-api' {
     put(id: string, params: TModelMutator): ODataAction<TModel>;
   }
 
-  declare class AccountDAO extends DAO<Account, Account> {}
-  declare class AvailabilityDAO extends DAO<Availability, Availability> {}
-  declare class BeverageDAO extends DAO<Beverage, Beverage> {}
-  declare class DeviceDAO extends DAO<Device, Device> {}
-  declare class GlassDAO extends DAO<Glass, Glass> {}
-  declare class LocationDAO extends DAO<Location, Location> {}
-  declare class PermissionDAO extends DAO<Permission, PermissionMutator> {}
-  declare class ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
-  declare class SrmDAO extends DAO<Srm, Srm> {}
-  declare class StyleDAO extends DAO<Style, Style> {}
-  declare class TapDAO extends DAO<Tap, TapMutator> {}
-
-  declare class KegDAO extends DAO<Keg, Keg> {
+  declare class brewskey$AccountDAO extends DAO<Account, Account> {}
+  declare class brewskey$AvailabilityDAO extends DAO<Availability, Availability> {}
+  declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
+  declare class brewskey$DeviceDAO extends DAO<Device, Device> {}
+  declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
+  declare class brewskey$KegDAO extends DAO<Keg, Keg> {
     fetchKegByTapID(tapId: string): ODataAction<Keg>;
   }
-
-  declare class PourDAO extends DAO<Pour, Pour> {
+  declare class brewskey$LocationDAO extends DAO<Location, Location> {}
+  declare class brewskey$PermissionDAO extends DAO<Permission, PermissionMutator> {}
+  declare class brewskey$PourDAO extends DAO<Pour, Pour> {
     fetchChartData(
       params: ODataChartParams,
       chartName: string,
     ): ODataAction<Pour>;
   }
+  declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
+  declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
+  declare class brewskey$StyleDAO extends DAO<Style, Style> {}
+  declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {}
+
+  declare var AccountDAO: brewskey$AccountDAO;
+  declare var AvailabilityDAO: brewskey$AvailabilityDAO;
+  declare var BeverageDAO: brewskey$BeverageDAO;
+  declare var DeviceDAO: brewskey$DeviceDAO;
+  declare var GlassDAO: brewskey$GlassDAO;
+  declare var KegDAO: brewskey$KegDAO;
+  declare var LocationDAO: brewskey$LocationDAO;
+  declare var PermissionDAO: brewskey$PermissionDAO;
+  declare var PourDAO: brewskey$PourDAO;
+  declare var ScheduleDAO: brewskey$ScheduleDAO;
+  declare var SrmDAO: brewskey$SrmDAO;
+  declare var StyleDAO: brewskey$StyleDAO;
+  declare var TapDAO: brewskey$TapDAO;
 }
