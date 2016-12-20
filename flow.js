@@ -476,4 +476,12 @@ declare module 'brewskey.js-api' {
   declare var SrmDAO: brewskey$SrmDAO;
   declare var StyleDAO: brewskey$StyleDAO;
   declare var TapDAO: brewskey$TapDAO;
+
+  /* Utilities
+  */
+
+  declare var oHandler: OHandler;
+  declare type FilterCreators = ({ [string]: any=> QueryFilter });
+  declare function apiFilter(params: any): FilterCreators;
+  declare function apiFetch(path: string, init: ?Object): Promise<*>;
 }
