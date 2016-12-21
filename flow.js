@@ -459,7 +459,7 @@ declare module 'brewskey.js-api' {
   declare var FILTER_OPERATORS: { [key: string]: FilterOperator };
   declare var ODATA_API: string;
 
-  declare var oHandler: OHandler;
+  declare var oHandler: OHandler<any>;
   declare type FilterCreators = ({ [string]: any=> QueryFilter });
   declare function apiFilter(params: any): FilterCreators;
   declare function apiFetch(path: string, init: ?Object): Promise<*>;
