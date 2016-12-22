@@ -1739,9 +1739,9 @@ object.omit@^2.0.0:
     for-own "^0.1.4"
     is-extendable "^0.1.1"
 
-odata@^0.3.0:
+"odata@git+https://github.com/Brewskey/o.js":
   version "0.3.0"
-  resolved "https://registry.yarnpkg.com/odata/-/odata-0.3.0.tgz#837af6d0a0b44ed6cd00c92a7712698d74bbc77e"
+  resolved "git+https://github.com/Brewskey/o.js#83037b22029bb3825aad14e50898efed488d9464"
   dependencies:
     q "*"
     xhr2 "*"
