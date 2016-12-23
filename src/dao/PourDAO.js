@@ -9,7 +9,7 @@ import DefaultTranslator from '../translators/DefaultTranslator';
 class PourDAO extends DAO<Pour, Pour> {
   constructor() {
     super({
-      entityName: DAO_ENTITIES.POUR,
+      entityName: DAO_ENTITIES.POURS,
       navigationProperties: {
         beverage: ['id', 'name'],
         location: ['id', 'name'],

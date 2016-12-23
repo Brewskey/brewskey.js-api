@@ -35,7 +35,7 @@ var PourDAO = function (_DAO) {
     _classCallCheck(this, PourDAO);
 
     return _possibleConstructorReturn(this, (PourDAO.__proto__ || Object.getPrototypeOf(PourDAO)).call(this, {
-      entityName: _constants.DAO_ENTITIES.POUR,
+      entityName: _constants.DAO_ENTITIES.POURS,
       navigationProperties: {
         beverage: ['id', 'name'],
         location: ['id', 'name'],
