@@ -1,7 +1,7 @@
 {
   "name": "brewskey.js-api",
   "version": "0.1.0",
-  "main": "build/index.js",
+  "main": "./build/index.js",
   "repository": "https://github.com/Brewskey/brewskey.js-api.git",
   "author": "Brewskey",
   "files": [
