@@ -9,6 +9,7 @@
     "build/"
   ],
   "scripts": {
+    "start": "babel ./src --out-dir ./build --watch",
     "build": "babel src -d build",
     "check:types": "flow",
     "check:style": "eslint src/"
@@ -28,6 +29,6 @@
     "flow-bin": "^0.37.4"
   },
   "dependencies": {
-    "odata": "^0.3.0"
+    "odata": "git+https://github.com/Brewskey/o.js"
   }
 }
