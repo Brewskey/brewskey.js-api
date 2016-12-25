@@ -433,7 +433,7 @@ declare module 'brewskey.js-api' {
   declare class brewskey$DeviceDAO extends DAO<Device, Device> {}
   declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
   declare class brewskey$KegDAO extends DAO<Keg, Keg> {
-    fetchKegByTapID(tapId: string): ODataAction<Keg>;
+    fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>>;
   }
   declare class brewskey$LocationDAO extends DAO<Location, Location> {}
   declare class brewskey$PermissionDAO extends DAO<Permission, PermissionMutator> {}
@@ -441,7 +441,7 @@ declare module 'brewskey.js-api' {
     fetchChartData(
       params: ODataChartParams,
       chartName: string,
-    ): ODataAction<Pour>;
+    ): Promise<DAOResult<Pour>>;
   }
   declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
   declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}

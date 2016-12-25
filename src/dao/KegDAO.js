@@ -1,5 +1,5 @@
 // @flow
-import type { ODataAction, Keg } from 'brewskey.js-api';
+import type { DAOResult, Keg } from 'brewskey.js-api';
 
 import DefaultTranslator from '../translators/DefaultTranslator';
 import DAO from './DAO';
@@ -21,7 +21,7 @@ class KegDAO extends DAO<Keg, Keg> {
     });
   }
 
-  fetchKegByTapID(tapId: string): ODataAction<Keg> {
+  fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>> {
     const idFilter = {
       operator: FILTER_OPERATORS.EQUALS,
       params: ['tap/id'],
@@ -37,10 +37,10 @@ class KegDAO extends DAO<Keg, Keg> {
       take: 1,
     };
 
-    return this.__query(
+    return this._resolve(this.__query(
       DAO_ACTIONS.FETCH_KEG_BY_TAP_ID,
       queryOptions,
-    );
+    ));
   }
 }
 
