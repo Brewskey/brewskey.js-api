@@ -402,18 +402,29 @@ declare module 'brewskey.js-api' {
   /* DAO implementation
   */
 
+  declare type ODataResult<TModel> = OHandler<TModel> & {
+    data: Object | Array<Object>,
+    inlinecount?: number,
+  };
+
+  declare type DAOResult<TModel> = {
+    action: ODataAction<TModel>,
+    data: ?(TModel | Array<TModel>),
+    handler: ODataResult<TModel>,
+  };
+
   declare class DAO<TModel, TModelMutator> {
     _config: DAOConfig<TModel, TModelMutator>;
-    count(queryOptions: QueryOptions): ODataAction<TModel>;
-    deleteByID: (id: string) => ODataAction<TModel>;
-    fetchByID(id: string): ODataAction<TModel>;
-    fetchByIDs(ids: Array<string>, meta?: Object): ODataAction<TModel>;
-    fetchMany(queryOptions: QueryOptions): ODataAction<TModel>;
+    count(queryOptions: QueryOptions): Promise<DAOResult<TModel>>;
+    deleteByID(id: string): Promise<DAOResult<TModel>>;
+    fetchByID(id: string): Promise<DAOResult<TModel>>;
+    fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TModel>>;
+    fetchMany(queryOptions: QueryOptions): Promise<DAOResult<TModel>>;
     getEntityName(): EntityName;
     getTranslator(): DAOTranslator<TModel, TModelMutator>;
-    patch(id: string, params: TModelMutator): ODataAction<TModel>;
-    post(params: TModelMutator): ODataAction<TModel>;
-    put(id: string, params: TModelMutator): ODataAction<TModel>;
+    patch(id: string, params: TModelMutator): Promise<DAOResult<TModel>>;
+    post(params: TModelMutator): Promise<DAOResult<TModel>>;
+    put(id: string, params: TModelMutator): Promise<DAOResult<TModel>>;
   }
 
   declare class brewskey$AccountDAO extends DAO<Account, Account> {}
