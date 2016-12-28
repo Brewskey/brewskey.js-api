@@ -1,5 +1,5 @@
 // @flow
-import type { ODataAction, ODataChartParams, Pour } from 'brewskey.js-api';
+import type { DAOResult, ODataChartParams, Pour } from 'brewskey.js-api';
 
 import DAO from './DAO';
 import oHandler from '../handler';
@@ -23,7 +23,7 @@ class PourDAO extends DAO<Pour, Pour> {
   fetchChartData(
     params: ODataChartParams,
     chartName: string,
-  ): ODataAction<Pour> {
+  ): Promise<DAOResult<Pour>> {
     const action = this.__query(
       DAO_ACTIONS.FETCH_CHART_DATA,
       {},
@@ -33,7 +33,7 @@ class PourDAO extends DAO<Pour, Pour> {
 
     action.method = 'post';
     action.oHandler = oHandler('chart');
-    return action;
+    return this._resolve(action);
   }
 }
 

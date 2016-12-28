@@ -2,9 +2,11 @@
 import type {
   EntityName,
   DAOConfig,
+  DAOResult,
   DAOTranslator,
   QueryFilter,
   ODataAction,
+  ODataResult,
   RequestStatus,
   QueryOptions,
 } from 'brewskey.js-api';
@@ -26,22 +28,22 @@ class DAO<TModel, TModelMutator> {
     this._config = config;
   }
 
-  count(queryOptions: QueryOptions): ODataAction<TModel> {
-    return this.__query(
+  count(queryOptions: QueryOptions): Promise<DAOResult<TModel>> {
+    return this._resolve(this.__query(
       DAO_ACTIONS.COUNT,
       {
         ...queryOptions,
         count: true,
         take: 0,
       },
-    );
+    ));
   }
 
-  deleteByID(id: string): ODataAction<TModel> {
+  deleteByID(id: string): Promise<DAOResult<TModel>> {
     const action = this.__query(DAO_ACTIONS.DELETE_BY_ID, {}, { id });
     action.method = 'delete';
     action.oHandler = action.oHandler.find(this.__reformatQueryValue(id));
-    return action;
+    return this._resolve(action);
   }
 
   getEntityName(): EntityName {
@@ -52,13 +54,13 @@ class DAO<TModel, TModelMutator> {
     return this._config.translator;
   }
 
-  fetchByID(id: string): ODataAction<TModel> {
+  fetchByID(id: string): Promise<DAOResult<TModel>> {
     const action = this.__query(DAO_ACTIONS.FETCH_BY_ID, {}, { id });
     action.oHandler = action.oHandler.find(this.__reformatQueryValue(id));
-    return action;
+    return this._resolve(action);
   }
 
-  fetchByIDs(ids: Array<string>, meta?: Object): ODataAction<TModel> {
+  fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TModel>> {
     const idsFilter = {
       operator: FILTER_OPERATORS.EQUALS,
       params: ['id'],
@@ -69,22 +71,22 @@ class DAO<TModel, TModelMutator> {
       filters: [idsFilter],
     };
 
-    return this.__query(
+    return this._resolve(this.__query(
       DAO_ACTIONS.FETCH_BY_IDS,
       queryOptions,
       {},
       meta,
-    );
+    ));
   }
 
-  fetchMany(queryOptions: QueryOptions): ODataAction<TModel> {
-    return this.__query(
+  fetchMany(queryOptions: QueryOptions): Promise<DAOResult<TModel>> {
+    return this._resolve(this.__query(
       DAO_ACTIONS.FETCH_MANY,
       queryOptions,
-    );
+    ));
   }
 
-  patch(id: string, params: TModelMutator): ODataAction<TModel> {
+  patch(id: string, params: TModelMutator): Promise<DAOResult<TModel>> {
     const action = this.__query(
       DAO_ACTIONS.PATCH,
       {},
@@ -93,10 +95,10 @@ class DAO<TModel, TModelMutator> {
 
     action.method = 'patch';
     action.oHandler = action.oHandler.find(this.__reformatQueryValue(id));
-    return action;
+    return this._resolve(action);
   }
 
-  post(params: TModelMutator): ODataAction<TModel> {
+  post(params: TModelMutator): Promise<DAOResult<TModel>> {
     const action = this.__query(
       DAO_ACTIONS.POST,
       {},
@@ -104,10 +106,10 @@ class DAO<TModel, TModelMutator> {
     );
 
     action.method = 'post';
-    return action;
+    return this._resolve(action);
   }
 
-  put(id: string, params: TModelMutator): ODataAction<TModel> {
+  put(id: string, params: TModelMutator): Promise<DAOResult<TModel>> {
     const action = this.__query(
       DAO_ACTIONS.PUT,
       {},
@@ -116,7 +118,7 @@ class DAO<TModel, TModelMutator> {
 
     action.method = 'put';
     action.oHandler = action.oHandler.find(this.__reformatQueryValue(id));
-    return action;
+    return this._resolve(action);
   }
 
   __reformatQueryValue(value: string | number): string | number {
@@ -218,6 +220,36 @@ class DAO<TModel, TModelMutator> {
     }
 
     return handler;
+  }
+
+  async _resolve(action: ODataAction<TModel>): Promise<DAOResult<TModel>> {
+    let request: Promise<ODataResult<TModel>>;
+    switch (action.method) {
+      case 'delete':
+        request = action.oHandler.remove().save();
+        break;
+      case 'patch':
+        request = action.oHandler.patch(action.params).save();
+        break;
+      case 'post':
+        request = action.oHandler.post(action.params).save();
+        break;
+      case 'put':
+        request = action.oHandler.put(action.params).save();
+        break;
+      default:
+        request = action.oHandler.get();
+    }
+
+    const result = await request;
+
+    return {
+      action,
+      data: action.meta && (Array.isArray(result.data)
+        ? result.data.map(action.meta.fromApi)
+        : action.meta.fromApi(result.data)),
+      handler: result,
+    };
   }
 }
 

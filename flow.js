@@ -402,18 +402,29 @@ declare module 'brewskey.js-api' {
   /* DAO implementation
   */
 
+  declare type ODataResult<TModel> = OHandler<TModel> & {
+    data: Object | Array<Object>,
+    inlinecount?: number,
+  };
+
+  declare type DAOResult<TModel> = {
+    action: ODataAction<TModel>,
+    data: ?(TModel | Array<TModel>),
+    handler: ODataResult<TModel>,
+  };
+
   declare class DAO<TModel, TModelMutator> {
     _config: DAOConfig<TModel, TModelMutator>;
-    count(queryOptions: QueryOptions): ODataAction<TModel>;
-    deleteByID: (id: string) => ODataAction<TModel>;
-    fetchByID(id: string): ODataAction<TModel>;
-    fetchByIDs(ids: Array<string>, meta?: Object): ODataAction<TModel>;
-    fetchMany(queryOptions: QueryOptions): ODataAction<TModel>;
+    count(queryOptions: QueryOptions): Promise<DAOResult<TModel>>;
+    deleteByID(id: string): Promise<DAOResult<TModel>>;
+    fetchByID(id: string): Promise<DAOResult<TModel>>;
+    fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TModel>>;
+    fetchMany(queryOptions: QueryOptions): Promise<DAOResult<TModel>>;
     getEntityName(): EntityName;
     getTranslator(): DAOTranslator<TModel, TModelMutator>;
-    patch(id: string, params: TModelMutator): ODataAction<TModel>;
-    post(params: TModelMutator): ODataAction<TModel>;
-    put(id: string, params: TModelMutator): ODataAction<TModel>;
+    patch(id: string, params: TModelMutator): Promise<DAOResult<TModel>>;
+    post(params: TModelMutator): Promise<DAOResult<TModel>>;
+    put(id: string, params: TModelMutator): Promise<DAOResult<TModel>>;
   }
 
   declare class brewskey$AccountDAO extends DAO<Account, Account> {}
@@ -422,7 +433,7 @@ declare module 'brewskey.js-api' {
   declare class brewskey$DeviceDAO extends DAO<Device, Device> {}
   declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
   declare class brewskey$KegDAO extends DAO<Keg, Keg> {
-    fetchKegByTapID(tapId: string): ODataAction<Keg>;
+    fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>>;
   }
   declare class brewskey$LocationDAO extends DAO<Location, Location> {}
   declare class brewskey$PermissionDAO extends DAO<Permission, PermissionMutator> {}
@@ -430,7 +441,7 @@ declare module 'brewskey.js-api' {
     fetchChartData(
       params: ODataChartParams,
       chartName: string,
-    ): ODataAction<Pour>;
+    ): Promise<DAOResult<Pour>>;
   }
   declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
   declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
