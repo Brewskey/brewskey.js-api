@@ -3,9 +3,8 @@
 import type { OHandler } from 'odata';
 
 class DAOResult<TModel> {
-  _data: ?TModel | ?Array<TModel>;
   _count: ?number;
-  _resultHandler: ?OHandler<TModel>;
+  _data: ?TModel | ?Array<TModel>;
   _error: ?Error;
 
   constructor(
