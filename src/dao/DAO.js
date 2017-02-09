@@ -1,25 +1,18 @@
 // @flow
 import type {
-  EntityName,
   DAOConfig,
-  DAOResult,
   DAOTranslator,
-  QueryFilter,
-  ODataAction,
+  EntityName,
   ODataResult,
-  RequestStatus,
+  QueryFilter,
   QueryOptions,
+  RequestMethod,
 } from 'brewskey.js-api';
 
-import {
-  DAO_ACTIONS,
-  FILTER_OPERATORS,
-  FILTER_FUNCTION_OPERATORS,
-} from '../constants';
-
-import createODataAction from '../actions';
-
 import oHandler from '../handler';
+import DAOResult from './DAOResult';
+import { FILTER_FUNCTION_OPERATORS } from '../constants';
+import apiFilter from '../filters';
 
 class DAO<TModel, TModelMutator> {
   _config: DAOConfig<TModel, TModelMutator>;
@@ -28,126 +21,66 @@ class DAO<TModel, TModelMutator> {
     this._config = config;
   }
 
-  count(queryOptions: QueryOptions): Promise<DAOResult<TModel>> {
-    return this._resolve(this.__query(
-      DAO_ACTIONS.COUNT,
-      {
-        ...queryOptions,
-        count: true,
-        take: 0,
-      },
-    ));
-  }
-
-  deleteByID(id: string): Promise<DAOResult<TModel>> {
-    const action = this.__query(DAO_ACTIONS.DELETE_BY_ID, {}, { id });
-    action.method = 'delete';
-    action.oHandler = action.oHandler.find(this.__reformatQueryValue(id));
-    return this._resolve(action);
-  }
-
-  getEntityName(): EntityName {
-    return this._config.entityName;
-  }
-
-  getTranslator(): DAOTranslator<TModel, TModelMutator> {
-    return this._config.translator;
-  }
-
-  fetchByID(id: string): Promise<DAOResult<TModel>> {
-    const action = this.__query(DAO_ACTIONS.FETCH_BY_ID, {}, { id });
-    action.oHandler = action.oHandler.find(this.__reformatQueryValue(id));
-    return this._resolve(action);
-  }
-
-  fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TModel>> {
-    const idsFilter = {
-      operator: FILTER_OPERATORS.EQUALS,
-      params: ['id'],
-      values: ids,
-    };
-
-    const queryOptions = {
-      filters: [idsFilter],
-    };
-
-    return this._resolve(this.__query(
-      DAO_ACTIONS.FETCH_BY_IDS,
-      queryOptions,
-      {},
-      meta,
-    ));
-  }
-
-  fetchMany(queryOptions: QueryOptions): Promise<DAOResult<TModel>> {
-    return this._resolve(this.__query(
-      DAO_ACTIONS.FETCH_MANY,
-      queryOptions,
-    ));
-  }
-
-  patch(id: string, params: TModelMutator): Promise<DAOResult<TModel>> {
-    const action = this.__query(
-      DAO_ACTIONS.PATCH,
-      {},
-      this._config.translator.toApi(params),
+  deleteByID = (id: string): Promise<DAOResult<TModel>> =>
+    this._resolve(
+      this._buildHandler().find(this.__reformatQueryValue(id)),
+      null,
+      'delete',
     );
 
-    action.method = 'patch';
-    action.oHandler = action.oHandler.find(this.__reformatQueryValue(id));
-    return this._resolve(action);
-  }
+  getEntityName = (): EntityName =>
+    this._config.entityName;
 
-  post(params: TModelMutator): Promise<DAOResult<TModel>> {
-    const action = this.__query(
-      DAO_ACTIONS.POST,
-      {},
-      this._config.translator.toApi(params),
+  getTranslator = (): DAOTranslator<TModel, TModelMutator> =>
+    this._config.translator;
+
+  count = (queryOptions: QueryOptions): Promise<DAOResult<TModel>> =>
+    this._resolve(this._buildHandler({
+      ...queryOptions,
+      count: true,
+      take: 0,
+    }));
+
+  fetchByID = (id: string): Promise<DAOResult<TModel>> =>
+    this._resolve(
+      this._buildHandler().find(this.__reformatQueryValue(id)),
     );
 
-    action.method = 'post';
-    return this._resolve(action);
-  }
+  fetchByIDs = (ids: Array<string>): Promise<DAOResult<TModel>> =>
+    this._resolve(this._buildHandler({
+      filters: [apiFilter('id').equals(ids)],
+    }));
 
-  put(id: string, params: TModelMutator): Promise<DAOResult<TModel>> {
-    const action = this.__query(
-      DAO_ACTIONS.PUT,
-      {},
-      this._config.translator.toApi(params),
+  fetchMany = (queryOptions?: QueryOptions): Promise<DAOResult<TModel>> =>
+    this._resolve(this._buildHandler(queryOptions));
+
+  patch = (id: string, mutator: TModelMutator): Promise<DAOResult<TModel>> =>
+    this._resolve(
+      this._buildHandler().find(this.__reformatQueryValue(id)),
+      this._config.translator.toApi(mutator),
+      'patch',
     );
 
-    action.method = 'put';
-    action.oHandler = action.oHandler.find(this.__reformatQueryValue(id));
-    return this._resolve(action);
-  }
-
-  __reformatQueryValue(value: string | number): string | number {
-    return isNaN(value) || value === '' ? `'${value}'` : value;
-  }
-
-  __query(
-    requestStatus: RequestStatus,
-    queryOptions: QueryOptions,
-    params?: Object,
-    meta?: Object,
-  ): ODataAction<TModel> {
-    return createODataAction(
-      {
-        method: 'get',
-        oHandler: this._buildHandler(queryOptions),
-      },
-      requestStatus,
-      queryOptions,
-      params,
-      {
-        ...meta,
-        entityName: this._config.entityName,
-        fromApi: this._config.translator.fromApi,
-      }
+  post = (mutator: TModelMutator): Promise<DAOResult<TModel>> =>
+    this._resolve(
+      this._buildHandler(),
+      this._config.translator.toApi(mutator),
+      'post',
     );
-  }
 
-  _buildHandler(queryOptions: QueryOptions): oHandler<TModel> {
+  put = (id: string, mutator: TModelMutator): Promise<DAOResult<TModel>> =>
+    this._resolve(
+      this._buildHandler().find(this.__reformatQueryValue(id)),
+      this._config.translator.toApi(mutator),
+      'put',
+    );
+
+  __reformatQueryValue = (value: string | number): string | number =>
+    isNaN(value) || value === '' ? `'${value}'` : value;
+
+  // TODO oHandler<TModel> throws Flow error, it was okey in old code,
+  // figure it out
+  _buildHandler = (queryOptions?: QueryOptions = {}): oHandler<$FlowFixMe> => {
     const { count, skip, take } = queryOptions;
     let handler = oHandler(this._config.entityName);
 
@@ -220,36 +153,48 @@ class DAO<TModel, TModelMutator> {
     }
 
     return handler;
-  }
+  };
 
-  async _resolve(action: ODataAction<TModel>): Promise<DAOResult<TModel>> {
+  async _resolve(
+    handler: oHandler<TModel>,
+    params: ?Object,
+    method: ?RequestMethod = 'get',
+  ): Promise<DAOResult<TModel>> {
     let request: Promise<ODataResult<TModel>>;
-    switch (action.method) {
+    switch (method) {
       case 'delete':
-        request = action.oHandler.remove().save();
+        request = handler.remove().save();
         break;
       case 'patch':
-        request = action.oHandler.patch(action.params).save();
+        request = handler.patch(params).save();
         break;
       case 'post':
-        request = action.oHandler.post(action.params).save();
+        request = handler.post(params).save();
         break;
       case 'put':
-        request = action.oHandler.put(action.params).save();
+        request = handler.put(params).save();
         break;
       default:
-        request = action.oHandler.get();
+        request = handler.get();
     }
 
-    const result = await request;
+    try {
+      const resultHandler = await request;
 
-    return {
-      action,
-      data: action.meta && (Array.isArray(result.data)
-        ? result.data.map(action.meta.fromApi)
-        : action.meta.fromApi(result.data)),
-      handler: result,
-    };
+      if (Array.isArray(resultHandler.data)) {
+        resultHandler.data = (resultHandler.data || [])
+          .map((item: Object): ?TModel =>
+            this._config.translator.fromApi(item),
+          );
+      } else {
+        resultHandler.data =
+          this._config.translator.fromApi(resultHandler.data);
+      }
+
+      return new DAOResult(resultHandler.data, resultHandler.inlinecount);
+    } catch (error) {
+      return new DAOResult(null, null, error);
+    }
   }
 }
 

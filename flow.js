@@ -36,12 +36,6 @@ declare module 'brewskey.js-api' {
   /* odata
   */
 
-  declare type RequestStatus = {
-    FAILURE: string,
-    REQUEST: string,
-    SUCCESS: string
-  };
-
   declare type RequestMethod =
     'delete' |
     'get' |
@@ -62,12 +56,6 @@ declare module 'brewskey.js-api' {
     'not startswith' |
     'startswith';
 
-  declare type ConfigType<TModel> = {
-    data?: Object,
-    method: RequestMethod,
-    oHandler: OHandler<TModel>,
-  };
-
   declare type QueryFilter = {
     operator: FilterOperator,
     params: Array<string>,
@@ -85,16 +73,6 @@ declare module 'brewskey.js-api' {
     orderBy?: Array<QueryOrderBy>,
     skip?: number,
     take?: number,
-  };
-
-  declare type ODataAction<TModel> = {
-    meta?: Object,
-    method: RequestMethod,
-    oHandler: OHandler<TModel>,
-    params?: Object,
-    queryOptions: QueryOptions,
-    type: string,
-    types: RequestStatus,
   };
 
   declare type ODataChartParams = {
@@ -403,14 +381,8 @@ declare module 'brewskey.js-api' {
   */
 
   declare type ODataResult<TModel> = OHandler<TModel> & {
-    data: Object | Array<Object>,
-    inlinecount?: number,
-  };
-
-  declare type DAOResult<TModel> = {
-    action: ODataAction<TModel>,
-    data: ?(TModel | Array<TModel>),
-    handler: ODataResult<TModel>,
+    data: TModel | Array<TModel>,
+    inlinecount: ?number,
   };
 
   declare class DAO<TModel, TModelMutator> {
@@ -419,7 +391,7 @@ declare module 'brewskey.js-api' {
     deleteByID(id: string): Promise<DAOResult<TModel>>;
     fetchByID(id: string): Promise<DAOResult<TModel>>;
     fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TModel>>;
-    fetchMany(queryOptions: QueryOptions): Promise<DAOResult<TModel>>;
+    fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TModel>>;
     getEntityName(): EntityName;
     getTranslator(): DAOTranslator<TModel, TModelMutator>;
     patch(id: string, params: TModelMutator): Promise<DAOResult<TModel>>;
@@ -427,8 +399,18 @@ declare module 'brewskey.js-api' {
     put(id: string, params: TModelMutator): Promise<DAOResult<TModel>>;
   }
 
+  declare class DAOResult<TModel> {
+    _count: ?number;
+    _data: ?TModel | ?Array<TModel>;
+    _error: ?Error;
+    count(): ?number;
+    getData(): ?TModel | ?Array<TModel>;
+    getError(): ?Error;
+  }
+
   declare class brewskey$AccountDAO extends DAO<Account, Account> {}
-  declare class brewskey$AvailabilityDAO extends DAO<Availability, Availability> {}
+  declare class brewskey$AvailabilityDAO
+    extends DAO<Availability, Availability> {}
   declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
   declare class brewskey$DeviceDAO extends DAO<Device, Device> {}
   declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
@@ -436,18 +418,17 @@ declare module 'brewskey.js-api' {
     fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>>;
   }
   declare class brewskey$LocationDAO extends DAO<Location, Location> {}
-  declare class brewskey$PermissionDAO extends DAO<Permission, PermissionMutator> {}
+  declare class brewskey$PermissionDAO
+    extends DAO<Permission, PermissionMutator> {}
   declare class brewskey$PourDAO extends DAO<Pour, Pour> {
-    fetchChartData(
-      params: ODataChartParams,
-      chartName: string,
-    ): Promise<DAOResult<Pour>>;
+    fetchChartData(params: ODataChartParams): Promise<DAOResult<Pour>>;
   }
   declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
   declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
   declare class brewskey$StyleDAO extends DAO<Style, Style> {}
   declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {}
 
+  declare var DAO: DAO;
   declare var AccountDAO: brewskey$AccountDAO;
   declare var AvailabilityDAO: brewskey$AvailabilityDAO;
   declare var BeverageDAO: brewskey$BeverageDAO;
@@ -464,21 +445,11 @@ declare module 'brewskey.js-api' {
 
   /* Utilities
   */
-
-  declare var DAO_ACTIONS: { [string]: RequestStatus };
   declare var DAO_ENTITIES: { [string]: EntityName };
   declare var FILTER_OPERATORS: { [key: string]: FilterOperator };
-  declare var ODATA_API: string;
 
   declare var oHandler: OHandler<any>;
-  declare type FilterCreators = ({ [string]: any=> QueryFilter });
+  declare type FilterCreators = (params: { [string]: any }) => QueryFilter;
   declare function apiFilter(params: any): FilterCreators;
   declare function apiFetch(path: string, init: ?Object): Promise<*>;
-  declare function createODataAction<TModel>(
-    config: ConfigType<TModel>,
-    types: RequestStatus,
-    queryOptions: QueryOptions,
-    params?: Object,
-    meta?: Object,
-  ): ODataAction<TModel>;
 }

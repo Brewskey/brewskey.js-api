@@ -23,7 +23,7 @@ const FILTERS: { [string]: FilterOperator } = {
 const makeFilter = (
   operator: FilterOperator,
   params: any,
-): (any=> QueryFilter) =>
+): (values: any) => QueryFilter =>
   (values: any): QueryFilter => ({
     operator,
     params: Array.isArray(params) ? params : [params],

@@ -1,9 +1,10 @@
 // @flow
-import type { DAOResult, ODataChartParams, Pour } from 'brewskey.js-api';
+import type { ODataChartParams, Pour } from 'brewskey.js-api';
+import type DAOResult from './DAOResult';
 
 import DAO from './DAO';
 import oHandler from '../handler';
-import { DAO_ACTIONS, DAO_ENTITIES } from '../constants';
+import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
 class PourDAO extends DAO<Pour, Pour> {
@@ -20,21 +21,13 @@ class PourDAO extends DAO<Pour, Pour> {
     });
   }
 
-  fetchChartData(
-    params: ODataChartParams,
-    chartName: string,
-  ): Promise<DAOResult<Pour>> {
-    const action = this.__query(
-      DAO_ACTIONS.FETCH_CHART_DATA,
-      {},
+  fetchChartData = (params: ODataChartParams): Promise<DAOResult<Object>> =>
+    this._resolve(
+      oHandler('chart'), // TODO this is a hacky crutch for change endpoint
+      // on the fly..come up better solution,
       params,
-      { chartName },
+      'post',
     );
-
-    action.method = 'post';
-    action.oHandler = oHandler('chart');
-    return this._resolve(action);
-  }
 }
 
 export default new PourDAO();

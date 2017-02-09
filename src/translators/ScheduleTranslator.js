@@ -38,7 +38,7 @@ class SchedulesTranslator extends DefaultTranslator<Schedule, ScheduleMutator> {
   toApi(mutator: ScheduleMutator): Object {
     return {
       ...mutator,
-      accountIds: mutator.accounts.map(
+      accountIds: mutator.accounts && mutator.accounts.map(
         (account: { id: string, name: string }): string => account.id,
       ),
     };

@@ -1,13 +1,15 @@
 // @flow
-import type { DAOResult, Keg } from 'brewskey.js-api';
+
+import type { Keg } from 'brewskey.js-api';
+import type DAOResult from './DAOResult';
 
 import DefaultTranslator from '../translators/DefaultTranslator';
 import DAO from './DAO';
 import {
-  DAO_ACTIONS,
   DAO_ENTITIES,
   FILTER_OPERATORS,
 } from '../constants';
+import apiFilter from '../filters';
 
 class KegDAO extends DAO<Keg, Keg> {
   constructor() {
@@ -21,27 +23,16 @@ class KegDAO extends DAO<Keg, Keg> {
     });
   }
 
-  fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>> {
-    const idFilter = {
-      operator: FILTER_OPERATORS.EQUALS,
-      params: ['tap/id'],
-      values: [tapId],
-    };
-
-    const queryOptions = {
-      filters: [idFilter],
+  fetchKegByTapID = (tapId: string): Promise<DAOResult<Keg>> =>
+    this._resolve(this._buildHandler({
+      filters: [apiFilter('tap/id').equals(tapId)],
       orderBy: [{
         column: 'tapDate',
         direction: 'desc',
       }],
       take: 1,
-    };
+    }));
 
-    return this._resolve(this.__query(
-      DAO_ACTIONS.FETCH_KEG_BY_TAP_ID,
-      queryOptions,
-    ));
-  }
 }
 
 export default new KegDAO();
