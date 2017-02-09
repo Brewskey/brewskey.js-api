@@ -162,20 +162,25 @@ class DAO<TModel, TModelMutator> {
   ): Promise<DAOResult<TModel>> {
     let request: Promise<ODataResult<TModel>>;
     switch (method) {
-      case 'delete':
+      case 'delete': {
         request = handler.remove().save();
         break;
-      case 'patch':
+      }
+      case 'patch': {
         request = handler.patch(params).save();
         break;
-      case 'post':
+      }
+      case 'post': {
         request = handler.post(params).save();
         break;
-      case 'put':
+      }
+      case 'put': {
         request = handler.put(params).save();
         break;
-      default:
+      }
+      default: {
         request = handler.get();
+      }
     }
 
     try {
