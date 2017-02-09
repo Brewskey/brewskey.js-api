@@ -31,15 +31,6 @@ Object.defineProperty(exports, 'oHandler', {
   }
 });
 
-var _actions = require('./actions');
-
-Object.defineProperty(exports, 'createODataAction', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_actions).default;
-  }
-});
-
 var _constants = require('./constants');
 
 Object.defineProperty(exports, 'DAO_ENTITIES', {
@@ -48,22 +39,10 @@ Object.defineProperty(exports, 'DAO_ENTITIES', {
     return _constants.DAO_ENTITIES;
   }
 });
-Object.defineProperty(exports, 'DAO_ACTIONS', {
-  enumerable: true,
-  get: function get() {
-    return _constants.DAO_ACTIONS;
-  }
-});
 Object.defineProperty(exports, 'FILTER_OPERATORS', {
   enumerable: true,
   get: function get() {
     return _constants.FILTER_OPERATORS;
-  }
-});
-Object.defineProperty(exports, 'ODATA_API', {
-  enumerable: true,
-  get: function get() {
-    return _constants.ODATA_API;
   }
 });
 

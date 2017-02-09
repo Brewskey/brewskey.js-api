@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _DAO2 = require('./DAO');
 
 var _DAO3 = _interopRequireDefault(_DAO2);
@@ -34,7 +32,7 @@ var PourDAO = function (_DAO) {
   function PourDAO() {
     _classCallCheck(this, PourDAO);
 
-    return _possibleConstructorReturn(this, (PourDAO.__proto__ || Object.getPrototypeOf(PourDAO)).call(this, {
+    var _this = _possibleConstructorReturn(this, (PourDAO.__proto__ || Object.getPrototypeOf(PourDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.POURS,
       navigationProperties: {
         beverage: ['id', 'name'],
@@ -44,18 +42,15 @@ var PourDAO = function (_DAO) {
       },
       translator: new _DefaultTranslator2.default()
     }));
+
+    _this.fetchChartData = function (params) {
+      return _this._resolve((0, _handler2.default)('chart'), // TODO this is a hacky crutch for change endpoint
+      // on the fly..come up better solution,
+      params, 'post');
+    };
+
+    return _this;
   }
-
-  _createClass(PourDAO, [{
-    key: 'fetchChartData',
-    value: function fetchChartData(params, chartName) {
-      var action = this.__query(_constants.DAO_ACTIONS.FETCH_CHART_DATA, {}, params, { chartName: chartName });
-
-      action.method = 'post';
-      action.oHandler = (0, _handler2.default)('chart');
-      return action;
-    }
-  }]);
 
   return PourDAO;
 }(_DAO3.default);
