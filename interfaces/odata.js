@@ -19,8 +19,8 @@ declare module 'odata' {
   };
 
   declare type OHandler<TModel> = {
-     inlineCount: number,
-     data: TModel,
+     inlinecount: number,
+     data: TModel | Array<TModel>,
      oConfig: Options,
 
      config<TModel>(options?: Options): OHandler<TModel>,
