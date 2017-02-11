@@ -15,17 +15,17 @@ const deepIdCast = (node: any): any => {
   return node;
 };
 
-class DefaultTranslator<TModel, TModelMutator> {
-  fromApi(apiValue: Object): TModel {
+class DefaultTranslator<TEntity, TEntityMutator> {
+  fromApi(apiValue: Object): TEntity {
     return deepIdCast(apiValue);
   }
 
-  toApi(mutator: TModelMutator): Object {
+  toApi(mutator: TEntityMutator): Object {
     return ((mutator: any): Object);
   }
 
-  toForm(model: TModel): TModelMutator {
-    return ((model: any): TModelMutator);
+  toForm(model: TEntity): TEntityMutator {
+    return ((model: any): TEntityMutator);
   }
 }
 

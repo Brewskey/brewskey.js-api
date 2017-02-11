@@ -5,10 +5,7 @@ import type DAOResult from './DAOResult';
 
 import DefaultTranslator from '../translators/DefaultTranslator';
 import DAO from './DAO';
-import {
-  DAO_ENTITIES,
-  FILTER_OPERATORS,
-} from '../constants';
+import { DAO_ENTITIES } from '../constants';
 import apiFilter from '../filters';
 
 class KegDAO extends DAO<Keg, Keg> {

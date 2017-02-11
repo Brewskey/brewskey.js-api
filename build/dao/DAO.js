@@ -170,7 +170,7 @@ var DAO = function () {
     this._config = config;
   }
 
-  // TODO oHandler<TModel> throws Flow error, it was okey in old code,
+  // TODO oHandler<TEntity> throws Flow error, it was okey in old code,
   // figure it out
 
 
