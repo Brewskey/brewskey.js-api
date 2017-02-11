@@ -1,14 +1,12 @@
 // @flow
 
-import type { OHandler } from 'odata';
-
-class DAOResult<TModel> {
+class DAOResult<TEntity> {
   _count: ?number;
-  _data: ?TModel | ?Array<TModel>;
+  _data: ?TEntity | ?Array<TEntity>;
   _error: ?Error;
 
   constructor(
-    data: ?TModel | ?Array<TModel>,
+    data: ?TEntity | ?Array<TEntity>,
     count: ?number,
     error?: Error,
   ) {
@@ -20,7 +18,7 @@ class DAOResult<TModel> {
   count = (): ?number =>
     this._error ? null : this._count;
 
-  getData = (): ?TModel | ?Array<TModel> =>
+  getData = (): ?TEntity | ?Array<TEntity> =>
     this._error ? null : this._data;
 
   getError = (): ?Error => this._error;

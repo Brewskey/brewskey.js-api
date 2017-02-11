@@ -21,16 +21,16 @@ declare module 'brewskey.js-api' {
     'schedules' |
     'taps';
 
-  declare type DAOTranslator<TModel, TModelMutator> = {
-    +fromApi: (apiValue: Object) => TModel,
-    +toApi: (model: TModelMutator) => Object,
-    +toForm: (model: TModel) => TModelMutator,
+  declare type DAOTranslator<TEntity, TEntityMutator> = {
+    +fromApi: (apiValue: Object) => TEntity,
+    +toApi: (model: TEntityMutator) => Object,
+    +toForm: (model: TEntity) => TEntityMutator,
   };
 
-  declare type DAOConfig<TModel, TModelMutator> = {
+  declare type DAOConfig<TEntity, TEntityMutator> = {
     entityName: EntityName,
     navigationProperties?: {[string]: ?Array<string>},
-    translator: DAOTranslator<TModel, TModelMutator>,
+    translator: DAOTranslator<TEntity, TEntityMutator>,
   };
 
   /* odata
@@ -380,31 +380,31 @@ declare module 'brewskey.js-api' {
   /* DAO implementation
   */
 
-  declare type ODataResult<TModel> = OHandler<TModel> & {
-    data: TModel | Array<TModel>,
+  declare type ODataResult<TEntity> = OHandler<TEntity> & {
+    data: TEntity | Array<TEntity>,
     inlinecount: ?number,
   };
 
-  declare class DAO<TModel, TModelMutator> {
-    _config: DAOConfig<TModel, TModelMutator>;
-    count(queryOptions: QueryOptions): Promise<DAOResult<TModel>>;
-    deleteByID(id: string): Promise<DAOResult<TModel>>;
-    fetchByID(id: string): Promise<DAOResult<TModel>>;
-    fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TModel>>;
-    fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TModel>>;
+  declare class DAO<TEntity, TEntityMutator> {
+    _config: DAOConfig<TEntity, TEntityMutator>;
+    count(queryOptions: QueryOptions): Promise<DAOResult<TEntity>>;
+    deleteByID(id: string): Promise<DAOResult<TEntity>>;
+    fetchByID(id: string): Promise<DAOResult<TEntity>>;
+    fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TEntity>>;
+    fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>>;
     getEntityName(): EntityName;
-    getTranslator(): DAOTranslator<TModel, TModelMutator>;
-    patch(id: string, params: TModelMutator): Promise<DAOResult<TModel>>;
-    post(params: TModelMutator): Promise<DAOResult<TModel>>;
-    put(id: string, params: TModelMutator): Promise<DAOResult<TModel>>;
+    getTranslator(): DAOTranslator<TEntity, TEntityMutator>;
+    patch(id: string, params: TEntityMutator): Promise<DAOResult<TEntity>>;
+    post(params: TEntityMutator): Promise<DAOResult<TEntity>>;
+    put(id: string, params: TEntityMutator): Promise<DAOResult<TEntity>>;
   }
 
-  declare class DAOResult<TModel> {
+  declare class DAOResult<TEntity> {
     _count: ?number;
-    _data: ?TModel | ?Array<TModel>;
+    _data: ?TEntity | ?Array<TEntity>;
     _error: ?Error;
     count(): ?number;
-    getData(): ?TModel | ?Array<TModel>;
+    getData(): ?TEntity | ?Array<TEntity>;
     getError(): ?Error;
   }
 

@@ -18,62 +18,62 @@ declare module 'odata' {
     isAsync?: boolean,
   };
 
-  declare type OHandler<TModel> = {
+  declare type OHandler<TEntity> = {
      inlinecount: number,
-     data: TModel | Array<TModel>,
+     data: TEntity | Array<TEntity>,
      oConfig: Options,
 
-     config<TModel>(options?: Options): OHandler<TModel>,
-     progress<TModel>(callback: () => any): OHandler<TModel>,
+     config<TEntity>(options?: Options): OHandler<TEntity>,
+     progress<TEntity>(callback: () => any): OHandler<TEntity>,
 
-     get<TModel>(callback?: (data : TModel) => void): Promise<TModel>,
-     save<TModel>(callback?: (data : TModel) => void): Promise<TModel>,
-     // save<TModel>(callback ?: (data : TModel) => void) : Q.Promise<OHandler<TModel>>,
+     get<TEntity>(callback?: (data : TEntity) => void): Promise<TEntity>,
+     save<TEntity>(callback?: (data : TEntity) => void): Promise<TEntity>,
+     // save<TEntity>(callback ?: (data : TEntity) => void) : Q.Promise<OHandler<TEntity>>,
 
-     post<TModel>(params: any): OHandler<TModel>,
-     patch<TModel>(params: any): OHandler<TModel>,
-     put<TModel>(params: any): OHandler<TModel>,
-     remove<TModel>(params?: any): OHandler<TModel>,
+     post<TEntity>(params: any): OHandler<TEntity>,
+     patch<TEntity>(params: any): OHandler<TEntity>,
+     put<TEntity>(params: any): OHandler<TEntity>,
+     remove<TEntity>(params?: any): OHandler<TEntity>,
 
-     routes<TModel>(path: string, callback?: (data: TModel) => void): OHandler<TModel>,
-     route<TModel>(path: string, callback?: (data: TModel) => void): OHandler<TModel>,
-     triggerRoute<TModel>(hash: string): OHandler<TModel>,
-     beforeRouting<TModel>(callback: (routeParams: any) => boolean): OHandler<TModel>,
+     routes<TEntity>(path: string, callback?: (data: TEntity) => void): OHandler<TEntity>,
+     route<TEntity>(path: string, callback?: (data: TEntity) => void): OHandler<TEntity>,
+     triggerRoute<TEntity>(hash: string): OHandler<TEntity>,
+     beforeRouting<TEntity>(callback: (routeParams: any) => boolean): OHandler<TEntity>,
 
      isEndpoint(): boolean,
-     loading<TModel>(startFn: () => any | boolean, endFn: () => any): OHandler<TModel>,
+     loading<TEntity>(startFn: () => any | boolean, endFn: () => any): OHandler<TEntity>,
 
-     find<TModel>(selector: string|number): OHandler<TModel>,
+     find<TEntity>(selector: string|number): OHandler<TEntity>,
 
-     top<TModel>(quantity: number): OHandler<TModel>,
-     take<TModel>(quantity: number): OHandler<TModel>,
-     skip<TModel>(quantity: number): OHandler<TModel>,
-     first<TModel>(): OHandler<TModel>,
+     top<TEntity>(quantity: number): OHandler<TEntity>,
+     take<TEntity>(quantity: number): OHandler<TEntity>,
+     skip<TEntity>(quantity: number): OHandler<TEntity>,
+     first<TEntity>(): OHandler<TEntity>,
 
-     include<TModel>(column: string, data: string): OHandler<TModel>,
-     exclude<TModel>(column: string, data: string): OHandler<TModel>,
-     filterByList<TModel>(column: string, data: string): OHandler<TModel>,
+     include<TEntity>(column: string, data: string): OHandler<TEntity>,
+     exclude<TEntity>(column: string, data: string): OHandler<TEntity>,
+     filterByList<TEntity>(column: string, data: string): OHandler<TEntity>,
 
-     filter<TModel>(filter: string): OHandler<TModel>,
-     where<TModel>(filter: string): OHandler<TModel>,
-     any<TModel>(filter: string, resource: string): OHandler<TModel>,
-     search<TModel>(columns: string[], term: string): OHandler<TModel>,
+     filter<TEntity>(filter: string): OHandler<TEntity>,
+     where<TEntity>(filter: string): OHandler<TEntity>,
+     any<TEntity>(filter: string, resource: string): OHandler<TEntity>,
+     search<TEntity>(columns: string[], term: string): OHandler<TEntity>,
 
-     orderBy<TModel>(column: string, direction?: boolean): OHandler<TModel>,
-     orderByDesc<TModel>(column: string): OHandler<TModel>,
-     select<TModel>(selectStr: string): OHandler<TModel>,
+     orderBy<TEntity>(column: string, direction?: boolean): OHandler<TEntity>,
+     orderByDesc<TEntity>(column: string): OHandler<TEntity>,
+     select<TEntity>(selectStr: string): OHandler<TEntity>,
 
-     count<TModel>(): OHandler<TModel>,
-     inlineCount<TModel>(paramName?: string): OHandler<TModel>,
+     count<TEntity>(): OHandler<TEntity>,
+     inlineCount<TEntity>(paramName?: string): OHandler<TEntity>,
 
-     batch<TModel>(resource: string): OHandler<TModel>,
-     expand<TModel>(resource: string): OHandler<TModel>,
-     getRef<TModel>(resource: string, id?: string | number): OHandler<TModel>,
-     ref<TModel>(resource: string, id: string | number): OHandler<TModel>,
-     removeRef<TModel>(resource: string, id: string | number): OHandler<TModel>,
-     deleteRef<TModel>(resource: string, id: string | number): OHandler<TModel>,
+     batch<TEntity>(resource: string): OHandler<TEntity>,
+     expand<TEntity>(resource: string): OHandler<TEntity>,
+     getRef<TEntity>(resource: string, id?: string | number): OHandler<TEntity>,
+     ref<TEntity>(resource: string, id: string | number): OHandler<TEntity>,
+     removeRef<TEntity>(resource: string, id: string | number): OHandler<TEntity>,
+     deleteRef<TEntity>(resource: string, id: string | number): OHandler<TEntity>,
    };
 
 
-  declare function exports<TModel>(args?: Options | string): OHandler<TModel>
+  declare function exports<TEntity>(args?: Options | string): OHandler<TEntity>
 }
