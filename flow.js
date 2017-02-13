@@ -447,9 +447,15 @@ declare module 'brewskey.js-api' {
   */
   declare var DAO_ENTITIES: { [string]: EntityName };
   declare var FILTER_OPERATORS: { [key: string]: FilterOperator };
+  declare type Headers = Array<{
+    name: string,
+    value: string,
+  }>;
 
-  declare var oHandler: OHandler<any>;
   declare type FilterCreators = (params: { [string]: any }) => QueryFilter;
   declare function apiFilter(params: any): FilterCreators;
   declare function apiFetch(path: string, init: ?Object): Promise<*>;
+
+  declare function getHeaders(): Headers;
+  declare function setHeaders(headers: Headers): void;
 }

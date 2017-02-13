@@ -1,19 +1,70 @@
 // @flow
-export { default as apiFetch } from './fetch';
-export { default as apiFilter } from './filters';
-export { default as oHandler } from './handler';
-export { DAO_ENTITIES, FILTER_OPERATORS } from './constants';
 
-export { default as AccountDAO } from './dao/AccountDAO';
-export { default as AvailabilityDAO } from './dao/AvailabilityDAO';
-export { default as BeverageDAO } from './dao/BeverageDAO';
-export { default as DeviceDAO } from './dao/DeviceDAO';
-export { default as GlassDAO } from './dao/GlassDAO';
-export { default as KegDAO } from './dao/KegDAO';
-export { default as LocationDAO } from './dao/LocationDAO';
-export { default as PermissionDAO } from './dao/PermissionDAO';
-export { default as PourDAO } from './dao/PourDAO';
-export { default as ScheduleDAO } from './dao/ScheduleDAO';
-export { default as SrmDAO } from './dao/SrmDAO';
-export { default as StyleDAO } from './dao/StyleDAO';
-export { default as TapDAO } from './dao/TapDAO';
+import type { Headers } from 'brewskey.js-api';
+
+import oHandler from 'odata';
+import { DAO_ENTITIES, FILTER_OPERATORS } from './constants';
+
+import apiFetch from './fetch';
+import apiFilter from './filters';
+
+import AccountDAO from './dao/AccountDAO';
+import AvailabilityDAO from './dao/AvailabilityDAO';
+import BeverageDAO from './dao/BeverageDAO';
+import DeviceDAO from './dao/DeviceDAO';
+import GlassDAO from './dao/GlassDAO';
+import KegDAO from './dao/KegDAO';
+import LocationDAO from './dao/LocationDAO';
+import PermissionDAO from './dao/PermissionDAO';
+import PourDAO from './dao/PourDAO';
+import ScheduleDAO from './dao/ScheduleDAO';
+import SrmDAO from './dao/SrmDAO';
+import StyleDAO from './dao/StyleDAO';
+import TapDAO from './dao/TapDAO';
+
+type OConfig = {
+  endpoint: string,
+  headers?: Headers,
+};
+
+const initializeDAOApi = ({ endpoint, headers }: OConfig) => {
+  oHandler().config({
+    endpoint,
+    headers: [
+      { name: 'Prefer', value: 'return=representation' },
+      ...(headers || []),
+    ],
+  });
+};
+
+const getHeaders = (): Headers =>
+  oHandler().oConfig.headers || [];
+
+const setHeaders = (headers: Headers) => {
+  oHandler().config({
+    headers,
+  });
+};
+
+export default {
+  AccountDAO,
+  apiFetch,
+  apiFilter,
+  AvailabilityDAO,
+  BeverageDAO,
+  DAO_ENTITIES,
+  DeviceDAO,
+  FILTER_OPERATORS,
+  getHeaders,
+  GlassDAO,
+  initializeDAOApi,
+  KegDAO,
+  LocationDAO,
+  PermissionDAO,
+  PourDAO,
+  ScheduleDAO,
+  setHeaders,
+  SrmDAO,
+  StyleDAO,
+  TapDAO,
+};

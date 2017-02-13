@@ -1,5 +1,5 @@
 // @flow
-import oHandler from './handler';
+import oHandler from 'odata';
 
 export default (path: string, init: ?Object): Promise<*> => {
   const {

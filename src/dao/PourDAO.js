@@ -2,8 +2,8 @@
 import type { ODataChartParams, Pour } from 'brewskey.js-api';
 import type DAOResult from './DAOResult';
 
+import oHandler from 'odata';
 import DAO from './DAO';
-import oHandler from '../handler';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 

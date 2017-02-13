@@ -8,16 +8,6 @@ var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
 
-var _constants = require('./constants');
-
-var _fetch = require('./fetch');
-
-var _fetch2 = _interopRequireDefault(_fetch);
-
-var _filters = require('./filters');
-
-var _filters2 = _interopRequireDefault(_filters);
-
 var _AccountDAO = require('./dao/AccountDAO');
 
 var _AccountDAO2 = _interopRequireDefault(_AccountDAO);
@@ -70,49 +60,54 @@ var _TapDAO = require('./dao/TapDAO');
 
 var _TapDAO2 = _interopRequireDefault(_TapDAO);
 
+var _handler = require('./handler');
+
+var _handler2 = _interopRequireDefault(_handler);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var initializeDAOApi = function initializeDAOApi(_ref) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DAOApi = function DAOApi(_ref) {
   var endpoint = _ref.endpoint,
       headers = _ref.headers;
 
-  (0, _odata2.default)().config({
+  _classCallCheck(this, DAOApi);
+
+  _initialiseProps.call(this);
+
+  (0, _handler2.default)().config({
     endpoint: endpoint,
     headers: [{ name: 'Prefer', value: 'return=representation' }].concat(_toConsumableArray(headers || []))
   });
+
+  this.AccountDAO = _AccountDAO2.default;
+  this.AvailabilityDAO = _AvailabilityDAO2.default;
+  this.BeverageDAO = _BeverageDAO2.default;
+  this.DeviceDAO = _DeviceDAO2.default;
+  this.GlassDAO = _GlassDAO2.default;
+  this.KegDAO = _KegDAO2.default;
+  this.LocationDAO = _LocationDAO2.default;
+  this.PermissionDAO = _PermissionDAO2.default;
+  this.PourDAO = _PourDAO2.default;
+  this.ScheduleDAO = _ScheduleDAO2.default;
+  this.SrmDAO = _SrmDAO2.default;
+  this.StyleDAO = _StyleDAO2.default;
+  this.TapDAO = _TapDAO2.default;
 };
 
-var getHeaders = function getHeaders() {
-  return (0, _odata2.default)().oConfig.headers || [];
+var _initialiseProps = function _initialiseProps() {
+  this.getHeaders = function () {
+    return (0, _handler2.default)().oConfig.headers || [];
+  };
+
+  this.setHeaders = function (headers) {
+    (0, _handler2.default)().config({
+      headers: headers
+    });
+  };
 };
 
-var setHeaders = function setHeaders(headers) {
-  (0, _odata2.default)().config({
-    headers: headers
-  });
-};
-
-exports.default = {
-  AccountDAO: _AccountDAO2.default,
-  apiFetch: _fetch2.default,
-  apiFilter: _filters2.default,
-  AvailabilityDAO: _AvailabilityDAO2.default,
-  BeverageDAO: _BeverageDAO2.default,
-  DAO_ENTITIES: _constants.DAO_ENTITIES,
-  DeviceDAO: _DeviceDAO2.default,
-  FILTER_OPERATORS: _constants.FILTER_OPERATORS,
-  getHeaders: getHeaders,
-  GlassDAO: _GlassDAO2.default,
-  initializeDAOApi: initializeDAOApi,
-  KegDAO: _KegDAO2.default,
-  LocationDAO: _LocationDAO2.default,
-  PermissionDAO: _PermissionDAO2.default,
-  PourDAO: _PourDAO2.default,
-  ScheduleDAO: _ScheduleDAO2.default,
-  setHeaders: setHeaders,
-  SrmDAO: _SrmDAO2.default,
-  StyleDAO: _StyleDAO2.default,
-  TapDAO: _TapDAO2.default
-};
+exports.default = DAOApi;
