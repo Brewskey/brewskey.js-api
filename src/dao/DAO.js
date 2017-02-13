@@ -9,7 +9,7 @@ import type {
   RequestMethod,
 } from 'brewskey.js-api';
 
-import oHandler from '../handler';
+import oHandler from 'odata';
 import DAOResult from './DAOResult';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
 import apiFilter from '../filters';

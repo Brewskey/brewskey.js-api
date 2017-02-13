@@ -429,27 +429,38 @@ declare module 'brewskey.js-api' {
   declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {}
 
   declare var DAO: DAO;
-  declare var AccountDAO: brewskey$AccountDAO;
-  declare var AvailabilityDAO: brewskey$AvailabilityDAO;
-  declare var BeverageDAO: brewskey$BeverageDAO;
-  declare var DeviceDAO: brewskey$DeviceDAO;
-  declare var GlassDAO: brewskey$GlassDAO;
-  declare var KegDAO: brewskey$KegDAO;
-  declare var LocationDAO: brewskey$LocationDAO;
-  declare var PermissionDAO: brewskey$PermissionDAO;
-  declare var PourDAO: brewskey$PourDAO;
-  declare var ScheduleDAO: brewskey$ScheduleDAO;
-  declare var SrmDAO: brewskey$SrmDAO;
-  declare var StyleDAO: brewskey$StyleDAO;
-  declare var TapDAO: brewskey$TapDAO;
+
+  declare class DAOApi {
+    AccountDAO: brewskey$AccountDAO;
+    AvailabilityDAO: brewskey$AvailabilityDAO;
+    BeverageDAO: brewskey$BeverageDAO;
+    DeviceDAO: brewskey$DeviceDAO;
+    GlassDAO: brewskey$GlassDAO;
+    KegDAO: brewskey$KegDAO;
+    LocationDAO: brewskey$LocationDAO;
+    PermissionDAO: brewskey$PermissionDAO;
+    PourDAO: brewskey$PourDAO;
+    ScheduleDAO: brewskey$ScheduleDAO;
+    SrmDAO: brewskey$SrmDAO;
+    StyleDAO: brewskey$StyleDAO;
+    TapDAO: brewskey$TapDAO;
+
+    getHeaders(): Headers;
+    setHeaders(headers: Headers): void;
+  }
 
   /* Utilities
   */
   declare var DAO_ENTITIES: { [string]: EntityName };
   declare var FILTER_OPERATORS: { [key: string]: FilterOperator };
+  declare type Headers = Array<{
+    name: string,
+    value: string,
+  }>;
 
-  declare var oHandler: OHandler<any>;
   declare type FilterCreators = (params: { [string]: any }) => QueryFilter;
   declare function apiFilter(params: any): FilterCreators;
   declare function apiFetch(path: string, init: ?Object): Promise<*>;
+
+  declare var exports: DAOApi;
 }

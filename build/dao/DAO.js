@@ -10,9 +10,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _handler = require('../handler');
+var _odata = require('odata');
 
-var _handler2 = _interopRequireDefault(_handler);
+var _odata2 = _interopRequireDefault(_odata);
 
 var _DAOResult = require('./DAOResult');
 
@@ -93,7 +93,7 @@ var DAO = function () {
           skip = queryOptions.skip,
           take = queryOptions.take;
 
-      var handler = (0, _handler2.default)(_this._config.entityName);
+      var handler = (0, _odata2.default)(_this._config.entityName);
 
       if (_this._config.navigationProperties) {
         var navigationPropString = Object.entries(_this._config.navigationProperties).map(function (_ref) {

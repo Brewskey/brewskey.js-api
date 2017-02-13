@@ -29,7 +29,6 @@ class KegDAO extends DAO<Keg, Keg> {
       }],
       take: 1,
     }));
-
 }
 
 export default new KegDAO();

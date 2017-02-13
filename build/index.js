@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.FILTER_OPERATORS = exports.DAO_ENTITIES = exports.apiFilter = exports.apiFetch = undefined;
 
 var _fetch = require('./fetch');
 
@@ -22,15 +23,6 @@ Object.defineProperty(exports, 'apiFilter', {
   }
 });
 
-var _handler = require('./handler');
-
-Object.defineProperty(exports, 'oHandler', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_handler).default;
-  }
-});
-
 var _constants = require('./constants');
 
 Object.defineProperty(exports, 'DAO_ENTITIES', {
@@ -46,121 +38,10 @@ Object.defineProperty(exports, 'FILTER_OPERATORS', {
   }
 });
 
-var _AccountDAO = require('./dao/AccountDAO');
+var _DAOApi = require('./DAOApi');
 
-Object.defineProperty(exports, 'AccountDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_AccountDAO).default;
-  }
-});
-
-var _AvailabilityDAO = require('./dao/AvailabilityDAO');
-
-Object.defineProperty(exports, 'AvailabilityDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_AvailabilityDAO).default;
-  }
-});
-
-var _BeverageDAO = require('./dao/BeverageDAO');
-
-Object.defineProperty(exports, 'BeverageDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_BeverageDAO).default;
-  }
-});
-
-var _DeviceDAO = require('./dao/DeviceDAO');
-
-Object.defineProperty(exports, 'DeviceDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_DeviceDAO).default;
-  }
-});
-
-var _GlassDAO = require('./dao/GlassDAO');
-
-Object.defineProperty(exports, 'GlassDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_GlassDAO).default;
-  }
-});
-
-var _KegDAO = require('./dao/KegDAO');
-
-Object.defineProperty(exports, 'KegDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_KegDAO).default;
-  }
-});
-
-var _LocationDAO = require('./dao/LocationDAO');
-
-Object.defineProperty(exports, 'LocationDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_LocationDAO).default;
-  }
-});
-
-var _PermissionDAO = require('./dao/PermissionDAO');
-
-Object.defineProperty(exports, 'PermissionDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_PermissionDAO).default;
-  }
-});
-
-var _PourDAO = require('./dao/PourDAO');
-
-Object.defineProperty(exports, 'PourDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_PourDAO).default;
-  }
-});
-
-var _ScheduleDAO = require('./dao/ScheduleDAO');
-
-Object.defineProperty(exports, 'ScheduleDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_ScheduleDAO).default;
-  }
-});
-
-var _SrmDAO = require('./dao/SrmDAO');
-
-Object.defineProperty(exports, 'SrmDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_SrmDAO).default;
-  }
-});
-
-var _StyleDAO = require('./dao/StyleDAO');
-
-Object.defineProperty(exports, 'StyleDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_StyleDAO).default;
-  }
-});
-
-var _TapDAO = require('./dao/TapDAO');
-
-Object.defineProperty(exports, 'TapDAO', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_TapDAO).default;
-  }
-});
+var _DAOApi2 = _interopRequireDefault(_DAOApi);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _DAOApi2.default;
