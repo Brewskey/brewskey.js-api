@@ -65,9 +65,9 @@ export default {
   SrmDAO,
   StyleDAO,
   TapDAO,
-  setHeaders,
-  initializeDAOApi,
-  getHeaders,
-  fetch,
   createFilter,
+  fetch,
+  getHeaders,
+  initializeDAOApi,
+  setHeaders,
 };
