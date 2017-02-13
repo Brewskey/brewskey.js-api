@@ -5,8 +5,8 @@ import type { Headers } from 'brewskey.js-api';
 import oHandler from 'odata';
 import { DAO_ENTITIES, FILTER_OPERATORS } from './constants';
 
-import apiFetch from './fetch';
-import apiFilter from './filters';
+import fetch from './fetch';
+import createFilter from './filters';
 
 import AccountDAO from './dao/AccountDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
@@ -46,25 +46,28 @@ const setHeaders = (headers: Headers) => {
   });
 };
 
+export {
+  DAO_ENTITIES,
+  FILTER_OPERATORS,
+}
+
 export default {
   AccountDAO,
-  apiFetch,
-  apiFilter,
   AvailabilityDAO,
   BeverageDAO,
-  DAO_ENTITIES,
   DeviceDAO,
-  FILTER_OPERATORS,
-  getHeaders,
   GlassDAO,
-  initializeDAOApi,
   KegDAO,
   LocationDAO,
   PermissionDAO,
   PourDAO,
   ScheduleDAO,
-  setHeaders,
   SrmDAO,
   StyleDAO,
   TapDAO,
+  setHeaders,
+  initializeDAOApi,
+  getHeaders,
+  fetch,
+  createFilter,
 };

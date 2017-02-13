@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.FILTER_OPERATORS = exports.DAO_ENTITIES = undefined;
 
 var _odata = require('odata');
 
@@ -94,25 +95,25 @@ var setHeaders = function setHeaders(headers) {
   });
 };
 
+exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
+exports.FILTER_OPERATORS = _constants.FILTER_OPERATORS;
 exports.default = {
   AccountDAO: _AccountDAO2.default,
-  apiFetch: _fetch2.default,
-  apiFilter: _filters2.default,
   AvailabilityDAO: _AvailabilityDAO2.default,
   BeverageDAO: _BeverageDAO2.default,
-  DAO_ENTITIES: _constants.DAO_ENTITIES,
   DeviceDAO: _DeviceDAO2.default,
-  FILTER_OPERATORS: _constants.FILTER_OPERATORS,
-  getHeaders: getHeaders,
   GlassDAO: _GlassDAO2.default,
-  initializeDAOApi: initializeDAOApi,
   KegDAO: _KegDAO2.default,
   LocationDAO: _LocationDAO2.default,
   PermissionDAO: _PermissionDAO2.default,
   PourDAO: _PourDAO2.default,
   ScheduleDAO: _ScheduleDAO2.default,
-  setHeaders: setHeaders,
   SrmDAO: _SrmDAO2.default,
   StyleDAO: _StyleDAO2.default,
-  TapDAO: _TapDAO2.default
+  TapDAO: _TapDAO2.default,
+  setHeaders: setHeaders,
+  initializeDAOApi: initializeDAOApi,
+  getHeaders: getHeaders,
+  fetch: _fetch2.default,
+  createFilter: _filters2.default
 };
