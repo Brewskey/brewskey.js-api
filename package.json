@@ -5,15 +5,16 @@
   "repository": "https://github.com/Brewskey/brewskey.js-api.git",
   "author": "Brewskey",
   "files": [
-    "flow.js",
-    "build/"
+    "build/",
+    "flowTypes.js"
   ],
   "scripts": {
-    "start": "babel ./src --out-dir ./build --watch",
     "build": "babel src -d build",
-    "check:types": "flow",
-    "check:style": "eslint src/"
+    "flow": "flow",
+    "lint": "eslint src/",
+    "start": "babel ./src --out-dir ./build --watch"
   },
+  "pre-commit": "lint",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-eslint": "^7.1.1",

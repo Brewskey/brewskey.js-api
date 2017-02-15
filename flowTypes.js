@@ -1,5 +1,5 @@
 // @flow
-import type { OHandler } from 'odata';
+import type OHandler from 'odata';
 
 declare module 'brewskey.js-api' {
   /* DAO
@@ -447,14 +447,17 @@ declare module 'brewskey.js-api' {
   */
   declare var DAO_ENTITIES: { [string]: EntityName };
   declare var FILTER_OPERATORS: { [key: string]: FilterOperator };
-  declare type Headers = Array<{
+
+  declare  type Header = {
     name: string,
     value: string,
-  }>;
+  };
 
-  declare type FilterCreators = (params: { [string]: any }) => QueryFilter;
-  declare function apiFilter(params: any): FilterCreators;
-  declare function apiFetch(path: string, init: ?Object): Promise<*>;
+  declare type Headers = Array<Header>;
+  declare type FilterCreator = (params: Array<string> | string) => QueryFilter;
+  declare type FilterCreators = { [string]: FilterCreator };
+  declare function createFilter(params: string): FilterCreators;
+  declare function fetch(path: string, init: ?Object): Promise<*>;
 
   declare function getHeaders(): Headers;
   declare function setHeaders(headers: Headers): void;

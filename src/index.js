@@ -49,8 +49,9 @@ const setHeaders = (headers: Headers) => {
 export {
   DAO_ENTITIES,
   FILTER_OPERATORS,
-}
+};
 
+/* eslint-disable sorting/sort-object-props */
 export default {
   AccountDAO,
   AvailabilityDAO,

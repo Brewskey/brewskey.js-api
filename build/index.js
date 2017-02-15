@@ -97,6 +97,9 @@ var setHeaders = function setHeaders(headers) {
 
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
 exports.FILTER_OPERATORS = _constants.FILTER_OPERATORS;
+
+/* eslint-disable sorting/sort-object-props */
+
 exports.default = {
   AccountDAO: _AccountDAO2.default,
   AvailabilityDAO: _AvailabilityDAO2.default,
@@ -111,9 +114,9 @@ exports.default = {
   SrmDAO: _SrmDAO2.default,
   StyleDAO: _StyleDAO2.default,
   TapDAO: _TapDAO2.default,
-  setHeaders: setHeaders,
-  initializeDAOApi: initializeDAOApi,
-  getHeaders: getHeaders,
+  createFilter: _filters2.default,
   fetch: _fetch2.default,
-  createFilter: _filters2.default
+  getHeaders: getHeaders,
+  initializeDAOApi: initializeDAOApi,
+  setHeaders: setHeaders
 };
