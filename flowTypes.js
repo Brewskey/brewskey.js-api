@@ -448,7 +448,7 @@ declare module 'brewskey.js-api' {
   declare var DAO_ENTITIES: { [string]: EntityName };
   declare var FILTER_OPERATORS: { [key: string]: FilterOperator };
 
-  declare  type Header = {
+  declare type Header = {
     name: string,
     value: string,
   };
