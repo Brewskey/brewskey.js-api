@@ -4,13 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (path, init) {
+exports.default = function (path, options) {
   var _oHandler$oConfig = (0, _odata2.default)().oConfig,
       endpoint = _oHandler$oConfig.endpoint,
       _oHandler$oConfig$hea = _oHandler$oConfig.headers,
@@ -28,5 +30,18 @@ exports.default = function (path, init) {
     return headers.append(name, value);
   });
 
-  return fetch(endpoint + '/' + path, Object.assign({ headers: headers }, init));
+  (options && options.headers || []).forEach(function (_ref2) {
+    var name = _ref2.name,
+        value = _ref2.value;
+    return headers.append(name, value);
+  });
+
+  return fetch(endpoint + '/' + path, _extends({}, options, { headers: headers })).then(function (response) {
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return response;
+  }).then(function (response) {
+    return response.json();
+  });
 };

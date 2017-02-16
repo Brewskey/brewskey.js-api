@@ -1,7 +1,10 @@
 // @flow
+
+import type { Header } from 'brewskey.js-api';
+
 import oHandler from 'odata';
 
-export default (path: string, init: ?Object): Promise<*> => {
+export default (path: string, options: ?Object): Promise<*> => {
   const {
     endpoint,
     headers: oheaders = [],
@@ -12,12 +15,22 @@ export default (path: string, init: ?Object): Promise<*> => {
   }
 
   const headers = new Headers();
-  oheaders.forEach(({ name, value }: { name: string, value: string }): void =>
-    headers.append(name, value)
+  oheaders.forEach(({ name, value }: Header): void =>
+    headers.append(name, value),
+  );
+
+  (options && options.headers || []).forEach(
+    ({ name, value }: Header): void =>
+    headers.append(name, value),
   );
 
   return fetch(
     `${endpoint}/${path}`,
-    Object.assign({ headers }, init),
-  );
+    { ...options, headers },
+  ).then((response: Object): Object => {
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return response;
+  }).then((response: Object): Object => response.json());
 };
