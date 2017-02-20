@@ -5,14 +5,13 @@
   "repository": "https://github.com/Brewskey/brewskey.js-api.git",
   "author": "Brewskey",
   "files": [
-    "build/",
-    "flowTypes.js"
+    "build/"
   ],
   "scripts": {
-    "build": "babel src -d build",
+    "build": "babel src -d build --copy-files",
     "flow": "flow",
     "lint": "eslint src/",
-    "start": "babel ./src --out-dir ./build --watch"
+    "start": "babel ./src --out-dir ./build --watch --copy-files"
   },
   "pre-commit": "lint",
   "devDependencies": {
@@ -31,6 +30,7 @@
     "flow-bin": "^0.39.0"
   },
   "dependencies": {
-    "odata": "git+https://github.com/Brewskey/o.js"
+    "babel-preset-react-hmre": "^1.1.1",
+    "odata": "git+https://github.com/Brewskey/o.js.git"
   }
 }
