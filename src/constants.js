@@ -2,7 +2,7 @@
 import type {
   EntityName,
   FilterOperator,
-} from 'brewskey.js-api';
+} from './index';
 
 export const DAO_ENTITIES: { [key: string]: EntityName } = {
   ACCOUNTS: 'accounts',

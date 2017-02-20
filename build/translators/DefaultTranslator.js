@@ -14,17 +14,11 @@ var deepIdCast = function deepIdCast(node) {
   if (Array.isArray(node)) {
     return node.map(deepIdCast);
   } else if (node && (typeof node === 'undefined' ? 'undefined' : _typeof(node)) === 'object' && node.constructor === Object) {
-    var _ret = function () {
-      var newNode = {};
-      Object.keys(node).forEach(function (key) {
-        newNode[key] = key === 'id' ? node[key].toString() : node[key];
-      });
-      return {
-        v: newNode
-      };
-    }();
-
-    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+    var newNode = {};
+    Object.keys(node).forEach(function (key) {
+      newNode[key] = key === 'id' ? node[key].toString() : node[key];
+    });
+    return newNode;
   }
 
   return node;

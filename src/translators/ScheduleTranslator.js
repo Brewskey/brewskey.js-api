@@ -1,5 +1,5 @@
 // @flow
-import type { Schedule, ScheduleMutator } from 'brewskey.js-api';
+import type { Schedule, ScheduleMutator } from '../index';
 
 import DefaultTranslator from './DefaultTranslator';
 

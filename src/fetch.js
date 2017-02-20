@@ -1,6 +1,6 @@
 // @flow
 
-import type { Header } from 'brewskey.js-api';
+import type { Header } from './index';
 
 import oHandler from 'odata';
 

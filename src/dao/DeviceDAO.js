@@ -1,5 +1,5 @@
 // @flow
-import type { Device } from 'brewskey.js-api';
+import type { Device } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';

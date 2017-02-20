@@ -2,13 +2,13 @@
 import type {
   Permission,
   PermissionMutator,
-} from 'brewskey.js-api';
+} from '../index';
 
 import DefaultTranslator from './DefaultTranslator';
 
 class PermissionTranslator extends DefaultTranslator<
   Permission,
-  PermissionMutator,
+  PermissionMutator
 > {
   toApi(mutator: PermissionMutator): Object {
     return {

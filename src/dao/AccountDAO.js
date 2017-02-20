@@ -1,5 +1,5 @@
 // @flow
-import type { Account } from 'brewskey.js-api';
+import type { Account } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';

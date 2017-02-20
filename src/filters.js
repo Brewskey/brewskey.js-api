@@ -3,7 +3,7 @@ import type {
   FilterCreators,
   FilterOperator,
   QueryFilter,
-} from 'brewskey.js-api';
+} from './index';
 import { FILTER_OPERATORS } from './constants';
 
 const FILTERS: { [string]: FilterOperator } = {
