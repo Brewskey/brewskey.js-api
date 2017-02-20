@@ -1,0 +1,464 @@
+// @flow
+
+/* Entities */
+
+export type EntityName =
+  'accounts' |
+    'beverage-availabilities' |
+    'beverage-glasses' |
+    'beverage-srms' |
+    'beverage-styles' |
+    'beverages' |
+    'devices' |
+    'kegs' |
+    'locations' |
+    'permissions' |
+    'pours' |
+    'schedule-groups' |
+    'schedules' |
+    'taps';
+
+export type Account = {
+  accessFailedCount: number,
+  banned: boolean,
+  createdDate: string,
+  email: string,
+  emailConfirmed: boolean,
+  fullName: ?string,
+  id: string,
+  lockoutEnabled: boolean,
+  lockoutEndDateUtc: ?string,
+  logins: Object,
+  phoneNumber: ?number,
+  phoneNumberConfirmed: boolean,
+  roles: Object,
+  twoFactorEnabled: boolean,
+  userName: string,
+};
+
+export type Availability = {
+  description: ?string,
+  id: string,
+  name: string,
+};
+
+export type BeverageType =
+  'Beer' |
+  'Cider' |
+  'Coffee' |
+  'Soda';
+
+export type ServingTemperature =
+  'cellar' |
+  'cold' |
+  'cool' |
+  'hot' |
+  'very_cold' |
+  'warm';
+
+export type Beverage = {
+  abv: number,
+  availableId: ?string,
+  beerVariationId: ?string,
+  beverageType: BeverageType,
+  createDate: Date,
+  createdBy: {
+    id: string,
+    userName: string,
+  },
+  description: ?string,
+  externalId: ?string,
+  foodPairings: ?string,
+  glasswareId: ?number,
+  ibu: number,
+  id: string,
+  isOrganic: ?string,
+  labels: {
+    icon: string,
+    large: string,
+    medium: string,
+  },
+  name: string,
+  originalGravity: ?number,
+  servingTemperature: ?ServingTemperature,
+  servingTemperatureDisplay: ?string,
+  srmId: ?string,
+  styleId: ?string,
+  updateDate: Date,
+  year: ?number,
+};
+
+export type Device = {
+  createdBy: {
+    id: string,
+    userName: string,
+  },
+  deviceStatus: string,
+  id: string,
+  isDeleted: boolean,
+  isMultiTap: boolean,
+  lastEdited: string,
+  lastEditedBy: {
+    id: string,
+    userName: string,
+  },
+  name: string,
+  particleId: string,
+  temperature: number,
+};
+
+export type Glass = {
+  createDate: Date,
+  description: ?string,
+  id: string,
+  name: string,
+  updateDate: Date,
+};
+
+export type Keg = {
+  beerIcon: string,
+  beerId: string,
+  beerName: string,
+  floatedDate: string,
+  id: string,
+  kegType: string,
+  location: {
+    id: string,
+    name: string,
+  },
+  maxOunces: number,
+  ounces: number,
+  pulses: number,
+  tap: {
+    id: string,
+    name: string,
+  },
+  tapDate: string,
+};
+
+export type Location = {
+  city: string,
+  createdDate: string,
+  description: ?string,
+  geolocation: Object,
+  id: string,
+  locationType: string,
+  name: string,
+  state: ?string,
+  street: string,
+  suite: string,
+  summary: string,
+  timeZone: string,
+  zipCode: number,
+};
+
+export type PermissionEntityType =
+  'devices' |
+  'locations' |
+  'taps';
+
+export type PermissionType =
+  'Administrator'|
+  'Edit'|
+  'Read'|
+  'BannedFromTap';
+
+export type Permission = {
+  createdBy: {
+    id: string,
+    userName: string,
+  },
+  createdDate: Date,
+  device: ?{
+    id: string,
+    name: string,
+  },
+  expiresDate: ?Date,
+  forUser: {
+    id: string,
+    userName: string,
+  },
+  id: string,
+  invalid: boolean,
+  location: ?{
+    id: string,
+    name: string,
+  },
+  permissionType: PermissionType,
+  startDate: ?Date,
+  tap: ?{
+    id: string,
+    name: string,
+  },
+};
+
+export type PermissionMutator = {
+  entityId: string,
+  entityType: PermissionEntityType,
+  expiresDate: ?Date,
+  id: ?string,
+  permissionType: PermissionType,
+  startDate: ?Date,
+  userId: string,
+};
+
+export type Pour = {
+  beverage: {
+    id: string,
+    name: string,
+  },
+  id: string,
+  location: {
+    id: string,
+    name: string,
+  },
+  ounces: number,
+  owner: {
+    id: string,
+    userName: string,
+  },
+  pourDate: string,
+  pulses: number,
+  tap: {
+    id: string,
+    name: string,
+  },
+};
+
+export type Schedule = {
+  accounts: Array<{
+    id: string,
+    name: string,
+  }>,
+  createdDate: Date,
+  days: number,
+  editDate: Date,
+  endTime: Date,
+  id: string,
+  location: {
+    id: string,
+    name: string,
+  },
+  name: string,
+  startTime: Date,
+};
+
+export type ScheduleMutator = {
+  accounts: Array<{
+    id: string,
+    name: string,
+  }>,
+  days: number,
+  endTime: Date,
+  id: ?string,
+  locationId: ?string,
+  name: string,
+  startTime: Date,
+};
+
+export type Srm = {
+  hex: string,
+  id: string,
+  name: string,
+};
+
+export type Style = {
+  abvMax: number,
+  abvMin: number,
+  createDate: Date,
+  description: ?string,
+  fgMax: number,
+  fgMin: number,
+  ibuMax: number,
+  ibuMin: number,
+  id: string,
+  name: string,
+  ogMax: number,
+  ogMin: number,
+  srmMax: number,
+  srmMin: number,
+  updateDate: Date,
+};
+
+export type Tap = {
+  createdDate: string,
+  description: ?string,
+  device: {
+    id: string,
+    name: string,
+  },
+  disableBadges: boolean,
+  hideLeaderboard: boolean,
+  hideStats: boolean,
+  id: string,
+  location: {
+    id: string,
+    name: string,
+  },
+  name: string,
+  requiresPourPrivilege: boolean,
+};
+
+export type TapMutator = {
+  createdDate: ?string,
+  description: ?string,
+  deviceId: string,
+  disableBadges: boolean,
+  hideLeaderboard: boolean,
+  hideStats: boolean,
+  id: ?string,
+  locationId: string,
+  name: string,
+  requiresPourPrivilege: boolean,
+};
+
+/* DAO */
+
+export type FilterOperator =
+  'contains' |
+    'endswith' |
+    'eq' |
+    'gt' |
+    'ge' |
+    'lt' |
+    'le' |
+    'not endswith' |
+    'ne' |
+    'not startswith' |
+    'startswith';
+
+export type QueryFilter = {
+  operator: FilterOperator,
+  params: Array<string>,
+  values: Array<string>
+};
+
+export type QueryOrderBy = {
+  column: string,
+  direction: 'asc' | 'desc',
+};
+
+export type QueryOptions = {
+  count?: boolean,
+  filters?: Array<QueryFilter>,
+  orderBy?: Array<QueryOrderBy>,
+  skip?: number,
+  take?: number,
+};
+
+export type DAOConfig<TEntity, TEntityMutator> = {
+  entityName: EntityName,
+  navigationProperties?: {[string]: ?Array<string>},
+  translator: DAOTranslator<TEntity, TEntityMutator>,
+};
+
+declare export class DAOResult<TEntity> {
+  _count: ?number;
+  _data: ?TEntity | ?Array<TEntity>;
+  _error: ?Error;
+  count(): ?number;
+  getData(): ?TEntity | ?Array<TEntity>;
+  getError(): ?Error;
+}
+
+export type DAOTranslator<TEntity, TEntityMutator> = {
+  +fromApi: (apiValue: Object) => TEntity,
+  +toApi: (model: TEntityMutator) => Object,
+  +toForm: (model: TEntity) => TEntityMutator,
+};
+
+declare export class DAO<TEntity, TEntityMutator>  {
+  //_config: DAOConfig<TEntity, TEntityMutator>;
+  count(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>>;
+  deleteByID(id: string): Promise<DAOResult<TEntity>>;
+  fetchByID(id: string): Promise<DAOResult<TEntity>>;
+  fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TEntity>>;
+  fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>>;
+  getEntityName(): EntityName;
+  getTranslator(): DAOTranslator<TEntity, TEntityMutator>;
+  patch(id: string, params: TEntityMutator): Promise<DAOResult<TEntity>>;
+  post(params: TEntityMutator): Promise<DAOResult<TEntity>>;
+  put(id: string, params: TEntityMutator): Promise<DAOResult<TEntity>>;
+}
+
+// export type TDao = typeof DAO;
+
+export type DAOChartParams = {
+  beginDate?: ?Date,
+  endDate?: ?Date,
+};
+
+declare class brewskey$AccountDAO extends DAO<Account, Account> {}
+declare class brewskey$AvailabilityDAO
+  extends DAO<Availability, Availability> {}
+declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
+declare class brewskey$DeviceDAO extends DAO<Device, Device> {}
+declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
+declare class brewskey$KegDAO extends DAO<Keg, Keg> {
+  fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>>;
+}
+declare class brewskey$LocationDAO extends DAO<Location, Location> {}
+declare class brewskey$PermissionDAO
+  extends DAO<Permission, PermissionMutator> {}
+declare class brewskey$PourDAO extends DAO<Pour, Pour> {
+  fetchChartData(params: DAOChartParams): Promise<DAOResult<Pour>>;
+}
+declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
+declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
+declare class brewskey$StyleDAO extends DAO<Style, Style> {}
+declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {}
+
+
+
+/* Utilities */
+export type Header = {
+  name: string,
+  value: string,
+};
+
+export type Headers = Array<Header>;
+
+export type FilterCreator = (params: any) => QueryFilter;
+export type FilterCreators = { [string]: FilterCreator };
+
+export type RequestMethod =
+  'delete' |
+  'get' |
+  'patch' |
+  'post' |
+  'put';
+
+
+/* exports */
+
+export type OConfig = {
+  endpoint: string,
+  headers?: Headers,
+};
+
+type DAOApi = {
+  AccountDAO: brewskey$AccountDAO,
+  AvailabilityDAO: brewskey$AvailabilityDAO,
+  BeverageDAO: brewskey$BeverageDAO,
+  DeviceDAO: brewskey$DeviceDAO,
+  GlassDAO: brewskey$GlassDAO,
+  KegDAO: brewskey$KegDAO,
+  LocationDAO: brewskey$LocationDAO,
+  PermissionDAO: brewskey$PermissionDAO,
+  PourDAO: brewskey$PourDAO,
+  ScheduleDAO: brewskey$ScheduleDAO,
+  SrmDAO: brewskey$SrmDAO,
+  StyleDAO: brewskey$StyleDAO,
+  TapDAO: brewskey$TapDAO,
+  initializeDAOApi(config: OConfig): void;
+  createFilter(params: string): FilterCreators;
+  fetch(path: string, init: ?Object): Promise<*>;
+  getHeaders(): Headers;
+  setHeaders(headers: Headers): void;
+}
+
+declare export var DAO_ENTITIES: { [string]: EntityName };
+
+declare export default DAOApi;
+
+

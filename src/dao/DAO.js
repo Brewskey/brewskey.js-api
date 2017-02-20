@@ -3,11 +3,12 @@ import type {
   DAOConfig,
   DAOTranslator,
   EntityName,
-  ODataResult,
   QueryFilter,
   QueryOptions,
   RequestMethod,
-} from 'brewskey.js-api';
+} from '../index';
+
+type ODataResultHandler = any; // TODO annotate
 
 import oHandler from 'odata';
 import DAOResult from './DAOResult';
@@ -160,7 +161,7 @@ class DAO<TEntity, TEntityMutator> {
     params: ?Object,
     method: ?RequestMethod = 'get',
   ): Promise<DAOResult<TEntity>> {
-    let request: Promise<ODataResult<TEntity>>;
+    let request: Promise<ODataResultHandler<TEntity>>;
     switch (method) {
       case 'delete': {
         request = handler.remove().save();

@@ -1,5 +1,5 @@
 // @flow
-import type { Srm } from 'brewskey.js-api';
+import type { Srm } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';

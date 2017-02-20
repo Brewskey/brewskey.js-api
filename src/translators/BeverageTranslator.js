@@ -1,5 +1,5 @@
 // @flow
-import type { Beverage } from 'brewskey.js-api';
+import type { Beverage } from '../index';
 import DefaultTranslator from './DefaultTranslator';
 
 const ID_FIELDS = [

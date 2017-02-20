@@ -2,7 +2,7 @@
 import type {
   Permission,
   PermissionMutator,
-} from 'brewskey.js-api';
+} from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';

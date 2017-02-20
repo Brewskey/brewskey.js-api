@@ -1,6 +1,6 @@
 // @flow
 
-import type { Keg } from 'brewskey.js-api';
+import type { Keg } from '../index';
 import type DAOResult from './DAOResult';
 
 import DefaultTranslator from '../translators/DefaultTranslator';

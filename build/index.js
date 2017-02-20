@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.FILTER_OPERATORS = exports.DAO_ENTITIES = undefined;
+exports.DAO_ENTITIES = undefined;
 
 var _odata = require('odata');
 
@@ -96,7 +96,6 @@ var setHeaders = function setHeaders(headers) {
 };
 
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
-exports.FILTER_OPERATORS = _constants.FILTER_OPERATORS;
 
 /* eslint-disable sorting/sort-object-props */
 

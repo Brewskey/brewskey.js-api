@@ -1,9 +1,9 @@
 // @flow
 
-import type { Headers } from 'brewskey.js-api';
+import type { Headers, OConfig } from './index';
 
 import oHandler from 'odata';
-import { DAO_ENTITIES, FILTER_OPERATORS } from './constants';
+import { DAO_ENTITIES } from './constants';
 
 import fetch from './fetch';
 import createFilter from './filters';
@@ -21,11 +21,6 @@ import ScheduleDAO from './dao/ScheduleDAO';
 import SrmDAO from './dao/SrmDAO';
 import StyleDAO from './dao/StyleDAO';
 import TapDAO from './dao/TapDAO';
-
-type OConfig = {
-  endpoint: string,
-  headers?: Headers,
-};
 
 const initializeDAOApi = ({ endpoint, headers }: OConfig) => {
   oHandler().config({
@@ -46,10 +41,7 @@ const setHeaders = (headers: Headers) => {
   });
 };
 
-export {
-  DAO_ENTITIES,
-  FILTER_OPERATORS,
-};
+export { DAO_ENTITIES };
 
 /* eslint-disable sorting/sort-object-props */
 export default {

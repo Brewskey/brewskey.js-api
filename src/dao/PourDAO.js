@@ -1,5 +1,5 @@
 // @flow
-import type { ODataChartParams, Pour } from 'brewskey.js-api';
+import type { DAOChartParams, Pour } from '../index';
 import type DAOResult from './DAOResult';
 
 import oHandler from 'odata';
@@ -21,7 +21,7 @@ class PourDAO extends DAO<Pour, Pour> {
     });
   }
 
-  fetchChartData = (params: ODataChartParams): Promise<DAOResult<Object>> =>
+  fetchChartData = (params: DAOChartParams): Promise<DAOResult<Object>> =>
     this._resolve(
       oHandler('chart'), // TODO this is a hacky crutch for change endpoint
       // on the fly..come up better solution,
