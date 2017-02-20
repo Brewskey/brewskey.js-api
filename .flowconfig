@@ -4,7 +4,6 @@ build
 [include]
 
 [libs]
-flowTypes.js
 interfaces/
 
 [options]
