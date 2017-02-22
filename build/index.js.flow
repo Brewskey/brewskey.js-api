@@ -368,7 +368,6 @@ export type DAOTranslator<TEntity, TEntityMutator> = {
 };
 
 declare export class DAO<TEntity, TEntityMutator>  {
-  //_config: DAOConfig<TEntity, TEntityMutator>;
   count(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>>;
   deleteByID(id: string): Promise<DAOResult<TEntity>>;
   fetchByID(id: string): Promise<DAOResult<TEntity>>;
@@ -380,8 +379,6 @@ declare export class DAO<TEntity, TEntityMutator>  {
   post(params: TEntityMutator): Promise<DAOResult<TEntity>>;
   put(id: string, params: TEntityMutator): Promise<DAOResult<TEntity>>;
 }
-
-// export type TDao = typeof DAO;
 
 export type DAOChartParams = {
   beginDate?: ?Date,

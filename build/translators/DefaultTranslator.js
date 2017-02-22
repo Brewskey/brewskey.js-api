@@ -14,6 +14,7 @@ var deepIdCast = function deepIdCast(node) {
       deepIdCast(node[key]);
     }
     if (key === 'id') {
+      // eslint-disable-next-line
       node[key] = node[key].toString();
     }
   });

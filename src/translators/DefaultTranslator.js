@@ -1,11 +1,12 @@
 // @flow
 
 const deepIdCast = (node: any): any => {
-  Object.keys(node).forEach((key) => {
+  Object.keys(node).forEach((key: string) => {
     if (node[key] === Object(node[key])) {
       deepIdCast(node[key]);
     }
     if (key === 'id') {
+      // eslint-disable-next-line
       node[key] = node[key].toString();
     }
   });
