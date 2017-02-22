@@ -457,5 +457,3 @@ type DAOApi = {
 declare export var DAO_ENTITIES: { [string]: EntityName };
 
 declare export default DAOApi;
-
-
