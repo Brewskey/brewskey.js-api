@@ -10,7 +10,7 @@
   "scripts": {
     "build": "babel src -d build --copy-files",
     "flow": "flow",
-    "lint": "eslint src/",
+    "lint": "eslint src/ --fix --max-warnings 0",
     "start": "babel ./src --out-dir ./build --watch --copy-files"
   },
   "pre-commit": "lint",
