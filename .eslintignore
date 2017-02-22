@@ -1,2 +1,3 @@
 build/*
 interfaces/*
+src/index.js.flow
