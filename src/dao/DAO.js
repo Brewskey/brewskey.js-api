@@ -8,8 +8,6 @@ import type {
   RequestMethod,
 } from '../index';
 
-type ODataResultHandler = any; // TODO annotate
-
 import oHandler from 'odata';
 import DAOResult from './DAOResult';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
@@ -22,66 +20,74 @@ class DAO<TEntity, TEntityMutator> {
     this._config = config;
   }
 
-  deleteByID = (id: string): Promise<DAOResult<TEntity>> =>
-    this._resolve(
+  deleteByID(id: string): Promise<DAOResult<TEntity>> {
+    return this._resolve(
       this._buildHandler().find(this.__reformatQueryValue(id)),
       null,
       'delete',
     );
+  }
 
-  getEntityName = (): EntityName =>
-    this._config.entityName;
+  getEntityName(): EntityName {
+    return this._config.entityName;
+  }
 
-  getTranslator = (): DAOTranslator<TEntity, TEntityMutator> =>
-    this._config.translator;
+  getTranslator(): DAOTranslator<TEntity, TEntityMutator> {
+    return this._config.translator;
+  }
 
-  count = (queryOptions: QueryOptions): Promise<DAOResult<TEntity>> =>
-    this._resolve(this._buildHandler({
+  count(queryOptions: QueryOptions): Promise<DAOResult<TEntity>> {
+    return this._resolve(this._buildHandler({
       ...queryOptions,
       count: true,
       take: 0,
     }));
+  }
 
-  fetchByID = (id: string): Promise<DAOResult<TEntity>> =>
-    this._resolve(
+  fetchByID(id: string): Promise<DAOResult<TEntity>> {
+    return this._resolve(
       this._buildHandler().find(this.__reformatQueryValue(id)),
     );
+  }
 
-  fetchByIDs = (ids: Array<string>): Promise<DAOResult<TEntity>> =>
-    this._resolve(this._buildHandler({
+  fetchByIDs(ids: Array<string>): Promise<DAOResult<TEntity>> {
+    return this._resolve(this._buildHandler({
       filters: [apiFilter('id').equals(ids)],
     }));
+  }
 
-  fetchMany = (queryOptions?: QueryOptions): Promise<DAOResult<TEntity>> =>
-    this._resolve(this._buildHandler(queryOptions));
+  fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>> {
+    return this._resolve(this._buildHandler(queryOptions));
+  }
 
-  patch = (id: string, mutator: TEntityMutator): Promise<DAOResult<TEntity>> =>
-    this._resolve(
+  patch(id: string, mutator: TEntityMutator): Promise<DAOResult<TEntity>> {
+    return this._resolve(
       this._buildHandler().find(this.__reformatQueryValue(id)),
       this._config.translator.toApi(mutator),
       'patch',
     );
+  }
 
-  post = (mutator: TEntityMutator): Promise<DAOResult<TEntity>> =>
-    this._resolve(
+  post(mutator: TEntityMutator): Promise<DAOResult<TEntity>> {
+    return this._resolve(
       this._buildHandler(),
       this._config.translator.toApi(mutator),
       'post',
     );
+  }
 
-  put = (id: string, mutator: TEntityMutator): Promise<DAOResult<TEntity>> =>
-    this._resolve(
+  put(id: string, mutator: TEntityMutator): Promise<DAOResult<TEntity>> {
+    return this._resolve(
       this._buildHandler().find(this.__reformatQueryValue(id)),
       this._config.translator.toApi(mutator),
       'put',
     );
+  }
 
   __reformatQueryValue = (value: string | number): string | number =>
     isNaN(value) || value === '' ? `'${value}'` : value;
 
-  // TODO oHandler<TEntity> throws Flow error, it was okey in old code,
-  // figure it out
-  _buildHandler = (queryOptions?: QueryOptions = {}): oHandler<$FlowFixMe> => {
+  _buildHandler(queryOptions?: QueryOptions = {}): oHandler<TEntity> {
     const { count, skip, take } = queryOptions;
     let handler = oHandler(this._config.entityName);
 
@@ -154,14 +160,14 @@ class DAO<TEntity, TEntityMutator> {
     }
 
     return handler;
-  };
+  }
 
   async _resolve(
     handler: oHandler<TEntity>,
     params: ?Object,
     method: ?RequestMethod = 'get',
   ): Promise<DAOResult<TEntity>> {
-    let request: Promise<ODataResultHandler<TEntity>>;
+    let request: Promise<oHandler<TEntity>>;
     switch (method) {
       case 'delete': {
         request = handler.remove().save();

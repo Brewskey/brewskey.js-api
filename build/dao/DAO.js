@@ -8,7 +8,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // TODO annotate
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _odata = require('odata');
 
@@ -34,69 +34,84 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var DAO = function () {
   function DAO(config) {
-    var _this = this;
-
     _classCallCheck(this, DAO);
-
-    this.deleteByID = function (id) {
-      return _this._resolve(_this._buildHandler().find(_this.__reformatQueryValue(id)), null, 'delete');
-    };
-
-    this.getEntityName = function () {
-      return _this._config.entityName;
-    };
-
-    this.getTranslator = function () {
-      return _this._config.translator;
-    };
-
-    this.count = function (queryOptions) {
-      return _this._resolve(_this._buildHandler(_extends({}, queryOptions, {
-        count: true,
-        take: 0
-      })));
-    };
-
-    this.fetchByID = function (id) {
-      return _this._resolve(_this._buildHandler().find(_this.__reformatQueryValue(id)));
-    };
-
-    this.fetchByIDs = function (ids) {
-      return _this._resolve(_this._buildHandler({
-        filters: [(0, _filters2.default)('id').equals(ids)]
-      }));
-    };
-
-    this.fetchMany = function (queryOptions) {
-      return _this._resolve(_this._buildHandler(queryOptions));
-    };
-
-    this.patch = function (id, mutator) {
-      return _this._resolve(_this._buildHandler().find(_this.__reformatQueryValue(id)), _this._config.translator.toApi(mutator), 'patch');
-    };
-
-    this.post = function (mutator) {
-      return _this._resolve(_this._buildHandler(), _this._config.translator.toApi(mutator), 'post');
-    };
-
-    this.put = function (id, mutator) {
-      return _this._resolve(_this._buildHandler().find(_this.__reformatQueryValue(id)), _this._config.translator.toApi(mutator), 'put');
-    };
 
     this.__reformatQueryValue = function (value) {
       return isNaN(value) || value === '' ? '\'' + value + '\'' : value;
     };
 
-    this._buildHandler = function () {
+    this._config = config;
+  }
+
+  _createClass(DAO, [{
+    key: 'deleteByID',
+    value: function deleteByID(id) {
+      return this._resolve(this._buildHandler().find(this.__reformatQueryValue(id)), null, 'delete');
+    }
+  }, {
+    key: 'getEntityName',
+    value: function getEntityName() {
+      return this._config.entityName;
+    }
+  }, {
+    key: 'getTranslator',
+    value: function getTranslator() {
+      return this._config.translator;
+    }
+  }, {
+    key: 'count',
+    value: function count(queryOptions) {
+      return this._resolve(this._buildHandler(_extends({}, queryOptions, {
+        count: true,
+        take: 0
+      })));
+    }
+  }, {
+    key: 'fetchByID',
+    value: function fetchByID(id) {
+      return this._resolve(this._buildHandler().find(this.__reformatQueryValue(id)));
+    }
+  }, {
+    key: 'fetchByIDs',
+    value: function fetchByIDs(ids) {
+      return this._resolve(this._buildHandler({
+        filters: [(0, _filters2.default)('id').equals(ids)]
+      }));
+    }
+  }, {
+    key: 'fetchMany',
+    value: function fetchMany(queryOptions) {
+      return this._resolve(this._buildHandler(queryOptions));
+    }
+  }, {
+    key: 'patch',
+    value: function patch(id, mutator) {
+      return this._resolve(this._buildHandler().find(this.__reformatQueryValue(id)), this._config.translator.toApi(mutator), 'patch');
+    }
+  }, {
+    key: 'post',
+    value: function post(mutator) {
+      return this._resolve(this._buildHandler(), this._config.translator.toApi(mutator), 'post');
+    }
+  }, {
+    key: 'put',
+    value: function put(id, mutator) {
+      return this._resolve(this._buildHandler().find(this.__reformatQueryValue(id)), this._config.translator.toApi(mutator), 'put');
+    }
+  }, {
+    key: '_buildHandler',
+    value: function _buildHandler() {
+      var _this = this;
+
       var queryOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var count = queryOptions.count,
           skip = queryOptions.skip,
           take = queryOptions.take;
 
-      var handler = (0, _odata2.default)(_this._config.entityName);
+      var handler = (0, _odata2.default)(this._config.entityName);
 
-      if (_this._config.navigationProperties) {
-        var navigationPropString = Object.entries(_this._config.navigationProperties).map(function (_ref) {
+      if (this._config.navigationProperties) {
+        var navigationPropString = Object.entries(this._config.navigationProperties).map(function (_ref) {
           var _ref2 = _slicedToArray(_ref, 2),
               key = _ref2[0],
               value = _ref2[1];
@@ -165,16 +180,8 @@ var DAO = function () {
       }
 
       return handler;
-    };
-
-    this._config = config;
-  }
-
-  // TODO oHandler<TEntity> throws Flow error, it was okey in old code,
-  // figure it out
-
-
-  _createClass(DAO, [{
+    }
+  }, {
     key: '_resolve',
     value: function () {
       var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(handler, params) {
