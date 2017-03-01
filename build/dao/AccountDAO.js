@@ -10,9 +10,9 @@ var _DAO3 = _interopRequireDefault(_DAO2);
 
 var _constants = require('../constants');
 
-var _DefaultTranslator = require('../translators/DefaultTranslator');
+var _AccountTranslator = require('../translators/AccountTranslator');
 
-var _DefaultTranslator2 = _interopRequireDefault(_DefaultTranslator);
+var _AccountTranslator2 = _interopRequireDefault(_AccountTranslator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30,7 +30,7 @@ var AccountDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (AccountDAO.__proto__ || Object.getPrototypeOf(AccountDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.ACCOUNTS,
-      translator: new _DefaultTranslator2.default()
+      translator: new _AccountTranslator2.default()
     }));
   }
 

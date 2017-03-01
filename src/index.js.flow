@@ -29,10 +29,17 @@ export type Account = {
   lockoutEnabled: ?boolean,
   lockoutEndDateUtc: ?string,
   logins: ?Object,
-  phoneNumber: ?number,
+  phoneNumber: ?string,
   phoneNumberConfirmed: ?boolean,
   roles: ?Object,
   twoFactorEnabled: ?boolean,
+  userName: string,
+};
+
+export type AccountMutator = {
+  email: string,
+  fullName: ?string,
+  phoneNumber: ?string,
   userName: string,
 };
 
@@ -385,7 +392,7 @@ export type DAOChartParams = {
   endDate?: ?Date,
 };
 
-declare class brewskey$AccountDAO extends DAO<Account, Account> {}
+declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}
 declare class brewskey$AvailabilityDAO
   extends DAO<Availability, Availability> {}
 declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
