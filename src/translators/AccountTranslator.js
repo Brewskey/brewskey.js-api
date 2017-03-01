@@ -8,7 +8,7 @@ const formatPhoneNumber = (number: ?number): ?string => {
   }
   const numberString = number.toString();
 
-  return `(${numberString.slice(0, 3)})-` +
+  return `(${numberString.slice(0, 3)}) ` +
     `${numberString.slice(3, 6)}-${numberString.slice(6, 10)}`;
 };
 

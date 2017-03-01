@@ -28,7 +28,7 @@ var formatPhoneNumber = function formatPhoneNumber(number) {
   }
   var numberString = number.toString();
 
-  return '(' + numberString.slice(0, 3) + ')-' + (numberString.slice(3, 6) + '-' + numberString.slice(6, 10));
+  return '(' + numberString.slice(0, 3) + ') ' + (numberString.slice(3, 6) + '-' + numberString.slice(6, 10));
 };
 
 var AccountTranslator = function (_DefaultTranslator) {
