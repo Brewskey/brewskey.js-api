@@ -3,13 +3,13 @@ import type { Account, AccountMutator } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import AccountTranslator from '../translators/AccountTranslator';
+import DefaultTranslator from '../translators/DefaultTranslator';
 
 class AccountDAO extends DAO<Account, AccountMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.ACCOUNTS,
-      translator: new AccountTranslator(),
+      translator: new DefaultTranslator(),
     });
   }
 }
