@@ -29,7 +29,7 @@ export type Account = {
   lockoutEnabled: ?boolean,
   lockoutEndDateUtc: ?string,
   logins: ?Object,
-  phoneNumber: ?number,
+  phoneNumber: ?string,
   phoneNumberConfirmed: ?boolean,
   roles: ?Object,
   twoFactorEnabled: ?boolean,
@@ -39,7 +39,7 @@ export type Account = {
 export type AccountMutator = {
   email: string,
   fullName: ?string,
-  phoneNumber: ?number,
+  phoneNumber: ?string,
   userName: string,
 };
 
