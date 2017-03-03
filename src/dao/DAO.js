@@ -116,7 +116,7 @@ class DAO<TEntity, TEntityMutator> {
       handler = handler.top(take || 0);
     }
 
-    if (queryOptions.filters) {
+    if (queryOptions.filters && queryOptions.filters.length > 0) {
       const renderedFilters = queryOptions.filters.map(
         ({ operator, params, values }: QueryFilter): string => {
           const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
