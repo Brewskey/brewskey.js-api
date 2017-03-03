@@ -32,12 +32,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var ID_REG_EXP = /\bid\b/;
+
 var DAO = function () {
   function DAO(config) {
     _classCallCheck(this, DAO);
 
-    this.__reformatQueryValue = function (value) {
+    this.__reformatIDValue = function (value) {
       return isNaN(value) || value === '' ? '\'' + value + '\'' : value;
+    };
+
+    this.__reformatQueryValue = function (value) {
+      return typeof value === 'string' ? '\'' + value + '\'' : value;
     };
 
     this._config = config;
@@ -46,7 +52,7 @@ var DAO = function () {
   _createClass(DAO, [{
     key: 'deleteByID',
     value: function deleteByID(id) {
-      return this._resolve(this._buildHandler().find(this.__reformatQueryValue(id)), null, 'delete');
+      return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)), null, 'delete');
     }
   }, {
     key: 'getEntityName',
@@ -69,7 +75,7 @@ var DAO = function () {
   }, {
     key: 'fetchByID',
     value: function fetchByID(id) {
-      return this._resolve(this._buildHandler().find(this.__reformatQueryValue(id)));
+      return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)));
     }
   }, {
     key: 'fetchByIDs',
@@ -86,7 +92,7 @@ var DAO = function () {
   }, {
     key: 'patch',
     value: function patch(id, mutator) {
-      return this._resolve(this._buildHandler().find(this.__reformatQueryValue(id)), this._config.translator.toApi(mutator), 'patch');
+      return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)), this._config.translator.toApi(mutator), 'patch');
     }
   }, {
     key: 'post',
@@ -96,7 +102,7 @@ var DAO = function () {
   }, {
     key: 'put',
     value: function put(id, mutator) {
-      return this._resolve(this._buildHandler().find(this.__reformatQueryValue(id)), this._config.translator.toApi(mutator), 'put');
+      return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)), this._config.translator.toApi(mutator), 'put');
     }
   }, {
     key: '_buildHandler',
@@ -149,7 +155,12 @@ var DAO = function () {
 
           var filters = values.map(function (value) {
             return params.map(function (param) {
-              var reformattedValue = _this.__reformatQueryValue(value);
+              // we have to use two reformat functions because of the issue:
+              // https://github.com/Brewskey/brewskey.admin/issues/371
+              // this is not ideal though, because it doesn't resolve
+              // situations when we get stringified value from front-end
+              // which is stored as number on the server.
+              var reformattedValue = ID_REG_EXP.test(param) ? _this.__reformatIDValue(value) : _this.__reformatQueryValue(value);
 
               if (isValidOperator) {
                 return '(' + operator + '(' + param + ', ' + reformattedValue + '))';
