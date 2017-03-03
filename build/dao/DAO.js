@@ -143,7 +143,7 @@ var DAO = function () {
         handler = handler.top(take || 0);
       }
 
-      if (queryOptions.filters) {
+      if (queryOptions.filters && queryOptions.filters.length > 0) {
         var renderedFilters = queryOptions.filters.map(function (_ref3) {
           var operator = _ref3.operator,
               params = _ref3.params,
