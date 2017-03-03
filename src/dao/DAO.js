@@ -13,6 +13,8 @@ import DAOResult from './DAOResult';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
 import apiFilter from '../filters';
 
+const ID_REG_EXP = /\bid\b/;
+
 class DAO<TEntity, TEntityMutator> {
   _config: DAOConfig<TEntity, TEntityMutator>;
 
@@ -22,7 +24,7 @@ class DAO<TEntity, TEntityMutator> {
 
   deleteByID(id: string): Promise<DAOResult<TEntity>> {
     return this._resolve(
-      this._buildHandler().find(this.__reformatQueryValue(id)),
+      this._buildHandler().find(this.__reformatIDValue(id)),
       null,
       'delete',
     );
@@ -46,7 +48,7 @@ class DAO<TEntity, TEntityMutator> {
 
   fetchByID(id: string): Promise<DAOResult<TEntity>> {
     return this._resolve(
-      this._buildHandler().find(this.__reformatQueryValue(id)),
+      this._buildHandler().find(this.__reformatIDValue(id)),
     );
   }
 
@@ -62,7 +64,7 @@ class DAO<TEntity, TEntityMutator> {
 
   patch(id: string, mutator: TEntityMutator): Promise<DAOResult<TEntity>> {
     return this._resolve(
-      this._buildHandler().find(this.__reformatQueryValue(id)),
+      this._buildHandler().find(this.__reformatIDValue(id)),
       this._config.translator.toApi(mutator),
       'patch',
     );
@@ -78,14 +80,17 @@ class DAO<TEntity, TEntityMutator> {
 
   put(id: string, mutator: TEntityMutator): Promise<DAOResult<TEntity>> {
     return this._resolve(
-      this._buildHandler().find(this.__reformatQueryValue(id)),
+      this._buildHandler().find(this.__reformatIDValue(id)),
       this._config.translator.toApi(mutator),
       'put',
     );
   }
 
-  __reformatQueryValue = (value: string | number): string | number =>
+  __reformatIDValue = (value: string): string | number =>
     isNaN(value) || value === '' ? `'${value}'` : value;
+
+  __reformatQueryValue = (value: string | number): string | number =>
+    typeof value === 'string' ? `'${value}'` : value;
 
   _buildHandler(queryOptions?: QueryOptions = {}): oHandler<TEntity> {
     const { count, skip, take } = queryOptions;
@@ -125,7 +130,14 @@ class DAO<TEntity, TEntityMutator> {
 
           const filters = values.map((value: string): Array<string> =>
             params.map((param: string): string => {
-              const reformattedValue = this.__reformatQueryValue(value);
+              // we have to use two reformat functions because of the issue:
+              // https://github.com/Brewskey/brewskey.admin/issues/371
+              // this is not ideal though, because it doesn't resolve
+              // situations when we get stringified value from front-end
+              // which is stored as number on the server.
+              const reformattedValue = ID_REG_EXP.test(param)
+                ? this.__reformatIDValue(value)
+                : this.__reformatQueryValue(value);
 
               if (isValidOperator) {
                 return `(${operator}(${param}, ${reformattedValue}))`;
