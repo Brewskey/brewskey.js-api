@@ -3,13 +3,13 @@ import type { Location } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import DefaultTranslator from '../translators/DefaultTranslator';
+import LocationTranslator from '../translators/LocationTranslator';
 
 class LocationDAO extends DAO<Location, Location> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.LOCATIONS,
-      translator: new DefaultTranslator(),
+      translator: new LocationTranslator(),
     });
   }
 }
