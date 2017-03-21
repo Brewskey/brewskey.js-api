@@ -3,13 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DAO_ENTITIES = undefined;
+exports.DAOResult = exports.DAO_ENTITIES = undefined;
 
 var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
 
 var _constants = require('./constants');
+
+var _DAOResult = require('./dao/DAOResult');
+
+var _DAOResult2 = _interopRequireDefault(_DAOResult);
 
 var _fetch = require('./fetch');
 
@@ -96,6 +100,7 @@ var setHeaders = function setHeaders(headers) {
 };
 
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
+exports.DAOResult = _DAOResult2.default;
 
 /* eslint-disable sorting/sort-object-props */
 

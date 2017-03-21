@@ -4,6 +4,7 @@ import type { Headers, OConfig } from './index';
 
 import oHandler from 'odata';
 import { DAO_ENTITIES } from './constants';
+import DAOResult from './dao/DAOResult';
 
 import fetch from './fetch';
 import createFilter from './filters';
@@ -41,7 +42,7 @@ const setHeaders = (headers: Headers) => {
   });
 };
 
-export { DAO_ENTITIES };
+export { DAO_ENTITIES, DAOResult };
 
 /* eslint-disable sorting/sort-object-props */
 export default {

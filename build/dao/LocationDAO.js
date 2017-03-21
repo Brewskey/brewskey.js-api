@@ -10,9 +10,9 @@ var _DAO3 = _interopRequireDefault(_DAO2);
 
 var _constants = require('../constants');
 
-var _DefaultTranslator = require('../translators/DefaultTranslator');
+var _LocationTranslator = require('../translators/LocationTranslator');
 
-var _DefaultTranslator2 = _interopRequireDefault(_DefaultTranslator);
+var _LocationTranslator2 = _interopRequireDefault(_LocationTranslator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30,7 +30,7 @@ var LocationDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (LocationDAO.__proto__ || Object.getPrototypeOf(LocationDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.LOCATIONS,
-      translator: new _DefaultTranslator2.default()
+      translator: new _LocationTranslator2.default()
     }));
   }
 

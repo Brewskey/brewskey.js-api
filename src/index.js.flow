@@ -63,6 +63,11 @@ export type ServingTemperature =
   'very_cold' |
   'warm';
 
+export type Coordinates = {
+  latitude: number,
+  longitude: number,
+};
+
 export type Beverage = {
   abv: number,
   availableId: ?string,
@@ -147,7 +152,14 @@ export type Location = {
   city: string,
   createdDate: string,
   description: ?string,
-  geolocation: Object,
+  geolocation?: {
+    coordinates: Coordinates,
+    geography: {
+      coordinateSystemId: number,
+      wellKnownText: string,
+      wellKnownBinary: ?Object,
+    },
+  },
   id: string,
   locationType: string,
   name: string,
