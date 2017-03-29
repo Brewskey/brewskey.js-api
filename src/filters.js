@@ -50,7 +50,7 @@ export const doesSatisfyToQueryFilters = (
   queryFilters: Array<QueryFilter>,
 ): boolean =>
   queryFilters
-    .map((queryFilter: QueryFilter): boolean => {
+    .every((queryFilter: QueryFilter): boolean => {
       const { params, values, operator } = queryFilter;
 
       return params.some((param: string): boolean => {
@@ -74,5 +74,4 @@ export const doesSatisfyToQueryFilters = (
           }
         });
       });
-    })
-    .every((filterCheckResult: boolean): boolean => filterCheckResult);
+    });

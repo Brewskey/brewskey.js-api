@@ -49,7 +49,7 @@ var createFilter = exports.createFilter = function createFilter(params) {
 
 // todo make unit tests
 var doesSatisfyToQueryFilters = exports.doesSatisfyToQueryFilters = function doesSatisfyToQueryFilters(item, queryFilters) {
-  return queryFilters.map(function (queryFilter) {
+  return queryFilters.every(function (queryFilter) {
     var params = queryFilter.params,
         values = queryFilter.values,
         operator = queryFilter.operator;
@@ -80,7 +80,5 @@ var doesSatisfyToQueryFilters = exports.doesSatisfyToQueryFilters = function doe
         }
       });
     });
-  }).every(function (filterCheckResult) {
-    return filterCheckResult;
   });
 };
