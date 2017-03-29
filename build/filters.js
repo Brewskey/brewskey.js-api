@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.doesSatisfyToQueryFilters = exports.createFilter = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -24,6 +25,12 @@ var FILTERS = {
   startsWith: _constants.FILTER_OPERATORS.STARTS_WITH
 };
 
+var getIn = function getIn(props, object) {
+  return props.reduce(function (previousObjectValue, prop) {
+    return previousObjectValue && previousObjectValue[prop] ? previousObjectValue[prop] : null;
+  }, object);
+};
+
 var makeFilter = function makeFilter(operator, params) {
   return function (values) {
     return {
@@ -34,8 +41,46 @@ var makeFilter = function makeFilter(operator, params) {
   };
 };
 
-exports.default = function (params) {
+var createFilter = exports.createFilter = function createFilter(params) {
   return Object.keys(FILTERS).reduce(function (filters, filter) {
     return _extends({}, filters, _defineProperty({}, filter, makeFilter(FILTERS[filter], params)));
   }, {});
+};
+
+// todo make unit tests
+var doesSatisfyToQueryFilters = exports.doesSatisfyToQueryFilters = function doesSatisfyToQueryFilters(item, queryFilters) {
+  return queryFilters.map(function (queryFilter) {
+    var params = queryFilter.params,
+        values = queryFilter.values,
+        operator = queryFilter.operator;
+
+
+    return params.some(function (param) {
+      var itemValue = getIn(param.split('/'), item);
+
+      return values.some(function (value) {
+        switch (operator) {
+          // todo add another cases
+          case _constants.FILTER_OPERATORS.CONTAINS:
+            {
+              return itemValue.toString().includes(value.toString());
+            }
+          case _constants.FILTER_OPERATORS.EQUALS:
+            {
+              return value === itemValue;
+            }
+          case _constants.FILTER_OPERATORS.NOT_EQUALS:
+            {
+              return value !== itemValue;
+            }
+          default:
+            {
+              return false;
+            }
+        }
+      });
+    });
+  }).every(function (filterCheckResult) {
+    return filterCheckResult;
+  });
 };

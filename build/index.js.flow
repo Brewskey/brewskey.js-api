@@ -466,11 +466,15 @@ type DAOApi = {
   SrmDAO: brewskey$SrmDAO,
   StyleDAO: brewskey$StyleDAO,
   TapDAO: brewskey$TapDAO,
-  initializeDAOApi(config: OConfig): void;
-  createFilter(params: string): FilterCreators;
-  fetch(path: string, init: ?Object): Promise<*>;
-  getHeaders(): Headers;
-  setHeaders(headers: Headers): void;
+  createFilter(params: string): FilterCreators,
+  doesSatisfyToQueryFilters(
+    item: Object,
+    queryFilters: Array<QueryFilter>,
+  ): boolean,
+  fetch(path: string, init: ?Object): Promise<*>,
+  getHeaders(): Headers,
+  initializeDAOApi(config: OConfig): void,
+  setHeaders(headers: Headers): void,
 }
 
 declare export var DAO_ENTITIES: { [string]: EntityName };

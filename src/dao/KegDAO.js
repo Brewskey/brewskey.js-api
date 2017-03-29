@@ -6,7 +6,7 @@ import type DAOResult from './DAOResult';
 import DefaultTranslator from '../translators/DefaultTranslator';
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import apiFilter from '../filters';
+import { createFilter } from '../filters';
 
 class KegDAO extends DAO<Keg, Keg> {
   constructor() {
@@ -22,7 +22,7 @@ class KegDAO extends DAO<Keg, Keg> {
 
   fetchKegByTapID = (tapId: string): Promise<DAOResult<Keg>> =>
     this._resolve(this._buildHandler({
-      filters: [apiFilter('tap/id').equals(tapId)],
+      filters: [createFilter('tap/id').equals(tapId)],
       orderBy: [{
         column: 'tapDate',
         direction: 'desc',

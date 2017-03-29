@@ -21,8 +21,6 @@ var _fetch2 = _interopRequireDefault(_fetch);
 
 var _filters = require('./filters');
 
-var _filters2 = _interopRequireDefault(_filters);
-
 var _AccountDAO = require('./dao/AccountDAO');
 
 var _AccountDAO2 = _interopRequireDefault(_AccountDAO);
@@ -118,7 +116,8 @@ exports.default = {
   SrmDAO: _SrmDAO2.default,
   StyleDAO: _StyleDAO2.default,
   TapDAO: _TapDAO2.default,
-  createFilter: _filters2.default,
+  createFilter: _filters.createFilter,
+  doesSatisfyToQueryFilters: _filters.doesSatisfyToQueryFilters,
   fetch: _fetch2.default,
   getHeaders: getHeaders,
   initializeDAOApi: initializeDAOApi,

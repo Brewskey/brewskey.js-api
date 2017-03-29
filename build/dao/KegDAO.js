@@ -16,8 +16,6 @@ var _constants = require('../constants');
 
 var _filters = require('../filters');
 
-var _filters2 = _interopRequireDefault(_filters);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -43,7 +41,7 @@ var KegDAO = function (_DAO) {
 
     _this.fetchKegByTapID = function (tapId) {
       return _this._resolve(_this._buildHandler({
-        filters: [(0, _filters2.default)('tap/id').equals(tapId)],
+        filters: [(0, _filters.createFilter)('tap/id').equals(tapId)],
         orderBy: [{
           column: 'tapDate',
           direction: 'desc'
