@@ -7,7 +7,7 @@ import { DAO_ENTITIES } from './constants';
 import DAOResult from './dao/DAOResult';
 
 import fetch from './fetch';
-import createFilter from './filters';
+import { createFilter, doesSatisfyToQueryFilters } from './filters';
 
 import AccountDAO from './dao/AccountDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
@@ -33,8 +33,7 @@ const initializeDAOApi = ({ endpoint, headers }: OConfig) => {
   });
 };
 
-const getHeaders = (): Headers =>
-  oHandler().oConfig.headers || [];
+const getHeaders = (): Headers => oHandler().oConfig.headers || [];
 
 const setHeaders = (headers: Headers) => {
   oHandler().config({
@@ -60,6 +59,7 @@ export default {
   StyleDAO,
   TapDAO,
   createFilter,
+  doesSatisfyToQueryFilters,
   fetch,
   getHeaders,
   initializeDAOApi,

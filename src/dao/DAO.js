@@ -11,7 +11,7 @@ import type {
 import oHandler from 'odata';
 import DAOResult from './DAOResult';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
-import apiFilter from '../filters';
+import { createFilter } from '../filters';
 
 const ID_REG_EXP = /\bid\b/;
 
@@ -54,7 +54,7 @@ class DAO<TEntity, TEntityMutator> {
 
   fetchByIDs(ids: Array<string>): Promise<DAOResult<TEntity>> {
     return this._resolve(this._buildHandler({
-      filters: [apiFilter('id').equals(ids)],
+      filters: [createFilter('id').equals(ids)],
     }));
   }
 

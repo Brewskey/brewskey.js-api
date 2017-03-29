@@ -1,9 +1,5 @@
 // @flow
-import type {
-  FilterCreators,
-  FilterOperator,
-  QueryFilter,
-} from './index';
+import type { FilterCreators, FilterOperator, QueryFilter } from './index';
 import { FILTER_OPERATORS } from './constants';
 
 const FILTERS: { [string]: FilterOperator } = {
@@ -20,6 +16,15 @@ const FILTERS: { [string]: FilterOperator } = {
   startsWith: FILTER_OPERATORS.STARTS_WITH,
 };
 
+const getIn = (props: Array<string>, object: Object): any =>
+  props.reduce(
+    (previousObjectValue: any, prop: string) =>
+      previousObjectValue && previousObjectValue[prop]
+        ? previousObjectValue[prop]
+        : null,
+    object,
+  );
+
 const makeFilter = (
   operator: FilterOperator,
   params: any,
@@ -30,8 +35,43 @@ const makeFilter = (
     values: Array.isArray(values) ? values : [values],
   });
 
-export default (params: any): FilterCreators => Object.keys(FILTERS).reduce(
-  (filters: FilterCreators, filter: string): FilterCreators =>
-    ({ ...filters, [filter]: makeFilter(FILTERS[filter], params) }),
-  {},
-);
+export const createFilter = (params: any): FilterCreators =>
+  Object.keys(FILTERS).reduce(
+    (filters: FilterCreators, filter: string): FilterCreators => ({
+      ...filters,
+      [filter]: makeFilter(FILTERS[filter], params),
+    }),
+    {},
+  );
+
+// todo make unit tests
+export const doesSatisfyToQueryFilters = (
+  item: Object,
+  queryFilters: Array<QueryFilter>,
+): boolean =>
+  queryFilters
+    .every((queryFilter: QueryFilter): boolean => {
+      const { params, values, operator } = queryFilter;
+
+      return params.some((param: string): boolean => {
+        const itemValue = getIn(param.split('/'), item);
+
+        return values.some((value: any): boolean => {
+          switch (operator) {
+            // todo add another cases
+            case FILTER_OPERATORS.CONTAINS: {
+              return itemValue.toString().includes(value.toString());
+            }
+            case FILTER_OPERATORS.EQUALS: {
+              return value === itemValue;
+            }
+            case FILTER_OPERATORS.NOT_EQUALS: {
+              return value !== itemValue;
+            }
+            default: {
+              return false;
+            }
+          }
+        });
+      });
+    });
