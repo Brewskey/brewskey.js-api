@@ -415,7 +415,9 @@ declare class brewskey$KegDAO extends DAO<Keg, Keg> {
 }
 declare class brewskey$LocationDAO extends DAO<Location, Location> {}
 declare class brewskey$PermissionDAO
-  extends DAO<Permission, PermissionMutator> {}
+  extends DAO<Permission, PermissionMutator> {
+    fetchPermissionsByUserID(userID: string): Promise<DAOResult<Permission>>;
+  }
 declare class brewskey$PourDAO extends DAO<Pour, Pour> {
   fetchChartData(params: DAOChartParams): Promise<DAOResult<Pour>>;
 }

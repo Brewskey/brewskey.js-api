@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _DAO2 = require('./DAO');
 
 var _DAO3 = _interopRequireDefault(_DAO2);
@@ -13,6 +15,8 @@ var _constants = require('../constants');
 var _PermissionTranslator = require('../translators/PermissionTranslator');
 
 var _PermissionTranslator2 = _interopRequireDefault(_PermissionTranslator);
+
+var _filters = require('../filters');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40,6 +44,15 @@ var PermissionDAO = function (_DAO) {
       translator: new _PermissionTranslator2.default()
     }));
   }
+
+  _createClass(PermissionDAO, [{
+    key: 'fetchPermissionsByUserID',
+    value: function fetchPermissionsByUserID(userID) {
+      return this._resolve(this._buildHandler({
+        filters: [(0, _filters.createFilter)('forUser/id').equals(userID)]
+      }));
+    }
+  }]);
 
   return PermissionDAO;
 }(_DAO3.default);
