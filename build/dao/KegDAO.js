@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _DefaultTranslator = require('../translators/DefaultTranslator');
-
-var _DefaultTranslator2 = _interopRequireDefault(_DefaultTranslator);
-
 var _DAO2 = require('./DAO');
 
 var _DAO3 = _interopRequireDefault(_DAO2);
+
+var _KegTranslator = require('../translators/KegTranslator');
+
+var _KegTranslator2 = _interopRequireDefault(_KegTranslator);
 
 var _constants = require('../constants');
 
@@ -33,10 +33,10 @@ var KegDAO = function (_DAO) {
     var _this = _possibleConstructorReturn(this, (KegDAO.__proto__ || Object.getPrototypeOf(KegDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.KEGS,
       navigationProperties: {
-        location: ['id', 'name'],
-        tap: ['id', 'name']
+        location: ['id', 'isDeleted', 'name'],
+        tap: ['id', 'isDeleted', 'name']
       },
-      translator: new _DefaultTranslator2.default()
+      translator: new _KegTranslator2.default()
     }));
 
     _this.fetchKegByTapID = function (tapId) {

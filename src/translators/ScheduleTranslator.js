@@ -32,6 +32,7 @@ class SchedulesTranslator extends DefaultTranslator<Schedule, ScheduleMutator> {
     return {
       ...super.fromApi(apiValue),
       days: getCombinedFlag(apiValue.days.split(', ')),
+      location: apiValue.location.isDeleted ? apiValue.location : null,
     };
   }
 
@@ -47,7 +48,7 @@ class SchedulesTranslator extends DefaultTranslator<Schedule, ScheduleMutator> {
   toForm(model: Schedule): ScheduleMutator {
     return {
       ...model,
-      locationId: model.location.id,
+      locationId: model.location ? model.location.id : null,
     };
   }
 }
