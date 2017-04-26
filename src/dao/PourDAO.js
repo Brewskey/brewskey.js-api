@@ -5,19 +5,19 @@ import type DAOResult from './DAOResult';
 import oHandler from 'odata';
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import DefaultTranslator from '../translators/DefaultTranslator';
+import PourTranslator from '../translators/PourTranslator';
 
 class PourDAO extends DAO<Pour, Pour> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.POURS,
       navigationProperties: {
-        beverage: ['id', 'name'],
-        location: ['id', 'name'],
+        beverage: ['id', 'isDeleted', 'name'],
+        location: ['id', 'isDeleted', 'name'],
         owner: ['id', 'userName'],
-        tap: ['id', 'name'],
+        tap: ['id', 'isDeleted', 'name'],
       },
-      translator: new DefaultTranslator(),
+      translator: new PourTranslator(),
     });
   }
 
