@@ -22,62 +22,26 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var SCHEDULE_DAY_BIT_MAP = {
-  All: 127,
-  Friday: 16,
-  Monday: 1,
-  None: 0,
-  Saturday: 32,
-  Sunday: 64,
-  Thursday: 8,
-  Tuesday: 2,
-  Wednesday: 4,
-  WeekDays: 31
-};
+var KegTranslator = function (_DefaultTranslator) {
+  _inherits(KegTranslator, _DefaultTranslator);
 
-var getCombinedFlag = function getCombinedFlag(days) {
-  return days.reduce(function (total, day) {
-    return total | SCHEDULE_DAY_BIT_MAP[day];
-  }, // eslint-disable-line
-  0);
-};
+  function KegTranslator() {
+    _classCallCheck(this, KegTranslator);
 
-var SchedulesTranslator = function (_DefaultTranslator) {
-  _inherits(SchedulesTranslator, _DefaultTranslator);
-
-  function SchedulesTranslator() {
-    _classCallCheck(this, SchedulesTranslator);
-
-    return _possibleConstructorReturn(this, (SchedulesTranslator.__proto__ || Object.getPrototypeOf(SchedulesTranslator)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (KegTranslator.__proto__ || Object.getPrototypeOf(KegTranslator)).apply(this, arguments));
   }
 
-  _createClass(SchedulesTranslator, [{
+  _createClass(KegTranslator, [{
     key: 'fromApi',
     value: function fromApi(apiValue) {
-      return _extends({}, _get(SchedulesTranslator.prototype.__proto__ || Object.getPrototypeOf(SchedulesTranslator.prototype), 'fromApi', this).call(this, apiValue), {
-        days: getCombinedFlag(apiValue.days.split(', ')),
-        location: apiValue.location.isDeleted ? null : apiValue.location
-      });
-    }
-  }, {
-    key: 'toApi',
-    value: function toApi(mutator) {
-      return _extends({}, mutator, {
-        accountIds: mutator.accounts && mutator.accounts.map(function (account) {
-          return account.id;
-        })
-      });
-    }
-  }, {
-    key: 'toForm',
-    value: function toForm(model) {
-      return _extends({}, model, {
-        locationId: model.location ? model.location.id : null
+      return _extends({}, _get(KegTranslator.prototype.__proto__ || Object.getPrototypeOf(KegTranslator.prototype), 'fromApi', this).call(this, apiValue), {
+        location: apiValue.location.isDeleted ? null : apiValue.location,
+        tap: apiValue.tap.isDeleted ? null : apiValue.tap
       });
     }
   }]);
 
-  return SchedulesTranslator;
+  return KegTranslator;
 }(_DefaultTranslator3.default);
 
-exports.default = SchedulesTranslator;
+exports.default = KegTranslator;

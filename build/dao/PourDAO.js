@@ -14,9 +14,9 @@ var _DAO3 = _interopRequireDefault(_DAO2);
 
 var _constants = require('../constants');
 
-var _DefaultTranslator = require('../translators/DefaultTranslator');
+var _PourTranslator = require('../translators/PourTranslator');
 
-var _DefaultTranslator2 = _interopRequireDefault(_DefaultTranslator);
+var _PourTranslator2 = _interopRequireDefault(_PourTranslator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35,12 +35,12 @@ var PourDAO = function (_DAO) {
     var _this = _possibleConstructorReturn(this, (PourDAO.__proto__ || Object.getPrototypeOf(PourDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.POURS,
       navigationProperties: {
-        beverage: ['id', 'name'],
-        location: ['id', 'name'],
+        beverage: ['id', 'isDeleted', 'name'],
+        location: ['id', 'isDeleted', 'name'],
         owner: ['id', 'userName'],
-        tap: ['id', 'name']
+        tap: ['id', 'isDeleted', 'name']
       },
-      translator: new _DefaultTranslator2.default()
+      translator: new _PourTranslator2.default()
     }));
 
     _this.fetchChartData = function (params) {

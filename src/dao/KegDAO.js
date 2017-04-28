@@ -3,8 +3,8 @@
 import type { Keg } from '../index';
 import type DAOResult from './DAOResult';
 
-import DefaultTranslator from '../translators/DefaultTranslator';
 import DAO from './DAO';
+import KegTranslator from '../translators/KegTranslator';
 import { DAO_ENTITIES } from '../constants';
 import { createFilter } from '../filters';
 
@@ -13,10 +13,10 @@ class KegDAO extends DAO<Keg, Keg> {
     super({
       entityName: DAO_ENTITIES.KEGS,
       navigationProperties: {
-        location: ['id', 'name'],
-        tap: ['id', 'name'],
+        location: ['id', 'isDeleted', 'name'],
+        tap: ['id', 'isDeleted', 'name'],
       },
-      translator: new DefaultTranslator(),
+      translator: new KegTranslator(),
     });
   }
 

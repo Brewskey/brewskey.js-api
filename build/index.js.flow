@@ -84,6 +84,7 @@ export type Beverage = {
   glasswareId: ?number,
   ibu: number,
   id: string,
+  isDeleted: boolean,
   isOrganic: ?string,
   labels: {
     icon: string,
@@ -133,16 +134,19 @@ export type Keg = {
   beerName: string,
   floatedDate: string,
   id: string,
+  isDeleted: boolean,
   kegType: string,
-  location: {
+  location: ?{
     id: string,
+    isDeleted: boolean,
     name: string,
   },
   maxOunces: number,
   ounces: number,
   pulses: number,
-  tap: {
+  tap: ?{
     id: string,
+    isDeleted: boolean,
     name: string,
   },
   tapDate: string,
@@ -161,6 +165,7 @@ export type Location = {
     },
   },
   id: string,
+  isDeleted: boolean,
   locationType: string,
   name: string,
   state: ?string,
@@ -198,6 +203,7 @@ export type Permission = {
     userName: string,
   },
   id: string,
+  isDeleted: boolean,
   invalid: boolean,
   location: ?{
     id: string,
@@ -222,13 +228,16 @@ export type PermissionMutator = {
 };
 
 export type Pour = {
-  beverage: {
+  beverage: ?{
     id: string,
+    isDeleted: boolean,
     name: string,
   },
   id: string,
-  location: {
+  isDeleted: boolean,
+  location: ?{
     id: string,
+    isDeleted: boolean,
     name: string,
   },
   ounces: number,
@@ -238,8 +247,9 @@ export type Pour = {
   },
   pourDate: string,
   pulses: number,
-  tap: {
+  tap: ?{
     id: string,
+    isDeleted: boolean,
     name: string,
   },
 };
@@ -254,8 +264,10 @@ export type Schedule = {
   editDate: Date,
   endTime: Date,
   id: string,
-  location: {
+  isDeleted: boolean,
+  location: ?{
     id: string,
+    isDeleted: boolean,
     name: string,
   },
   name: string,
@@ -304,15 +316,17 @@ export type Tap = {
   description: ?string,
   device: {
     id: string,
+    isDeleted: boolean,
     name: string,
   },
   disableBadges: boolean,
   hideLeaderboard: boolean,
   hideStats: boolean,
   id: string,
-  location: {
+  location: ?{
     id: string,
-    name: string,
+    isDeleted: boolean,
+    name: string,    
   },
   name: string,
   requiresPourPrivilege: boolean,
@@ -326,7 +340,7 @@ export type TapMutator = {
   hideLeaderboard: boolean,
   hideStats: boolean,
   id: ?string,
-  locationId: string,
+  locationId: ?string,
   name: string,
   requiresPourPrivilege: boolean,
 };
