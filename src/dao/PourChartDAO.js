@@ -1,12 +1,12 @@
 // @flow
-import type { PourChartParams, PourChartDataItem } from '../index';
+import type { PourChartParams, PourChartDataSet } from '../index';
 import type DAOResult from './DAOResult';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class PourChartDAO extends DAO<PourChartDataItem, PourChartDataItem> {
+class PourChartDAO extends DAO<PourChartDataSet, PourChartDataSet> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.POUR_CHART,
@@ -32,7 +32,7 @@ class PourChartDAO extends DAO<PourChartDataItem, PourChartDataItem> {
 
   fetchChartData = (
     params: PourChartParams,
-  ): Promise<DAOResult<PourChartDataItem>> =>
+  ): Promise<DAOResult<PourChartDataSet>> =>
     this._resolve(this._buildHandler(), params, 'post');
 
   fetchMany() {
