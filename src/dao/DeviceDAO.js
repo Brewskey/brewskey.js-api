@@ -12,6 +12,7 @@ class DeviceDAO extends DAO<Device, Device> {
       navigationProperties: {
         createdBy: ['id', 'userName'],
         lastEditedBy: ['id', 'userName'],
+        location: ['id', 'name'],
       },
       translator: new DefaultTranslator(),
     });
