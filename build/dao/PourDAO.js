@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _odata = require('odata');
-
-var _odata2 = _interopRequireDefault(_odata);
-
 var _DAO2 = require('./DAO');
 
 var _DAO3 = _interopRequireDefault(_DAO2);
@@ -32,7 +28,7 @@ var PourDAO = function (_DAO) {
   function PourDAO() {
     _classCallCheck(this, PourDAO);
 
-    var _this = _possibleConstructorReturn(this, (PourDAO.__proto__ || Object.getPrototypeOf(PourDAO)).call(this, {
+    return _possibleConstructorReturn(this, (PourDAO.__proto__ || Object.getPrototypeOf(PourDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.POURS,
       navigationProperties: {
         beverage: ['id', 'isDeleted', 'name'],
@@ -42,14 +38,6 @@ var PourDAO = function (_DAO) {
       },
       translator: new _PourTranslator2.default()
     }));
-
-    _this.fetchChartData = function (params) {
-      return _this._resolve((0, _odata2.default)('chart'), // TODO this is a hacky crutch for change endpoint
-      // on the fly..come up better solution,
-      params, 'post');
-    };
-
-    return _this;
   }
 
   return PourDAO;

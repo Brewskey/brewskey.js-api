@@ -57,6 +57,10 @@ var _PourDAO = require('./dao/PourDAO');
 
 var _PourDAO2 = _interopRequireDefault(_PourDAO);
 
+var _PourChartDAO = require('./dao/PourChartDAO');
+
+var _PourChartDAO2 = _interopRequireDefault(_PourChartDAO);
+
 var _ScheduleDAO = require('./dao/ScheduleDAO');
 
 var _ScheduleDAO2 = _interopRequireDefault(_ScheduleDAO);
@@ -112,6 +116,7 @@ exports.default = {
   LocationDAO: _LocationDAO2.default,
   PermissionDAO: _PermissionDAO2.default,
   PourDAO: _PourDAO2.default,
+  PourChartDAO: _PourChartDAO2.default,
   ScheduleDAO: _ScheduleDAO2.default,
   SrmDAO: _SrmDAO2.default,
   StyleDAO: _StyleDAO2.default,
