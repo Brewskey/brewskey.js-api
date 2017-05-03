@@ -32,7 +32,8 @@ var DeviceDAO = function (_DAO) {
       entityName: _constants.DAO_ENTITIES.DEVICES,
       navigationProperties: {
         createdBy: ['id', 'userName'],
-        lastEditedBy: ['id', 'userName']
+        lastEditedBy: ['id', 'userName'],
+        location: ['id', 'name']
       },
       translator: new _DefaultTranslator2.default()
     }));

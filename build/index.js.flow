@@ -140,6 +140,10 @@ export type Device = {
     id: string,
     userName: string,
   },
+  location?: {
+    id: string,
+    name: string,
+  },
   name: string,
   particleId: string,
   temperature: number,
