@@ -14,6 +14,7 @@ var DAO_ENTITIES = exports.DAO_ENTITIES = {
   KEGS: 'kegs',
   LOCATIONS: 'locations',
   PERMISSIONS: 'permissions',
+  POUR_CHART: 'chart',
   POURS: 'pours',
   SCHEDULE_GROUPS: 'schedule-groups',
   SCHEDULES: 'schedules',

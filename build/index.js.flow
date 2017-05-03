@@ -4,19 +4,20 @@
 
 export type EntityName =
   'accounts' |
-    'beverage-availabilities' |
-    'beverage-glasses' |
-    'beverage-srms' |
-    'beverage-styles' |
-    'beverages' |
-    'devices' |
-    'kegs' |
-    'locations' |
-    'permissions' |
-    'pours' |
-    'schedule-groups' |
-    'schedules' |
-    'taps';
+  'beverage-availabilities' |
+  'beverage-glasses' |
+  'beverage-srms' |
+  'beverage-styles' |
+  'beverages' |
+  'chart' |
+  'devices' |
+  'kegs' |
+  'locations' |
+  'permissions' |
+  'pours' |
+  'schedule-groups' |
+  'schedules' |
+  'taps';
 
 export type Account = {
   accessFailedCount: ?number,
@@ -99,6 +100,30 @@ export type Beverage = {
   styleId: ?string,
   updateDate: Date,
   year: ?number,
+};
+
+export type PourChartDataType =
+  'all-with-tap-id'|
+  'by-location'|
+  'by-tap'|
+  'hourly-by-location'|
+  'hourly-by-tap';
+
+export type PourChartParams = {
+  beginDate?: ?Date,
+  chartType: PourChartDataType,
+  endDate?: ?Date,
+  ids?: Array<string>,
+};
+
+export type PourChartDataEntry = {
+  keys: Array<string>,
+  value: number,
+};
+
+export type PourChartDataSet = {
+  dataSet: Array<PourChartDataEntry>,
+  key: string,
 };
 
 export type Device = {
@@ -413,11 +438,6 @@ declare export class DAO<TEntity, TEntityMutator>  {
   put(id: string, params: TEntityMutator): Promise<DAOResult<TEntity>>;
 }
 
-export type DAOChartParams = {
-  beginDate?: ?Date,
-  endDate?: ?Date,
-};
-
 declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}
 declare class brewskey$AvailabilityDAO
   extends DAO<Availability, Availability> {}
@@ -430,8 +450,9 @@ declare class brewskey$KegDAO extends DAO<Keg, Keg> {
 declare class brewskey$LocationDAO extends DAO<Location, Location> {}
 declare class brewskey$PermissionDAO
   extends DAO<Permission, PermissionMutator> {}
-declare class brewskey$PourDAO extends DAO<Pour, Pour> {
-  fetchChartData(params: DAOChartParams): Promise<DAOResult<Pour>>;
+declare class brewskey$PourDAO extends DAO<Pour, Pour> {}
+declare class brewkey$PourChartDAO extends DAO<PourChartDataSet, PourChartDataSet> {
+  fetchChartData(params: PourChartParams): Promise<DAOResult<PourChartDataSet>>;
 }
 declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
 declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
@@ -476,6 +497,7 @@ type DAOApi = {
   LocationDAO: brewskey$LocationDAO,
   PermissionDAO: brewskey$PermissionDAO,
   PourDAO: brewskey$PourDAO,
+  PourChartDAO: brewkey$PourChartDAO,
   ScheduleDAO: brewskey$ScheduleDAO,
   SrmDAO: brewskey$SrmDAO,
   StyleDAO: brewskey$StyleDAO,

@@ -18,6 +18,7 @@ import KegDAO from './dao/KegDAO';
 import LocationDAO from './dao/LocationDAO';
 import PermissionDAO from './dao/PermissionDAO';
 import PourDAO from './dao/PourDAO';
+import PourChartDAO from './dao/PourChartDAO';
 import ScheduleDAO from './dao/ScheduleDAO';
 import SrmDAO from './dao/SrmDAO';
 import StyleDAO from './dao/StyleDAO';
@@ -54,6 +55,7 @@ export default {
   LocationDAO,
   PermissionDAO,
   PourDAO,
+  PourChartDAO,
   ScheduleDAO,
   SrmDAO,
   StyleDAO,
