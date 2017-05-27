@@ -10,9 +10,9 @@ var _DAO3 = _interopRequireDefault(_DAO2);
 
 var _constants = require('../constants');
 
-var _DefaultTranslator = require('../translators/DefaultTranslator');
+var _DeviceTranslator = require('../translators/DeviceTranslator');
 
-var _DefaultTranslator2 = _interopRequireDefault(_DefaultTranslator);
+var _DeviceTranslator2 = _interopRequireDefault(_DeviceTranslator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35,7 +35,7 @@ var DeviceDAO = function (_DAO) {
         lastEditedBy: ['id', 'userName'],
         location: ['id', 'name']
       },
-      translator: new _DefaultTranslator2.default()
+      translator: new _DeviceTranslator2.default()
     }));
   }
 

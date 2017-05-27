@@ -1,11 +1,11 @@
 // @flow
-import type { Device } from '../index';
+import type { Device, DeviceMutator } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
-import DefaultTranslator from '../translators/DefaultTranslator';
+import DeviceTranslator from '../translators/DeviceTranslator';
 
-class DeviceDAO extends DAO<Device, Device> {
+class DeviceDAO extends DAO<Device, DeviceMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.DEVICES,
@@ -14,7 +14,7 @@ class DeviceDAO extends DAO<Device, Device> {
         lastEditedBy: ['id', 'userName'],
         location: ['id', 'name'],
       },
-      translator: new DefaultTranslator(),
+      translator: new DeviceTranslator(),
     });
   }
 }
