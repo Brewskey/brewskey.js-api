@@ -369,7 +369,6 @@ export type TapMutator = {
   hideLeaderboard: boolean,
   hideStats: boolean,
   id: ?string,
-  locationId: ?string,
   name: string,
   requiresPourPrivilege: boolean,
 };

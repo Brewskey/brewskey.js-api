@@ -35,15 +35,14 @@ var TapsTranslator = function (_DefaultTranslator) {
     key: 'fromApi',
     value: function fromApi(apiValue) {
       return _extends({}, _get(TapsTranslator.prototype.__proto__ || Object.getPrototypeOf(TapsTranslator.prototype), 'fromApi', this).call(this, apiValue), {
-        location: apiValue.location.isDeleted ? null : apiValue.location
+        location: apiValue.location && apiValue.location.isDeleted ? null : apiValue.location
       });
     }
   }, {
     key: 'toForm',
     value: function toForm(model) {
       return _extends({}, model, {
-        deviceId: model.device.id,
-        locationId: model.location && model.location.id
+        deviceId: model.device.id
       });
     }
   }]);
