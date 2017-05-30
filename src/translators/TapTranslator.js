@@ -7,7 +7,8 @@ class TapsTranslator extends DefaultTranslator<Tap, TapMutator> {
   fromApi(apiValue: Object): Tap {
     return (({
       ...super.fromApi(apiValue),
-      location: apiValue.location.isDeleted ? null : apiValue.location,
+      location: apiValue.location &&
+        apiValue.location.isDeleted ? null : apiValue.location,
     }: any): Tap);
   }
 
@@ -15,7 +16,6 @@ class TapsTranslator extends DefaultTranslator<Tap, TapMutator> {
     return {
       ...model,
       deviceId: model.device.id,
-      locationId: model.location && model.location.id,
     };
   }
 }
