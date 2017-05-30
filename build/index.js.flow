@@ -126,12 +126,18 @@ export type PourChartDataSet = {
   key: string,
 };
 
+export type DeviceStatus = 
+  'Active'|
+  'Cleaning'|
+  'Free'|
+  'Inactive'; 
+
 export type Device = {
   createdBy: {
     id: string,
     userName: string,
   },
-  deviceStatus: string,
+  deviceStatus: DeviceStatus,
   id: string,
   isDeleted: boolean,
   isMultiTap: boolean,
@@ -147,6 +153,14 @@ export type Device = {
   name: string,
   particleId: string,
   temperature: number,
+};
+
+export type DeviceMutator = {
+  deviceStatus: DeviceStatus,
+  isMultiTap: boolean,
+  locationId: ?string,
+  name: string,
+  particleId: string,
 };
 
 export type Glass = {
@@ -446,7 +460,7 @@ declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}
 declare class brewskey$AvailabilityDAO
   extends DAO<Availability, Availability> {}
 declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
-declare class brewskey$DeviceDAO extends DAO<Device, Device> {}
+declare class brewskey$DeviceDAO extends DAO<Device, DeviceMutator> {}
 declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
 declare class brewskey$KegDAO extends DAO<Keg, Keg> {
   fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>>;
