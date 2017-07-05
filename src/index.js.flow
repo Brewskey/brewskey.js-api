@@ -15,6 +15,7 @@ export type EntityName =
   'locations' |
   'permissions' |
   'pours' |
+  'reports' |
   'schedule-groups' |
   'schedules' |
   'taps';
@@ -22,7 +23,7 @@ export type EntityName =
 export type Account = {
   accessFailedCount: ?number,
   banned: ?boolean,
-  createdDate: string,
+  createdDate: Date,
   email: ?string,
   emailConfirmed: ?boolean,
   fullName: ?string,
@@ -141,7 +142,7 @@ export type Device = {
   id: string,
   isDeleted: boolean,
   isMultiTap: boolean,
-  lastEdited: string,
+  lastEdited: Date,
   lastEditedBy: {
     id: string,
     userName: string,
@@ -175,7 +176,7 @@ export type Keg = {
   beerIcon: string,
   beerId: string,
   beerName: string,
-  floatedDate: string,
+  floatedDate: Date,
   id: string,
   isDeleted: boolean,
   kegType: string,
@@ -192,12 +193,12 @@ export type Keg = {
     isDeleted: boolean,
     name: string,
   },
-  tapDate: string,
+  tapDate: Date,
 };
 
 export type Location = {
   city: string,
-  createdDate: string,
+  createdDate: Date,
   description: ?string,
   geolocation?: {
     coordinates: Coordinates,
@@ -296,6 +297,33 @@ export type Pour = {
     name: string,
   },
 };
+
+export type Report = {
+  id: string,
+  name: string,
+  reportCadence: ReportCadence,
+  reportCadenceTimeStamp: Date,
+  sendToEmails: Array<string>,
+  isDeleted: boolean,
+  createdDate: Date,
+  lastEdited: Date,
+  locations: Array<{ id: string, name: string }>,
+  devices: Array<{ id: string, name: string }>,
+  taps: Array<{ id: string, name: string }>,
+};
+
+export type ReportMutator = {
+  id?: string,
+  name: string,
+  reportCadence: ReportCadence,
+  reportCadenceTimeStamp: Date,
+  sendToEmails: Array<{ email: string }>,
+  locations?: Array<{ id: string, name: string }>,
+  devices?: Array<{ id: string, name: string }>,
+  taps?: Array<{ id: string, name: string }>,
+};
+
+export type ReportCadence = 'OneTime' | 'Daily' | 'Weekly' | 'Biweekly' | 'Monthly';
 
 export type Schedule = {
   accounts: Array<{
@@ -471,6 +499,7 @@ declare class brewskey$PourDAO extends DAO<Pour, Pour> {}
 declare class brewkey$PourChartDAO extends DAO<PourChartDataSet, PourChartDataSet> {
   fetchChartData(params: PourChartParams): Promise<DAOResult<PourChartDataSet>>;
 }
+declare class brewskey$ReportDAO extends DAO<Report, ReportMutator> {}
 declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
 declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
 declare class brewskey$StyleDAO extends DAO<Style, Style> {}
@@ -513,8 +542,9 @@ type DAOApi = {
   KegDAO: brewskey$KegDAO,
   LocationDAO: brewskey$LocationDAO,
   PermissionDAO: brewskey$PermissionDAO,
-  PourDAO: brewskey$PourDAO,
   PourChartDAO: brewkey$PourChartDAO,
+  PourDAO: brewskey$PourDAO,
+  ReportDAO: brewskey$ReportDAO,
   ScheduleDAO: brewskey$ScheduleDAO,
   SrmDAO: brewskey$SrmDAO,
   StyleDAO: brewskey$StyleDAO,
