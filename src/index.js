@@ -5,6 +5,7 @@ import type { Headers, OConfig } from './index';
 import oHandler from 'odata';
 import { DAO_ENTITIES } from './constants';
 import DAOResult from './dao/DAOResult';
+import { CADENCE_MAP } from './translators/ReportTranslator';
 
 import fetch from './fetch';
 import { createFilter, doesSatisfyToQueryFilters } from './filters';
@@ -17,8 +18,9 @@ import GlassDAO from './dao/GlassDAO';
 import KegDAO from './dao/KegDAO';
 import LocationDAO from './dao/LocationDAO';
 import PermissionDAO from './dao/PermissionDAO';
-import PourDAO from './dao/PourDAO';
 import PourChartDAO from './dao/PourChartDAO';
+import PourDAO from './dao/PourDAO';
+import ReportDAO from './dao/ReportDAO';
 import ScheduleDAO from './dao/ScheduleDAO';
 import SrmDAO from './dao/SrmDAO';
 import StyleDAO from './dao/StyleDAO';
@@ -42,7 +44,7 @@ const setHeaders = (headers: Headers) => {
   });
 };
 
-export { DAO_ENTITIES, DAOResult };
+export { CADENCE_MAP, DAO_ENTITIES, DAOResult };
 
 /* eslint-disable sorting/sort-object-props */
 export default {
@@ -54,8 +56,9 @@ export default {
   KegDAO,
   LocationDAO,
   PermissionDAO,
-  PourDAO,
   PourChartDAO,
+  PourDAO,
+  ReportDAO,
   ScheduleDAO,
   SrmDAO,
   StyleDAO,

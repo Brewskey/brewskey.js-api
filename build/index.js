@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DAOResult = exports.DAO_ENTITIES = undefined;
+exports.DAOResult = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
 
 var _odata = require('odata');
 
@@ -14,6 +14,8 @@ var _constants = require('./constants');
 var _DAOResult = require('./dao/DAOResult');
 
 var _DAOResult2 = _interopRequireDefault(_DAOResult);
+
+var _ReportTranslator = require('./translators/ReportTranslator');
 
 var _fetch = require('./fetch');
 
@@ -53,13 +55,17 @@ var _PermissionDAO = require('./dao/PermissionDAO');
 
 var _PermissionDAO2 = _interopRequireDefault(_PermissionDAO);
 
+var _PourChartDAO = require('./dao/PourChartDAO');
+
+var _PourChartDAO2 = _interopRequireDefault(_PourChartDAO);
+
 var _PourDAO = require('./dao/PourDAO');
 
 var _PourDAO2 = _interopRequireDefault(_PourDAO);
 
-var _PourChartDAO = require('./dao/PourChartDAO');
+var _ReportDAO = require('./dao/ReportDAO');
 
-var _PourChartDAO2 = _interopRequireDefault(_PourChartDAO);
+var _ReportDAO2 = _interopRequireDefault(_ReportDAO);
 
 var _ScheduleDAO = require('./dao/ScheduleDAO');
 
@@ -101,6 +107,7 @@ var setHeaders = function setHeaders(headers) {
   });
 };
 
+exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
 exports.DAOResult = _DAOResult2.default;
 
@@ -115,8 +122,9 @@ exports.default = {
   KegDAO: _KegDAO2.default,
   LocationDAO: _LocationDAO2.default,
   PermissionDAO: _PermissionDAO2.default,
-  PourDAO: _PourDAO2.default,
   PourChartDAO: _PourChartDAO2.default,
+  PourDAO: _PourDAO2.default,
+  ReportDAO: _ReportDAO2.default,
   ScheduleDAO: _ScheduleDAO2.default,
   SrmDAO: _SrmDAO2.default,
   StyleDAO: _StyleDAO2.default,

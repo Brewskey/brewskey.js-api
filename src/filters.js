@@ -18,7 +18,7 @@ const FILTERS: { [string]: FilterOperator } = {
 
 const getIn = (props: Array<string>, object: Object): any =>
   props.reduce(
-    (previousObjectValue: any, prop: string) =>
+    (previousObjectValue: any, prop: string): any =>
       previousObjectValue && previousObjectValue[prop]
         ? previousObjectValue[prop]
         : null,
