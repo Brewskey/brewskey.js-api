@@ -299,27 +299,27 @@ export type Pour = {
 };
 
 export type Report = {
+  createdDate: Date,
+  devices: Array<{ id: string, name: string }>,
   id: string,
+  isDeleted: boolean,
+  lastEdited: Date,
+  locations: Array<{ id: string, name: string }>,
   name: string,
   reportCadence: ReportCadence,
   reportCadenceTimeStamp: Date,
   sendToEmails: Array<string>,
-  isDeleted: boolean,
-  createdDate: Date,
-  lastEdited: Date,
-  locations: Array<{ id: string, name: string }>,
-  devices: Array<{ id: string, name: string }>,
   taps: Array<{ id: string, name: string }>,
 };
 
 export type ReportMutator = {
+  devices?: Array<{ id: string, name: string }>,
   id?: string,
+  locations?: Array<{ id: string, name: string }>,
   name: string,
   reportCadence: ReportCadence,
   reportCadenceTimeStamp: Date,
   sendToEmails: Array<{ email: string }>,
-  locations?: Array<{ id: string, name: string }>,
-  devices?: Array<{ id: string, name: string }>,
   taps?: Array<{ id: string, name: string }>,
 };
 
@@ -383,7 +383,7 @@ export type Style = {
 };
 
 export type Tap = {
-  createdDate: string,
+  createdDate: Date,
   description: ?string,
   device: {
     id: string,
