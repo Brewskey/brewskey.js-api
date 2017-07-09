@@ -8,7 +8,7 @@ import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
 import PermissionTranslator from '../translators/PermissionTranslator';
 
-class PermissionDAO extends DAO<Permission, PermissionMutator> {
+class PermissionDAO extends DAO<Permission, PermissionMutator<*>> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.PERMISSIONS,

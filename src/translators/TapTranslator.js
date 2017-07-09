@@ -12,10 +12,10 @@ class TapsTranslator extends DefaultTranslator<Tap, TapMutator> {
     }: any): Tap);
   }
 
-  toForm(model: Tap): TapMutator {
+  toApi({ device, ...props }: TapMutator): Object {
     return {
-      ...model,
-      deviceId: model.device.id,
+      ...props,
+      deviceId: device.id,
     };
   }
 }
