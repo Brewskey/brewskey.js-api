@@ -16,6 +16,8 @@ var _DefaultTranslator3 = _interopRequireDefault(_DefaultTranslator2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -39,10 +41,13 @@ var DeviceTranslator = function (_DefaultTranslator) {
       });
     }
   }, {
-    key: 'toForm',
-    value: function toForm(model) {
-      return _extends({}, model, {
-        locationId: model.location && model.location.id
+    key: 'toApi',
+    value: function toApi(_ref) {
+      var location = _ref.location,
+          props = _objectWithoutProperties(_ref, ['location']);
+
+      return _extends({}, props, {
+        locationId: location && location.id
       });
     }
   }]);

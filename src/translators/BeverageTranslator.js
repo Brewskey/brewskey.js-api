@@ -2,22 +2,22 @@
 import type { Beverage } from '../index';
 import DefaultTranslator from './DefaultTranslator';
 
-const ID_FIELDS = [
-  'availableId',
-  'beerVariationId',
-  'externalId',
-  'glasswareId',
-  'srmId',
-  'styleId',
-];
-
 class BeverageTranslator extends DefaultTranslator<Beverage, Beverage> {
-  fromApi(apiValue: Object): Beverage {
-    const obj = super.fromApi(apiValue);
-    ID_FIELDS.forEach((field: string) => {
-      obj[field] = obj[field] && obj[field].toString();
-    });
-    return obj;
+  toApi(
+    {
+      availability,
+      glassware,
+      srm,
+      style,
+      ...props
+  }: Beverage): Object {
+    return {
+      ...props,
+      availabilityId: availability && availability.id,
+      glasswareId: glassware && glassware.id,
+      srmId: srm && srm.id,
+      styleId: style && style.id,
+    };
   }
 }
 

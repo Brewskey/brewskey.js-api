@@ -8,24 +8,28 @@ import DefaultTranslator from './DefaultTranslator';
 
 class PermissionTranslator extends DefaultTranslator<
   Permission,
-  PermissionMutator
+  PermissionMutator<*>
 > {
-  toApi(mutator: PermissionMutator): Object {
+  toApi(
+    {
+      entity,
+      entityType,
+      user,
+      ...props
+    }: PermissionMutator<*>,
+  ): Object {
     return {
-      deviceId: mutator.entityType === 'devices'
-        ? mutator.entityId
+      ...props,
+      deviceId: entityType === 'devices'
+        ? entity.id
         : null,
-      expiresDate: mutator.expiresDate,
-      id: mutator.id,
-      locationId: mutator.entityType === 'locations'
-        ? mutator.entityId
+      locationId: entityType === 'locations'
+        ? entity.id
         : null,
-      permissionType: mutator.permissionType,
-      startDate: mutator.startDate,
-      tapId: mutator.entityType === 'taps'
-        ? mutator.entityId
+      tapId: entityType === 'taps'
+        ? entity.id
         : null,
-      userId: mutator.userId,
+      userId: user.id,
     };
   }
 }

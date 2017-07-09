@@ -12,10 +12,10 @@ class DeviceTranslator extends DefaultTranslator<Device, DeviceMutator> {
     }: any): Device);
   }
 
-  toForm(model: Device): DeviceMutator {
+  toApi({ location, ...props }: DeviceMutator): Object {
     return {
-      ...model,
-      locationId: model.location && model.location.id,
+      ...props,
+      locationId: location && location.id,
     };
   }
 }

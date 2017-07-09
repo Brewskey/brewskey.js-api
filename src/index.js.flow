@@ -72,7 +72,7 @@ export type Coordinates = {
 
 export type Beverage = {
   abv: number,
-  availableId: ?string,
+  availability: ?Availability,
   beerVariationId: ?string,
   beverageType: BeverageType,
   createDate: Date,
@@ -83,7 +83,7 @@ export type Beverage = {
   description: ?string,
   externalId: ?string,
   foodPairings: ?string,
-  glasswareId: ?number,
+  glassware: ?Glass,
   ibu: number,
   id: string,
   isDeleted: boolean,
@@ -97,8 +97,8 @@ export type Beverage = {
   originalGravity: ?number,
   servingTemperature: ?ServingTemperature,
   servingTemperatureDisplay: ?string,
-  srmId: ?string,
-  styleId: ?string,
+  srm: ?Srm,
+  style: ?Object,
   updateDate: Date,
   year: ?number,
 };
@@ -159,7 +159,7 @@ export type Device = {
 export type DeviceMutator = {
   deviceStatus: DeviceStatus,
   isMultiTap: boolean,
-  locationId: ?string,
+  location: ?Location,
   name: string,
   particleId: string,
 };
@@ -261,14 +261,14 @@ export type Permission = {
   },
 };
 
-export type PermissionMutator = {
-  entityId: string,
+export type PermissionMutator<TEntity> = {
+  entity: TEntity,
   entityType: PermissionEntityType,
   expiresDate: ?Date,
   id: ?string,
   permissionType: PermissionType,
   startDate: ?Date,
-  userId: string,
+  user: Account,
 };
 
 export type Pour = {
@@ -406,7 +406,7 @@ export type Tap = {
 export type TapMutator = {
   createdDate: ?string,
   description: ?string,
-  deviceId: string,
+  device: Device,
   disableBadges: boolean,
   hideLeaderboard: boolean,
   hideStats: boolean,
@@ -494,7 +494,7 @@ declare class brewskey$KegDAO extends DAO<Keg, Keg> {
 }
 declare class brewskey$LocationDAO extends DAO<Location, Location> {}
 declare class brewskey$PermissionDAO
-  extends DAO<Permission, PermissionMutator> {}
+  extends DAO<Permission, PermissionMutator<*>> {}
 declare class brewskey$PourDAO extends DAO<Pour, Pour> {}
 declare class brewkey$PourChartDAO extends DAO<PourChartDataSet, PourChartDataSet> {
   fetchChartData(params: PourChartParams): Promise<DAOResult<PourChartDataSet>>;
