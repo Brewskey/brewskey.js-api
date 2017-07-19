@@ -34,6 +34,7 @@ var KegDAO = function (_DAO) {
       entityName: _constants.DAO_ENTITIES.KEGS,
       navigationProperties: {
         location: ['id', 'isDeleted', 'name'],
+        organization: ['id', 'name'],
         tap: ['id', 'isDeleted', 'name']
       },
       translator: new _KegTranslator2.default()

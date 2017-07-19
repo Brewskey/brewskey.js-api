@@ -14,6 +14,7 @@ export const DAO_ENTITIES: { [key: string]: EntityName } = {
   DEVICES: 'devices',
   KEGS: 'kegs',
   LOCATIONS: 'locations',
+  ORGANIZATIONS: 'organizations',
   PERMISSIONS: 'permissions',
   POUR_CHART: 'chart',
   POURS: 'pours',

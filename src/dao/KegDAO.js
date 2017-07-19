@@ -14,6 +14,7 @@ class KegDAO extends DAO<Keg, Keg> {
       entityName: DAO_ENTITIES.KEGS,
       navigationProperties: {
         location: ['id', 'isDeleted', 'name'],
+        organization: ['id', 'name'],
         tap: ['id', 'isDeleted', 'name'],
       },
       translator: new KegTranslator(),

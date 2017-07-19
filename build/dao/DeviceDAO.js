@@ -33,7 +33,8 @@ var DeviceDAO = function (_DAO) {
       navigationProperties: {
         createdBy: ['id', 'userName'],
         lastEditedBy: ['id', 'userName'],
-        location: ['id', 'name']
+        location: ['id', 'name'],
+        organization: ['id', 'name']
       },
       translator: new _DeviceTranslator2.default()
     }));

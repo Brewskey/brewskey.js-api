@@ -32,7 +32,8 @@ var TapDAO = function (_DAO) {
       entityName: _constants.DAO_ENTITIES.TAPS,
       navigationProperties: {
         device: ['id', 'name'],
-        location: ['id', 'isDeleted', 'name']
+        location: ['id', 'isDeleted', 'name'],
+        organization: ['id', 'name']
       },
       translator: new _TapTranslator2.default()
     }));

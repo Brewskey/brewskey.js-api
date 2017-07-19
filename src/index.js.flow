@@ -13,6 +13,7 @@ export type EntityName =
   'devices' |
   'kegs' |
   'locations' |
+  'organizations' |
   'permissions' |
   'pours' |
   'reports' |
@@ -134,24 +135,16 @@ export type DeviceStatus =
   'Inactive'; 
 
 export type Device = {
-  createdBy: {
-    id: string,
-    userName: string,
-  },
+  createdBy: { id: string, userName: string  },
   deviceStatus: DeviceStatus,
   id: string,
   isDeleted: boolean,
   isMultiTap: boolean,
   lastEdited: Date,
-  lastEditedBy: {
-    id: string,
-    userName: string,
-  },
-  location?: {
-    id: string,
-    name: string,
-  },
+  lastEditedBy: { id: string,  userName: string },
+  location?: { id: string, name: string },
   name: string,
+  organization: { name: string, id: string },
   particleId: string,
   temperature: number,
 };
@@ -186,6 +179,7 @@ export type Keg = {
     name: string,
   },
   maxOunces: number,
+  organization: { name: string, id: string },
   ounces: number,
   pulses: number,
   tap: ?{
@@ -212,12 +206,20 @@ export type Location = {
   isDeleted: boolean,
   locationType: string,
   name: string,
+  organization: { name: string, id: string },
   state: ?string,
   street: string,
   suite: string,
   summary: string,
   timeZone: string,
   zipCode: number,
+};
+
+export type Organization = {
+  createdDate: Date,
+  id: string,
+  isDeleted: boolean,
+  name: string,
 };
 
 export type PermissionEntityType =
@@ -284,11 +286,9 @@ export type Pour = {
     isDeleted: boolean,
     name: string,
   },
+  organization: { name: string, id: string },
   ounces: number,
-  owner: {
-    id: string,
-    userName: string,
-  },
+  owner: { id: string, userName: string },
   pourDate: string,
   pulses: number,
   tap: ?{
@@ -493,6 +493,7 @@ declare class brewskey$KegDAO extends DAO<Keg, Keg> {
   fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>>;
 }
 declare class brewskey$LocationDAO extends DAO<Location, Location> {}
+declare class brewskey$OrganizationDAO extends DAO<Organization, Organization> {}
 declare class brewskey$PermissionDAO
   extends DAO<Permission, PermissionMutator<*>> {}
 declare class brewskey$PourDAO extends DAO<Pour, Pour> {}
@@ -541,6 +542,7 @@ type DAOApi = {
   GlassDAO: brewskey$GlassDAO,
   KegDAO: brewskey$KegDAO,
   LocationDAO: brewskey$LocationDAO,
+  OrganizationDAO: brewskey$OrganizationDAO,
   PermissionDAO: brewskey$PermissionDAO,
   PourChartDAO: brewkey$PourChartDAO,
   PourDAO: brewskey$PourDAO,
@@ -560,6 +562,7 @@ type DAOApi = {
   setHeaders(headers: Headers): void,
 }
 
+declare export var CADENCE_MAP: { [ReportCadence]: number };
 declare export var DAO_ENTITIES: { [string]: EntityName };
 
 declare export default DAOApi;

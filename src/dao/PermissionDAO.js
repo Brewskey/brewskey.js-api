@@ -17,6 +17,7 @@ class PermissionDAO extends DAO<Permission, PermissionMutator<*>> {
         device: ['id', 'name'],
         forUser: ['id', 'userName'],
         location: ['id', 'name'],
+        organization: ['id', 'name'],
         tap: ['id', 'name'],
       },
       translator: new PermissionTranslator(),

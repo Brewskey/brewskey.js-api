@@ -51,6 +51,10 @@ var _LocationDAO = require('./dao/LocationDAO');
 
 var _LocationDAO2 = _interopRequireDefault(_LocationDAO);
 
+var _OrganizationDAO = require('./dao/OrganizationDAO');
+
+var _OrganizationDAO2 = _interopRequireDefault(_OrganizationDAO);
+
 var _PermissionDAO = require('./dao/PermissionDAO');
 
 var _PermissionDAO2 = _interopRequireDefault(_PermissionDAO);
@@ -121,6 +125,7 @@ exports.default = {
   GlassDAO: _GlassDAO2.default,
   KegDAO: _KegDAO2.default,
   LocationDAO: _LocationDAO2.default,
+  OrganizationDAO: _OrganizationDAO2.default,
   PermissionDAO: _PermissionDAO2.default,
   PourChartDAO: _PourChartDAO2.default,
   PourDAO: _PourDAO2.default,

@@ -35,6 +35,7 @@ var PermissionDAO = function (_DAO) {
         device: ['id', 'name'],
         forUser: ['id', 'userName'],
         location: ['id', 'name'],
+        organization: ['id', 'name'],
         tap: ['id', 'name']
       },
       translator: new _PermissionTranslator2.default()
