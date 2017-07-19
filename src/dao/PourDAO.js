@@ -12,6 +12,7 @@ class PourDAO extends DAO<Pour, Pour> {
       navigationProperties: {
         beverage: ['id', 'isDeleted', 'name'],
         location: ['id', 'isDeleted', 'name'],
+        organization: ['id', 'name'],
         owner: ['id', 'userName'],
         tap: ['id', 'isDeleted', 'name'],
       },

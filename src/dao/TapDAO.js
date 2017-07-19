@@ -12,6 +12,7 @@ class TapDAO extends DAO<Tap, TapMutator> {
       navigationProperties: {
         device: ['id', 'name'],
         location: ['id', 'isDeleted', 'name'],
+        organization: ['id', 'name'],
       },
       translator: new TapTranslator(),
     });

@@ -13,6 +13,7 @@ class DeviceDAO extends DAO<Device, DeviceMutator> {
         createdBy: ['id', 'userName'],
         lastEditedBy: ['id', 'userName'],
         location: ['id', 'name'],
+        organization: ['id', 'name'],
       },
       translator: new DeviceTranslator(),
     });

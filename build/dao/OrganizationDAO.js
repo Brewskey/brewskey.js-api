@@ -10,9 +10,9 @@ var _DAO3 = _interopRequireDefault(_DAO2);
 
 var _constants = require('../constants');
 
-var _LocationTranslator = require('../translators/LocationTranslator');
+var _DefaultTranslator = require('../translators/DefaultTranslator');
 
-var _LocationTranslator2 = _interopRequireDefault(_LocationTranslator);
+var _DefaultTranslator2 = _interopRequireDefault(_DefaultTranslator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22,22 +22,19 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var LocationDAO = function (_DAO) {
-  _inherits(LocationDAO, _DAO);
+var OrganizationDAO = function (_DAO) {
+  _inherits(OrganizationDAO, _DAO);
 
-  function LocationDAO() {
-    _classCallCheck(this, LocationDAO);
+  function OrganizationDAO() {
+    _classCallCheck(this, OrganizationDAO);
 
-    return _possibleConstructorReturn(this, (LocationDAO.__proto__ || Object.getPrototypeOf(LocationDAO)).call(this, {
-      entityName: _constants.DAO_ENTITIES.LOCATIONS,
-      navigationProperties: {
-        organization: ['id', 'name']
-      },
-      translator: new _LocationTranslator2.default()
+    return _possibleConstructorReturn(this, (OrganizationDAO.__proto__ || Object.getPrototypeOf(OrganizationDAO)).call(this, {
+      entityName: _constants.DAO_ENTITIES.ORGANIZATIONS,
+      translator: new _DefaultTranslator2.default()
     }));
   }
 
-  return LocationDAO;
+  return OrganizationDAO;
 }(_DAO3.default);
 
-exports.default = new LocationDAO();
+exports.default = new OrganizationDAO();

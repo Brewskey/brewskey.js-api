@@ -17,6 +17,7 @@ import DeviceDAO from './dao/DeviceDAO';
 import GlassDAO from './dao/GlassDAO';
 import KegDAO from './dao/KegDAO';
 import LocationDAO from './dao/LocationDAO';
+import OrganizationDAO from './dao/OrganizationDAO';
 import PermissionDAO from './dao/PermissionDAO';
 import PourChartDAO from './dao/PourChartDAO';
 import PourDAO from './dao/PourDAO';
@@ -55,6 +56,7 @@ export default {
   GlassDAO,
   KegDAO,
   LocationDAO,
+  OrganizationDAO,
   PermissionDAO,
   PourChartDAO,
   PourDAO,
