@@ -15,6 +15,7 @@ class PermissionTranslator extends DefaultTranslator<
       entity,
       entityType,
       user,
+      organization,
       ...props
     }: PermissionMutator<*>,
   ): Object {
@@ -26,6 +27,7 @@ class PermissionTranslator extends DefaultTranslator<
       locationId: entityType === 'locations'
         ? entity.id
         : null,
+      organizationId: organization && organization.id,
       tapId: entityType === 'taps'
         ? entity.id
         : null,

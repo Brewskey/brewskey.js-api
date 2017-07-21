@@ -37,11 +37,13 @@ var PermissionTranslator = function (_DefaultTranslator) {
       var entity = _ref.entity,
           entityType = _ref.entityType,
           user = _ref.user,
-          props = _objectWithoutProperties(_ref, ['entity', 'entityType', 'user']);
+          organization = _ref.organization,
+          props = _objectWithoutProperties(_ref, ['entity', 'entityType', 'user', 'organization']);
 
       return _extends({}, props, {
         deviceId: entityType === 'devices' ? entity.id : null,
         locationId: entityType === 'locations' ? entity.id : null,
+        organizationId: organization && organization.id,
         tapId: entityType === 'taps' ? entity.id : null,
         userId: user.id
       });
