@@ -43,7 +43,7 @@ var PermissionTranslator = function (_DefaultTranslator) {
       return _extends({}, props, {
         deviceId: entityType === 'devices' ? entity.id : null,
         locationId: entityType === 'locations' ? entity.id : null,
-        organizationId: organization && organization.id,
+        organizationId: entityType === 'organizations' ? entity.id : null,
         tapId: entityType === 'taps' ? entity.id : null,
         userId: user.id
       });

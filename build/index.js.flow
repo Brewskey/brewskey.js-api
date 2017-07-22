@@ -225,6 +225,7 @@ export type Organization = {
 export type PermissionEntityType =
   'devices' |
   'locations' |
+  'organizations' |
   'taps';
 
 export type PermissionType =
@@ -272,7 +273,6 @@ export type PermissionMutator<TEntity> = {
   permissionType: PermissionType,
   startDate: ?Date,
   user: Account,
-  organization: ?Organization,
 };
 
 export type Pour = {

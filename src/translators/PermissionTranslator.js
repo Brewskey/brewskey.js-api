@@ -27,7 +27,9 @@ class PermissionTranslator extends DefaultTranslator<
       locationId: entityType === 'locations'
         ? entity.id
         : null,
-      organizationId: organization && organization.id,
+      organizationId: entityType === 'organizations'
+        ? entity.id
+        : null,
       tapId: entityType === 'taps'
         ? entity.id
         : null,
