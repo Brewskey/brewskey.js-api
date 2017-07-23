@@ -40,7 +40,7 @@ class SchedulesTranslator extends DefaultTranslator<Schedule, ScheduleMutator> {
     return {
       ...mutator,
       accountIds: mutator.accounts && mutator.accounts.map(
-        (account: { id: string, name: string }): string => account.id,
+        (account: { id: string, userName: string }): string => account.id,
       ),
     };
   }

@@ -22,7 +22,7 @@ export type EntityName =
   'taps';
 
 
-export type ShortenedEntity = { id: strinng, name: string };
+export type ShortenedEntity = { id: string, name: string };
 
 export type Account = {
   accessFailedCount: ?number,
@@ -157,6 +157,7 @@ export type DeviceMutator = {
   isMultiTap: boolean,
   location: ?Location,
   name: string,
+  organization: ShortenedEntity,
   particleId: string,
 };
 
