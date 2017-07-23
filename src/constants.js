@@ -2,7 +2,15 @@
 import type {
   EntityName,
   FilterOperator,
+  PermissionType,
 } from './index';
+
+export const PERMISSIONS_MAP: { [key: PermissionType]: number } = {
+  Administrator: 4,
+  BannedFromTap: 1,
+  Edit: 3,
+  Read: 2,
+};
 
 export const DAO_ENTITIES: { [key: string]: EntityName } = {
   ACCOUNTS: 'accounts',

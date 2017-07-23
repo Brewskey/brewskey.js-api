@@ -33,7 +33,7 @@ var PermissionDAO = function (_DAO) {
       navigationProperties: {
         createdBy: ['id', 'userName'],
         device: ['id', 'isDeleted', 'name'],
-        forUser: ['id', 'isDeleted', 'userName'],
+        forUser: ['id', 'userName'],
         location: ['id', 'isDeleted', 'name'],
         organization: ['id', 'isDeleted', 'name'],
         tap: ['id', 'isDeleted', 'name']

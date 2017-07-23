@@ -530,5 +530,6 @@ type DAOApi = {
 
 declare export var CADENCE_MAP: { [ReportCadence]: number };
 declare export var DAO_ENTITIES: { [string]: EntityName };
+declare export var PERMISSIONS_MAP: { [PermissionType]: number };
 
 declare export default DAOApi;

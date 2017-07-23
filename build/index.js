@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DAOResult = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
+exports.PERMISSIONS_MAP = exports.DAOResult = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
 
 var _odata = require('odata');
 
@@ -114,6 +114,7 @@ var setHeaders = function setHeaders(headers) {
 exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
 exports.DAOResult = _DAOResult2.default;
+exports.PERMISSIONS_MAP = _constants.PERMISSIONS_MAP;
 
 /* eslint-disable sorting/sort-object-props */
 
