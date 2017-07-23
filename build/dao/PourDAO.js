@@ -33,7 +33,7 @@ var PourDAO = function (_DAO) {
       navigationProperties: {
         beverage: ['id', 'isDeleted', 'name'],
         location: ['id', 'isDeleted', 'name'],
-        organization: ['id', 'name'],
+        organization: ['id', 'isDeleted', 'name'],
         owner: ['id', 'userName'],
         tap: ['id', 'isDeleted', 'name']
       },

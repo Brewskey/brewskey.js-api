@@ -10,7 +10,7 @@ class LocationDAO extends DAO<Location, Location> {
     super({
       entityName: DAO_ENTITIES.LOCATIONS,
       navigationProperties: {
-        organization: ['id', 'name'],
+        organization: ['id', 'isDeleted', 'name'],
       },
       translator: new LocationTranslator(),
     });

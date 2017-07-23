@@ -12,8 +12,8 @@ class DeviceDAO extends DAO<Device, DeviceMutator> {
       navigationProperties: {
         createdBy: ['id', 'userName'],
         lastEditedBy: ['id', 'userName'],
-        location: ['id', 'name'],
-        organization: ['id', 'name'],
+        location: ['id', 'isDeleted', 'name'],
+        organization: ['id', 'isDeleted', 'name'],
       },
       translator: new DeviceTranslator(),
     });

@@ -14,11 +14,11 @@ class PermissionDAO extends DAO<Permission, PermissionMutator<*>> {
       entityName: DAO_ENTITIES.PERMISSIONS,
       navigationProperties: {
         createdBy: ['id', 'userName'],
-        device: ['id', 'name'],
+        device: ['id', 'isDeleted', 'name'],
         forUser: ['id', 'userName'],
-        location: ['id', 'name'],
-        organization: ['id', 'name'],
-        tap: ['id', 'name'],
+        location: ['id', 'isDeleted', 'name'],
+        organization: ['id', 'isDeleted', 'name'],
+        tap: ['id', 'isDeleted', 'name'],
       },
       translator: new PermissionTranslator(),
     });

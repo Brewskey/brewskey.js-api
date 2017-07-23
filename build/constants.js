@@ -3,6 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var PERMISSIONS_MAP = exports.PERMISSIONS_MAP = {
+  Administrator: 4,
+  BannedFromTap: 1,
+  Edit: 3,
+  Read: 2
+};
 var DAO_ENTITIES = exports.DAO_ENTITIES = {
   ACCOUNTS: 'accounts',
   BEVERAGE_AVAILABILITIES: 'beverage-availabilities',
@@ -22,7 +28,6 @@ var DAO_ENTITIES = exports.DAO_ENTITIES = {
   SCHEDULES: 'schedules',
   TAPS: 'taps'
 };
-
 
 var FILTER_OPERATORS = {
   CONTAINS: 'contains',
