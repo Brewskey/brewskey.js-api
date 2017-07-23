@@ -32,11 +32,11 @@ var PermissionDAO = function (_DAO) {
       entityName: _constants.DAO_ENTITIES.PERMISSIONS,
       navigationProperties: {
         createdBy: ['id', 'userName'],
-        device: ['id', 'name'],
-        forUser: ['id', 'userName'],
-        location: ['id', 'name'],
-        organization: ['id', 'name'],
-        tap: ['id', 'name']
+        device: ['id', 'isDeleted', 'name'],
+        forUser: ['id', 'isDeleted', 'userName'],
+        location: ['id', 'isDeleted', 'name'],
+        organization: ['id', 'isDeleted', 'name'],
+        tap: ['id', 'isDeleted', 'name']
       },
       translator: new _PermissionTranslator2.default()
     }));

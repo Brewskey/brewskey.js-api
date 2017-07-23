@@ -31,9 +31,9 @@ var TapDAO = function (_DAO) {
     return _possibleConstructorReturn(this, (TapDAO.__proto__ || Object.getPrototypeOf(TapDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.TAPS,
       navigationProperties: {
-        device: ['id', 'name'],
+        device: ['id', 'isDeleted', 'name'],
         location: ['id', 'isDeleted', 'name'],
-        organization: ['id', 'name']
+        organization: ['id', 'isDeleted', 'name']
       },
       translator: new _TapTranslator2.default()
     }));

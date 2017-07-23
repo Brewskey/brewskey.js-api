@@ -12,10 +12,11 @@ class DeviceTranslator extends DefaultTranslator<Device, DeviceMutator> {
     }: any): Device);
   }
 
-  toApi({ location, ...props }: DeviceMutator): Object {
+  toApi({ location, organization, ...props }: DeviceMutator): Object {
     return {
       ...props,
       locationId: location && location.id,
+      organizationId: organization.id,
     };
   }
 }

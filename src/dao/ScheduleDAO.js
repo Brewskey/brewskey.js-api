@@ -11,7 +11,7 @@ class ScheduleDAO extends DAO<Schedule, ScheduleMutator> {
       entityName: DAO_ENTITIES.SCHEDULES,
       navigationProperties: {
         accounts: ['id', 'userName'],
-        location: ['id', 'name'],
+        location: ['id', 'isDeleted', 'name'],
       },
       translator: new ScheduleTranslator(),
     });

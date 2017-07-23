@@ -10,9 +10,9 @@ class ReportDAO extends DAO<Report, ReportMutator> {
     super({
       entityName: DAO_ENTITIES.REPORTS,
       navigationProperties: {
-        devices: ['id', 'name'],
-        locations: ['id', 'name'],
-        taps: ['id', 'name'],
+        devices: ['id', 'isDeleted', 'name'],
+        locations: ['id', 'isDeleted', 'name'],
+        taps: ['id', 'isDeleted', 'name'],
       },
       translator: new ReportTranslator(),
     });

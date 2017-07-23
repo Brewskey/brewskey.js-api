@@ -21,6 +21,9 @@ export type EntityName =
   'schedules' |
   'taps';
 
+
+export type ShortenedEntity = { id: strinng, name: string };
+
 export type Account = {
   accessFailedCount: ?number,
   banned: ?boolean,
@@ -142,9 +145,9 @@ export type Device = {
   isMultiTap: boolean,
   lastEdited: Date,
   lastEditedBy: { id: string,  userName: string },
-  location?: { id: string, name: string },
+  location?: ShortenedEntity,
   name: string,
-  organization: { name: string, id: string },
+  organization: ShortenedEntity,
   particleId: string,
   temperature: number,
 };
@@ -173,20 +176,12 @@ export type Keg = {
   id: string,
   isDeleted: boolean,
   kegType: string,
-  location: ?{
-    id: string,
-    isDeleted: boolean,
-    name: string,
-  },
+  location: ?ShortenedEntity,
   maxOunces: number,
-  organization: { name: string, id: string },
+  organization: ShortenedEntity,
   ounces: number,
   pulses: number,
-  tap: ?{
-    id: string,
-    isDeleted: boolean,
-    name: string,
-  },
+  tap: ?ShortenedEntity,
   tapDate: Date,
 };
 
@@ -206,7 +201,7 @@ export type Location = {
   isDeleted: boolean,
   locationType: string,
   name: string,
-  organization: { name: string, id: string },
+  organization: ShortenedEntity,
   state: ?string,
   street: string,
   suite: string,
@@ -240,10 +235,7 @@ export type Permission = {
     userName: string,
   },
   createdDate: Date,
-  device: ?{
-    id: string,
-    name: string,
-  },
+  device: ?ShortenedEntity,
   expiresDate: ?Date,
   forUser: {
     id: string,
@@ -252,17 +244,11 @@ export type Permission = {
   id: string,
   isDeleted: boolean,
   invalid: boolean,
-  location: ?{
-    id: string,
-    name: string,
-  },
-  organization: ?{ id: string, name: string },
+  location: ?ShortenedEntity,
+  organization: ?ShortenedEntity,
   permissionType: PermissionType,
   startDate: ?Date,
-  tap: ?{
-    id: string,
-    name: string,
-  },
+  tap: ?ShortenedEntity,
 };
 
 export type PermissionMutator<TEntity> = {
@@ -276,53 +262,41 @@ export type PermissionMutator<TEntity> = {
 };
 
 export type Pour = {
-  beverage: ?{
-    id: string,
-    isDeleted: boolean,
-    name: string,
-  },
+  beverage: ?ShortenedEntity,
   id: string,
   isDeleted: boolean,
-  location: ?{
-    id: string,
-    isDeleted: boolean,
-    name: string,
-  },
-  organization: { name: string, id: string },
+  location: ?ShortenedEntity,
+  organization: ShortenedEntity,
   ounces: number,
   owner: { id: string, userName: string },
   pourDate: string,
   pulses: number,
-  tap: ?{
-    id: string,
-    isDeleted: boolean,
-    name: string,
-  },
+  tap: ?ShortenedEntity,
 };
 
 export type Report = {
   createdDate: Date,
-  devices: Array<{ id: string, name: string }>,
+  devices: Array<ShortenedEntity>,
   id: string,
   isDeleted: boolean,
   lastEdited: Date,
-  locations: Array<{ id: string, name: string }>,
+  locations: Array<ShortenedEntity>,
   name: string,
   reportCadence: ReportCadence,
   reportCadenceTimeStamp: Date,
   sendToEmails: Array<string>,
-  taps: Array<{ id: string, name: string }>,
+  taps: Array<ShortenedEntity>,
 };
 
 export type ReportMutator = {
-  devices?: Array<{ id: string, name: string }>,
+  devices?: Array<ShortenedEntity>,
   id?: string,
-  locations?: Array<{ id: string, name: string }>,
+  locations?: Array<ShortenedEntity>,
   name: string,
   reportCadence: ReportCadence,
   reportCadenceTimeStamp: Date,
   sendToEmails: Array<{ email: string }>,
-  taps?: Array<{ id: string, name: string }>,
+  taps?: Array<ShortenedEntity>,
 };
 
 export type ReportCadence = 'OneTime' | 'Daily' | 'Weekly' | 'Biweekly' | 'Monthly';
@@ -330,7 +304,7 @@ export type ReportCadence = 'OneTime' | 'Daily' | 'Weekly' | 'Biweekly' | 'Month
 export type Schedule = {
   accounts: Array<{
     id: string,
-    name: string,
+    userName: string,
   }>,
   createdDate: Date,
   days: number,
@@ -338,11 +312,7 @@ export type Schedule = {
   endTime: Date,
   id: string,
   isDeleted: boolean,
-  location: ?{
-    id: string,
-    isDeleted: boolean,
-    name: string,
-  },
+  location: ?ShortenedEntity,
   name: string,
   startTime: Date,
 };
@@ -350,7 +320,7 @@ export type Schedule = {
 export type ScheduleMutator = {
   accounts: Array<{
     id: string,
-    name: string,
+    userName: string,
   }>,
   days: number,
   endTime: Date,
@@ -387,21 +357,14 @@ export type Style = {
 export type Tap = {
   createdDate: Date,
   description: ?string,
-  device: {
-    id: string,
-    isDeleted: boolean,
-    name: string,
-  },
+  device: ShortenedEntity,
   disableBadges: boolean,
   hideLeaderboard: boolean,
   hideStats: boolean,
   id: string,
-  location: ?{
-    id: string,
-    isDeleted: boolean,
-    name: string,    
-  },
+  location: ?ShortenedEntity,
   name: string,
+  organization: ShortenedEntity,
   requiresPourPrivilege: boolean,
 };
 
@@ -414,6 +377,7 @@ export type TapMutator = {
   hideStats: boolean,
   id: ?string,
   name: string,
+  organization: ShortenedEntity,
   requiresPourPrivilege: boolean,
 };
 

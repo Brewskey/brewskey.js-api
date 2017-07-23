@@ -32,7 +32,7 @@ var ScheduleDAO = function (_DAO) {
       entityName: _constants.DAO_ENTITIES.SCHEDULES,
       navigationProperties: {
         accounts: ['id', 'userName'],
-        location: ['id', 'name']
+        location: ['id', 'isDeleted', 'name']
       },
       translator: new _ScheduleTranslator2.default()
     }));

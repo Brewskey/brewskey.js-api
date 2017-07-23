@@ -32,6 +32,13 @@ class LocationTranslator extends DefaultTranslator<Location, Location> {
       },
     }: any): Location);
   }
+
+  toApi({ organization, ...props }: Location): Object {
+    return {
+      ...props,
+      organizationId: organization.id,
+    };
+  }
 }
 
 export default LocationTranslator;
