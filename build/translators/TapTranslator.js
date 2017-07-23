@@ -44,12 +44,10 @@ var TapsTranslator = function (_DefaultTranslator) {
     key: 'toApi',
     value: function toApi(_ref) {
       var device = _ref.device,
-          organization = _ref.organization,
-          props = _objectWithoutProperties(_ref, ['device', 'organization']);
+          props = _objectWithoutProperties(_ref, ['device']);
 
       return _extends({}, props, {
-        deviceId: device.id,
-        organizationId: organization.id
+        deviceId: device.id
       });
     }
   }]);

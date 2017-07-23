@@ -12,11 +12,10 @@ class TapsTranslator extends DefaultTranslator<Tap, TapMutator> {
     }: any): Tap);
   }
 
-  toApi({ device, organization, ...props }: TapMutator): Object {
+  toApi({ device, ...props }: TapMutator): Object {
     return {
       ...props,
       deviceId: device.id,
-      organizationId: organization.id,
     };
   }
 }

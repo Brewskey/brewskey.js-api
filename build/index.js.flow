@@ -157,7 +157,6 @@ export type DeviceMutator = {
   isMultiTap: boolean,
   location: ?Location,
   name: string,
-  organization: ShortenedEntity,
   particleId: string,
 };
 
@@ -378,7 +377,6 @@ export type TapMutator = {
   hideStats: boolean,
   id: ?string,
   name: string,
-  organization: ShortenedEntity,
   requiresPourPrivilege: boolean,
 };
 

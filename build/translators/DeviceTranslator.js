@@ -44,12 +44,10 @@ var DeviceTranslator = function (_DefaultTranslator) {
     key: 'toApi',
     value: function toApi(_ref) {
       var location = _ref.location,
-          organization = _ref.organization,
-          props = _objectWithoutProperties(_ref, ['location', 'organization']);
+          props = _objectWithoutProperties(_ref, ['location']);
 
       return _extends({}, props, {
-        locationId: location && location.id,
-        organizationId: organization.id
+        locationId: location && location.id
       });
     }
   }]);
