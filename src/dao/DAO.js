@@ -16,10 +16,15 @@ import { createFilter } from '../filters';
 const ID_REG_EXP = /\bid\b/;
 
 class DAO<TEntity, TEntityMutator> {
+  static _organizationID: ?string = null;
   _config: DAOConfig<TEntity, TEntityMutator>;
 
   constructor(config: DAOConfig<TEntity, TEntityMutator>) {
     this._config = config;
+  }
+
+  static setOrganizationID(organizationID: string) {
+    DAO._organizationID = organizationID;
   }
 
   deleteByID(id: string): Promise<DAOResult<TEntity>> {
@@ -169,6 +174,10 @@ class DAO<TEntity, TEntityMutator> {
       } else if (orderBy) {
         handler.orderBy(orderBy);
       }
+    }
+
+    if (DAO._organizationID) {
+      handler.customParam('organizationID', DAO._organizationID);
     }
 
     return handler;

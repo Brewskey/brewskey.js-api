@@ -15,6 +15,10 @@ var _DAOResult = require('./dao/DAOResult');
 
 var _DAOResult2 = _interopRequireDefault(_DAOResult);
 
+var _DAO = require('./dao/DAO');
+
+var _DAO2 = _interopRequireDefault(_DAO);
+
 var _ReportTranslator = require('./translators/ReportTranslator');
 
 var _fetch = require('./fetch');
@@ -111,6 +115,8 @@ var setHeaders = function setHeaders(headers) {
   });
 };
 
+var setOrganizationID = _DAO2.default.setOrganizationID;
+
 exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
 exports.DAOResult = _DAOResult2.default;
@@ -140,5 +146,6 @@ exports.default = {
   fetch: _fetch2.default,
   getHeaders: getHeaders,
   initializeDAOApi: initializeDAOApi,
-  setHeaders: setHeaders
+  setHeaders: setHeaders,
+  setOrganizationID: setOrganizationID
 };

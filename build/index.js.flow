@@ -525,6 +525,7 @@ type DAOApi = {
   getHeaders(): Headers,
   initializeDAOApi(config: OConfig): void,
   setHeaders(headers: Headers): void,
+  setOrganizationID(organizationID: ?string): void,
 }
 
 declare export var CADENCE_MAP: { [ReportCadence]: number };
