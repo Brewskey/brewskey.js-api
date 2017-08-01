@@ -5,6 +5,7 @@ import type { Headers, OConfig } from './index';
 import oHandler from 'odata';
 import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
 import DAOResult from './dao/DAOResult';
+import DAO from './dao/DAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
 
 import fetch from './fetch';
@@ -45,6 +46,8 @@ const setHeaders = (headers: Headers) => {
   });
 };
 
+const setOrganizationID = DAO.setOrganizationID;
+
 export { CADENCE_MAP, DAO_ENTITIES, DAOResult, PERMISSIONS_MAP };
 
 /* eslint-disable sorting/sort-object-props */
@@ -71,4 +74,5 @@ export default {
   getHeaders,
   initializeDAOApi,
   setHeaders,
+  setOrganizationID,
 };

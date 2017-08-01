@@ -188,6 +188,10 @@ var DAO = function () {
         }
       }
 
+      if (DAO._organizationID) {
+        handler.customParam('organizationID', DAO._organizationID);
+      }
+
       return handler;
     }
   }, {
@@ -264,9 +268,15 @@ var DAO = function () {
 
       return _resolve;
     }()
+  }], [{
+    key: 'setOrganizationID',
+    value: function setOrganizationID(organizationID) {
+      DAO._organizationID = organizationID;
+    }
   }]);
 
   return DAO;
 }();
 
+DAO._organizationID = null;
 exports.default = DAO;
