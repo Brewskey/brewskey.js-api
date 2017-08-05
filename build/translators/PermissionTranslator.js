@@ -22,6 +22,19 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var PERMISSION_ENTITY_KEYS = ['device', 'location', 'organization', 'tap'];
+
+// todo make DAO_ENTITIES and permissionType singular, it will allow
+// simplify and reduce many annoying transformations.
+// and we won't need to write shitty methods like this. :/
+var getPermissionEntityTypeFromModel = function getPermissionEntityTypeFromModel(model) {
+  return (Object.entries(model).find(function (entry) {
+    var key = entry[0];
+    var value = entry[1];
+    return PERMISSION_ENTITY_KEYS.includes(key) && !!value;
+  }) || {})[0] + 's';
+};
+
 var PermissionTranslator = function (_DefaultTranslator) {
   _inherits(PermissionTranslator, _DefaultTranslator);
 
@@ -46,6 +59,17 @@ var PermissionTranslator = function (_DefaultTranslator) {
         organizationId: entityType === 'organizations' ? entity.id : null,
         tapId: entityType === 'taps' ? entity.id : null,
         userId: user.id
+      });
+    }
+  }, {
+    key: 'toForm',
+    value: function toForm(model) {
+      var permissionEntityType = getPermissionEntityTypeFromModel(model);
+
+      return _extends({}, model, {
+        entity: model[permissionEntityType.slice(0, -1)],
+        entityType: permissionEntityType,
+        user: model.forUser
       });
     }
   }]);
