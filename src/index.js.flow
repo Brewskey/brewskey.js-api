@@ -258,7 +258,7 @@ export type PermissionMutator<TEntity> = {
   id: ?string,
   permissionType: PermissionType,
   startDate: ?Date,
-  user: Account,
+  user: { id: string,  userName: string },
 };
 
 export type Pour = {
