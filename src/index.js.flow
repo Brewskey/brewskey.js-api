@@ -169,9 +169,6 @@ export type Glass = {
 };
 
 export type Keg = {
-  beerIcon: string,
-  beerId: string,
-  beerName: string,
   beverage: ShortenedEntity,
   floatedDate: Date,
   id: string,
