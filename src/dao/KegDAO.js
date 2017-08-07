@@ -13,6 +13,7 @@ class KegDAO extends DAO<Keg, Keg> {
     super({
       entityName: DAO_ENTITIES.KEGS,
       navigationProperties: {
+        beverage: ['id', 'isDeleted', 'name'],
         location: ['id', 'isDeleted', 'name'],
         organization: ['id', 'isDeleted', 'name'],
         tap: ['id', 'isDeleted', 'name'],
