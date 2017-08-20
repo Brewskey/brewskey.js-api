@@ -419,14 +419,14 @@ export type DAOConfig<TEntity, TEntityMutator> = {
 };
 
 declare export class DAOResult<TEntity> {
-  constructor(
-    count: ?number,
-    data: ?TEntity | ?Array<TEntity>,
-    error?: Error,
-  ): void;
   _count: ?number;
   _data: ?TEntity | ?Array<TEntity>;
   _error: ?Error;
+  constructor(
+    data: ?TEntity | ?Array<TEntity>,
+    count: ?number,
+    error?: Error,
+  ): void;
   count(): ?number;
   getData(): ?TEntity | ?Array<TEntity>;
   getError(): ?Error;
