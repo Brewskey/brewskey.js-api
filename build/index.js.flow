@@ -135,14 +135,16 @@ export type DeviceStatus =
   'Active'|
   'Cleaning'|
   'Free'|
-  'Inactive'; 
+  'Inactive';
+
+export type DeviceType = 'BrewskeyBox' | 'Onsite'
 
 export type Device = {
   createdBy: { id: string, userName: string  },
   deviceStatus: DeviceStatus,
+  deviceType: DeviceType,
   id: string,
   isDeleted: boolean,
-  isMultiTap: boolean,
   lastEdited: Date,
   lastEditedBy: { id: string,  userName: string },
   location?: ShortenedEntity,
