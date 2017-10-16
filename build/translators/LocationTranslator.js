@@ -65,9 +65,7 @@ var LocationTranslator = function (_DefaultTranslator) {
       var organization = _ref.organization,
           props = _objectWithoutProperties(_ref, ['organization']);
 
-      return _extends({}, props, {
-        organizationId: organization.id
-      });
+      return _extends({}, props, organization ? { organizationId: organization.id } : {});
     }
   }]);
 
