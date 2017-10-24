@@ -8,6 +8,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _DefaultTranslator2 = require('./DefaultTranslator');
 
 var _DefaultTranslator3 = _interopRequireDefault(_DefaultTranslator2);
@@ -32,17 +34,26 @@ var BeverageTranslator = function (_DefaultTranslator) {
   }
 
   _createClass(BeverageTranslator, [{
+    key: 'fromApi',
+    value: function fromApi(apiValue) {
+      return _extends({}, _get(BeverageTranslator.prototype.__proto__ || Object.getPrototypeOf(BeverageTranslator.prototype), 'fromApi', this).call(this, apiValue), {
+        isOrganic: apiValue.isOrganic === 'Y'
+      });
+    }
+  }, {
     key: 'toApi',
     value: function toApi(_ref) {
       var availability = _ref.availability,
           glassware = _ref.glassware,
+          isOrganic = _ref.isOrganic,
           srm = _ref.srm,
           style = _ref.style,
-          props = _objectWithoutProperties(_ref, ['availability', 'glassware', 'srm', 'style']);
+          props = _objectWithoutProperties(_ref, ['availability', 'glassware', 'isOrganic', 'srm', 'style']);
 
       return _extends({}, props, {
         availabilityId: availability && availability.id,
         glasswareId: glassware && glassware.id,
+        isOrganic: isOrganic ? 'Y' : 'N',
         srmId: srm && srm.id,
         styleId: style && style.id
       });
