@@ -24,6 +24,10 @@ var deepIdCast = function deepIdCast(node) {
 var DefaultTranslator = function () {
   function DefaultTranslator() {
     _classCallCheck(this, DefaultTranslator);
+
+    this.fromApi = this.fromApi.bind(this);
+    this.toApi = this.toApi.bind(this);
+    this.toForm = this.toForm.bind(this);
   }
 
   _createClass(DefaultTranslator, [{

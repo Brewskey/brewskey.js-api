@@ -36,6 +36,19 @@ var DAO = function () {
   function DAO(config) {
     _classCallCheck(this, DAO);
 
+    this.deleteByID = this.deleteByID.bind(this);
+    this.getEntityName = this.getEntityName.bind(this);
+    this.getTranslator = this.getTranslator.bind(this);
+    this.count = this.count.bind(this);
+    this.fetchByID = this.fetchByID.bind(this);
+    this.fetchByIDs = this.fetchByIDs.bind(this);
+    this.fetchMany = this.fetchMany.bind(this);
+    this.patch = this.patch.bind(this);
+    this.post = this.post.bind(this);
+    this.put = this.put.bind(this);
+    this._buildHandler = this._buildHandler.bind(this);
+    this._resolve = this._resolve.bind(this);
+
     this.__reformatIDValue = function (value) {
       return isNaN(value) || value === '' ? '\'' + value + '\'' : value;
     };

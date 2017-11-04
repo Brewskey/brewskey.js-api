@@ -35,19 +35,27 @@ var ReportTranslator = function (_DefaultTranslator) {
   _inherits(ReportTranslator, _DefaultTranslator);
 
   function ReportTranslator() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, ReportTranslator);
 
-    return _possibleConstructorReturn(this, (ReportTranslator.__proto__ || Object.getPrototypeOf(ReportTranslator)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ReportTranslator.__proto__ || Object.getPrototypeOf(ReportTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.toApi = _this.toApi.bind(_this), _this.toForm = _this.toForm.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(ReportTranslator, [{
     key: 'toApi',
-    value: function toApi(_ref) {
-      var devices = _ref.devices,
-          locations = _ref.locations,
-          sendToEmails = _ref.sendToEmails,
-          taps = _ref.taps,
-          props = _objectWithoutProperties(_ref, ['devices', 'locations', 'sendToEmails', 'taps']);
+    value: function toApi(_ref2) {
+      var devices = _ref2.devices,
+          locations = _ref2.locations,
+          sendToEmails = _ref2.sendToEmails,
+          taps = _ref2.taps,
+          props = _objectWithoutProperties(_ref2, ['devices', 'locations', 'sendToEmails', 'taps']);
 
       return _extends({}, props, {
         deviceIds: devices ? devices.map(function (device) {

@@ -46,9 +46,17 @@ var SchedulesTranslator = function (_DefaultTranslator) {
   _inherits(SchedulesTranslator, _DefaultTranslator);
 
   function SchedulesTranslator() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, SchedulesTranslator);
 
-    return _possibleConstructorReturn(this, (SchedulesTranslator.__proto__ || Object.getPrototypeOf(SchedulesTranslator)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = SchedulesTranslator.__proto__ || Object.getPrototypeOf(SchedulesTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.fromApi = _this.fromApi.bind(_this), _this.toApi = _this.toApi.bind(_this), _this.toForm = _this.toForm.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(SchedulesTranslator, [{

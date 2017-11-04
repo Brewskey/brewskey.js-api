@@ -156,6 +156,7 @@ export type Device = {
 
 export type DeviceMutator = {
   deviceStatus: DeviceStatus,
+  id?: string,
   isMultiTap: boolean,
   location: ?Location,
   name: string,

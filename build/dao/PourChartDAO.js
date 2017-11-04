@@ -35,6 +35,15 @@ var PourChartDAO = function (_DAO) {
       translator: new _DefaultTranslator2.default()
     }));
 
+    _this.deleteByID = _this.deleteByID.bind(_this);
+    _this.count = _this.count.bind(_this);
+    _this.fetchByID = _this.fetchByID.bind(_this);
+    _this.fetchByIDs = _this.fetchByIDs.bind(_this);
+    _this.fetchMany = _this.fetchMany.bind(_this);
+    _this.patch = _this.patch.bind(_this);
+    _this.post = _this.post.bind(_this);
+    _this.put = _this.put.bind(_this);
+
     _this.fetchChartData = function (params) {
       return _this._resolve(_this._buildHandler(), params, 'post');
     };

@@ -26,9 +26,17 @@ var PourTranslator = function (_DefaultTranslator) {
   _inherits(PourTranslator, _DefaultTranslator);
 
   function PourTranslator() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, PourTranslator);
 
-    return _possibleConstructorReturn(this, (PourTranslator.__proto__ || Object.getPrototypeOf(PourTranslator)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = PourTranslator.__proto__ || Object.getPrototypeOf(PourTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.fromApi = _this.fromApi.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(PourTranslator, [{

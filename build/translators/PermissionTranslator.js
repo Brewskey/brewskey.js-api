@@ -39,19 +39,27 @@ var PermissionTranslator = function (_DefaultTranslator) {
   _inherits(PermissionTranslator, _DefaultTranslator);
 
   function PermissionTranslator() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, PermissionTranslator);
 
-    return _possibleConstructorReturn(this, (PermissionTranslator.__proto__ || Object.getPrototypeOf(PermissionTranslator)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = PermissionTranslator.__proto__ || Object.getPrototypeOf(PermissionTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.toApi = _this.toApi.bind(_this), _this.toForm = _this.toForm.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(PermissionTranslator, [{
     key: 'toApi',
-    value: function toApi(_ref) {
-      var entity = _ref.entity,
-          entityType = _ref.entityType,
-          user = _ref.user,
-          organization = _ref.organization,
-          props = _objectWithoutProperties(_ref, ['entity', 'entityType', 'user', 'organization']);
+    value: function toApi(_ref2) {
+      var entity = _ref2.entity,
+          entityType = _ref2.entityType,
+          user = _ref2.user,
+          organization = _ref2.organization,
+          props = _objectWithoutProperties(_ref2, ['entity', 'entityType', 'user', 'organization']);
 
       return _extends({}, props, {
         deviceId: entityType === 'devices' ? entity.id : null,

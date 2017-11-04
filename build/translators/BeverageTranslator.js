@@ -28,9 +28,17 @@ var BeverageTranslator = function (_DefaultTranslator) {
   _inherits(BeverageTranslator, _DefaultTranslator);
 
   function BeverageTranslator() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, BeverageTranslator);
 
-    return _possibleConstructorReturn(this, (BeverageTranslator.__proto__ || Object.getPrototypeOf(BeverageTranslator)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = BeverageTranslator.__proto__ || Object.getPrototypeOf(BeverageTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.fromApi = _this.fromApi.bind(_this), _this.toApi = _this.toApi.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(BeverageTranslator, [{
@@ -42,13 +50,13 @@ var BeverageTranslator = function (_DefaultTranslator) {
     }
   }, {
     key: 'toApi',
-    value: function toApi(_ref) {
-      var availability = _ref.availability,
-          glassware = _ref.glassware,
-          isOrganic = _ref.isOrganic,
-          srm = _ref.srm,
-          style = _ref.style,
-          props = _objectWithoutProperties(_ref, ['availability', 'glassware', 'isOrganic', 'srm', 'style']);
+    value: function toApi(_ref2) {
+      var availability = _ref2.availability,
+          glassware = _ref2.glassware,
+          isOrganic = _ref2.isOrganic,
+          srm = _ref2.srm,
+          style = _ref2.style,
+          props = _objectWithoutProperties(_ref2, ['availability', 'glassware', 'isOrganic', 'srm', 'style']);
 
       return _extends({}, props, {
         availabilityId: availability && availability.id,
