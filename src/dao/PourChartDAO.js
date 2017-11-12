@@ -1,12 +1,11 @@
 // @flow
 import type { PourChartParams, PourChartDataSet } from '../index';
-import type DAOResult from './DAOResult';
 
-import DAO from './DAO';
+import BaseDAO from './BaseDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class PourChartDAO extends DAO<PourChartDataSet, PourChartDataSet> {
+class PourChartDAO extends BaseDAO<PourChartDataSet, PourChartDataSet> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.POUR_CHART,
@@ -14,42 +13,8 @@ class PourChartDAO extends DAO<PourChartDataSet, PourChartDataSet> {
     });
   }
 
-  deleteByID() {
-    throw new Error('The method is not implemented.');
-  }
-
-  count() {
-    throw new Error('The method is not implemented.');
-  }
-
-  fetchByID() {
-    throw new Error('The method is not implemented.');
-  }
-
-  fetchByIDs() {
-    throw new Error('The method is not implemented.');
-  }
-
-  fetchChartData = (
-    params: PourChartParams,
-  ): Promise<DAOResult<PourChartDataSet>> =>
-    this._resolve(this._buildHandler(), params, 'post');
-
-  fetchMany() {
-    throw new Error('The method is not implemented.');
-  }
-
-  patch() {
-    throw new Error('The method is not implemented.');
-  }
-
-  post() {
-    throw new Error('The method is not implemented.');
-  }
-
-  put() {
-    throw new Error('The method is not implemented.');
-  }
+  fetchChartData = (params: PourChartParams): Promise<PourChartDataSet> =>
+    this.__resolveSingle(this.__buildHandler(), params, 'post');
 }
 
 export default new PourChartDAO();

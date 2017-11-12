@@ -7,55 +7,38 @@ import type {
 
 import DefaultTranslator from './DefaultTranslator';
 
-const PERMISSION_ENTITY_KEYS = [
-  'device',
-  'location',
-  'organization',
-  'tap',
-];
+const PERMISSION_ENTITY_KEYS = ['device', 'location', 'organization', 'tap'];
 
 // todo make DAO_ENTITIES and permissionType singular, it will allow
 // simplify and reduce many annoying transformations.
 // and we won't need to write shitty methods like this. :/
 const getPermissionEntityTypeFromModel = (
   model: Permission,
-// eslint-disable-next-line prefer-template
-): PermissionEntityType => (((Object
-  .entries(model)
-  .find((entry: [string, mixed]): boolean => {
+  // eslint-disable-next-line prefer-template
+): PermissionEntityType =>
+  ((Object.entries(model).find((entry: [string, mixed]): boolean => {
     const key = entry[0];
     const value = entry[1];
     return PERMISSION_ENTITY_KEYS.includes(key) && !!value;
-  }) || {}
-)[0] + 's'): any);
+  }) || {})[0] + 's': any);
 
 class PermissionTranslator extends DefaultTranslator<
   Permission,
-  PermissionMutator<*>
+  PermissionMutator<*>,
 > {
-  toApi(
-    {
-      entity,
-      entityType,
-      user,
-      organization,
-      ...props
-    }: PermissionMutator<*>,
-  ): Object {
+  toApi({
+    entity,
+    entityType,
+    user,
+    organization,
+    ...props
+  }: PermissionMutator<*>): Object {
     return {
       ...props,
-      deviceId: entityType === 'devices'
-        ? entity.id
-        : null,
-      locationId: entityType === 'locations'
-        ? entity.id
-        : null,
-      organizationId: entityType === 'organizations'
-        ? entity.id
-        : null,
-      tapId: entityType === 'taps'
-        ? entity.id
-        : null,
+      deviceId: entityType === 'devices' ? entity.id : null,
+      locationId: entityType === 'locations' ? entity.id : null,
+      organizationId: entityType === 'organizations' ? entity.id : null,
+      tapId: entityType === 'taps' ? entity.id : null,
       userId: user.id,
     };
   }

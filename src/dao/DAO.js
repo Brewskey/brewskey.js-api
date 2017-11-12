@@ -2,232 +2,264 @@
 import type {
   DAOConfig,
   DAOTranslator,
+  EntityID,
   EntityName,
   QueryFilter,
   QueryOptions,
   RequestMethod,
+  SelectExpandQuery,
 } from '../index';
 
+import nullthrows from 'nullthrows';
 import oHandler from 'odata';
-import DAOResult from './DAOResult';
+import BaseDAO from './BaseDAO';
+import LoadObject from '../load_object/LoadObject';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
 import { createFilter } from '../filters';
 
 const ID_REG_EXP = /\bid\b/;
 
-class DAO<TEntity, TEntityMutator> {
-  static _organizationID: ?string = null;
-  _config: DAOConfig<TEntity, TEntityMutator>;
+class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
+  TEntity,
+  TEntityMutator,
+> {
+  _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
+  _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
+  _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
+  _subscribers: Array<() => void> = [];
 
   constructor(config: DAOConfig<TEntity, TEntityMutator>) {
-    this._config = config;
+    super(config);
   }
 
-  static setOrganizationID(organizationID: string) {
-    DAO._organizationID = organizationID;
-  }
+  deleteByID(id: string): void {
+    const entity = this._entityLoaderByID.get(id);
+    if (!entity) {
+      return;
+    }
 
-  deleteByID(id: string): Promise<DAOResult<TEntity>> {
-    return this._resolve(
-      this._buildHandler().find(this.__reformatIDValue(id)),
+    this._entityLoaderByID.set(id, entity.deleting());
+    this._emitChanges();
+
+    this.__resolveSingle(
+      this.__buildHandler().find(this.__reformatIDValue(id)),
       null,
       'delete',
+    )
+      .then(() => {
+        this._entityLoaderByID.delete(id);
+        this._clearQueryCaches();
+        this._emitChanges();
+      })
+      .catch(error => this._updateCacheForError(id, error));
+  }
+
+  count(queryOptions?: QueryOptions): LoadObject<number> {
+    const cacheKey = this._getCacheKey(queryOptions);
+    if (!this._countLoaderByQuery.has(cacheKey)) {
+      this._countLoaderByQuery.set(cacheKey, LoadObject.loading());
+      this._emitChanges();
+      this.__resolve(
+        this.__buildHandler({
+          ...queryOptions,
+          count: true,
+          take: 0,
+        }),
+      )
+        .then(result => {
+          // TODO - test this... it should be a number in the object
+          const loader = this._countLoaderByQuery.get(cacheKey);
+          this._countLoaderByQuery.set(
+            cacheKey,
+            loader
+              ? loader.setValue(result.data)
+              : LoadObject.withValue(result.data),
+          );
+          this._emitChanges();
+        })
+        .catch(error => {
+          const loader = this._countLoaderByQuery.get(cacheKey);
+          this._countLoaderByQuery.set(
+            cacheKey,
+            loader ? loader.setValue(error) : LoadObject.withValue(error),
+          );
+          this._emitChanges();
+        });
+    }
+
+    return nullthrows(this._countLoaderByQuery.get(cacheKey));
+  }
+
+  fetchByID(id: EntityID): LoadObject<TEntity> {
+    if (!this._entityLoaderByID.has(id)) {
+      this._entityLoaderByID.set(id, LoadObject.loading());
+      this._emitChanges();
+      this.__resolveSingle(
+        this.__buildHandler().find(this.__reformatIDValue(id)),
+      )
+        .then(result => this._updateCacheForEntity(result))
+        .catch(error => this._updateCacheForError(id, error));
+    }
+
+    return nullthrows(this._entityLoaderByID.get(id));
+  }
+
+  fetchByIDs(ids: Array<EntityID>): Array<LoadObject<TEntity>> {
+    const idsToLoad = ids.filter(id => !this._entityLoaderByID.has(id));
+
+    if (idsToLoad.length) {
+      idsToLoad.forEach(id =>
+        this._entityLoaderByID.set(id, LoadObject.loading()),
+      );
+
+      const queryOptions = {
+        filters: [createFilter('id').equals(idsToLoad)],
+      };
+      this.__resolveMany(this.__buildHandler(queryOptions))
+        .then(results => {
+          results.forEach(entity => this._updateCacheForEntity(entity, false));
+          this._emitChanges();
+        })
+        .catch(error => {
+          ids.forEach(id => this._updateCacheForError(id, error, false));
+          this._emitChanges();
+        });
+    }
+
+    return ids.map(id => nullthrows(this._entityLoaderByID.get(id)));
+  }
+
+  fetchMany(
+    queryOptions?: QueryOptions,
+  ): LoadObject<Array<LoadObject<TEntity>>> {
+    const cacheKey = this._getCacheKey(queryOptions);
+    if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
+      this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
+      this._emitChanges();
+
+      let handler = oHandler(this.getEntityName());
+      handler = this.__setFilters(handler, queryOptions);
+      handler = handler.select('id');
+      this.__resolveMany(queryOptions)
+        .then(results => {
+          const ids = results.map(result => result.id);
+          this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.withValue(ids));
+          this._emitChanges();
+
+          return this.fetchByIDs(ids);
+        })
+        .catch(error => {
+          this._entityIDsLoaderByQuery.set(
+            cacheKey,
+            LoadObject.withError(error),
+          );
+          this._emitChanges();
+        });
+    }
+
+    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(result =>
+      this.fetchByIDs(result),
     );
   }
 
-  getEntityName(): EntityName {
-    return this._config.entityName;
-  }
+  patch(id: string, mutator: TEntityMutator): void {
+    const entity = this._entityLoaderByID.get(id);
+    if (entity) {
+      this._entityLoaderByID.set(id, entity.updating());
+      this._emitChanges();
+    }
 
-  getTranslator(): DAOTranslator<TEntity, TEntityMutator> {
-    return this._config.translator;
-  }
-
-  count(queryOptions: QueryOptions): Promise<DAOResult<TEntity>> {
-    return this._resolve(this._buildHandler({
-      ...queryOptions,
-      count: true,
-      take: 0,
-    }));
-  }
-
-  fetchByID(id: string): Promise<DAOResult<TEntity>> {
-    return this._resolve(
-      this._buildHandler().find(this.__reformatIDValue(id)),
-    );
-  }
-
-  fetchByIDs(ids: Array<string>): Promise<DAOResult<TEntity>> {
-    return this._resolve(this._buildHandler({
-      filters: [createFilter('id').equals(ids)],
-    }));
-  }
-
-  fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>> {
-    return this._resolve(this._buildHandler(queryOptions));
-  }
-
-  patch(id: string, mutator: TEntityMutator): Promise<DAOResult<TEntity>> {
-    return this._resolve(
-      this._buildHandler().find(this.__reformatIDValue(id)),
-      this._config.translator.toApi(mutator),
+    this.__resolveSingle(
+      this.__buildHandler().find(this.__reformatIDValue(id)),
+      this.getTranslator().toApi(mutator),
       'patch',
-    );
+    )
+      .then(result => {
+        this._clearQueryCaches();
+        this._updateCacheForEntity(result);
+      })
+      .catch(error => this._updateCacheForError(id, error));
   }
 
-  post(mutator: TEntityMutator): Promise<DAOResult<TEntity>> {
-    return this._resolve(
-      this._buildHandler(),
-      this._config.translator.toApi(mutator),
+  post(mutator: TEntityMutator): void {
+    this.__resolveSingle(
+      this.__buildHandler(),
+      this.getTranslator().toApi(mutator),
       'post',
-    );
+    )
+      .then(result => {
+        this._clearQueryCaches();
+        this._updateCacheForEntity(result);
+      })
+      .catch(() => this._emitChanges());
   }
 
-  put(id: string, mutator: TEntityMutator): Promise<DAOResult<TEntity>> {
-    return this._resolve(
-      this._buildHandler().find(this.__reformatIDValue(id)),
-      this._config.translator.toApi(mutator),
+  put(id: string, mutator: TEntityMutator): void {
+    const entity = this._entityLoaderByID.get(id);
+    if (entity) {
+      this._entityLoaderByID.set(id, entity.updating());
+      this._emitChanges();
+    }
+
+    this.__resolveSingle(
+      this.__buildHandler().find(this.__reformatIDValue(id)),
+      this.getTranslator().toApi(mutator),
       'put',
+    )
+      .then(result => {
+        this._clearQueryCaches();
+        this._updateCacheForEntity(result);
+      })
+      .catch(error => this._updateCacheForError(id, error));
+  }
+
+  subscribe(fn: () => void): void {
+    if (this._subscribers.includes(fn)) {
+      return;
+    }
+    this._subscribers.push(fn);
+  }
+
+  unsubscribe(fn: () => void): void {
+    this._subscribers = this._subscribers.filter(item => item !== fn);
+  }
+
+  _emitChanges(): void {
+    // TODO - stores should somehow subscribe to refetch when there are changes
+  }
+
+  _clearQueryCaches(): void {
+    this._entityIDsLoaderByQuery = new Map();
+    this._entityIDsLoaderByQuery = new Map();
+  }
+
+  _getCacheKey(queryOptions?: QueryOptions): string {
+    return JSON.stringify(queryOptions || '_');
+  }
+
+  _updateCacheForEntity(
+    entity: TEntity,
+    should_emitChanges: boolean = true,
+  ): void {
+    const loader = this._entityLoaderByID.get(entity.id);
+    this._entityLoaderByID.set(
+      entity.id,
+      loader ? loader.setValue(entity) : LoadObject.withValue(entity),
     );
+    should_emitChanges && this._emitChanges();
   }
 
-  __reformatIDValue = (value: string): string | number =>
-    isNaN(value) || value === '' ? `'${value}'` : value;
-
-  __reformatQueryValue = (value: string | number): string | number =>
-    typeof value === 'string' ? `'${value}'` : value;
-
-  _buildHandler(queryOptions?: QueryOptions = {}): oHandler<TEntity> {
-    const { count, skip, take } = queryOptions;
-    let handler = oHandler(this._config.entityName);
-
-    if (this._config.navigationProperties) {
-      const navigationPropString = Object.entries(
-        this._config.navigationProperties,
-      ).map(([key, value]: [string, mixed]): string => {
-        if (!value || !Array.isArray(value) || !value.length) {
-          return key;
-        }
-        return `${key}($select=${value.join(',')})`;
-      }).join(',');
-
-      handler = handler.expand(navigationPropString);
-    }
-
-    if (count) {
-      handler = handler.inlineCount('true');
-    }
-
-    if (Number.isInteger(skip)) {
-      handler = handler.skip(skip || 0);
-    }
-
-    if (Number.isInteger(take)) {
-      handler = handler.top(take || 0);
-    }
-
-    if (queryOptions.filters && queryOptions.filters.length > 0) {
-      const renderedFilters = queryOptions.filters.map(
-        ({ operator, params, values }: QueryFilter): string => {
-          const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
-            (op: string): boolean => op === operator,
-          );
-
-          const filters = values.map((value: string): Array<string> =>
-            params.map((param: string): string => {
-              // we have to use two reformat functions because of the issue:
-              // https://github.com/Brewskey/brewskey.admin/issues/371
-              // this is not ideal though, because it doesn't resolve
-              // situations when we get stringified value from front-end
-              // which is stored as number on the server.
-              const reformattedValue = ID_REG_EXP.test(param)
-                ? this.__reformatIDValue(value)
-                : this.__reformatQueryValue(value);
-
-              if (isValidOperator) {
-                return `(${operator}(${param}, ${reformattedValue}))`;
-              }
-
-              return `(${param} ${operator} ${reformattedValue})`;
-            })
-          );
-
-          return filters.reduce((
-            previousFilter: Array<string>,
-            currentFilters: Array<string>,
-          ): Array<string> => (
-            [...previousFilter, ...currentFilters]
-          )).join(' or ');
-        }
-      ).map((filter: string): string => (
-        `(${filter})`
-      )).join(' and ');
-
-      handler.filter(renderedFilters);
-    }
-
-    if (queryOptions.orderBy) {
-      const orderBy = queryOptions.orderBy[0].column;
-      const direction = queryOptions.orderBy[0].direction;
-      if (direction === 'desc') {
-        handler.orderByDesc(orderBy);
-      } else if (orderBy) {
-        handler.orderBy(orderBy);
-      }
-    }
-
-    if (DAO._organizationID) {
-      handler.customParam('organizationID', DAO._organizationID);
-    }
-
-    return handler;
-  }
-
-  async _resolve(
-    handler: oHandler<TEntity>,
-    params: ?Object,
-    method: ?RequestMethod = 'get',
-  ): Promise<DAOResult<TEntity>> {
-    let request: Promise<oHandler<TEntity>>;
-    switch (method) {
-      case 'delete': {
-        request = handler.remove().save();
-        break;
-      }
-      case 'patch': {
-        request = handler.patch(params).save();
-        break;
-      }
-      case 'post': {
-        request = handler.post(params).save();
-        break;
-      }
-      case 'put': {
-        request = handler.put(params).save();
-        break;
-      }
-      default: {
-        request = handler.get();
-      }
-    }
-
-    try {
-      const resultHandler = await request;
-
-      if (Array.isArray(resultHandler.data)) {
-        resultHandler.data = (resultHandler.data || [])
-          .map((item: Object): ?TEntity =>
-            this._config.translator.fromApi(item),
-          );
-      } else {
-        resultHandler.data =
-          this._config.translator.fromApi(resultHandler.data);
-      }
-
-      return new DAOResult(resultHandler.data, resultHandler.inlinecount);
-    } catch (error) {
-      return new DAOResult(null, null, error);
-    }
+  _updateCacheForError(
+    id: EntityID,
+    error: Error,
+    should_emitChanges: boolean = true,
+  ): void {
+    const loader = this._entityLoaderByID.get(id);
+    this._entityLoaderByID.set(
+      id,
+      loader ? loader.setError(error) : LoadObject.withError(error),
+    );
+    should_emitChanges && this._emitChanges();
   }
 }
 

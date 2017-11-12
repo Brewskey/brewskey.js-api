@@ -4,12 +4,12 @@ import type { Headers, OConfig } from './index';
 
 import oHandler from 'odata';
 import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
-import DAOResult from './dao/DAOResult';
-import DAO from './dao/DAO';
+import BaseDAO from './dao/DAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
+import LoadObject from './load_object/LoadObject';
 
 import fetch from './fetch';
-import { createFilter, doesSatisfyToQueryFilters } from './filters';
+import { createFilter, doesSatisfyQueryFilters } from './filters';
 
 import AccountDAO from './dao/AccountDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
@@ -46,9 +46,9 @@ const setHeaders = (headers: Headers) => {
   });
 };
 
-const setOrganizationID = DAO.setOrganizationID;
+const setOrganizationID = BaseDAO.setOrganizationID;
 
-export { CADENCE_MAP, DAO_ENTITIES, DAOResult, PERMISSIONS_MAP };
+export { CADENCE_MAP, DAO_ENTITIES, PERMISSIONS_MAP };
 
 /* eslint-disable sorting/sort-object-props */
 export default {
@@ -58,6 +58,7 @@ export default {
   DeviceDAO,
   GlassDAO,
   KegDAO,
+  LoadObject,
   LocationDAO,
   OrganizationDAO,
   PermissionDAO,
@@ -69,7 +70,7 @@ export default {
   StyleDAO,
   TapDAO,
   createFilter,
-  doesSatisfyToQueryFilters,
+  doesSatisfyQueryFilters,
   fetch,
   getHeaders,
   initializeDAOApi,

@@ -9,10 +9,12 @@ class TapDAO extends DAO<Tap, TapMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.TAPS,
-      navigationProperties: {
-        device: ['id', 'isDeleted', 'name'],
-        location: ['id', 'isDeleted', 'name'],
-        organization: ['id', 'isDeleted', 'name'],
+      selectExpandQuery: {
+        expand: {
+          device: ['id', 'isDeleted', 'name'],
+          location: ['id', 'isDeleted', 'name'],
+          organization: ['id', 'isDeleted', 'name'],
+        },
       },
       translator: new TapTranslator(),
     });

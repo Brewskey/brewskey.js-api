@@ -16,14 +16,9 @@ const SCHEDULE_DAY_BIT_MAP = {
   WeekDays: 31,
 };
 
-const getCombinedFlag = (
-  days: Array<string>,
-): number =>
+const getCombinedFlag = (days: Array<string>): number =>
   days.reduce(
-    (
-      total: number,
-      day: string,
-    ): number => total | SCHEDULE_DAY_BIT_MAP[day], // eslint-disable-line
+    (total: number, day: string): number => total | SCHEDULE_DAY_BIT_MAP[day], // eslint-disable-line
     0,
   );
 
@@ -39,9 +34,7 @@ class SchedulesTranslator extends DefaultTranslator<Schedule, ScheduleMutator> {
   toApi(mutator: ScheduleMutator): Object {
     return {
       ...mutator,
-      accountIds: mutator.accounts && mutator.accounts.map(
-        (account: { id: string, userName: string }): string => account.id,
-      ),
+      accountIds: mutator.accounts && mutator.accounts.map(({ id }) => id),
     };
   }
 
