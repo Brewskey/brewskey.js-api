@@ -30,11 +30,13 @@ var DeviceDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (DeviceDAO.__proto__ || Object.getPrototypeOf(DeviceDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.DEVICES,
-      navigationProperties: {
-        createdBy: ['id', 'userName'],
-        lastEditedBy: ['id', 'userName'],
-        location: ['id', 'isDeleted', 'name'],
-        organization: ['id', 'isDeleted', 'name']
+      selectExpandQuery: {
+        expand: {
+          createdBy: ['id', 'userName'],
+          lastEditedBy: ['id', 'userName'],
+          location: ['id', 'isDeleted', 'name'],
+          organization: ['id', 'isDeleted', 'name']
+        }
       },
       translator: new _DeviceTranslator2.default()
     }));

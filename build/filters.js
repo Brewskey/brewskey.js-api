@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.doesSatisfyToQueryFilters = exports.createFilter = undefined;
+exports.doesSatisfyQueryFilters = exports.createFilter = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -48,7 +48,7 @@ var createFilter = exports.createFilter = function createFilter(params) {
 };
 
 // todo make unit tests
-var doesSatisfyToQueryFilters = exports.doesSatisfyToQueryFilters = function doesSatisfyToQueryFilters(item, queryFilters) {
+var doesSatisfyQueryFilters = exports.doesSatisfyQueryFilters = function doesSatisfyQueryFilters(item, queryFilters) {
   return queryFilters.every(function (queryFilter) {
     var params = queryFilter.params,
         values = queryFilter.values,
@@ -60,7 +60,7 @@ var doesSatisfyToQueryFilters = exports.doesSatisfyToQueryFilters = function doe
 
       return values.some(function (value) {
         switch (operator) {
-          // todo add another cases
+          // todo add other cases
           case _constants.FILTER_OPERATORS.CONTAINS:
             {
               return itemValue.toString().includes(value.toString());

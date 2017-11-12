@@ -12,6 +12,10 @@ var _KegTranslator = require('../translators/KegTranslator');
 
 var _KegTranslator2 = _interopRequireDefault(_KegTranslator);
 
+var _LoadObject = require('../load_object/LoadObject');
+
+var _LoadObject2 = _interopRequireDefault(_LoadObject);
+
 var _constants = require('../constants');
 
 var _filters = require('../filters');
@@ -32,24 +36,26 @@ var KegDAO = function (_DAO) {
 
     var _this = _possibleConstructorReturn(this, (KegDAO.__proto__ || Object.getPrototypeOf(KegDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.KEGS,
-      navigationProperties: {
-        beverage: ['id', 'isDeleted', 'name'],
-        location: ['id', 'isDeleted', 'name'],
-        organization: ['id', 'isDeleted', 'name'],
-        tap: ['id', 'isDeleted', 'name']
+      selectExpandQuery: {
+        expand: {
+          beverage: ['id', 'isDeleted', 'name'],
+          location: ['id', 'isDeleted', 'name'],
+          organization: ['id', 'isDeleted', 'name'],
+          tap: ['id', 'isDeleted', 'name']
+        }
       },
       translator: new _KegTranslator2.default()
     }));
 
     _this.fetchKegByTapID = function (tapId) {
-      return _this._resolve(_this._buildHandler({
+      return _this.fetchMany({
         filters: [(0, _filters.createFilter)('tap/id').equals(tapId)],
         orderBy: [{
           column: 'tapDate',
           direction: 'desc'
         }],
         take: 1
-      }));
+      });
     };
 
     return _this;

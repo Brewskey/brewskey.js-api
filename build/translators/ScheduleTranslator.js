@@ -71,8 +71,9 @@ var SchedulesTranslator = function (_DefaultTranslator) {
     key: 'toApi',
     value: function toApi(mutator) {
       return _extends({}, mutator, {
-        accountIds: mutator.accounts && mutator.accounts.map(function (account) {
-          return account.id;
+        accountIds: mutator.accounts && mutator.accounts.map(function (_ref2) {
+          var id = _ref2.id;
+          return id;
         })
       });
     }

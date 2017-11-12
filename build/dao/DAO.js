@@ -4,19 +4,25 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nullthrows = require('nullthrows');
+
+var _nullthrows2 = _interopRequireDefault(_nullthrows);
 
 var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
 
-var _DAOResult = require('./DAOResult');
+var _BaseDAO2 = require('./BaseDAO');
 
-var _DAOResult2 = _interopRequireDefault(_DAOResult);
+var _BaseDAO3 = _interopRequireDefault(_BaseDAO2);
+
+var _LoadObject = require('../load_object/LoadObject');
+
+var _LoadObject2 = _interopRequireDefault(_LoadObject);
 
 var _constants = require('../constants');
 
@@ -24,272 +30,298 @@ var _filters = require('../filters');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CHUNK_SIZE = 20;
 var ID_REG_EXP = /\bid\b/;
 
-var DAO = function () {
+var DAO = function (_BaseDAO) {
+  _inherits(DAO, _BaseDAO);
+
   function DAO(config) {
     _classCallCheck(this, DAO);
 
-    this.deleteByID = this.deleteByID.bind(this);
-    this.getEntityName = this.getEntityName.bind(this);
-    this.getTranslator = this.getTranslator.bind(this);
-    this.count = this.count.bind(this);
-    this.fetchByID = this.fetchByID.bind(this);
-    this.fetchByIDs = this.fetchByIDs.bind(this);
-    this.fetchMany = this.fetchMany.bind(this);
-    this.patch = this.patch.bind(this);
-    this.post = this.post.bind(this);
-    this.put = this.put.bind(this);
-    this._buildHandler = this._buildHandler.bind(this);
-    this._resolve = this._resolve.bind(this);
+    var _this = _possibleConstructorReturn(this, (DAO.__proto__ || Object.getPrototypeOf(DAO)).call(this, config));
 
-    this.__reformatIDValue = function (value) {
-      return isNaN(value) || value === '' ? '\'' + value + '\'' : value;
-    };
-
-    this.__reformatQueryValue = function (value) {
-      return typeof value === 'string' ? '\'' + value + '\'' : value;
-    };
-
-    this._config = config;
+    _this.deleteByID = _this.deleteByID.bind(_this);
+    _this.count = _this.count.bind(_this);
+    _this.fetchByID = _this.fetchByID.bind(_this);
+    _this.fetchByIDs = _this.fetchByIDs.bind(_this);
+    _this.fetchMany = _this.fetchMany.bind(_this);
+    _this.flushCache = _this.flushCache.bind(_this);
+    _this.patch = _this.patch.bind(_this);
+    _this.post = _this.post.bind(_this);
+    _this.put = _this.put.bind(_this);
+    _this.subscribe = _this.subscribe.bind(_this);
+    _this.unsubscribe = _this.unsubscribe.bind(_this);
+    _this._emitChanges = _this._emitChanges.bind(_this);
+    _this._clearQueryCaches = _this._clearQueryCaches.bind(_this);
+    _this._getCacheKey = _this._getCacheKey.bind(_this);
+    _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this);
+    _this._updateCacheForError = _this._updateCacheForError.bind(_this);
+    _this._entityLoaderByID = new Map();
+    _this._entityIDsLoaderByQuery = new Map();
+    _this._countLoaderByQuery = new Map();
+    _this._subscribers = [];
+    return _this;
   }
 
   _createClass(DAO, [{
     key: 'deleteByID',
     value: function deleteByID(id) {
-      return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)), null, 'delete');
-    }
-  }, {
-    key: 'getEntityName',
-    value: function getEntityName() {
-      return this._config.entityName;
-    }
-  }, {
-    key: 'getTranslator',
-    value: function getTranslator() {
-      return this._config.translator;
+      var _this2 = this;
+
+      id = id.toString();
+      var entity = this._entityLoaderByID.get(id);
+      if (!entity) {
+        return;
+      }
+
+      this._entityLoaderByID.set(id, entity.deleting());
+      this._emitChanges();
+
+      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)), null, 'delete').then(function () {
+        _this2._entityLoaderByID.delete(id);
+        _this2._clearQueryCaches();
+        _this2._emitChanges();
+      }).catch(function (error) {
+        return _this2._updateCacheForError(id, error);
+      });
     }
   }, {
     key: 'count',
     value: function count(queryOptions) {
-      return this._resolve(this._buildHandler(_extends({}, queryOptions, {
-        count: true,
-        take: 0
-      })));
+      var _this3 = this;
+
+      var cacheKey = this._getCacheKey(queryOptions);
+      if (!this._countLoaderByQuery.has(cacheKey)) {
+        this._countLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
+        this._emitChanges();
+        this.__resolve(this.__buildHandler(_extends({}, queryOptions, {
+          count: true,
+          take: 0
+        }))).then(function (result) {
+          // TODO - test this... it should be a number in the object
+          _this3._countLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.data));
+          _this3._emitChanges();
+        }).catch(function (error) {
+          var loader = _this3._countLoaderByQuery.get(cacheKey);
+          _this3._countLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
+          _this3._emitChanges();
+        });
+      }
+
+      return (0, _nullthrows2.default)(this._countLoaderByQuery.get(cacheKey));
     }
   }, {
     key: 'fetchByID',
     value: function fetchByID(id) {
-      return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)));
+      var _this4 = this;
+
+      id = id.toString();
+      if (!this._entityLoaderByID.has(id)) {
+        this._entityLoaderByID.set(id, _LoadObject2.default.loading());
+        this._emitChanges();
+        this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id))).then(function (result) {
+          return _this4._updateCacheForEntity(result);
+        }).catch(function (error) {
+          return _this4._updateCacheForError(id, error);
+        });
+      }
+
+      return (0, _nullthrows2.default)(this._entityLoaderByID.get(id));
     }
   }, {
     key: 'fetchByIDs',
     value: function fetchByIDs(ids) {
-      return this._resolve(this._buildHandler({
-        filters: [(0, _filters.createFilter)('id').equals(ids)]
+      var _this5 = this;
+
+      var idsToLoad = ids.filter(function (id) {
+        return !_this5._entityLoaderByID.has(id.toString());
+      });
+      ids = ids.map(function (id) {
+        return id.toString();
+      });
+
+      if (idsToLoad.length) {
+        idsToLoad.forEach(function (id) {
+          return _this5._entityLoaderByID.set(id.toString(), _LoadObject2.default.loading());
+        });
+        for (var ii = 0; ii < idsToLoad.length; ii += CHUNK_SIZE) {
+          var queryOptions = {
+            filters: [(0, _filters.createFilter)('id').equals(idsToLoad.slice(ii, ii + CHUNK_SIZE))]
+          };
+          this.__resolveMany(this.__buildHandler(queryOptions)).then(function (results) {
+            var entitiesByID = new Map(results.map(function (item) {
+              return [item.id, item];
+            }));
+            ids.forEach(function (id) {
+              var entity = entitiesByID.get(id);
+              if (entity) {
+                _this5._updateCacheForEntity(entity);
+              } else {
+                _this5._updateCacheForError(id, new Error('Could not load ' + _this5.getEntityName() + ' ' + id));
+              }
+            });
+            _this5._emitChanges();
+          }).catch(function (error) {
+            ids.forEach(function (id) {
+              return _this5._updateCacheForError(id, error, false);
+            });
+            _this5._emitChanges();
+          });
+        }
+      }
+
+      return new Map(ids.map(function (id) {
+        return [id, (0, _nullthrows2.default)(_this5._entityLoaderByID.get(id))];
       }));
     }
   }, {
     key: 'fetchMany',
     value: function fetchMany(queryOptions) {
-      return this._resolve(this._buildHandler(queryOptions));
+      var _this6 = this;
+
+      var cacheKey = this._getCacheKey(queryOptions);
+      if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
+        this._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
+        this._emitChanges();
+
+        var handler = this.__buildHandler(queryOptions,
+        /* shouldSelectExpand */false);
+        handler = handler.select('id');
+        this.__resolveManyIDs(handler).then(function (ids) {
+          _this6._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(ids));
+          _this6._emitChanges();
+          return _this6.fetchByIDs(ids);
+        }).catch(function (error) {
+          var loader = _this6._entityIDsLoaderByQuery.get(cacheKey);
+          _this6._entityIDsLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
+          _this6._emitChanges();
+        });
+      }
+
+      return (0, _nullthrows2.default)(this._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
+        var resultMap = _this6.fetchByIDs(ids);
+        return ids.map(function (id) {
+          return (0, _nullthrows2.default)(resultMap.get(id.toString()));
+        });
+      });
+    }
+  }, {
+    key: 'flushCache',
+    value: function flushCache() {
+      this._entityLoaderByID = new Map();
+      this._entityIDsLoaderByQuery = new Map();
+      this._countLoaderByQuery = new Map();
+      this._emitChanges();
     }
   }, {
     key: 'patch',
     value: function patch(id, mutator) {
-      return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)), this._config.translator.toApi(mutator), 'patch');
+      var _this7 = this;
+
+      id = id.toString();
+      var entity = this._entityLoaderByID.get(id);
+      if (entity) {
+        this._entityLoaderByID.set(id, entity.updating());
+        this._emitChanges();
+      }
+
+      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
+        _this7._clearQueryCaches();
+        _this7._updateCacheForEntity(result);
+      }).catch(function (error) {
+        return _this7._updateCacheForError(id, error);
+      });
     }
   }, {
     key: 'post',
     value: function post(mutator) {
-      return this._resolve(this._buildHandler(), this._config.translator.toApi(mutator), 'post');
+      var _this8 = this;
+
+      this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'post').then(function (result) {
+        _this8._clearQueryCaches();
+        _this8._updateCacheForEntity(result);
+      }).catch(function () {
+        return _this8._emitChanges();
+      });
     }
   }, {
     key: 'put',
     value: function put(id, mutator) {
-      return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)), this._config.translator.toApi(mutator), 'put');
+      var _this9 = this;
+
+      id = id.toString();
+      var entity = this._entityLoaderByID.get(id);
+      if (entity) {
+        this._entityLoaderByID.set(id, entity.updating());
+        this._emitChanges();
+      }
+
+      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
+        _this9._clearQueryCaches();
+        _this9._updateCacheForEntity(result);
+      }).catch(function (error) {
+        return _this9._updateCacheForError(id, error);
+      });
     }
   }, {
-    key: '_buildHandler',
-    value: function _buildHandler() {
-      var _this = this;
-
-      var queryOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var count = queryOptions.count,
-          skip = queryOptions.skip,
-          take = queryOptions.take;
-
-      var handler = (0, _odata2.default)(this._config.entityName);
-
-      if (this._config.navigationProperties) {
-        var navigationPropString = Object.entries(this._config.navigationProperties).map(function (_ref) {
-          var _ref2 = _slicedToArray(_ref, 2),
-              key = _ref2[0],
-              value = _ref2[1];
-
-          if (!value || !Array.isArray(value) || !value.length) {
-            return key;
-          }
-          return key + '($select=' + value.join(',') + ')';
-        }).join(',');
-
-        handler = handler.expand(navigationPropString);
+    key: 'subscribe',
+    value: function subscribe(fn) {
+      if (this._subscribers.includes(fn)) {
+        return;
       }
-
-      if (count) {
-        handler = handler.inlineCount('true');
-      }
-
-      if (Number.isInteger(skip)) {
-        handler = handler.skip(skip || 0);
-      }
-
-      if (Number.isInteger(take)) {
-        handler = handler.top(take || 0);
-      }
-
-      if (queryOptions.filters && queryOptions.filters.length > 0) {
-        var renderedFilters = queryOptions.filters.map(function (_ref3) {
-          var operator = _ref3.operator,
-              params = _ref3.params,
-              values = _ref3.values;
-
-          var isValidOperator = _constants.FILTER_FUNCTION_OPERATORS.find(function (op) {
-            return op === operator;
-          });
-
-          var filters = values.map(function (value) {
-            return params.map(function (param) {
-              // we have to use two reformat functions because of the issue:
-              // https://github.com/Brewskey/brewskey.admin/issues/371
-              // this is not ideal though, because it doesn't resolve
-              // situations when we get stringified value from front-end
-              // which is stored as number on the server.
-              var reformattedValue = ID_REG_EXP.test(param) ? _this.__reformatIDValue(value) : _this.__reformatQueryValue(value);
-
-              if (isValidOperator) {
-                return '(' + operator + '(' + param + ', ' + reformattedValue + '))';
-              }
-
-              return '(' + param + ' ' + operator + ' ' + reformattedValue + ')';
-            });
-          });
-
-          return filters.reduce(function (previousFilter, currentFilters) {
-            return [].concat(_toConsumableArray(previousFilter), _toConsumableArray(currentFilters));
-          }).join(' or ');
-        }).map(function (filter) {
-          return '(' + filter + ')';
-        }).join(' and ');
-
-        handler.filter(renderedFilters);
-      }
-
-      if (queryOptions.orderBy) {
-        var orderBy = queryOptions.orderBy[0].column;
-        var direction = queryOptions.orderBy[0].direction;
-        if (direction === 'desc') {
-          handler.orderByDesc(orderBy);
-        } else if (orderBy) {
-          handler.orderBy(orderBy);
-        }
-      }
-
-      if (DAO._organizationID) {
-        handler.customParam('organizationID', DAO._organizationID);
-      }
-
-      return handler;
+      this._subscribers.push(fn);
     }
   }, {
-    key: '_resolve',
-    value: function () {
-      var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(handler, params) {
-        var _this2 = this;
+    key: 'unsubscribe',
+    value: function unsubscribe(fn) {
+      this._subscribers = this._subscribers.filter(function (item) {
+        return item !== fn;
+      });
+    }
+  }, {
+    key: '_emitChanges',
+    value: function _emitChanges() {
+      // TODO - stores should somehow subscribe to refetch when there are changes
+    }
+  }, {
+    key: '_clearQueryCaches',
+    value: function _clearQueryCaches() {
+      this._entityIDsLoaderByQuery = new Map();
+      this._entityIDsLoaderByQuery = new Map();
+    }
+  }, {
+    key: '_getCacheKey',
+    value: function _getCacheKey(queryOptions) {
+      return JSON.stringify(queryOptions || '_');
+    }
+  }, {
+    key: '_updateCacheForEntity',
+    value: function _updateCacheForEntity(entity) {
+      var should_emitChanges = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-        var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
-        var request, resultHandler;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                request = void 0;
-                _context.t0 = method;
-                _context.next = _context.t0 === 'delete' ? 4 : _context.t0 === 'patch' ? 6 : _context.t0 === 'post' ? 8 : _context.t0 === 'put' ? 10 : 12;
-                break;
+      this._entityLoaderByID.set(entity.id.toString(), _LoadObject2.default.withValue(entity));
+      should_emitChanges && this._emitChanges();
+    }
+  }, {
+    key: '_updateCacheForError',
+    value: function _updateCacheForError(id, error) {
+      var should_emitChanges = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-              case 4:
-                request = handler.remove().save();
-                return _context.abrupt('break', 13);
-
-              case 6:
-                request = handler.patch(params).save();
-                return _context.abrupt('break', 13);
-
-              case 8:
-                request = handler.post(params).save();
-                return _context.abrupt('break', 13);
-
-              case 10:
-                request = handler.put(params).save();
-                return _context.abrupt('break', 13);
-
-              case 12:
-                request = handler.get();
-
-              case 13:
-                _context.prev = 13;
-                _context.next = 16;
-                return request;
-
-              case 16:
-                resultHandler = _context.sent;
-
-
-                if (Array.isArray(resultHandler.data)) {
-                  resultHandler.data = (resultHandler.data || []).map(function (item) {
-                    return _this2._config.translator.fromApi(item);
-                  });
-                } else {
-                  resultHandler.data = this._config.translator.fromApi(resultHandler.data);
-                }
-
-                return _context.abrupt('return', new _DAOResult2.default(resultHandler.data, resultHandler.inlinecount));
-
-              case 21:
-                _context.prev = 21;
-                _context.t1 = _context['catch'](13);
-                return _context.abrupt('return', new _DAOResult2.default(null, null, _context.t1));
-
-              case 24:
-              case 'end':
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[13, 21]]);
-      }));
-
-      function _resolve(_x2, _x3) {
-        return _ref4.apply(this, arguments);
-      }
-
-      return _resolve;
-    }()
-  }], [{
-    key: 'setOrganizationID',
-    value: function setOrganizationID(organizationID) {
-      DAO._organizationID = organizationID;
+      id = id.toString();
+      var loader = this._entityLoaderByID.get(id);
+      this._entityLoaderByID.set(id, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
+      should_emitChanges && this._emitChanges();
     }
   }]);
 
   return DAO;
-}();
+}(_BaseDAO3.default);
 
-DAO._organizationID = null;
 exports.default = DAO;

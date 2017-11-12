@@ -47,12 +47,15 @@ class BaseDAO<TEntity, TEntityMutator> {
   __reformatQueryValue = (value: string | number): string | number =>
     typeof value === 'string' ? `'${value}'` : value;
 
-  __buildHandler(queryOptions?: QueryOptions = {}): oHandler<TEntity> {
+  __buildHandler(
+    queryOptions?: QueryOptions = {},
+    shouldSelectExpand: boolean = true
+  ): oHandler<TEntity> {
     const { shouldCount, skip, take } = queryOptions;
-    const { entityName, selectExpandQuery } = this.__config;
-    let handler = oHandler(entityName);
+    const selectExpandQuery = this.__config.selectExpandQuery;
+    let handler = oHandler(this.getEntityName());
 
-    if (selectExpandQuery) {
+    if (shouldSelectExpand && selectExpandQuery) {
       const { expand, select } = selectExpandQuery;
       if (select) {
         handler = handler.select(select.join(','));
@@ -84,7 +87,7 @@ class BaseDAO<TEntity, TEntityMutator> {
       handler = handler.inlineCount('true');
     }
 
-    handler = this.__setFilters(handler, queryOptions);
+    handler = this._setFilters(handler, queryOptions);
 
     if (queryOptions.orderBy) {
       const orderBy = queryOptions.orderBy[0].column;
@@ -107,9 +110,9 @@ class BaseDAO<TEntity, TEntityMutator> {
     return JSON.stringify(queryOptions || '_');
   }
 
-  __setFilters(
+  _setFilters(
     handler: oHandler<TEntity>,
-    queryOptions: QueryOptions = {},
+    queryOptions: QueryOptions = {}
   ): oHandler<TEntity> {
     if (!queryOptions.filters || !queryOptions.filters.length) {
       return handler;
@@ -117,7 +120,7 @@ class BaseDAO<TEntity, TEntityMutator> {
     const renderedFilters = queryOptions.filters
       .map(({ operator, params, values }: QueryFilter): string => {
         const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
-          (op: string): boolean => op === operator,
+          (op: string): boolean => op === operator
         );
 
         const filters = values.map((value: string): Array<string> =>
@@ -136,47 +139,57 @@ class BaseDAO<TEntity, TEntityMutator> {
             }
 
             return `(${param} ${operator} ${reformattedValue})`;
-          }),
+          })
         );
 
         return filters
           .reduce(
             (
               previousFilter: Array<string>,
-              currentFilters: Array<string>,
-            ): Array<string> => [...previousFilter, ...currentFilters],
+              currentFilters: Array<string>
+            ): Array<string> => [...previousFilter, ...currentFilters]
           )
           .join(' or ');
       })
       .map((filter: string): string => `(${filter})`)
       .join(' and ');
-
     return handler.filter(renderedFilters);
   }
 
   async __resolveSingle(
     handler: oHandler<TEntity>,
     params: ?Object,
-    method: ?RequestMethod = 'get',
+    method: ?RequestMethod = 'get'
   ): Promise<TEntity> {
-    return this.__resolve(handler, params, method).then(result =>
-      this.getTranslator().fromApi(result),
+    return this.__resolve(handler, params, method).then((result) =>
+      this.getTranslator().fromApi(result)
     );
   }
 
   async __resolveMany(
     handler: oHandler<TEntity>,
     params: ?Object,
-    method: ?RequestMethod = 'get',
+    method: ?RequestMethod = 'get'
   ): Promise<Array<TEntity>> {
     const result: Array<Object> = await this.__resolve(handler, params, method);
-    return (result || []).map(item => this.getTranslator().fromApi(item));
+    return (result || []).map((item) => this.getTranslator().fromApi(item));
+  }
+
+  async __resolveManyIDs(
+    handler: oHandler<TEntity>,
+    params: ?Object,
+    selector: ?(item: Object) => EntityID,
+    method: ?RequestMethod = 'get'
+  ): Promise<Array<EntityID>> {
+    selector = selector || ((item) => item.id);
+    const result: Array<Object> = await this.__resolve(handler, params, method);
+    return (result || []).map(selector);
   }
 
   async __resolve<TResult>(
     handler: oHandler<TEntity>,
     params: ?Object,
-    method: ?RequestMethod = 'get',
+    method: ?RequestMethod = 'get'
   ): Promise<any> {
     let request: Promise<oHandler<TEntity>>;
     switch (method) {
@@ -200,7 +213,6 @@ class BaseDAO<TEntity, TEntityMutator> {
         request = handler.get();
       }
     }
-
     const resultHandler = await request;
     return resultHandler.data;
   }

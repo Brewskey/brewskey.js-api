@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PERMISSIONS_MAP = exports.DAOResult = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
+exports.PERMISSIONS_MAP = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
 
 var _odata = require('odata');
 
@@ -11,15 +11,15 @@ var _odata2 = _interopRequireDefault(_odata);
 
 var _constants = require('./constants');
 
-var _DAOResult = require('./dao/DAOResult');
-
-var _DAOResult2 = _interopRequireDefault(_DAOResult);
-
 var _DAO = require('./dao/DAO');
 
 var _DAO2 = _interopRequireDefault(_DAO);
 
 var _ReportTranslator = require('./translators/ReportTranslator');
+
+var _LoadObject = require('./load_object/LoadObject');
+
+var _LoadObject2 = _interopRequireDefault(_LoadObject);
 
 var _fetch = require('./fetch');
 
@@ -119,7 +119,6 @@ var setOrganizationID = _DAO2.default.setOrganizationID;
 
 exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
-exports.DAOResult = _DAOResult2.default;
 exports.PERMISSIONS_MAP = _constants.PERMISSIONS_MAP;
 
 /* eslint-disable sorting/sort-object-props */
@@ -131,6 +130,7 @@ exports.default = {
   DeviceDAO: _DeviceDAO2.default,
   GlassDAO: _GlassDAO2.default,
   KegDAO: _KegDAO2.default,
+  LoadObject: _LoadObject2.default,
   LocationDAO: _LocationDAO2.default,
   OrganizationDAO: _OrganizationDAO2.default,
   PermissionDAO: _PermissionDAO2.default,
@@ -142,7 +142,7 @@ exports.default = {
   StyleDAO: _StyleDAO2.default,
   TapDAO: _TapDAO2.default,
   createFilter: _filters.createFilter,
-  doesSatisfyToQueryFilters: _filters.doesSatisfyToQueryFilters,
+  doesSatisfyQueryFilters: _filters.doesSatisfyQueryFilters,
   fetch: _fetch2.default,
   getHeaders: getHeaders,
   initializeDAOApi: initializeDAOApi,

@@ -384,6 +384,8 @@ export type TapMutator = {
 };
 
 /* DAO */
+declare export class LoadObject<TEntity>  {
+}
 
 export type FilterOperator =
   'contains' |
@@ -444,8 +446,8 @@ declare export class DAO<TEntity: {id: EntityID}, TEntityMutator>
   count(queryOptions?: QueryOptions): LoadObject<number>;
   deleteByID(id: EntityID): void;
   fetchByID(id: EntityID): LoadObject<TEntity>;
-  fetchByIDs(ids: Array<string>, meta?: Object): LoadObject<Array<TEntity>>;
-  fetchMany(queryOptions?: QueryOptions): LoadObject<Array<TEntity>>;
+  fetchByIDs(ids: Array<string>, meta?: Object): Map<EntityID, LoadObject<TEntity>>;
+  fetchMany(queryOptions?: QueryOptions): LoadObject<Array<LoadObject<TEntity>>>;
   patch(id: EntityID, params: TEntityMutator): void;
   post(params: TEntityMutator): void;
   put(id: EntityID, params: TEntityMutator): void;
@@ -458,7 +460,7 @@ declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
 declare class brewskey$DeviceDAO extends DAO<Device, DeviceMutator> {}
 declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
 declare class brewskey$KegDAO extends DAO<Keg, Keg> {
-  fetchKegByTapID(tapId: EntityID): Promise<DAOResult<Keg>>;
+  fetchKegByTapID(tapId: EntityID): LoadObject<Array<LoadObject<Keg>>>;
 }
 declare class brewskey$LocationDAO extends DAO<Location, Location> {}
 declare class brewskey$OrganizationDAO extends DAO<Organization, Organization> {}

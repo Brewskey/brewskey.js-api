@@ -30,9 +30,11 @@ var ScheduleDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (ScheduleDAO.__proto__ || Object.getPrototypeOf(ScheduleDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.SCHEDULES,
-      navigationProperties: {
-        accounts: ['id', 'userName'],
-        location: ['id', 'isDeleted', 'name']
+      selectExpandQuery: {
+        expand: {
+          accounts: ['id', 'userName'],
+          location: ['id', 'isDeleted', 'name']
+        }
       },
       translator: new _ScheduleTranslator2.default()
     }));

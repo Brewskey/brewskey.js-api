@@ -58,17 +58,21 @@ var ReportTranslator = function (_DefaultTranslator) {
           props = _objectWithoutProperties(_ref2, ['devices', 'locations', 'sendToEmails', 'taps']);
 
       return _extends({}, props, {
-        deviceIds: devices ? devices.map(function (device) {
-          return device.id;
+        deviceIds: devices ? devices.map(function (_ref3) {
+          var id = _ref3.id;
+          return id;
         }) : [],
-        locationIds: locations ? locations.map(function (location) {
-          return location.id;
+        locationIds: locations ? locations.map(function (_ref4) {
+          var id = _ref4.id;
+          return id;
         }) : [],
-        sendToEmails: sendToEmails.map(function (emailObject) {
-          return emailObject.email;
+        sendToEmails: sendToEmails.map(function (_ref5) {
+          var email = _ref5.email;
+          return email;
         }),
-        tapIds: taps ? taps.map(function (tap) {
-          return tap.id;
+        tapIds: taps ? taps.map(function (_ref6) {
+          var id = _ref6.id;
+          return id;
         }) : []
       });
     }
@@ -78,7 +82,9 @@ var ReportTranslator = function (_DefaultTranslator) {
       return _extends({}, report, {
         reportCadence: CADENCE_MAP[report.reportCadence],
         sendToEmails: report.sendToEmails.map(function (email) {
-          return { email: email };
+          return {
+            email: email
+          };
         })
       });
     }

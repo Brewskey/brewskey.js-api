@@ -11,16 +11,21 @@
     "build": "babel src -d build --copy-files",
     "flow": "flow",
     "lint": "eslint src/ --fix --max-warnings 0",
-    "start": "babel ./src --out-dir ./build --watch --copy-files"
+    "start": "babel ./src --out-dir ./build --watch --copy-files",
+    "test": "node ./test"
   },
   "pre-commit": "lint",
   "devDependencies": {
-    "babel-cli": "^6.18.0",
+    "babel-core": "^6.26.0",
     "babel-eslint": "^7.1.1",
+    "babel-loader": "^7.1.2",
     "babel-plugin-autobind-class-methods": "^5.0.1",
     "babel-plugin-syntax-flow": "^6.18.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-flow-strip-types": "^6.18.0",
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-stage-0": "^6.22.0",
     "eslint": "^3.12.1",
@@ -28,10 +33,14 @@
     "eslint-plugin-flowtype": "^2.29.1",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-sorting": "^0.3.0",
-    "flow-bin": "^0.39.0"
+    "flow-bin": "^0.39.0",
+    "form-data": "^2.3.1",
+    "minimist": "^1.2.0",
+    "node-fetch": "^1.7.3"
   },
   "dependencies": {
     "babel-preset-react-hmre": "^1.1.1",
+    "nullthrows": "^1.0.0",
     "odata": "git+https://github.com/Brewskey/o.js.git"
   }
 }

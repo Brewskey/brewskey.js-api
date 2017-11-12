@@ -9,8 +9,6 @@
  * @flow
  */
 
-'use strict';
-
 type LoadObjectOperation =
   | 'NONE'
   | 'CREATING'
@@ -22,7 +20,7 @@ type LoadObjectOperation =
  * A secret key that is used to prevent direct construction of these objects,
  * this is effectively used to ensure that the constructor is private.
  */
-const SECRET = 'SECRET_' + Math.random();
+const SECRET = `SECRET_${Math.random()}`;
 
 /**
  * Immutable Load Object. This is an immutable object that represents a
@@ -61,12 +59,12 @@ class LoadObject<V> {
     operation: LoadObjectOperation,
     value: ?V,
     error: ?Error,
-    hasValue: boolean,
+    hasValue: boolean
   ) {
     if (secret !== SECRET) {
       throw new Error(
         'Construct LoadObjects using static methods such as ' +
-          'LoadObject.loading(), LoadObject.empty()',
+          'LoadObject.loading(), LoadObject.empty()'
       );
     }
     this._operation = operation;
@@ -132,7 +130,7 @@ class LoadObject<V> {
       operation,
       this._value,
       this._error,
-      this._hasValue,
+      this._hasValue
     );
   }
 
@@ -152,7 +150,7 @@ class LoadObject<V> {
       this._operation,
       this._value,
       error,
-      this._hasValue,
+      this._hasValue
     );
   }
 
@@ -165,7 +163,7 @@ class LoadObject<V> {
       'NONE',
       this._value,
       this._error,
-      this._hasValue,
+      this._hasValue
     );
   }
 
@@ -178,7 +176,7 @@ class LoadObject<V> {
       this._operation,
       undefined,
       this._error,
-      false,
+      false
     );
   }
 
@@ -191,7 +189,7 @@ class LoadObject<V> {
       this._operation,
       this._value,
       undefined,
-      this._hasValue,
+      this._hasValue
     );
   }
 
@@ -201,6 +199,21 @@ class LoadObject<V> {
     }
 
     const output = fn(this.getValueEnforcing());
+
+    const loader =
+      output instanceof LoadObject ? output : this.setValue((output: any));
+
+    return (loader: any);
+  }
+
+  mapError<TType>(
+    fn: (value: Error) => Error | LoadObject<TType>
+  ): LoadObject<TType> {
+    if (!this.hasError()) {
+      return (this: any);
+    }
+
+    const output = fn(this.getErrorEnforcing());
 
     const loader =
       output instanceof LoadObject ? output : this.setValue((output: any));
