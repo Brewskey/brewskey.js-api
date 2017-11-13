@@ -41,6 +41,7 @@ var BaseDAO = function () {
     this.getEntityName = this.getEntityName.bind(this);
     this.getTranslator = this.getTranslator.bind(this);
     this.__buildHandler = this.__buildHandler.bind(this);
+    this.__setupHandler = this.__setupHandler.bind(this);
     this._getCacheKey = this._getCacheKey.bind(this);
     this._setFilters = this._setFilters.bind(this);
     this.__resolveSingle = this.__resolveSingle.bind(this);
@@ -78,13 +79,20 @@ var BaseDAO = function () {
     value: function __buildHandler() {
       var queryOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var shouldSelectExpand = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+      var handler = (0, _odata2.default)(this.getEntityName());
+      return this.__setupHandler(handler, queryOptions, shouldSelectExpand);
+    }
+  }, {
+    key: '__setupHandler',
+    value: function __setupHandler(handler) {
+      var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var shouldSelectExpand = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       var shouldCount = queryOptions.shouldCount,
           skip = queryOptions.skip,
           take = queryOptions.take;
 
       var selectExpandQuery = this.__config.selectExpandQuery;
-      var handler = (0, _odata2.default)(this.getEntityName());
-
       if (shouldSelectExpand && selectExpandQuery) {
         var expand = selectExpandQuery.expand,
             select = selectExpandQuery.select;
@@ -104,7 +112,6 @@ var BaseDAO = function () {
             }
             return key + '($select=' + value.join(',') + ')';
           }).join(',');
-
           handler = handler.expand(navigationPropString);
         }
       }
@@ -211,7 +218,7 @@ var BaseDAO = function () {
         }, _callee, this);
       }));
 
-      function __resolveSingle(_x5, _x6) {
+      function __resolveSingle(_x7, _x8) {
         return _ref4.apply(this, arguments);
       }
 
@@ -246,7 +253,7 @@ var BaseDAO = function () {
         }, _callee2, this);
       }));
 
-      function __resolveMany(_x8, _x9) {
+      function __resolveMany(_x10, _x11) {
         return _ref5.apply(this, arguments);
       }
 
@@ -280,7 +287,7 @@ var BaseDAO = function () {
         }, _callee3, this);
       }));
 
-      function __resolveManyIDs(_x11, _x12, _x13) {
+      function __resolveManyIDs(_x13, _x14, _x15) {
         return _ref6.apply(this, arguments);
       }
 
@@ -336,7 +343,7 @@ var BaseDAO = function () {
         }, _callee4, this);
       }));
 
-      function __resolve(_x15, _x16) {
+      function __resolve(_x17, _x18) {
         return _ref7.apply(this, arguments);
       }
 

@@ -51,10 +51,17 @@ class BaseDAO<TEntity, TEntityMutator> {
     queryOptions?: QueryOptions = {},
     shouldSelectExpand: boolean = true
   ): oHandler<TEntity> {
+    const handler = oHandler(this.getEntityName());
+    return this.__setupHandler(handler, queryOptions, shouldSelectExpand);
+  }
+
+  __setupHandler(
+    handler: oHandler<TEntity>,
+    queryOptions?: QueryOptions = {},
+    shouldSelectExpand: boolean = true
+  ): oHandler<TEntity> {
     const { shouldCount, skip, take } = queryOptions;
     const selectExpandQuery = this.__config.selectExpandQuery;
-    let handler = oHandler(this.getEntityName());
-
     if (shouldSelectExpand && selectExpandQuery) {
       const { expand, select } = selectExpandQuery;
       if (select) {
@@ -70,7 +77,6 @@ class BaseDAO<TEntity, TEntityMutator> {
             return `${key}($select=${value.join(',')})`;
           })
           .join(',');
-
         handler = handler.expand(navigationPropString);
       }
     }

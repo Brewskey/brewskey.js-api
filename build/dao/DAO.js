@@ -36,7 +36,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var CHUNK_SIZE = 20;
 var ID_REG_EXP = /\bid\b/;
 
 var DAO = function (_BaseDAO) {
@@ -151,30 +150,30 @@ var DAO = function (_BaseDAO) {
         idsToLoad.forEach(function (id) {
           return _this5._entityLoaderByID.set(id.toString(), _LoadObject2.default.loading());
         });
-        for (var ii = 0; ii < idsToLoad.length; ii += CHUNK_SIZE) {
-          var queryOptions = {
-            filters: [(0, _filters.createFilter)('id').equals(idsToLoad.slice(ii, ii + CHUNK_SIZE))]
-          };
-          this.__resolveMany(this.__buildHandler(queryOptions)).then(function (results) {
-            var entitiesByID = new Map(results.map(function (item) {
-              return [item.id, item];
-            }));
-            ids.forEach(function (id) {
-              var entity = entitiesByID.get(id);
-              if (entity) {
-                _this5._updateCacheForEntity(entity);
-              } else {
-                _this5._updateCacheForError(id, new Error('Could not load ' + _this5.getEntityName() + ' ' + id));
-              }
-            });
-            _this5._emitChanges();
-          }).catch(function (error) {
-            ids.forEach(function (id) {
-              return _this5._updateCacheForError(id, error, false);
-            });
-            _this5._emitChanges();
+
+        // This URI will look like `pours/Default.GetManyByIDs(ids=['58','59'])/`
+        var handler = this.__buildHandler();
+        handler.customParam('ids', idsToLoad.map(this.__reformatIDValue).join(','));
+
+        this.__resolveMany(handler).then(function (results) {
+          var entitiesByID = new Map(results.map(function (item) {
+            return [item.id, item];
+          }));
+          ids.forEach(function (id) {
+            var entity = entitiesByID.get(id);
+            if (entity) {
+              _this5._updateCacheForEntity(entity);
+            } else {
+              _this5._updateCacheForError(id, new Error('Could not load ' + _this5.getEntityName() + ' ' + id));
+            }
           });
-        }
+          _this5._emitChanges();
+        }).catch(function (error) {
+          ids.forEach(function (id) {
+            return _this5._updateCacheForError(id, error, false);
+          });
+          _this5._emitChanges();
+        });
       }
 
       return new Map(ids.map(function (id) {
@@ -191,7 +190,7 @@ var DAO = function (_BaseDAO) {
         this._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
         this._emitChanges();
 
-        var handler = this.__buildHandler(queryOptions,
+        var handler = this.__buildHandler(queryOptions, null,
         /* shouldSelectExpand */false);
         handler = handler.select('id');
         this.__resolveManyIDs(handler).then(function (ids) {

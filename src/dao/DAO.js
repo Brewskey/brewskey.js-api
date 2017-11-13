@@ -17,7 +17,6 @@ import LoadObject from '../load_object/LoadObject';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
 import { createFilter } from '../filters';
 
-const CHUNK_SIZE = 20;
 const ID_REG_EXP = /\bid\b/;
 
 class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
@@ -114,33 +113,34 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       idsToLoad.forEach((id) =>
         this._entityLoaderByID.set(id.toString(), LoadObject.loading())
       );
-      for (let ii = 0; ii < idsToLoad.length; ii += CHUNK_SIZE) {
-        const queryOptions = {
-          filters: [
-            createFilter('id').equals(idsToLoad.slice(ii, ii + CHUNK_SIZE)),
-          ],
-        };
-        this.__resolveMany(this.__buildHandler(queryOptions))
-          .then((results) => {
-            const entitiesByID = new Map(results.map((item) => [item.id, item]));
-            ids.forEach((id) => {
-              const entity = entitiesByID.get(id);
-              if (entity) {
-                this._updateCacheForEntity(entity);
-              } else {
-                this._updateCacheForError(
-                  id,
-                  new Error(`Could not load ${this.getEntityName()} ${id}`)
-                );
-              }
-            });
-            this._emitChanges();
-          })
-          .catch((error) => {
-            ids.forEach((id) => this._updateCacheForError(id, error, false));
-            this._emitChanges();
+
+      // This URI will look like `pours/Default.GetManyByIDs(ids=['58','59'])/`
+      const handler = this.__buildHandler();
+      handler.customParam(
+        'ids',
+        idsToLoad.map(this.__reformatIDValue).join(',')
+      );
+
+      this.__resolveMany(handler)
+        .then((results) => {
+          const entitiesByID = new Map(results.map((item) => [item.id, item]));
+          ids.forEach((id) => {
+            const entity = entitiesByID.get(id);
+            if (entity) {
+              this._updateCacheForEntity(entity);
+            } else {
+              this._updateCacheForError(
+                id,
+                new Error(`Could not load ${this.getEntityName()} ${id}`)
+              );
+            }
           });
-      }
+          this._emitChanges();
+        })
+        .catch((error) => {
+          ids.forEach((id) => this._updateCacheForError(id, error, false));
+          this._emitChanges();
+        });
     }
 
     return new Map(
@@ -158,6 +158,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
       let handler = this.__buildHandler(
         queryOptions,
+        null,
         /* shouldSelectExpand */ false
       );
       handler = handler.select('id');

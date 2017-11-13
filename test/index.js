@@ -46,7 +46,7 @@ const HOST = 'https://brewskey.com';
 
   const result = null;
   const query = {
-    take: 40,
+    take: 5,
   };
   console.time('FIRST LOAD');
   await loaderToPromise(() => DAOApi.PourDAO.fetchMany(query));
