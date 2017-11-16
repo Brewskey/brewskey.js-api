@@ -12,7 +12,7 @@ var _KegTranslator = require('../translators/KegTranslator');
 
 var _KegTranslator2 = _interopRequireDefault(_KegTranslator);
 
-var _LoadObject = require('../load_object/LoadObject');
+var _LoadObject = require('../LoadObject');
 
 var _LoadObject2 = _interopRequireDefault(_LoadObject);
 

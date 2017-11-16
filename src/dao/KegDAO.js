@@ -1,10 +1,10 @@
 // @flow
 
-import type { EntityID, Keg } from '../index';
+import type { Keg } from '../index';
 
 import DAO from './DAO';
 import KegTranslator from '../translators/KegTranslator';
-import LoadObject from '../load_object/LoadObject';
+import LoadObject from '../LoadObject';
 import { DAO_ENTITIES } from '../constants';
 import { createFilter } from '../filters';
 
@@ -24,7 +24,7 @@ class KegDAO extends DAO<Keg, Keg> {
     });
   }
 
-  fetchKegByTapID = (tapId: EntityID): LoadObject<Array<LoadObject<Keg>>> =>
+  fetchKegByTapID = (tapId: string): LoadObject<Array<LoadObject<Keg>>> =>
     this.fetchMany({
       filters: [createFilter('tap/id').equals(tapId)],
       orderBy: [

@@ -1,39 +1,21 @@
 // @flow
-import type {
-  DAOConfig,
-  DAOTranslator,
-  EntityID,
-  EntityName,
-  QueryFilter,
-  QueryOptions,
-  RequestMethod,
-  SelectExpandQuery,
-} from '../index';
+import type { EntityID, QueryOptions } from '../index';
 
+import nanoid from 'nanoid';
 import nullthrows from 'nullthrows';
-import oHandler from 'odata';
 import BaseDAO from './BaseDAO';
-import LoadObject from '../load_object/LoadObject';
-import { FILTER_FUNCTION_OPERATORS } from '../constants';
-import { createFilter } from '../filters';
-
-const ID_REG_EXP = /\bid\b/;
+import LoadObject from '../LoadObject';
 
 class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   TEntity,
-  TEntityMutator
+  TEntityMutator,
 > {
-  _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
-  _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
-  _subscribers: Array<() => void> = [];
+  _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
+  _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
+  _subscriptionsByID: Map<string, () => void> = new Map();
 
-  constructor(config: DAOConfig<TEntity, TEntityMutator>) {
-    super(config);
-  }
-
-  deleteByID(id: string): void {
-    id = id.toString();
+  deleteByID(id: EntityID) {
     const entity = this._entityLoaderByID.get(id);
     if (!entity) {
       return;
@@ -44,15 +26,15 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
     this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(id)),
-      null,
-      'delete'
+      /* params */ {},
+      'delete',
     )
       .then(() => {
         this._entityLoaderByID.delete(id);
         this._clearQueryCaches();
         this._emitChanges();
       })
-      .catch((error) => this._updateCacheForError(id, error));
+      .catch((error: Error): void => this._updateCacheForError(id, error));
   }
 
   count(queryOptions?: QueryOptions): LoadObject<number> {
@@ -60,26 +42,26 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     if (!this._countLoaderByQuery.has(cacheKey)) {
       this._countLoaderByQuery.set(cacheKey, LoadObject.loading());
       this._emitChanges();
+
       this.__resolve(
         this.__buildHandler({
           ...queryOptions,
-          count: true,
+          shouldCount: true,
           take: 0,
-        })
+        }),
       )
-        .then((result) => {
-          // TODO - test this... it should be a number in the object
+        .then((result: Object) => {
           this._countLoaderByQuery.set(
             cacheKey,
-            LoadObject.withValue(result.data)
+            LoadObject.withValue(result.inlinecount),
           );
           this._emitChanges();
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           const loader = this._countLoaderByQuery.get(cacheKey);
           this._countLoaderByQuery.set(
             cacheKey,
-            loader ? loader.setError(error) : LoadObject.withError(error)
+            loader ? loader.setError(error) : LoadObject.withError(error),
           );
           this._emitChanges();
         });
@@ -89,110 +71,122 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   }
 
   fetchByID(id: EntityID): LoadObject<TEntity> {
-    id = id.toString();
     if (!this._entityLoaderByID.has(id)) {
       this._entityLoaderByID.set(id, LoadObject.loading());
       this._emitChanges();
       this.__resolveSingle(
-        this.__buildHandler().find(this.__reformatIDValue(id))
+        this.__buildHandler().find(this.__reformatIDValue(id)),
       )
-        .then((result) => this._updateCacheForEntity(result))
-        .catch((error) => this._updateCacheForError(id, error));
+        .then((result: TEntity): void => this._updateCacheForEntity(result))
+        .catch((error: Error): void => this._updateCacheForError(id, error));
     }
 
     return nullthrows(this._entityLoaderByID.get(id));
   }
 
-  fetchByIDs(ids: Array<EntityID>): Map<EntityID, LoadObject<TEntity>> {
+  fetchByIDs(ids: Array<EntityID>): Map<string, LoadObject<TEntity>> {
     const idsToLoad = ids.filter(
-      (id) => !this._entityLoaderByID.has(id.toString())
+      (id: EntityID): boolean => !this._entityLoaderByID.has(id),
     );
-    ids = ids.map((id) => id.toString());
 
     if (idsToLoad.length) {
-      idsToLoad.forEach((id) =>
-        this._entityLoaderByID.set(id.toString(), LoadObject.loading())
-      );
+      idsToLoad.forEach((id: EntityID) => {
+        this._entityLoaderByID.set(id.toString(), LoadObject.loading());
+      });
 
       // This URI will look like `pours/Default.GetManyByIDs(ids=['58','59'])/`
       const handler = this.__buildHandler();
       handler.customParam(
         'ids',
-        idsToLoad.map(this.__reformatIDValue).join(',')
+        idsToLoad.map(this.__reformatIDValue).join(','),
       );
 
       this.__resolveMany(handler)
-        .then((results) => {
-          const entitiesByID = new Map(results.map((item) => [item.id, item]));
-          ids.forEach((id) => {
+        .then((results: Array<TEntity>) => {
+          const entitiesByID = new Map(
+            results.map((item: TEntity): [EntityID, TEntity] => [
+              item.id,
+              item,
+            ]),
+          );
+
+          ids.forEach((id: string) => {
             const entity = entitiesByID.get(id);
             if (entity) {
               this._updateCacheForEntity(entity);
             } else {
               this._updateCacheForError(
                 id,
-                new Error(`Could not load ${this.getEntityName()} ${id}`)
+                new Error(`Could not load ${this.getEntityName()} ${id}`),
               );
             }
           });
+
           this._emitChanges();
         })
-        .catch((error) => {
-          ids.forEach((id) => this._updateCacheForError(id, error, false));
+        .catch((error: Error) => {
+          ids.forEach((id: EntityID): void =>
+            this._updateCacheForError(id, error, false),
+          );
+
           this._emitChanges();
         });
     }
 
     return new Map(
-      ids.map((id) => [id, nullthrows(this._entityLoaderByID.get(id))])
+      ids.map((id: EntityID): [string, LoadObject<TEntity>] => [
+        id,
+        nullthrows(this._entityLoaderByID.get(id)),
+      ]),
     );
   }
 
   fetchMany(
-    queryOptions?: QueryOptions
+    queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntity>>> {
     const cacheKey = this._getCacheKey(queryOptions);
+
     if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
       this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
       this._emitChanges();
 
-      let handler = this.__buildHandler(
-        queryOptions,
-        null,
-        /* shouldSelectExpand */ false
-      );
+      let handler = this.__buildHandler(queryOptions, false);
       handler = handler.select('id');
+
       this.__resolveManyIDs(handler)
-        .then((ids) => {
+        .then((ids: Array<EntityID>) => {
           this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.withValue(ids));
           this._emitChanges();
-          return this.fetchByIDs(ids);
+          this.fetchByIDs(ids);
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           const loader = this._entityIDsLoaderByQuery.get(cacheKey);
           this._entityIDsLoaderByQuery.set(
             cacheKey,
-            loader ? loader.setError(error) : LoadObject.withError(error)
+            loader ? loader.setError(error) : LoadObject.withError(error),
           );
           this._emitChanges();
         });
     }
 
-    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map((ids) => {
-      const resultMap = this.fetchByIDs(ids);
-      return ids.map((id) => nullthrows(resultMap.get(id.toString())));
-    });
+    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
+      (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
+        const resultMap = this.fetchByIDs(ids);
+        return ids.map((id: EntityID): LoadObject<TEntity> =>
+          nullthrows(resultMap.get(id)),
+        );
+      },
+    );
   }
 
-  flushCache(): void {
+  flushCache() {
     this._entityLoaderByID = new Map();
     this._entityIDsLoaderByQuery = new Map();
     this._countLoaderByQuery = new Map();
     this._emitChanges();
   }
 
-  patch(id: string, mutator: TEntityMutator): void {
-    id = id.toString();
+  patch(id: EntityID, mutator: TEntityMutator) {
     const entity = this._entityLoaderByID.get(id);
     if (entity) {
       this._entityLoaderByID.set(id, entity.updating());
@@ -202,30 +196,26 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(id)),
       this.getTranslator().toApi(mutator),
-      'patch'
+      'patch',
     )
-      .then((result) => {
+      .then((result: TEntity) => {
         this._clearQueryCaches();
         this._updateCacheForEntity(result);
       })
-      .catch((error) => this._updateCacheForError(id, error));
+      .catch((error: Error): void => this._updateCacheForError(id, error));
   }
 
-  post(mutator: TEntityMutator): void {
+  post(mutator: TEntityMutator) {
     this.__resolveSingle(
       this.__buildHandler(),
       this.getTranslator().toApi(mutator),
-      'post'
+      'post',
     )
-      .then((result) => {
-        this._clearQueryCaches();
-        this._updateCacheForEntity(result);
-      })
-      .catch(() => this._emitChanges());
+      .then(this._clearQueryCaches)
+      .catch(this._emitChanges);
   }
 
-  put(id: string, mutator: TEntityMutator): void {
-    id = id.toString();
+  put(id: EntityID, mutator: TEntityMutator) {
     const entity = this._entityLoaderByID.get(id);
     if (entity) {
       this._entityLoaderByID.set(id, entity.updating());
@@ -235,32 +225,30 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(id)),
       this.getTranslator().toApi(mutator),
-      'put'
+      'put',
     )
-      .then((result) => {
+      .then((result: TEntity) => {
         this._clearQueryCaches();
         this._updateCacheForEntity(result);
       })
-      .catch((error) => this._updateCacheForError(id, error));
+      .catch((error: Error): void => this._updateCacheForError(id, error));
   }
 
-  subscribe(fn: () => void): void {
-    if (this._subscribers.includes(fn)) {
-      return;
-    }
-    this._subscribers.push(fn);
+  subscribe(handler: () => void): string {
+    const subscriptionID = nanoid();
+    this._subscriptionsByID.set(subscriptionID, handler);
+    return subscriptionID;
   }
 
-  unsubscribe(fn: () => void): void {
-    this._subscribers = this._subscribers.filter((item) => item !== fn);
+  unsubscribe(subscriptionID: string) {
+    this._subscriptionsByID.delete(subscriptionID);
   }
 
-  _emitChanges(): void {
-    // TODO - stores should somehow subscribe to refetch when there are changes
+  _emitChanges() {
+    this._subscriptionsByID.forEach((handler: () => void): void => handler());
   }
 
-  _clearQueryCaches(): void {
-    this._entityIDsLoaderByQuery = new Map();
+  _clearQueryCaches() {
     this._entityIDsLoaderByQuery = new Map();
   }
 
@@ -268,29 +256,26 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     return JSON.stringify(queryOptions || '_');
   }
 
-  _updateCacheForEntity(
-    entity: TEntity,
-    should_emitChanges: boolean = true
-  ): void {
-    this._entityLoaderByID.set(
-      entity.id.toString(),
-      LoadObject.withValue(entity)
-    );
-    should_emitChanges && this._emitChanges();
+  _updateCacheForEntity(entity: TEntity, shouldEmitChanges: boolean = true) {
+    this._entityLoaderByID.set(entity.id, LoadObject.withValue(entity));
+    if (shouldEmitChanges) {
+      this._emitChanges();
+    }
   }
 
   _updateCacheForError(
     id: EntityID,
     error: Error,
-    should_emitChanges: boolean = true
-  ): void {
-    id = id.toString();
+    shouldEmitChanges: boolean = true,
+  ) {
     const loader = this._entityLoaderByID.get(id);
     this._entityLoaderByID.set(
       id,
-      loader ? loader.setError(error) : LoadObject.withError(error)
+      loader ? loader.setError(error) : LoadObject.withError(error),
     );
-    should_emitChanges && this._emitChanges();
+    if (shouldEmitChanges) {
+      this._emitChanges();
+    }
   }
 }
 

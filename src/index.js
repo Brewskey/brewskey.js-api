@@ -6,7 +6,7 @@ import oHandler from 'odata';
 import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
 import BaseDAO from './dao/DAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
-import LoadObject from './load_object/LoadObject';
+import LoadObject from './LoadObject';
 
 import fetch from './fetch';
 import { createFilter, doesSatisfyQueryFilters } from './filters';
@@ -48,7 +48,7 @@ const setHeaders = (headers: Headers) => {
 
 const setOrganizationID = BaseDAO.setOrganizationID;
 
-export { CADENCE_MAP, DAO_ENTITIES, PERMISSIONS_MAP };
+export { LoadObject, PERMISSIONS_MAP, DAO_ENTITIES, CADENCE_MAP };
 
 /* eslint-disable sorting/sort-object-props */
 export default {
@@ -58,7 +58,6 @@ export default {
   DeviceDAO,
   GlassDAO,
   KegDAO,
-  LoadObject,
   LocationDAO,
   OrganizationDAO,
   PermissionDAO,

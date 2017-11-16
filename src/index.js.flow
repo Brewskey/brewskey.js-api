@@ -1,28 +1,29 @@
 // @flow
 
+import type { LoadObjectOperation } from './LoadObject';
+
+export type EntityID = string;
+
 /* Entities */
 
-export type EntityID = string | number;
-
 export type EntityName =
-  'accounts' |
-  'beverage-availabilities' |
-  'beverage-glasses' |
-  'beverage-srms' |
-  'beverage-styles' |
-  'beverages' |
-  'chart' |
-  'devices' |
-  'kegs' |
-  'locations' |
-  'organizations' |
-  'permissions' |
-  'pours' |
-  'reports' |
-  'schedule-groups' |
-  'schedules' |
-  'taps';
-
+  | 'accounts'
+  | 'beverage-availabilities'
+  | 'beverage-glasses'
+  | 'beverage-srms'
+  | 'beverage-styles'
+  | 'beverages'
+  | 'chart'
+  | 'devices'
+  | 'kegs'
+  | 'locations'
+  | 'organizations'
+  | 'permissions'
+  | 'pours'
+  | 'reports'
+  | 'schedule-groups'
+  | 'schedules'
+  | 'taps';
 
 export type ShortenedEntity = { id: EntityID, name: string };
 
@@ -57,19 +58,15 @@ export type Availability = {
   name: string,
 };
 
-export type BeverageType =
-  'Beer' |
-  'Cider' |
-  'Coffee' |
-  'Soda';
+export type BeverageType = 'Beer' | 'Cider' | 'Coffee' | 'Soda';
 
 export type ServingTemperature =
-  'cellar' |
-  'cold' |
-  'cool' |
-  'hot' |
-  'very_cold' |
-  'warm';
+  | 'cellar'
+  | 'cold'
+  | 'cool'
+  | 'hot'
+  | 'very_cold'
+  | 'warm';
 
 export type Coordinates = {
   latitude: number,
@@ -79,7 +76,7 @@ export type Coordinates = {
 export type Beverage = {
   abv: number,
   availability: ?Availability,
-  beerVariationId: ?EntityID,
+  beerVariationId: ?string,
   beverageType: BeverageType,
   createDate: Date,
   createdBy: {
@@ -110,11 +107,11 @@ export type Beverage = {
 };
 
 export type PourChartDataType =
-  'all-with-tap-id'|
-  'by-location'|
-  'by-tap'|
-  'hourly-by-location'|
-  'hourly-by-tap';
+  | 'all-with-tap-id'
+  | 'by-location'
+  | 'by-tap'
+  | 'hourly-by-location'
+  | 'hourly-by-tap';
 
 export type PourChartParams = {
   beginDate?: ?Date,
@@ -133,22 +130,18 @@ export type PourChartDataSet = {
   key: string,
 };
 
-export type DeviceStatus =
-  'Active'|
-  'Cleaning'|
-  'Free'|
-  'Inactive';
+export type DeviceStatus = 'Active' | 'Cleaning' | 'Free' | 'Inactive';
 
-export type DeviceType = 'BrewskeyBox' | 'Onsite'
+export type DeviceType = 'BrewskeyBox' | 'Onsite';
 
 export type Device = {
-  createdBy: { id: EntityID, userName: string  },
+  createdBy: { id: EntityID, userName: string },
   deviceStatus: DeviceStatus,
   deviceType: DeviceType,
   id: EntityID,
   isDeleted: boolean,
   lastEdited: Date,
-  lastEditedBy: { id: EntityID,  userName: string },
+  lastEditedBy: { id: EntityID, userName: string },
   location?: ShortenedEntity,
   name: string,
   organization: ShortenedEntity,
@@ -158,7 +151,7 @@ export type Device = {
 
 export type DeviceMutator = {
   deviceStatus: DeviceStatus,
-  id?: string,
+  id?: EntityID,
   isMultiTap: boolean,
   location: ?Location,
   name: string,
@@ -221,16 +214,16 @@ export type Organization = {
 };
 
 export type PermissionEntityType =
-  'devices' |
-  'locations' |
-  'organizations' |
-  'taps';
+  | 'devices'
+  | 'locations'
+  | 'organizations'
+  | 'taps';
 
 export type PermissionType =
-  'Administrator'|
-  'Edit'|
-  'Read'|
-  'BannedFromTap';
+  | 'Administrator'
+  | 'Edit'
+  | 'Read'
+  | 'BannedFromTap';
 
 export type Permission = {
   createdBy: {
@@ -261,7 +254,7 @@ export type PermissionMutator<TEntity> = {
   id: ?EntityID,
   permissionType: PermissionType,
   startDate: ?Date,
-  user: { id: EntityID,  userName: string },
+  user: { id: EntityID, userName: string },
 };
 
 export type Pour = {
@@ -293,7 +286,7 @@ export type Report = {
 
 export type ReportMutator = {
   devices?: Array<ShortenedEntity>,
-  id?: string,
+  id?: EntityID,
   locations?: Array<ShortenedEntity>,
   name: string,
   reportCadence: ReportCadence,
@@ -302,7 +295,12 @@ export type ReportMutator = {
   taps?: Array<ShortenedEntity>,
 };
 
-export type ReportCadence = 'OneTime' | 'Daily' | 'Weekly' | 'Biweekly' | 'Monthly';
+export type ReportCadence =
+  | 'OneTime'
+  | 'Daily'
+  | 'Weekly'
+  | 'Biweekly'
+  | 'Monthly';
 
 export type Schedule = {
   accounts: Array<{
@@ -328,7 +326,7 @@ export type ScheduleMutator = {
   days: number,
   endTime: Date,
   id: ?EntityID,
-  locationId: ?EntityID,
+  locationId: ?string,
   name: string,
   startTime: Date,
 };
@@ -384,26 +382,69 @@ export type TapMutator = {
 };
 
 /* DAO */
-declare export class LoadObject<TEntity>  {
+declare export class LoadObject<VType> {
+  static creating<Vtype>(): LoadObject<Vtype>;
+  static deleting<Vtype>(): LoadObject<Vtype>;
+  static empty<Vtype>(): LoadObject<Vtype>;
+  static loading<Vtype>(): LoadObject<Vtype>;
+  static updating<Vtype>(): LoadObject<Vtype>;
+  static withError<Vtype>(error: Error): LoadObject<Vtype>;
+  static withValue<Vtype>(value: Vtype): LoadObject<Vtype>;
+  creating(): LoadObject<VType>;
+  deleting(): LoadObject<VType>;
+  done(): LoadObject<VType>;
+  getError(): ?Error;
+  getErrorEnforcing(): Error;
+  getOperation(): LoadObjectOperation;
+  getValue(): ?VType;
+  getValueEnforcing(): VType;
+  hasError(): boolean;
+  hasOperation(): boolean;
+  hasValue(): boolean;
+  isCreating(): boolean;
+  isDeleting(): boolean;
+  isDone(): boolean;
+  isEmpty(): boolean;
+  isLoading(): boolean;
+  isUpdating(): boolean;
+  loading(): LoadObject<VType>;
+  map<TType>(
+    fn: (value: VType) => TType | LoadObject<TType>,
+  ): LoadObject<TType>;
+  mapError<TType>(
+    fn: (value: Error) => Error | LoadObject<TType>,
+  ): LoadObject<TType>;
+  removeError(): LoadObject<VType>;
+  removeOperation(): LoadObject<VType>;
+  removeValue(): LoadObject<VType>;
+  setError(error: Error): LoadObject<VType>;
+  setOperation(operation: LoadObjectOperation): LoadObject<VType>;
+  setValue(value: VType): LoadObject<VType>;
+  updating(): LoadObject<VType>;
 }
 
+export type DAOResult = {
+  data: any,
+  inlinecount?: number,
+};
+
 export type FilterOperator =
-  'contains' |
-    'endswith' |
-    'eq' |
-    'gt' |
-    'ge' |
-    'lt' |
-    'le' |
-    'not endswith' |
-    'ne' |
-    'not startswith' |
-    'startswith';
+  | 'contains'
+  | 'endswith'
+  | 'eq'
+  | 'gt'
+  | 'ge'
+  | 'lt'
+  | 'le'
+  | 'not endswith'
+  | 'ne'
+  | 'not startswith'
+  | 'startswith';
 
 export type QueryFilter = {
   operator: FilterOperator,
   params: Array<string>,
-  values: Array<string>
+  values: Array<string>,
 };
 
 export type QueryOrderBy = {
@@ -420,7 +461,7 @@ export type QueryOptions = {
 };
 
 export type SelectExpandQuery<TEntity> = {|
-  expand?: {[key: $Keys<TEntity>]: Array<string>},
+  expand?: { [key: $Keys<TEntity>]: Array<string> },
   select?: Array<$Keys<TEntity>>,
 |};
 
@@ -436,38 +477,58 @@ export type DAOTranslator<TEntity, TEntityMutator> = {
   +toForm: (model: TEntity) => TEntityMutator,
 };
 
-declare export class BaseDAO<TEntity, TEntityMutator>  {
+declare export class BaseDAO<TEntity, TEntityMutator> {
   getEntityName(): EntityName;
   getTranslator(): DAOTranslator<TEntity, TEntityMutator>;
 }
 
-declare export class DAO<TEntity: {id: EntityID}, TEntityMutator>
-  extends BaseDAO<TEntity, TEntityMutator>  {
+declare export class DAO<
+  TEntity: { id: EntityID },
+  TEntityMutator,
+> extends BaseDAO<TEntity, TEntityMutator> {
   count(queryOptions?: QueryOptions): LoadObject<number>;
   deleteByID(id: EntityID): void;
   fetchByID(id: EntityID): LoadObject<TEntity>;
-  fetchByIDs(ids: Array<string>, meta?: Object): Map<EntityID, LoadObject<TEntity>>;
-  fetchMany(queryOptions?: QueryOptions): LoadObject<Array<LoadObject<TEntity>>>;
+  fetchByIDs(
+    ids: Array<string>,
+    meta?: Object,
+  ): Map<string, LoadObject<TEntity>>;
+  fetchMany(
+    queryOptions?: QueryOptions,
+  ): LoadObject<Array<LoadObject<TEntity>>>;
+  flushCache(): void;
   patch(id: EntityID, params: TEntityMutator): void;
   post(params: TEntityMutator): void;
   put(id: EntityID, params: TEntityMutator): void;
+  subscribe(handler: () => void): string;
+  unsubscribe(subscriptionID: string): void;
 }
 
 declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}
-declare class brewskey$AvailabilityDAO
-  extends DAO<Availability, Availability> {}
+declare class brewskey$AvailabilityDAO extends DAO<
+  Availability,
+  Availability,
+> {}
 declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
 declare class brewskey$DeviceDAO extends DAO<Device, DeviceMutator> {}
 declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
 declare class brewskey$KegDAO extends DAO<Keg, Keg> {
-  fetchKegByTapID(tapId: EntityID): LoadObject<Array<LoadObject<Keg>>>;
+  fetchKegByTapID(tapId: string): LoadObject<Array<LoadObject<Keg>>>;
 }
 declare class brewskey$LocationDAO extends DAO<Location, Location> {}
-declare class brewskey$OrganizationDAO extends DAO<Organization, Organization> {}
-declare class brewskey$PermissionDAO
-  extends DAO<Permission, PermissionMutator<*>> {}
+declare class brewskey$OrganizationDAO extends DAO<
+  Organization,
+  Organization,
+> {}
+declare class brewskey$PermissionDAO extends DAO<
+  Permission,
+  PermissionMutator<*>,
+> {}
 declare class brewskey$PourDAO extends DAO<Pour, Pour> {}
-declare class brewkey$PourChartDAO extends BaseDAO<PourChartDataSet, PourChartDataSet> {
+declare class brewkey$PourChartDAO extends BaseDAO<
+  PourChartDataSet,
+  PourChartDataSet,
+> {
   fetchChartData(params: PourChartParams): Promise<PourChartDataSet>;
 }
 declare class brewskey$ReportDAO extends DAO<Report, ReportMutator> {}
@@ -475,8 +536,6 @@ declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
 declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
 declare class brewskey$StyleDAO extends DAO<Style, Style> {}
 declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {}
-
-
 
 /* Utilities */
 export type Header = {
@@ -489,13 +548,7 @@ export type Headers = Array<Header>;
 export type FilterCreator = (params: any) => QueryFilter;
 export type FilterCreators = { [string]: FilterCreator };
 
-export type RequestMethod =
-  'delete' |
-  'get' |
-  'patch' |
-  'post' |
-  'put';
-
+export type RequestMethod = 'delete' | 'get' | 'patch' | 'post' | 'put';
 
 /* exports */
 
@@ -530,11 +583,13 @@ type DAOApi = {
   getHeaders(): Headers,
   initializeDAOApi(config: OConfig): void,
   setHeaders(headers: Headers): void,
-  setOrganizationID(organizationID: ?EntityID): void,
-}
+  setOrganizationID(organizationID: ?string): void,
+};
 
 declare export var CADENCE_MAP: { [ReportCadence]: number };
 declare export var DAO_ENTITIES: { [string]: EntityName };
 declare export var PERMISSIONS_MAP: { [PermissionType]: number };
+declare export var LoadObject;
+// declare export var LoadObject: ILoadObject;
 
-declare export default DAOApi;
+declare export default DAOApi

@@ -1,5 +1,5 @@
 // @flow
-import type { Schedule, ScheduleMutator } from '../index';
+import type { EntityID, Schedule, ScheduleMutator } from '../index';
 
 import DefaultTranslator from './DefaultTranslator';
 
@@ -34,7 +34,9 @@ class SchedulesTranslator extends DefaultTranslator<Schedule, ScheduleMutator> {
   toApi(mutator: ScheduleMutator): Object {
     return {
       ...mutator,
-      accountIds: mutator.accounts && mutator.accounts.map(({ id }) => id),
+      accountIds:
+        mutator.accounts &&
+        mutator.accounts.map(({ id }: { id: EntityID }): EntityID => id),
     };
   }
 
