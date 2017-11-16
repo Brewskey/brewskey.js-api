@@ -226,7 +226,7 @@ var LoadObject = function () {
       return loader;
     }
 
-    // Provide some helper methods to check specific operations
+    //  some helper methods to check specific operations
 
   }, {
     key: 'isDone',

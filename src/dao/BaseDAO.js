@@ -2,6 +2,7 @@
 import type {
   DAOConfig,
   DAOTranslator,
+  EntityID,
   EntityName,
   QueryFilter,
   QueryOptions,
@@ -9,24 +10,19 @@ import type {
 } from '../index';
 
 import oHandler from 'odata';
-import LoadObject from '../LoadObject';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
 
 const ID_REG_EXP = /\bid\b/;
 
 class BaseDAO<TEntity, TEntityMutator> {
-  static _organizationID: ?string = null;
+  static _organizationID: ?EntityID = null;
   __config: DAOConfig<TEntity, TEntityMutator>;
-  _entityLoaderByID: Map<string, LoadObject<TEntity>> = new Map();
-  _entityIDsLoaderByQuery: Map<string, LoadObject<Array<string>>> = new Map();
-  _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
-  _subscribers: Array<() => void> = [];
 
   constructor(config: DAOConfig<TEntity, TEntityMutator>) {
     this.__config = config;
   }
 
-  static setOrganizationID(organizationID: string) {
+  static setOrganizationID(organizationID: EntityID) {
     BaseDAO._organizationID = organizationID;
   }
 
@@ -185,13 +181,14 @@ class BaseDAO<TEntity, TEntityMutator> {
   async __resolveManyIDs(
     handler: oHandler<TEntity>,
     params?: Object,
-    idSelector?: (item: Object) => string = (item: Object): string => item.id,
+    idSelector?: (item: Object) => EntityID = (item: Object): EntityID =>
+      item.id,
     method?: RequestMethod = 'get',
   ): Promise<Array<string>> {
     const result: Array<Object> = await this.__resolve(handler, params, method);
     return (result || [])
       .map(idSelector)
-      .map((rawId: string | number): string => rawId.toString());
+      .map((rawId: string | number): EntityID => rawId.toString());
   }
 
   async __resolve(

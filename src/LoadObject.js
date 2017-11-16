@@ -223,7 +223,7 @@ class LoadObject<VType> {
     return (loader: any);
   }
 
-  // Provide some helper methods to check specific operations
+  //  some helper methods to check specific operations
 
   isDone(): boolean {
     return !this.hasOperation();

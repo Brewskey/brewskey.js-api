@@ -1,5 +1,10 @@
 // @flow
-import type { ShortenedEntity, Report, ReportMutator } from '../index';
+import type {
+  EntityID,
+  Report,
+  ReportMutator,
+  ShortenedEntity,
+} from '../index';
 
 import DefaultTranslator from './DefaultTranslator';
 
@@ -22,15 +27,15 @@ class ReportTranslator extends DefaultTranslator<Report, ReportMutator> {
     return {
       ...props,
       deviceIds: devices
-        ? devices.map(({ id }: ShortenedEntity): string => id)
+        ? devices.map(({ id }: ShortenedEntity): EntityID => id)
         : [],
       locationIds: locations
-        ? locations.map(({ id }: ShortenedEntity): string => id)
+        ? locations.map(({ id }: ShortenedEntity): EntityID => id)
         : [],
       sendToEmails: sendToEmails.map(
         ({ email }: { email: string }): string => email,
       ),
-      tapIds: taps ? taps.map(({ id }: ShortenedEntity): string => id) : [],
+      tapIds: taps ? taps.map(({ id }: ShortenedEntity): EntityID => id) : [],
     };
   }
 

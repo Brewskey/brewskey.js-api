@@ -275,7 +275,7 @@ var DAO = function (_BaseDAO) {
     value: function _updateCacheForEntity(entity) {
       var shouldEmitChanges = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      this._entityLoaderByID.set(entity.id.toString(), _LoadObject2.default.withValue(entity));
+      this._entityLoaderByID.set(entity.id, _LoadObject2.default.withValue(entity));
       if (shouldEmitChanges) {
         this._emitChanges();
       }

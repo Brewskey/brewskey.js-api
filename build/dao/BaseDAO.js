@@ -12,10 +12,6 @@ var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
 
-var _LoadObject = require('../LoadObject');
-
-var _LoadObject2 = _interopRequireDefault(_LoadObject);
-
 var _constants = require('../constants');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -42,10 +38,6 @@ var BaseDAO = function () {
     this.__resolveMany = this.__resolveMany.bind(this);
     this.__resolveManyIDs = this.__resolveManyIDs.bind(this);
     this.__resolve = this.__resolve.bind(this);
-    this._entityLoaderByID = new Map();
-    this._entityIDsLoaderByQuery = new Map();
-    this._countLoaderByQuery = new Map();
-    this._subscribers = [];
 
     this.__reformatIDValue = function (value) {
       return isNaN(value) || value === '' ? '\'' + value + '\'' : value;

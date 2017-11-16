@@ -2,6 +2,8 @@
 
 import type { LoadObjectOperation } from './LoadObject';
 
+export type EntityID = string;
+
 /* Entities */
 
 export type EntityName =
@@ -23,7 +25,7 @@ export type EntityName =
   | 'schedules'
   | 'taps';
 
-export type ShortenedEntity = { id: string, name: string };
+export type ShortenedEntity = { id: EntityID, name: string };
 
 export type Account = {
   accessFailedCount: ?number,
@@ -32,7 +34,7 @@ export type Account = {
   email: ?string,
   emailConfirmed: ?boolean,
   fullName: ?string,
-  id: string,
+  id: EntityID,
   lockoutEnabled: ?boolean,
   lockoutEndDateUtc: ?string,
   logins: ?Object,
@@ -52,7 +54,7 @@ export type AccountMutator = {
 
 export type Availability = {
   description: ?string,
-  id: string,
+  id: EntityID,
   name: string,
 };
 
@@ -78,7 +80,7 @@ export type Beverage = {
   beverageType: BeverageType,
   createDate: Date,
   createdBy: {
-    id: string,
+    id: EntityID,
     userName: string,
   },
   description: ?string,
@@ -86,7 +88,7 @@ export type Beverage = {
   foodPairings: ?string,
   glassware: ?Glass,
   ibu: number,
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   isOrganic: ?string,
   labels: {
@@ -133,13 +135,13 @@ export type DeviceStatus = 'Active' | 'Cleaning' | 'Free' | 'Inactive';
 export type DeviceType = 'BrewskeyBox' | 'Onsite';
 
 export type Device = {
-  createdBy: { id: string, userName: string },
+  createdBy: { id: EntityID, userName: string },
   deviceStatus: DeviceStatus,
   deviceType: DeviceType,
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   lastEdited: Date,
-  lastEditedBy: { id: string, userName: string },
+  lastEditedBy: { id: EntityID, userName: string },
   location?: ShortenedEntity,
   name: string,
   organization: ShortenedEntity,
@@ -149,7 +151,7 @@ export type Device = {
 
 export type DeviceMutator = {
   deviceStatus: DeviceStatus,
-  id?: string,
+  id?: EntityID,
   isMultiTap: boolean,
   location: ?Location,
   name: string,
@@ -159,7 +161,7 @@ export type DeviceMutator = {
 export type Glass = {
   createDate: Date,
   description: ?string,
-  id: string,
+  id: EntityID,
   name: string,
   updateDate: Date,
 };
@@ -167,7 +169,7 @@ export type Glass = {
 export type Keg = {
   beverage: ShortenedEntity,
   floatedDate: Date,
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   kegType: string,
   location: ?ShortenedEntity,
@@ -191,7 +193,7 @@ export type Location = {
       wellKnownBinary: ?Object,
     },
   },
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   locationType: string,
   name: string,
@@ -206,7 +208,7 @@ export type Location = {
 
 export type Organization = {
   createdDate: Date,
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   name: string,
 };
@@ -225,17 +227,17 @@ export type PermissionType =
 
 export type Permission = {
   createdBy: {
-    id: string,
+    id: EntityID,
     userName: string,
   },
   createdDate: Date,
   device: ?ShortenedEntity,
   expiresDate: ?Date,
   forUser: {
-    id: string,
+    id: EntityID,
     userName: string,
   },
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   invalid: boolean,
   location: ?ShortenedEntity,
@@ -249,20 +251,20 @@ export type PermissionMutator<TEntity> = {
   entity: TEntity,
   entityType: PermissionEntityType,
   expiresDate: ?Date,
-  id: ?string,
+  id: ?EntityID,
   permissionType: PermissionType,
   startDate: ?Date,
-  user: { id: string, userName: string },
+  user: { id: EntityID, userName: string },
 };
 
 export type Pour = {
   beverage: ?ShortenedEntity,
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   location: ?ShortenedEntity,
   organization: ShortenedEntity,
   ounces: number,
-  owner: { id: string, userName: string },
+  owner: { id: EntityID, userName: string },
   pourDate: string,
   pulses: number,
   tap: ?ShortenedEntity,
@@ -271,7 +273,7 @@ export type Pour = {
 export type Report = {
   createdDate: Date,
   devices: Array<ShortenedEntity>,
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   lastEdited: Date,
   locations: Array<ShortenedEntity>,
@@ -284,7 +286,7 @@ export type Report = {
 
 export type ReportMutator = {
   devices?: Array<ShortenedEntity>,
-  id?: string,
+  id?: EntityID,
   locations?: Array<ShortenedEntity>,
   name: string,
   reportCadence: ReportCadence,
@@ -302,14 +304,14 @@ export type ReportCadence =
 
 export type Schedule = {
   accounts: Array<{
-    id: string,
+    id: EntityID,
     userName: string,
   }>,
   createdDate: Date,
   days: number,
   editDate: Date,
   endTime: Date,
-  id: string,
+  id: EntityID,
   isDeleted: boolean,
   location: ?ShortenedEntity,
   name: string,
@@ -318,12 +320,12 @@ export type Schedule = {
 
 export type ScheduleMutator = {
   accounts: Array<{
-    id: string,
+    id: EntityID,
     userName: string,
   }>,
   days: number,
   endTime: Date,
-  id: ?string,
+  id: ?EntityID,
   locationId: ?string,
   name: string,
   startTime: Date,
@@ -331,7 +333,7 @@ export type ScheduleMutator = {
 
 export type Srm = {
   hex: string,
-  id: string,
+  id: EntityID,
   name: string,
 };
 
@@ -344,7 +346,7 @@ export type Style = {
   fgMin: number,
   ibuMax: number,
   ibuMin: number,
-  id: string,
+  id: EntityID,
   name: string,
   ogMax: number,
   ogMin: number,
@@ -360,7 +362,7 @@ export type Tap = {
   disableBadges: boolean,
   hideLeaderboard: boolean,
   hideStats: boolean,
-  id: string,
+  id: EntityID,
   location: ?ShortenedEntity,
   name: string,
   organization: ShortenedEntity,
@@ -374,7 +376,7 @@ export type TapMutator = {
   disableBadges: boolean,
   hideLeaderboard: boolean,
   hideStats: boolean,
-  id: ?string,
+  id: ?EntityID,
   name: string,
   requiresPourPrivilege: boolean,
 };
@@ -476,12 +478,12 @@ declare export class BaseDAO<TEntity, TEntityMutator> {
 }
 
 declare export class DAO<
-  TEntity: { id: string },
+  TEntity: { id: EntityID },
   TEntityMutator,
 > extends BaseDAO<TEntity, TEntityMutator> {
   count(queryOptions?: QueryOptions): LoadObject<number>;
-  deleteByID(id: string): void;
-  fetchByID(id: string): LoadObject<TEntity>;
+  deleteByID(id: EntityID): void;
+  fetchByID(id: EntityID): LoadObject<TEntity>;
   fetchByIDs(
     ids: Array<string>,
     meta?: Object,
@@ -490,9 +492,9 @@ declare export class DAO<
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntity>>>;
   flushCache(): void;
-  patch(id: string, params: TEntityMutator): void;
+  patch(id: EntityID, params: TEntityMutator): void;
   post(params: TEntityMutator): void;
-  put(id: string, params: TEntityMutator): void;
+  put(id: EntityID, params: TEntityMutator): void;
   subscribe(handler: () => void): string;
   unsubscribe(subscriptionID: string): void;
 }
