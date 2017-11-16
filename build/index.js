@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PERMISSIONS_MAP = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
+exports.CADENCE_MAP = exports.DAO_ENTITIES = exports.PERMISSIONS_MAP = exports.LoadObject = undefined;
 
 var _odata = require('odata');
 
@@ -17,7 +17,7 @@ var _DAO2 = _interopRequireDefault(_DAO);
 
 var _ReportTranslator = require('./translators/ReportTranslator');
 
-var _LoadObject = require('./load_object/LoadObject');
+var _LoadObject = require('./LoadObject');
 
 var _LoadObject2 = _interopRequireDefault(_LoadObject);
 
@@ -117,9 +117,10 @@ var setHeaders = function setHeaders(headers) {
 
 var setOrganizationID = _DAO2.default.setOrganizationID;
 
-exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
-exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
+exports.LoadObject = _LoadObject2.default;
 exports.PERMISSIONS_MAP = _constants.PERMISSIONS_MAP;
+exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
+exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
 
 /* eslint-disable sorting/sort-object-props */
 
@@ -130,7 +131,6 @@ exports.default = {
   DeviceDAO: _DeviceDAO2.default,
   GlassDAO: _GlassDAO2.default,
   KegDAO: _KegDAO2.default,
-  LoadObject: _LoadObject2.default,
   LocationDAO: _LocationDAO2.default,
   OrganizationDAO: _OrganizationDAO2.default,
   PermissionDAO: _PermissionDAO2.default,

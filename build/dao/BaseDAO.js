@@ -8,21 +8,15 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nullthrows = require('nullthrows');
-
-var _nullthrows2 = _interopRequireDefault(_nullthrows);
-
 var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
 
-var _LoadObject = require('../load_object/LoadObject');
+var _LoadObject = require('../LoadObject');
 
 var _LoadObject2 = _interopRequireDefault(_LoadObject);
 
 var _constants = require('../constants');
-
-var _filters = require('../filters');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -88,6 +82,8 @@ var BaseDAO = function () {
     value: function __setupHandler(handler) {
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var shouldSelectExpand = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+      /* eslint-disable no-param-reassign */
       var shouldCount = queryOptions.shouldCount,
           skip = queryOptions.skip,
           take = queryOptions.take;
@@ -145,6 +141,7 @@ var BaseDAO = function () {
       }
 
       return handler;
+      /* eslint-enable no-param-reassign */
     }
   }, {
     key: '_getCacheKey',
@@ -197,20 +194,37 @@ var BaseDAO = function () {
     }
   }, {
     key: '__resolveSingle',
+    value: function __resolveSingle(handler, params) {
+      var _this2 = this;
+
+      var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
+
+      return this.__resolve(handler, params, method).then(function (result) {
+        return _this2.getTranslator().fromApi(result);
+      });
+    }
+  }, {
+    key: '__resolveMany',
     value: function () {
       var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
-        var _this2 = this;
+        var _this3 = this;
 
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
+        var result;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                return _context.abrupt('return', this.__resolve(handler, params, method).then(function (result) {
-                  return _this2.getTranslator().fromApi(result);
+                _context.next = 2;
+                return this.__resolve(handler, params, method);
+
+              case 2:
+                result = _context.sent;
+                return _context.abrupt('return', (result || []).map(function (item) {
+                  return _this3.getTranslator().fromApi(item);
                 }));
 
-              case 1:
+              case 4:
               case 'end':
                 return _context.stop();
             }
@@ -218,19 +232,20 @@ var BaseDAO = function () {
         }, _callee, this);
       }));
 
-      function __resolveSingle(_x7, _x8) {
+      function __resolveMany(_x8, _x9) {
         return _ref4.apply(this, arguments);
       }
 
-      return __resolveSingle;
+      return __resolveMany;
     }()
   }, {
-    key: '__resolveMany',
+    key: '__resolveManyIDs',
     value: function () {
       var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(handler, params) {
-        var _this3 = this;
-
-        var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
+        var idSelector = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (item) {
+          return item.id;
+        };
+        var method = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'get';
         var result;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
@@ -241,8 +256,8 @@ var BaseDAO = function () {
 
               case 2:
                 result = _context2.sent;
-                return _context2.abrupt('return', (result || []).map(function (item) {
-                  return _this3.getTranslator().fromApi(item);
+                return _context2.abrupt('return', (result || []).map(idSelector).map(function (rawId) {
+                  return rawId.toString();
                 }));
 
               case 4:
@@ -253,42 +268,8 @@ var BaseDAO = function () {
         }, _callee2, this);
       }));
 
-      function __resolveMany(_x10, _x11) {
+      function __resolveManyIDs(_x12, _x13) {
         return _ref5.apply(this, arguments);
-      }
-
-      return __resolveMany;
-    }()
-  }, {
-    key: '__resolveManyIDs',
-    value: function () {
-      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(handler, params, selector) {
-        var method = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'get';
-        var result;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                selector = selector || function (item) {
-                  return item.id;
-                };
-                _context3.next = 3;
-                return this.__resolve(handler, params, method);
-
-              case 3:
-                result = _context3.sent;
-                return _context3.abrupt('return', (result || []).map(selector));
-
-              case 5:
-              case 'end':
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-
-      function __resolveManyIDs(_x13, _x14, _x15) {
-        return _ref6.apply(this, arguments);
       }
 
       return __resolveManyIDs;
@@ -296,55 +277,55 @@ var BaseDAO = function () {
   }, {
     key: '__resolve',
     value: function () {
-      var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(handler, params) {
+      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(handler, params) {
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
         var request, resultHandler;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 request = void 0;
-                _context4.t0 = method;
-                _context4.next = _context4.t0 === 'delete' ? 4 : _context4.t0 === 'patch' ? 6 : _context4.t0 === 'post' ? 8 : _context4.t0 === 'put' ? 10 : 12;
+                _context3.t0 = method;
+                _context3.next = _context3.t0 === 'delete' ? 4 : _context3.t0 === 'patch' ? 6 : _context3.t0 === 'post' ? 8 : _context3.t0 === 'put' ? 10 : 12;
                 break;
 
               case 4:
                 request = handler.remove().save();
-                return _context4.abrupt('break', 13);
+                return _context3.abrupt('break', 13);
 
               case 6:
                 request = handler.patch(params).save();
-                return _context4.abrupt('break', 13);
+                return _context3.abrupt('break', 13);
 
               case 8:
                 request = handler.post(params).save();
-                return _context4.abrupt('break', 13);
+                return _context3.abrupt('break', 13);
 
               case 10:
                 request = handler.put(params).save();
-                return _context4.abrupt('break', 13);
+                return _context3.abrupt('break', 13);
 
               case 12:
                 request = handler.get();
 
               case 13:
-                _context4.next = 15;
+                _context3.next = 15;
                 return request;
 
               case 15:
-                resultHandler = _context4.sent;
-                return _context4.abrupt('return', resultHandler.data);
+                resultHandler = _context3.sent;
+                return _context3.abrupt('return', resultHandler.data);
 
               case 17:
               case 'end':
-                return _context4.stop();
+                return _context3.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee3, this);
       }));
 
-      function __resolve(_x17, _x18) {
-        return _ref7.apply(this, arguments);
+      function __resolve(_x15, _x16) {
+        return _ref6.apply(this, arguments);
       }
 
       return __resolve;

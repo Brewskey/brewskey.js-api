@@ -2,26 +2,23 @@
 import type {
   DAOConfig,
   DAOTranslator,
-  EntityID,
   EntityName,
   QueryFilter,
   QueryOptions,
   RequestMethod,
 } from '../index';
 
-import nullthrows from 'nullthrows';
 import oHandler from 'odata';
-import LoadObject from '../load_object/LoadObject';
+import LoadObject from '../LoadObject';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
-import { createFilter } from '../filters';
 
 const ID_REG_EXP = /\bid\b/;
 
 class BaseDAO<TEntity, TEntityMutator> {
   static _organizationID: ?string = null;
   __config: DAOConfig<TEntity, TEntityMutator>;
-  _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
-  _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
+  _entityLoaderByID: Map<string, LoadObject<TEntity>> = new Map();
+  _entityIDsLoaderByQuery: Map<string, LoadObject<Array<string>>> = new Map();
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
   _subscribers: Array<() => void> = [];
 
@@ -41,7 +38,7 @@ class BaseDAO<TEntity, TEntityMutator> {
     return this.__config.translator;
   }
 
-  __reformatIDValue = (value: EntityID): string | number =>
+  __reformatIDValue = (value: string): string | number =>
     isNaN(value) || value === '' ? `'${value}'` : value;
 
   __reformatQueryValue = (value: string | number): string | number =>
@@ -49,7 +46,7 @@ class BaseDAO<TEntity, TEntityMutator> {
 
   __buildHandler(
     queryOptions?: QueryOptions = {},
-    shouldSelectExpand: boolean = true
+    shouldSelectExpand: boolean = true,
   ): oHandler<TEntity> {
     const handler = oHandler(this.getEntityName());
     return this.__setupHandler(handler, queryOptions, shouldSelectExpand);
@@ -58,8 +55,9 @@ class BaseDAO<TEntity, TEntityMutator> {
   __setupHandler(
     handler: oHandler<TEntity>,
     queryOptions?: QueryOptions = {},
-    shouldSelectExpand: boolean = true
+    shouldSelectExpand: boolean = true,
   ): oHandler<TEntity> {
+    /* eslint-disable no-param-reassign */
     const { shouldCount, skip, take } = queryOptions;
     const selectExpandQuery = this.__config.selectExpandQuery;
     if (shouldSelectExpand && selectExpandQuery) {
@@ -110,6 +108,7 @@ class BaseDAO<TEntity, TEntityMutator> {
     }
 
     return handler;
+    /* eslint-enable no-param-reassign */
   }
 
   _getCacheKey(queryOptions?: QueryOptions): string {
@@ -118,7 +117,7 @@ class BaseDAO<TEntity, TEntityMutator> {
 
   _setFilters(
     handler: oHandler<TEntity>,
-    queryOptions: QueryOptions = {}
+    queryOptions: QueryOptions = {},
   ): oHandler<TEntity> {
     if (!queryOptions.filters || !queryOptions.filters.length) {
       return handler;
@@ -126,7 +125,7 @@ class BaseDAO<TEntity, TEntityMutator> {
     const renderedFilters = queryOptions.filters
       .map(({ operator, params, values }: QueryFilter): string => {
         const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
-          (op: string): boolean => op === operator
+          (op: string): boolean => op === operator,
         );
 
         const filters = values.map((value: string): Array<string> =>
@@ -145,15 +144,15 @@ class BaseDAO<TEntity, TEntityMutator> {
             }
 
             return `(${param} ${operator} ${reformattedValue})`;
-          })
+          }),
         );
 
         return filters
           .reduce(
             (
               previousFilter: Array<string>,
-              currentFilters: Array<string>
-            ): Array<string> => [...previousFilter, ...currentFilters]
+              currentFilters: Array<string>,
+            ): Array<string> => [...previousFilter, ...currentFilters],
           )
           .join(' or ');
       })
@@ -162,40 +161,43 @@ class BaseDAO<TEntity, TEntityMutator> {
     return handler.filter(renderedFilters);
   }
 
-  async __resolveSingle(
+  __resolveSingle(
     handler: oHandler<TEntity>,
-    params: ?Object,
-    method: ?RequestMethod = 'get'
+    params?: Object,
+    method?: RequestMethod = 'get',
   ): Promise<TEntity> {
-    return this.__resolve(handler, params, method).then((result) =>
-      this.getTranslator().fromApi(result)
+    return this.__resolve(handler, params, method).then(
+      (result: Object): TEntity => this.getTranslator().fromApi(result),
     );
   }
 
   async __resolveMany(
     handler: oHandler<TEntity>,
-    params: ?Object,
-    method: ?RequestMethod = 'get'
+    params?: Object,
+    method?: RequestMethod = 'get',
   ): Promise<Array<TEntity>> {
     const result: Array<Object> = await this.__resolve(handler, params, method);
-    return (result || []).map((item) => this.getTranslator().fromApi(item));
+    return (result || []).map((item: Object): TEntity =>
+      this.getTranslator().fromApi(item),
+    );
   }
 
   async __resolveManyIDs(
     handler: oHandler<TEntity>,
-    params: ?Object,
-    selector: ?(item: Object) => EntityID,
-    method: ?RequestMethod = 'get'
-  ): Promise<Array<EntityID>> {
-    selector = selector || ((item) => item.id);
+    params?: Object,
+    idSelector?: (item: Object) => string = (item: Object): string => item.id,
+    method?: RequestMethod = 'get',
+  ): Promise<Array<string>> {
     const result: Array<Object> = await this.__resolve(handler, params, method);
-    return (result || []).map(selector);
+    return (result || [])
+      .map(idSelector)
+      .map((rawId: string | number): string => rawId.toString());
   }
 
-  async __resolve<TResult>(
+  async __resolve(
     handler: oHandler<TEntity>,
-    params: ?Object,
-    method: ?RequestMethod = 'get'
+    params?: Object,
+    method?: RequestMethod = 'get',
   ): Promise<any> {
     let request: Promise<oHandler<TEntity>>;
     switch (method) {

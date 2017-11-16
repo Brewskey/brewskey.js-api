@@ -37,7 +37,7 @@ class LocationTranslator extends DefaultTranslator<Location, Location> {
     return {
       ...props,
       ...(organization ? { organizationId: organization.id } : {}),
-    }
+    };
   }
 }
 

@@ -9,7 +9,7 @@
  * @flow
  */
 
-type LoadObjectOperation =
+export type LoadObjectOperation =
   | 'NONE'
   | 'CREATING'
   | 'LOADING'
@@ -45,9 +45,9 @@ const SECRET = `SECRET_${Math.random()}`;
  *   return <div>{loadObject.getValue().text}</div>;
  *
  */
-class LoadObject<V> {
+class LoadObject<VType> {
   _operation: LoadObjectOperation;
-  _value: ?V;
+  _value: ?VType;
   _error: ?Error;
   _hasValue: boolean;
 
@@ -57,14 +57,14 @@ class LoadObject<V> {
   constructor(
     secret: string,
     operation: LoadObjectOperation,
-    value: ?V,
+    value: ?VType,
     error: ?Error,
-    hasValue: boolean
+    hasValue: boolean,
   ) {
     if (secret !== SECRET) {
       throw new Error(
         'Construct LoadObjects using static methods such as ' +
-          'LoadObject.loading(), LoadObject.empty()'
+          'LoadObject.loading(), LoadObject.empty()',
       );
     }
     this._operation = operation;
@@ -79,11 +79,11 @@ class LoadObject<V> {
     return this._operation;
   }
 
-  getValue(): ?V {
+  getValue(): ?VType {
     return this._value;
   }
 
-  getValueEnforcing(): V {
+  getValueEnforcing(): VType {
     if (!this.hasValue()) {
       throw new Error('Expected load object to have a value set.');
     }
@@ -121,7 +121,7 @@ class LoadObject<V> {
 
   // Convenient setters
 
-  setOperation(operation: LoadObjectOperation): LoadObject<V> {
+  setOperation(operation: LoadObjectOperation): LoadObject<VType> {
     if (this._operation === operation) {
       return this;
     }
@@ -130,18 +130,18 @@ class LoadObject<V> {
       operation,
       this._value,
       this._error,
-      this._hasValue
+      this._hasValue,
     );
   }
 
-  setValue(value: V): LoadObject<V> {
+  setValue(value: VType): LoadObject<VType> {
     if (this._value === value && this._hasValue === true) {
       return this;
     }
     return new LoadObject(SECRET, this._operation, value, this._error, true);
   }
 
-  setError(error: Error): LoadObject<V> {
+  setError(error: Error): LoadObject<VType> {
     if (this._error === error) {
       return this;
     }
@@ -150,11 +150,11 @@ class LoadObject<V> {
       this._operation,
       this._value,
       error,
-      this._hasValue
+      this._hasValue,
     );
   }
 
-  removeOperation(): LoadObject<V> {
+  removeOperation(): LoadObject<VType> {
     if (this._operation === 'NONE') {
       return this;
     }
@@ -163,11 +163,11 @@ class LoadObject<V> {
       'NONE',
       this._value,
       this._error,
-      this._hasValue
+      this._hasValue,
     );
   }
 
-  removeValue(): LoadObject<V> {
+  removeValue(): LoadObject<VType> {
     if (this._value === undefined && this._hasValue === false) {
       return this;
     }
@@ -176,11 +176,11 @@ class LoadObject<V> {
       this._operation,
       undefined,
       this._error,
-      false
+      false,
     );
   }
 
-  removeError(): LoadObject<V> {
+  removeError(): LoadObject<VType> {
     if (this._error === undefined) {
       return this;
     }
@@ -189,11 +189,13 @@ class LoadObject<V> {
       this._operation,
       this._value,
       undefined,
-      this._hasValue
+      this._hasValue,
     );
   }
 
-  map<TType>(fn: (value: V) => TType | LoadObject<TType>): LoadObject<TType> {
+  map<TType>(
+    fn: (value: VType) => TType | LoadObject<TType>,
+  ): LoadObject<TType> {
     if (!this.hasValue()) {
       return (this: any);
     }
@@ -207,7 +209,7 @@ class LoadObject<V> {
   }
 
   mapError<TType>(
-    fn: (value: Error) => Error | LoadObject<TType>
+    fn: (value: Error) => Error | LoadObject<TType>,
   ): LoadObject<TType> {
     if (!this.hasError()) {
       return (this: any);
@@ -245,23 +247,23 @@ class LoadObject<V> {
 
   // Provide some helpers for mutating the operations
 
-  done(): LoadObject<V> {
+  done(): LoadObject<VType> {
     return this.removeOperation();
   }
 
-  creating(): LoadObject<V> {
+  creating(): LoadObject<VType> {
     return this.setOperation('CREATING');
   }
 
-  loading(): LoadObject<V> {
+  loading(): LoadObject<VType> {
     return this.setOperation('LOADING');
   }
 
-  updating(): LoadObject<V> {
+  updating(): LoadObject<VType> {
     return this.setOperation('UPDATING');
   }
 
-  deleting(): LoadObject<V> {
+  deleting(): LoadObject<VType> {
     return this.setOperation('DELETING');
   }
 
