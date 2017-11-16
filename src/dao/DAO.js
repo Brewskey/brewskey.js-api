@@ -46,15 +46,14 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       this.__resolve(
         this.__buildHandler({
           ...queryOptions,
-          count: true,
+          shouldCount: true,
           take: 0,
         }),
       )
         .then((result: Object) => {
-          // TODO - test this... it should be a number in the object
           this._countLoaderByQuery.set(
             cacheKey,
-            LoadObject.withValue(result.data),
+            LoadObject.withValue(result.inlinecount),
           );
           this._emitChanges();
         })

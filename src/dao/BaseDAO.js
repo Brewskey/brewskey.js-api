@@ -1,6 +1,7 @@
 // @flow
 import type {
   DAOConfig,
+  DAOResult,
   DAOTranslator,
   EntityID,
   EntityName,
@@ -163,7 +164,7 @@ class BaseDAO<TEntity, TEntityMutator> {
     method?: RequestMethod = 'get',
   ): Promise<TEntity> {
     return this.__resolve(handler, params, method).then(
-      (result: Object): TEntity => this.getTranslator().fromApi(result),
+      (result: DAOResult): TEntity => this.getTranslator().fromApi(result.data),
     );
   }
 
@@ -172,8 +173,8 @@ class BaseDAO<TEntity, TEntityMutator> {
     params?: Object,
     method?: RequestMethod = 'get',
   ): Promise<Array<TEntity>> {
-    const result: Array<Object> = await this.__resolve(handler, params, method);
-    return (result || []).map((item: Object): TEntity =>
+    const result = await this.__resolve(handler, params, method);
+    return (result.data || []).map((item: Object): TEntity =>
       this.getTranslator().fromApi(item),
     );
   }
@@ -185,8 +186,8 @@ class BaseDAO<TEntity, TEntityMutator> {
       item.id,
     method?: RequestMethod = 'get',
   ): Promise<Array<string>> {
-    const result: Array<Object> = await this.__resolve(handler, params, method);
-    return (result || [])
+    const result = await this.__resolve(handler, params, method);
+    return (result.data || [])
       .map(idSelector)
       .map((rawId: string | number): EntityID => rawId.toString());
   }
@@ -195,7 +196,7 @@ class BaseDAO<TEntity, TEntityMutator> {
     handler: oHandler<TEntity>,
     params?: Object,
     method?: RequestMethod = 'get',
-  ): Promise<any> {
+  ): Promise<DAOResult> {
     let request: Promise<oHandler<TEntity>>;
     switch (method) {
       case 'delete': {
@@ -219,7 +220,7 @@ class BaseDAO<TEntity, TEntityMutator> {
       }
     }
     const resultHandler = await request;
-    return resultHandler.data;
+    return resultHandler;
   }
 }
 

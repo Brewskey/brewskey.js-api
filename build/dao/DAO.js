@@ -82,11 +82,10 @@ var DAO = function (_BaseDAO) {
         this._emitChanges();
 
         this.__resolve(this.__buildHandler(_extends({}, queryOptions, {
-          count: true,
+          shouldCount: true,
           take: 0
         }))).then(function (result) {
-          // TODO - test this... it should be a number in the object
-          _this3._countLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.data));
+          _this3._countLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.inlinecount));
           _this3._emitChanges();
         }).catch(function (error) {
           var loader = _this3._countLoaderByQuery.get(cacheKey);

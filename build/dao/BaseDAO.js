@@ -192,7 +192,7 @@ var BaseDAO = function () {
       var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
 
       return this.__resolve(handler, params, method).then(function (result) {
-        return _this2.getTranslator().fromApi(result);
+        return _this2.getTranslator().fromApi(result.data);
       });
     }
   }, {
@@ -212,7 +212,7 @@ var BaseDAO = function () {
 
               case 2:
                 result = _context.sent;
-                return _context.abrupt('return', (result || []).map(function (item) {
+                return _context.abrupt('return', (result.data || []).map(function (item) {
                   return _this3.getTranslator().fromApi(item);
                 }));
 
@@ -248,7 +248,7 @@ var BaseDAO = function () {
 
               case 2:
                 result = _context2.sent;
-                return _context2.abrupt('return', (result || []).map(idSelector).map(function (rawId) {
+                return _context2.abrupt('return', (result.data || []).map(idSelector).map(function (rawId) {
                   return rawId.toString();
                 }));
 
@@ -306,7 +306,7 @@ var BaseDAO = function () {
 
               case 15:
                 resultHandler = _context3.sent;
-                return _context3.abrupt('return', resultHandler.data);
+                return _context3.abrupt('return', resultHandler);
 
               case 17:
               case 'end':

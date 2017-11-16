@@ -423,6 +423,11 @@ declare export class LoadObject<VType> {
   updating(): LoadObject<VType>;
 }
 
+export type DAOResult = {
+  data: any,
+  inlinecount?: number,
+};
+
 export type FilterOperator =
   | 'contains'
   | 'endswith'
