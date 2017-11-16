@@ -54,13 +54,12 @@ class BaseDAO<TEntity, TEntityMutator> {
     queryOptions?: QueryOptions = {},
     shouldSelectExpand: boolean = true,
   ): oHandler<TEntity> {
-    /* eslint-disable no-param-reassign */
     const { shouldCount, skip, take } = queryOptions;
     const selectExpandQuery = this.__config.selectExpandQuery;
     if (shouldSelectExpand && selectExpandQuery) {
       const { expand, select } = selectExpandQuery;
       if (select) {
-        handler = handler.select(select.join(','));
+        handler.select(select.join(','));
       }
 
       if (expand) {
@@ -72,23 +71,23 @@ class BaseDAO<TEntity, TEntityMutator> {
             return `${key}($select=${value.join(',')})`;
           })
           .join(',');
-        handler = handler.expand(navigationPropString);
+        handler.expand(navigationPropString);
       }
     }
 
     if (Number.isInteger(skip)) {
-      handler = handler.skip(skip || 0);
+      handler.skip(skip || 0);
     }
 
     if (Number.isInteger(take)) {
-      handler = handler.top(take || 0);
+      handler.top(take || 0);
     }
 
     if (shouldCount) {
-      handler = handler.inlineCount('true');
+      handler.inlineCount('true');
     }
 
-    handler = this._setFilters(handler, queryOptions);
+    this._setFilters(handler, queryOptions);
 
     if (queryOptions.orderBy) {
       const orderBy = queryOptions.orderBy[0].column;
@@ -105,7 +104,6 @@ class BaseDAO<TEntity, TEntityMutator> {
     }
 
     return handler;
-    /* eslint-enable no-param-reassign */
   }
 
   _getCacheKey(queryOptions?: QueryOptions): string {

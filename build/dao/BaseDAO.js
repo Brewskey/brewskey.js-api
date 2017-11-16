@@ -86,7 +86,7 @@ var BaseDAO = function () {
             select = selectExpandQuery.select;
 
         if (select) {
-          handler = handler.select(select.join(','));
+          handler.select(select.join(','));
         }
 
         if (expand) {
@@ -100,23 +100,23 @@ var BaseDAO = function () {
             }
             return key + '($select=' + value.join(',') + ')';
           }).join(',');
-          handler = handler.expand(navigationPropString);
+          handler.expand(navigationPropString);
         }
       }
 
       if (Number.isInteger(skip)) {
-        handler = handler.skip(skip || 0);
+        handler.skip(skip || 0);
       }
 
       if (Number.isInteger(take)) {
-        handler = handler.top(take || 0);
+        handler.top(take || 0);
       }
 
       if (shouldCount) {
-        handler = handler.inlineCount('true');
+        handler.inlineCount('true');
       }
 
-      handler = this._setFilters(handler, queryOptions);
+      this._setFilters(handler, queryOptions);
 
       if (queryOptions.orderBy) {
         var orderBy = queryOptions.orderBy[0].column;
@@ -133,7 +133,6 @@ var BaseDAO = function () {
       }
 
       return handler;
-      /* eslint-enable no-param-reassign */
     }
   }, {
     key: '_getCacheKey',
