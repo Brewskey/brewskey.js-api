@@ -500,8 +500,8 @@ declare export class DAO<
   patch(id: EntityID, params: TEntityMutator): void;
   post(params: TEntityMutator): void;
   put(id: EntityID, params: TEntityMutator): void;
-  subscribe(handler: () => void): string;
-  unsubscribe(subscriptionID: string): void;
+  subscribe(handler: () => void): void;
+  unsubscribe(handler: () => void): void;
 }
 
 declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}

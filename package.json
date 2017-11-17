@@ -4,9 +4,7 @@
   "main": "./build/index.js",
   "repository": "https://github.com/Brewskey/brewskey.js-api.git",
   "author": "Brewskey",
-  "files": [
-    "build/"
-  ],
+  "files": ["build/"],
   "scripts": {
     "build": "babel src -d build --copy-files",
     "flow": "flow",
@@ -42,15 +40,10 @@
   },
   "dependencies": {
     "babel-preset-react-hmre": "^1.1.1",
-    "nanoid": "^1.0.1",
     "nullthrows": "^1.0.0",
     "odata": "git+https://github.com/Brewskey/o.js.git"
   },
   "lint-staged": {
-    "src/**/*.{js,json}": [
-      "prettier --write",
-      "lint",
-      "git add"
-    ]
+    "src/**/*.{js,json}": ["prettier --write", "lint", "git add"]
   }
 }

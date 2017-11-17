@@ -8,10 +8,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nanoid = require('nanoid');
-
-var _nanoid2 = _interopRequireDefault(_nanoid);
-
 var _nullthrows = require('nullthrows');
 
 var _nullthrows2 = _interopRequireDefault(_nullthrows);
@@ -46,7 +42,7 @@ var DAO = function (_BaseDAO) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = DAO.__proto__ || Object.getPrototypeOf(DAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.count = _this.count.bind(_this), _this.fetchByID = _this.fetchByID.bind(_this), _this.fetchByIDs = _this.fetchByIDs.bind(_this), _this.fetchMany = _this.fetchMany.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.patch = _this.patch.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.subscribe = _this.subscribe.bind(_this), _this.unsubscribe = _this.unsubscribe.bind(_this), _this._emitChanges = _this._emitChanges.bind(_this), _this._clearQueryCaches = _this._clearQueryCaches.bind(_this), _this._getCacheKey = _this._getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._countLoaderByQuery = new Map(), _this._entityIDsLoaderByQuery = new Map(), _this._entityLoaderByID = new Map(), _this._subscriptionsByID = new Map(), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = DAO.__proto__ || Object.getPrototypeOf(DAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.count = _this.count.bind(_this), _this.fetchByID = _this.fetchByID.bind(_this), _this.fetchByIDs = _this.fetchByIDs.bind(_this), _this.fetchMany = _this.fetchMany.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.patch = _this.patch.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.subscribe = _this.subscribe.bind(_this), _this.unsubscribe = _this.unsubscribe.bind(_this), _this._emitChanges = _this._emitChanges.bind(_this), _this._clearQueryCaches = _this._clearQueryCaches.bind(_this), _this._getCacheKey = _this._getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._countLoaderByQuery = new Map(), _this._entityIDsLoaderByQuery = new Map(), _this._entityLoaderByID = new Map(), _this._subscriptions = new Set(), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(DAO, [{
@@ -243,19 +239,17 @@ var DAO = function (_BaseDAO) {
   }, {
     key: 'subscribe',
     value: function subscribe(handler) {
-      var subscriptionID = (0, _nanoid2.default)();
-      this._subscriptionsByID.set(subscriptionID, handler);
-      return subscriptionID;
+      this._subscriptions.add(handler);
     }
   }, {
     key: 'unsubscribe',
-    value: function unsubscribe(subscriptionID) {
-      this._subscriptionsByID.delete(subscriptionID);
+    value: function unsubscribe(handler) {
+      this._subscriptions.delete(handler);
     }
   }, {
     key: '_emitChanges',
     value: function _emitChanges() {
-      this._subscriptionsByID.forEach(function (handler) {
+      this._subscriptions.forEach(function (handler) {
         return handler();
       });
     }
