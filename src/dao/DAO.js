@@ -1,7 +1,6 @@
 // @flow
 import type { EntityID, QueryOptions } from '../index';
 
-import nanoid from 'nanoid';
 import nullthrows from 'nullthrows';
 import BaseDAO from './BaseDAO';
 import LoadObject from '../LoadObject';
@@ -13,7 +12,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
   _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
-  _subscriptionsByID: Map<string, () => void> = new Map();
+  _subscriptions: Set<() => void> = new Set();
 
   deleteByID(id: EntityID) {
     const entity = this._entityLoaderByID.get(id);
@@ -234,18 +233,16 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       .catch((error: Error): void => this._updateCacheForError(id, error));
   }
 
-  subscribe(handler: () => void): string {
-    const subscriptionID = nanoid();
-    this._subscriptionsByID.set(subscriptionID, handler);
-    return subscriptionID;
+  subscribe(handler: () => void) {
+    this._subscriptions.add(handler);
   }
 
-  unsubscribe(subscriptionID: string) {
-    this._subscriptionsByID.delete(subscriptionID);
+  unsubscribe(handler: () => void) {
+    this._subscriptions.delete(handler);
   }
 
   _emitChanges() {
-    this._subscriptionsByID.forEach((handler: () => void): void => handler());
+    this._subscriptions.forEach((handler: () => void): void => handler());
   }
 
   _clearQueryCaches() {

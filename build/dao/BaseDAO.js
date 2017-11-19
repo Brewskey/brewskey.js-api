@@ -74,8 +74,6 @@ var BaseDAO = function () {
     value: function __setupHandler(handler) {
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var shouldSelectExpand = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
-      /* eslint-disable no-param-reassign */
       var shouldCount = queryOptions.shouldCount,
           skip = queryOptions.skip,
           take = queryOptions.take;
