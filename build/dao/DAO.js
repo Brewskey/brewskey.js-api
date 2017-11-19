@@ -42,7 +42,7 @@ var DAO = function (_BaseDAO) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = DAO.__proto__ || Object.getPrototypeOf(DAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.count = _this.count.bind(_this), _this.fetchByID = _this.fetchByID.bind(_this), _this.fetchByIDs = _this.fetchByIDs.bind(_this), _this.fetchMany = _this.fetchMany.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.patch = _this.patch.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.subscribe = _this.subscribe.bind(_this), _this.unsubscribe = _this.unsubscribe.bind(_this), _this.waitForLoaded = _this.waitForLoaded.bind(_this), _this._emitChanges = _this._emitChanges.bind(_this), _this._clearQueryCaches = _this._clearQueryCaches.bind(_this), _this._getCacheKey = _this._getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._countLoaderByQuery = new Map(), _this._entityIDsLoaderByQuery = new Map(), _this._entityLoaderByID = new Map(), _this._subscriptions = new Set(), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = DAO.__proto__ || Object.getPrototypeOf(DAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.count = _this.count.bind(_this), _this.fetchByID = _this.fetchByID.bind(_this), _this.fetchByIDs = _this.fetchByIDs.bind(_this), _this.fetchMany = _this.fetchMany.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.flushQueryCaches = _this.flushQueryCaches.bind(_this), _this.patch = _this.patch.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.subscribe = _this.subscribe.bind(_this), _this.unsubscribe = _this.unsubscribe.bind(_this), _this.waitForLoaded = _this.waitForLoaded.bind(_this), _this._emitChanges = _this._emitChanges.bind(_this), _this._flushQueryCaches = _this._flushQueryCaches.bind(_this), _this._getCacheKey = _this._getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._countLoaderByQuery = new Map(), _this._entityIDsLoaderByQuery = new Map(), _this._entityLoaderByID = new Map(), _this._subscriptions = new Set(), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(DAO, [{
@@ -50,18 +50,14 @@ var DAO = function (_BaseDAO) {
     value: function deleteByID(id) {
       var _this2 = this;
 
-      var entity = this._entityLoaderByID.get(id);
-      if (!entity) {
-        return;
-      }
-
+      var entity = this._entityLoaderByID.get(id) || _LoadObject2.default.empty();
       this._entityLoaderByID.set(id, entity.deleting());
       this._emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)),
       /* params */{}, 'delete').then(function () {
         _this2._entityLoaderByID.delete(id);
-        _this2._clearQueryCaches();
+        _this2._flushQueryCaches();
         _this2._emitChanges();
       }).catch(function (error) {
         return _this2._updateCacheForError(id, error);
@@ -192,8 +188,13 @@ var DAO = function (_BaseDAO) {
     key: 'flushCache',
     value: function flushCache() {
       this._entityLoaderByID = new Map();
-      this._entityIDsLoaderByQuery = new Map();
-      this._countLoaderByQuery = new Map();
+      this._flushQueryCaches();
+      this._emitChanges();
+    }
+  }, {
+    key: 'flushQueryCaches',
+    value: function flushQueryCaches() {
+      this._flushQueryCaches();
       this._emitChanges();
     }
   }, {
@@ -201,14 +202,12 @@ var DAO = function (_BaseDAO) {
     value: function patch(id, mutator) {
       var _this7 = this;
 
-      var entity = this._entityLoaderByID.get(id);
-      if (entity) {
-        this._entityLoaderByID.set(id, entity.updating());
-        this._emitChanges();
-      }
+      var entity = this._entityLoaderByID.get(id) || _LoadObject2.default.empty();
+      this._entityLoaderByID.set(id, entity.updating());
+      this._emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
-        _this7._clearQueryCaches();
+        _this7._flushQueryCaches();
         _this7._updateCacheForEntity(result);
       }).catch(function (error) {
         return _this7._updateCacheForError(id, error);
@@ -222,7 +221,7 @@ var DAO = function (_BaseDAO) {
       var clientID = 'CLIENT_ID:' + DAO._clientID++;
       this._entityLoaderByID.set(clientID, _LoadObject2.default.loading());
       this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'post').then(function (result) {
-        _this8._clearQueryCaches();
+        _this8._flushQueryCaches();
         _this8._updateCacheForEntity(result);
         // The clientID has a reference to the load object
         _this8._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this8._entityLoaderByID.get(result.id)));
@@ -234,14 +233,12 @@ var DAO = function (_BaseDAO) {
     value: function put(id, mutator) {
       var _this9 = this;
 
-      var entity = this._entityLoaderByID.get(id);
-      if (entity) {
-        this._entityLoaderByID.set(id, entity.updating());
-        this._emitChanges();
-      }
+      var entity = this._entityLoaderByID.get(id) || _LoadObject2.default.empty();
+      this._entityLoaderByID.set(id, entity.updating());
+      this._emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
-        _this9._clearQueryCaches();
+        _this9._flushQueryCaches();
         _this9._updateCacheForEntity(result);
       }).catch(function (error) {
         return _this9._updateCacheForError(id, error);
@@ -301,9 +298,10 @@ var DAO = function (_BaseDAO) {
       });
     }
   }, {
-    key: '_clearQueryCaches',
-    value: function _clearQueryCaches() {
+    key: '_flushQueryCaches',
+    value: function _flushQueryCaches() {
       this._entityIDsLoaderByQuery = new Map();
+      this._countLoaderByQuery = new Map();
     }
   }, {
     key: '_getCacheKey',
