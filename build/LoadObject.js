@@ -4,7 +4,22 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Copyright (c) 2014-present, Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * This source code is licensed under the BSD-style license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * LICENSE file in the root directory of this source tree. An additional grant
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * of patent rights can be found in the PATENTS file in the same directory.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+var _nullthrows = require('nullthrows');
+
+var _nullthrows2 = _interopRequireDefault(_nullthrows);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -13,6 +28,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * this is effectively used to ensure that the constructor is private.
  */
 var SECRET = 'SECRET_' + Math.random();
+
+var VALUES_TO_CACHE = [undefined, null, false, true, 0, ''];
+var CACHE = new Map(VALUES_TO_CACHE.map(function (value) {
+  return [value, new Map([[true, new Map()], [false, new Map()]])];
+}));
 
 /**
  * Immutable Load Object. This is an immutable object that represents a
@@ -36,16 +56,6 @@ var SECRET = 'SECRET_' + Math.random();
  *
  *   return <div>{loadObject.getValue().text}</div>;
  *
- */
-/**
- * Copyright (c) 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
  */
 
 var LoadObject = function () {
@@ -93,10 +103,12 @@ var LoadObject = function () {
     this._hasValue = hasValue;
   }
 
-  // Convenient getters
-
   _createClass(LoadObject, [{
     key: 'getOperation',
+
+
+    // Convenient getters
+
     value: function getOperation() {
       return this._operation;
     }
@@ -157,7 +169,8 @@ var LoadObject = function () {
       if (this._operation === operation) {
         return this;
       }
-      return new LoadObject(SECRET, operation, this._value, this._error, this._hasValue);
+
+      return LoadObject._create(operation, this.getValue(), this.getError(), this.hasValue());
     }
   }, {
     key: 'setValue',
@@ -165,7 +178,7 @@ var LoadObject = function () {
       if (this._value === value && this._hasValue === true) {
         return this;
       }
-      return new LoadObject(SECRET, this._operation, value, this._error, true);
+      return LoadObject._create(this.getOperation(), value, this.getError(), this.hasValue());
     }
   }, {
     key: 'setError',
@@ -173,7 +186,7 @@ var LoadObject = function () {
       if (this._error === error) {
         return this;
       }
-      return new LoadObject(SECRET, this._operation, this._value, error, this._hasValue);
+      return LoadObject._create(this.getOperation(), this.getValue(), error, this.hasValue());
     }
   }, {
     key: 'removeOperation',
@@ -181,7 +194,7 @@ var LoadObject = function () {
       if (this._operation === 'NONE') {
         return this;
       }
-      return new LoadObject(SECRET, 'NONE', this._value, this._error, this._hasValue);
+      return LoadObject._create('NONE', this.getValue(), this.getError(), this.hasValue());
     }
   }, {
     key: 'removeValue',
@@ -189,7 +202,7 @@ var LoadObject = function () {
       if (this._value === undefined && this._hasValue === false) {
         return this;
       }
-      return new LoadObject(SECRET, this._operation, undefined, this._error, false);
+      return LoadObject._create(this.getOperation(), undefined, this.getError(), false);
     }
   }, {
     key: 'removeError',
@@ -197,7 +210,7 @@ var LoadObject = function () {
       if (this._error === undefined) {
         return this;
       }
-      return new LoadObject(SECRET, this._operation, this._value, undefined, this._hasValue);
+      return LoadObject._create(this.getOperation(), this.getValue(), undefined, this.hasValue());
     }
   }, {
     key: 'map',
@@ -285,39 +298,61 @@ var LoadObject = function () {
     // Static helpers for creating LoadObjects
 
   }], [{
+    key: '_create',
+    value: function _create(operation, value, error, hasValue) {
+      var cachedItem = LoadObject._getFromCache(operation, value, error, hasValue);
+      return cachedItem || new LoadObject(SECRET, operation, value, error, hasValue);
+    }
+  }, {
+    key: '_getFromCache',
+    value: function _getFromCache(operation, value, error, hasValue) {
+      if (error !== undefined || !CACHE.has(value)) {
+        return null;
+      }
+
+      var operationMapByHasValue = (0, _nullthrows2.default)(CACHE.get(value));
+      var loaderByOperation = (0, _nullthrows2.default)(operationMapByHasValue.get(hasValue));
+      if (!loaderByOperation.has(operation)) {
+        var object = new LoadObject(SECRET, operation, value, error, hasValue);
+        loaderByOperation.set(operation, object);
+      }
+
+      return (0, _nullthrows2.default)(loaderByOperation.get(operation));
+    }
+  }, {
     key: 'empty',
     value: function empty() {
-      return new LoadObject(SECRET, 'NONE', undefined, undefined, false);
+      return LoadObject._create('NONE', undefined, undefined, false);
     }
   }, {
     key: 'creating',
     value: function creating() {
-      return new LoadObject(SECRET, 'CREATING', undefined, undefined, false);
+      return LoadObject._create('CREATING', undefined, undefined, false);
     }
   }, {
     key: 'loading',
     value: function loading() {
-      return new LoadObject(SECRET, 'LOADING', undefined, undefined, false);
+      return LoadObject._create('LOADING', undefined, undefined, false);
     }
   }, {
     key: 'updating',
     value: function updating() {
-      return new LoadObject(SECRET, 'UPDATING', undefined, undefined, false);
+      return LoadObject._create('UPDATING', undefined, undefined, false);
     }
   }, {
     key: 'deleting',
     value: function deleting() {
-      return new LoadObject(SECRET, 'DELETING', undefined, undefined, false);
+      return LoadObject._create('DELETING', undefined, undefined, false);
     }
   }, {
     key: 'withError',
     value: function withError(error) {
-      return new LoadObject(SECRET, 'NONE', undefined, error, false);
+      return LoadObject._create('NONE', undefined, error, false);
     }
   }, {
     key: 'withValue',
     value: function withValue(value) {
-      return new LoadObject(SECRET, 'NONE', value, undefined, true);
+      return LoadObject._create('NONE', value, undefined, true);
     }
   }]);
 

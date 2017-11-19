@@ -1,10 +1,7 @@
-require('babel-core/register');
-require('babel-polyfill');
-
 const FormData = require('form-data');
 const fetch = require('node-fetch');
 const minimist = require('minimist');
-const DAOApi = require('../build/index').default;
+import DAOApi from '../src/index';
 
 const LoadObject = DAOApi.LoadObject;
 
@@ -49,55 +46,29 @@ const HOST = 'https://brewskey.com';
     take: 5,
   };
   console.time('FIRST LOAD');
-  await loaderToPromise(() => DAOApi.PourDAO.fetchMany(query));
+  await DAOApi.PourDAO.waitForLoaded(() => DAOApi.PourDAO.fetchMany(query));
   console.timeEnd('FIRST LOAD');
   DAOApi.PourDAO.flushCache();
 
   console.time('SECOND LOAD');
-  await loaderToPromise(() => DAOApi.PourDAO.fetchMany(query));
+  await DAOApi.PourDAO.waitForLoaded(() => DAOApi.PourDAO.fetchMany(query));
   console.timeEnd('SECOND LOAD');
   DAOApi.PourDAO.flushCache();
 
   console.time('GET SINGLE');
-  await loaderToPromise(() => DAOApi.PourDAO.fetchByID(58));
+  await DAOApi.PourDAO.waitForLoaded(() => DAOApi.PourDAO.fetchByID(58));
   console.timeEnd('GET SINGLE');
+  DAOApi.PourDAO.flushCache();
 
   console.time('THIRD LOAD');
-  await loaderToPromise(() => DAOApi.PourDAO.fetchMany(query));
+  await DAOApi.PourDAO.waitForLoaded(() => DAOApi.PourDAO.fetchMany(query));
   console.timeEnd('THIRD LOAD');
+  DAOApi.PourDAO.flushCache();
 
   console.time('CACHE LOAD');
-  await loaderToPromise(() => DAOApi.PourDAO.fetchMany(query));
+  await DAOApi.PourDAO.waitForLoaded(() => DAOApi.PourDAO.fetchMany(query));
   console.timeEnd('CACHE LOAD');
   console.time('CACHE GET SINGLE');
-  await loaderToPromise(() => DAOApi.PourDAO.fetchByID(58));
+  await DAOApi.PourDAO.waitForLoaded(() => DAOApi.PourDAO.fetchByID(58));
   console.timeEnd('CACHE GET SINGLE');
 }());
-
-const loaderToPromise = (fn) =>
-  new Promise((resolve, reject) => {
-    const interval = setInterval(() => {
-      let loader = fn();
-      if (loader instanceof Map) {
-        loader = LoadObject.withValue(Array.from(loader.values()));
-      }
-
-      loader.map((result) => {
-        if (Array.isArray(result)) {
-          if (
-            result.some(
-              (item) => (item instanceof LoadObject ? item.isLoading() : false)
-            )
-          ) {
-            return LoadObject.loading();
-          }
-        }
-        clearInterval(interval);
-        resolve(result);
-      });
-      loader.mapError((error) => {
-        clearInterval(interval);
-        reject(error);
-      });
-    }, 100);
-  });

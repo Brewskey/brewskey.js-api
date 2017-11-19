@@ -11,7 +11,7 @@
     "lint": "eslint src/ --fix --max-warnings 0",
     "precommit": "lint-staged",
     "start": "babel ./src --out-dir ./build --watch --copy-files",
-    "test": "node ./test"
+    "test": "babel-node ./test"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

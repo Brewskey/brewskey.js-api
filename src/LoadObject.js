@@ -9,6 +9,8 @@
  * @flow
  */
 
+import nullthrows from 'nullthrows';
+
 export type LoadObjectOperation =
   | 'NONE'
   | 'CREATING'
@@ -21,6 +23,17 @@ export type LoadObjectOperation =
  * this is effectively used to ensure that the constructor is private.
  */
 const SECRET = `SECRET_${Math.random()}`;
+
+const VALUES_TO_CACHE = [undefined, null, false, true, 0, ''];
+const CACHE: Map<
+  any,
+  Map<boolean, Map<?LoadObjectOperation, LoadObject<any>>>
+> = new Map(
+  VALUES_TO_CACHE.map((value) => [
+    value,
+    new Map([[true, new Map()], [false, new Map()]]),
+  ])
+);
 
 /**
  * Immutable Load Object. This is an immutable object that represents a
@@ -45,9 +58,9 @@ const SECRET = `SECRET_${Math.random()}`;
  *   return <div>{loadObject.getValue().text}</div>;
  *
  */
-class LoadObject<VType> {
-  _operation: LoadObjectOperation;
-  _value: ?VType;
+class LoadObject<TValue> {
+  _operation: ?LoadObjectOperation;
+  _value: ?TValue;
   _error: ?Error;
   _hasValue: boolean;
 
@@ -56,15 +69,15 @@ class LoadObject<VType> {
    */
   constructor(
     secret: string,
-    operation: LoadObjectOperation,
-    value: ?VType,
+    operation: ?LoadObjectOperation,
+    value: ?TValue,
     error: ?Error,
-    hasValue: boolean,
+    hasValue: boolean
   ) {
     if (secret !== SECRET) {
       throw new Error(
         'Construct LoadObjects using static methods such as ' +
-          'LoadObject.loading(), LoadObject.empty()',
+          'LoadObject.loading(), LoadObject.empty()'
       );
     }
     this._operation = operation;
@@ -73,17 +86,54 @@ class LoadObject<VType> {
     this._hasValue = hasValue;
   }
 
+  static _create<TValue>(
+    operation: ?LoadObjectOperation,
+    value: ?TValue,
+    error: ?Error,
+    hasValue: boolean
+  ): LoadObject<TValue> {
+    const cachedItem = LoadObject._getFromCache(
+      operation,
+      value,
+      error,
+      hasValue
+    );
+    return (
+      cachedItem || new LoadObject(SECRET, operation, value, error, hasValue)
+    );
+  }
+
+  static _getFromCache<TValue>(
+    operation: ?LoadObjectOperation,
+    value: ?TValue,
+    error: ?Error,
+    hasValue: boolean
+  ): ?LoadObject<TValue> {
+    if (error !== undefined || !CACHE.has(value)) {
+      return null;
+    }
+
+    const operationMapByHasValue = nullthrows(CACHE.get(value));
+    const loaderByOperation = nullthrows(operationMapByHasValue.get(hasValue));
+    if (!loaderByOperation.has(operation)) {
+      const object = new LoadObject(SECRET, operation, value, error, hasValue);
+      loaderByOperation.set(operation, object);
+    }
+
+    return nullthrows(loaderByOperation.get(operation));
+  }
+
   // Convenient getters
 
-  getOperation(): LoadObjectOperation {
+  getOperation(): ?LoadObjectOperation {
     return this._operation;
   }
 
-  getValue(): ?VType {
+  getValue(): ?TValue {
     return this._value;
   }
 
-  getValueEnforcing(): VType {
+  getValueEnforcing(): TValue {
     if (!this.hasValue()) {
       throw new Error('Expected load object to have a value set.');
     }
@@ -121,80 +171,81 @@ class LoadObject<VType> {
 
   // Convenient setters
 
-  setOperation(operation: LoadObjectOperation): LoadObject<VType> {
+  setOperation(operation: LoadObjectOperation): LoadObject<TValue> {
     if (this._operation === operation) {
       return this;
     }
-    return new LoadObject(
-      SECRET,
+
+    return LoadObject._create(
       operation,
-      this._value,
-      this._error,
-      this._hasValue,
+      this.getValue(),
+      this.getError(),
+      this.hasValue()
     );
   }
 
-  setValue(value: VType): LoadObject<VType> {
+  setValue(value: TValue): LoadObject<TValue> {
     if (this._value === value && this._hasValue === true) {
       return this;
     }
-    return new LoadObject(SECRET, this._operation, value, this._error, true);
+    return LoadObject._create(
+      this.getOperation(),
+      value,
+      this.getError(),
+      this.hasValue()
+    );
   }
 
-  setError(error: Error): LoadObject<VType> {
+  setError(error: Error): LoadObject<TValue> {
     if (this._error === error) {
       return this;
     }
-    return new LoadObject(
-      SECRET,
-      this._operation,
-      this._value,
+    return LoadObject._create(
+      this.getOperation(),
+      this.getValue(),
       error,
-      this._hasValue,
+      this.hasValue()
     );
   }
 
-  removeOperation(): LoadObject<VType> {
+  removeOperation(): LoadObject<TValue> {
     if (this._operation === 'NONE') {
       return this;
     }
-    return new LoadObject(
-      SECRET,
+    return LoadObject._create(
       'NONE',
-      this._value,
-      this._error,
-      this._hasValue,
+      this.getValue(),
+      this.getError(),
+      this.hasValue()
     );
   }
 
-  removeValue(): LoadObject<VType> {
+  removeValue(): LoadObject<TValue> {
     if (this._value === undefined && this._hasValue === false) {
       return this;
     }
-    return new LoadObject(
-      SECRET,
-      this._operation,
+    return LoadObject._create(
+      this.getOperation(),
       undefined,
-      this._error,
-      false,
+      this.getError(),
+      false
     );
   }
 
-  removeError(): LoadObject<VType> {
+  removeError(): LoadObject<TValue> {
     if (this._error === undefined) {
       return this;
     }
-    return new LoadObject(
-      SECRET,
-      this._operation,
-      this._value,
+    return LoadObject._create(
+      this.getOperation(),
+      this.getValue(),
       undefined,
-      this._hasValue,
+      this.hasValue()
     );
   }
 
   map<TType>(
-    fn: (value: VType) => TType | LoadObject<TType>,
+    fn: (value: TValue) => TType | LoadObject<TType>
   ): LoadObject<TType> {
     if (!this.hasValue()) {
       return (this: any);
@@ -209,7 +260,7 @@ class LoadObject<VType> {
   }
 
   mapError<TType>(
-    fn: (value: Error) => Error | LoadObject<TType>,
+    fn: (value: Error) => Error | LoadObject<TType>
   ): LoadObject<TType> {
     if (!this.hasError()) {
       return (this: any);
@@ -247,54 +298,54 @@ class LoadObject<VType> {
 
   // Provide some helpers for mutating the operations
 
-  done(): LoadObject<VType> {
+  done(): LoadObject<TValue> {
     return this.removeOperation();
   }
 
-  creating(): LoadObject<VType> {
+  creating(): LoadObject<TValue> {
     return this.setOperation('CREATING');
   }
 
-  loading(): LoadObject<VType> {
+  loading(): LoadObject<TValue> {
     return this.setOperation('LOADING');
   }
 
-  updating(): LoadObject<VType> {
+  updating(): LoadObject<TValue> {
     return this.setOperation('UPDATING');
   }
 
-  deleting(): LoadObject<VType> {
+  deleting(): LoadObject<TValue> {
     return this.setOperation('DELETING');
   }
 
   // Static helpers for creating LoadObjects
 
   static empty<V>(): LoadObject<V> {
-    return new LoadObject(SECRET, 'NONE', undefined, undefined, false);
+    return LoadObject._create('NONE', undefined, undefined, false);
   }
 
   static creating<V>(): LoadObject<V> {
-    return new LoadObject(SECRET, 'CREATING', undefined, undefined, false);
+    return LoadObject._create('CREATING', undefined, undefined, false);
   }
 
   static loading<V>(): LoadObject<V> {
-    return new LoadObject(SECRET, 'LOADING', undefined, undefined, false);
+    return LoadObject._create('LOADING', undefined, undefined, false);
   }
 
   static updating<V>(): LoadObject<V> {
-    return new LoadObject(SECRET, 'UPDATING', undefined, undefined, false);
+    return LoadObject._create('UPDATING', undefined, undefined, false);
   }
 
   static deleting<V>(): LoadObject<V> {
-    return new LoadObject(SECRET, 'DELETING', undefined, undefined, false);
+    return LoadObject._create('DELETING', undefined, undefined, false);
   }
 
   static withError<V>(error: Error): LoadObject<V> {
-    return new LoadObject(SECRET, 'NONE', undefined, error, false);
+    return LoadObject._create('NONE', undefined, error, false);
   }
 
   static withValue<V>(value: V): LoadObject<V> {
-    return new LoadObject(SECRET, 'NONE', value, undefined, true);
+    return LoadObject._create('NONE', value, undefined, true);
   }
 }
 
