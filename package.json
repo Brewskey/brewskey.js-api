@@ -11,9 +11,12 @@
     "lint": "eslint src/ --fix --max-warnings 0",
     "precommit": "lint-staged",
     "start": "babel ./src --out-dir ./build --watch --copy-files",
-    "test": "babel-node ./test"
+    "test": "ava",
+    "test:watch": "ava --watch",
+    "test:api": "babel-node ./test/index.js"
   },
   "devDependencies": {
+    "ava": "^0.23.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.1.1",
@@ -25,6 +28,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
     "eslint": "^3.12.1",
     "eslint-config-airbnb-base": "^11.0.0",
     "eslint-plugin-flowtype": "^2.29.1",
@@ -42,6 +46,12 @@
     "babel-preset-react-hmre": "^1.1.1",
     "nullthrows": "^1.0.0",
     "odata": "git+https://github.com/Brewskey/o.js.git"
+  },
+  "ava": {
+    "verbose": true,
+    "babel": "inherit",
+    "files": ["test/*.test.js"],
+    "require": ["babel-register"]
   },
   "lint-staged": {
     "src/**/*.{js,json}": ["prettier --write", "lint", "git add"]
