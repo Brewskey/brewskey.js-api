@@ -2,7 +2,7 @@
 
 import type { LoadObjectOperation } from './LoadObject';
 
-export type EntityID = string;
+export type EntityID = string | number;
 
 /* Entities */
 
@@ -498,10 +498,14 @@ declare export class DAO<
   ): LoadObject<Array<LoadObject<TEntity>>>;
   flushCache(): void;
   patch(id: EntityID, params: TEntityMutator): void;
-  post(params: TEntityMutator): void;
+  post(params: TEntityMutator): EntityID;
   put(id: EntityID, params: TEntityMutator): void;
   subscribe(handler: () => void): void;
   unsubscribe(handler: () => void): void;
+  waitForLoaded<TResponse>(
+    fn: () => LoadObject<TResponse>,
+    timeout?: number,
+  ): Promise<TResponse>;
 }
 
 declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}

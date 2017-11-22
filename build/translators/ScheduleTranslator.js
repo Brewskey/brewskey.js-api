@@ -81,7 +81,7 @@ var SchedulesTranslator = function (_DefaultTranslator) {
     key: 'toForm',
     value: function toForm(model) {
       return _extends({}, model, {
-        locationId: model.location ? model.location.id : null
+        locationId: model.location ? model.location.id.toString() : null
       });
     }
   }]);

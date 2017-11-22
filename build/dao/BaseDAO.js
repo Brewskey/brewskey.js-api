@@ -245,9 +245,7 @@ var BaseDAO = function () {
 
               case 2:
                 result = _context2.sent;
-                return _context2.abrupt('return', (result.data || []).map(idSelector).map(function (rawId) {
-                  return rawId.toString();
-                }));
+                return _context2.abrupt('return', (result.data || []).map(idSelector));
 
               case 4:
               case 'end':
