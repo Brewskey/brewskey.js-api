@@ -50,17 +50,18 @@ var DAO = function (_BaseDAO) {
     value: function deleteByID(id) {
       var _this2 = this;
 
-      var entity = this._entityLoaderByID.get(id) || _LoadObject2.default.empty();
-      this._entityLoaderByID.set(id, entity.deleting());
+      var stringifiedID = id.toString();
+      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject2.default.empty();
+      this._entityLoaderByID.set(stringifiedID, entity.deleting());
       this._emitChanges();
 
-      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)),
+      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       /* params */{}, 'delete').then(function () {
         _this2._entityLoaderByID.delete(id);
         _this2._flushQueryCaches();
         _this2._emitChanges();
       }).catch(function (error) {
-        return _this2._updateCacheForError(id, error);
+        return _this2._updateCacheForError(stringifiedID, error);
       });
     }
   }, {
@@ -93,25 +94,26 @@ var DAO = function (_BaseDAO) {
     value: function fetchByID(id) {
       var _this4 = this;
 
-      var castedID = id.toString();
-      if (!this._entityLoaderByID.has(castedID)) {
-        this._entityLoaderByID.set(castedID, _LoadObject2.default.loading());
+      var stringifiedID = id.toString();
+      if (!this._entityLoaderByID.has(stringifiedID)) {
+        this._entityLoaderByID.set(stringifiedID, _LoadObject2.default.loading());
         this._emitChanges();
-        this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id))).then(function (result) {
+        this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID))).then(function (result) {
           return _this4._updateCacheForEntity(result);
         }).catch(function (error) {
-          return _this4._updateCacheForError(castedID, error);
+          return _this4._updateCacheForError(stringifiedID, error);
         });
       }
 
-      return (0, _nullthrows2.default)(this._entityLoaderByID.get(castedID));
+      return (0, _nullthrows2.default)(this._entityLoaderByID.get(stringifiedID));
     }
   }, {
     key: 'fetchByIDs',
     value: function fetchByIDs(ids) {
       var _this5 = this;
 
-      var idsToLoad = ids.filter(function (id) {
+      var stringifiedIds = ids.map(String);
+      var idsToLoad = stringifiedIds.filter(function (id) {
         return !_this5._entityLoaderByID.has(id);
       });
 
@@ -129,7 +131,7 @@ var DAO = function (_BaseDAO) {
             return [item.id, item];
           }));
 
-          ids.forEach(function (id) {
+          stringifiedIds.forEach(function (id) {
             var entity = entitiesByID.get(id);
             if (entity) {
               _this5._updateCacheForEntity(entity);
@@ -140,7 +142,7 @@ var DAO = function (_BaseDAO) {
 
           _this5._emitChanges();
         }).catch(function (error) {
-          ids.forEach(function (id) {
+          stringifiedIds.forEach(function (id) {
             return _this5._updateCacheForError(id, error, false);
           });
 
@@ -148,7 +150,7 @@ var DAO = function (_BaseDAO) {
         });
       }
 
-      return new Map(ids.map(function (id) {
+      return new Map(stringifiedIds.map(function (id) {
         return [id, (0, _nullthrows2.default)(_this5._entityLoaderByID.get(id))];
       }));
     }
@@ -167,9 +169,10 @@ var DAO = function (_BaseDAO) {
         handler = handler.select('id');
 
         this.__resolveManyIDs(handler).then(function (ids) {
-          _this6._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(ids));
+          var stringifiedIds = ids.map(String);
+          _this6._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(stringifiedIds));
           _this6._emitChanges();
-          _this6.fetchByIDs(ids);
+          _this6.fetchByIDs(stringifiedIds);
         }).catch(function (error) {
           var loader = _this6._entityIDsLoaderByQuery.get(cacheKey);
           _this6._entityIDsLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
@@ -180,7 +183,7 @@ var DAO = function (_BaseDAO) {
       return (0, _nullthrows2.default)(this._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
         var resultMap = _this6.fetchByIDs(ids);
         return ids.map(function (id) {
-          return (0, _nullthrows2.default)(resultMap.get(id));
+          return (0, _nullthrows2.default)(resultMap.get(id.toString()));
         });
       });
     }
@@ -202,15 +205,16 @@ var DAO = function (_BaseDAO) {
     value: function patch(id, mutator) {
       var _this7 = this;
 
-      var entity = this._entityLoaderByID.get(id) || _LoadObject2.default.empty();
-      this._entityLoaderByID.set(id, entity.updating());
+      var stringifiedID = id.toString();
+      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject2.default.empty();
+      this._entityLoaderByID.set(stringifiedID, entity.updating());
       this._emitChanges();
 
-      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
+      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
         _this7._flushQueryCaches();
         _this7._updateCacheForEntity(result);
       }).catch(function (error) {
-        return _this7._updateCacheForError(id, error);
+        return _this7._updateCacheForError(stringifiedID, error);
       });
     }
   }, {
@@ -218,14 +222,18 @@ var DAO = function (_BaseDAO) {
     value: function post(mutator) {
       var _this8 = this;
 
-      var clientID = 'CLIENT_ID:' + DAO._clientID++;
+      DAO._clientID += 1;
+      var clientID = 'CLIENT_ID:' + DAO._clientID;
       this._entityLoaderByID.set(clientID, _LoadObject2.default.loading());
       this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'post').then(function (result) {
         _this8._flushQueryCaches();
         _this8._updateCacheForEntity(result);
         // The clientID has a reference to the load object
         _this8._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this8._entityLoaderByID.get(result.id)));
-      }).catch(this._emitChanges);
+      }).catch(function (error) {
+        _this8._entityLoaderByID.set(clientID, _LoadObject2.default.withError(error));
+        _this8._emitChanges();
+      });
       return clientID;
     }
   }, {
@@ -233,15 +241,15 @@ var DAO = function (_BaseDAO) {
     value: function put(id, mutator) {
       var _this9 = this;
 
-      var entity = this._entityLoaderByID.get(id) || _LoadObject2.default.empty();
-      this._entityLoaderByID.set(id, entity.updating());
+      var stringifiedID = id.toString();
+      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject2.default.empty();
+      this._entityLoaderByID.set(stringifiedID, entity.updating());
       this._emitChanges();
 
-      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(id)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
-        _this9._flushQueryCaches();
+      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
         _this9._updateCacheForEntity(result);
       }).catch(function (error) {
-        return _this9._updateCacheForError(id, error);
+        return _this9._updateCacheForError(stringifiedID, error);
       });
     }
   }, {
@@ -262,6 +270,10 @@ var DAO = function (_BaseDAO) {
       var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10000;
 
       return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          return reject(new Error('Timeout!'));
+        }, timeout);
+
         var fetchAndResolve = function fetchAndResolve() {
           var loader = fn().map(function (result) {
             if (!Array.isArray(result)) {
@@ -276,16 +288,21 @@ var DAO = function (_BaseDAO) {
 
             return result;
           });
+
           if (loader.isLoading()) {
             return;
           }
+
           _this10.unsubscribe(fetchAndResolve);
+
           if (loader.hasError()) {
             reject(loader.getErrorEnforcing());
             return;
           }
+
           resolve(loader.getValueEnforcing());
         };
+
         _this10.subscribe(fetchAndResolve);
         fetchAndResolve();
       });

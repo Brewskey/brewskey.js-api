@@ -27,12 +27,12 @@ const SECRET = `SECRET_${Math.random()}`;
 const VALUES_TO_CACHE = [undefined, null, false, true, 0, ''];
 const CACHE: Map<
   any,
-  Map<boolean, Map<?LoadObjectOperation, LoadObject<any>>>
+  Map<boolean, Map<?LoadObjectOperation, LoadObject<any>>>,
 > = new Map(
-  VALUES_TO_CACHE.map((value) => [
+  VALUES_TO_CACHE.map((value: any): any => [
     value,
     new Map([[true, new Map()], [false, new Map()]]),
-  ])
+  ]),
 );
 
 /**
@@ -72,12 +72,12 @@ class LoadObject<TValue> {
     operation: ?LoadObjectOperation,
     value: ?TValue,
     error: ?Error,
-    hasValue: boolean
+    hasValue: boolean,
   ) {
     if (secret !== SECRET) {
       throw new Error(
         'Construct LoadObjects using static methods such as ' +
-          'LoadObject.loading(), LoadObject.empty()'
+          'LoadObject.loading(), LoadObject.empty()',
       );
     }
     this._operation = operation;
@@ -86,28 +86,28 @@ class LoadObject<TValue> {
     this._hasValue = hasValue;
   }
 
-  static _create<TValue>(
+  static _create(
     operation: ?LoadObjectOperation,
     value: ?TValue,
     error: ?Error,
-    hasValue: boolean
+    hasValue: boolean,
   ): LoadObject<TValue> {
     const cachedItem = LoadObject._getFromCache(
       operation,
       value,
       error,
-      hasValue
+      hasValue,
     );
     return (
       cachedItem || new LoadObject(SECRET, operation, value, error, hasValue)
     );
   }
 
-  static _getFromCache<TValue>(
+  static _getFromCache(
     operation: ?LoadObjectOperation,
     value: ?TValue,
     error: ?Error,
-    hasValue: boolean
+    hasValue: boolean,
   ): ?LoadObject<TValue> {
     if (error !== undefined || !CACHE.has(value)) {
       return null;
@@ -180,7 +180,7 @@ class LoadObject<TValue> {
       operation,
       this.getValue(),
       this.getError(),
-      this.hasValue()
+      this.hasValue(),
     );
   }
 
@@ -192,7 +192,7 @@ class LoadObject<TValue> {
       this.getOperation(),
       value,
       this.getError(),
-      this.hasValue()
+      this.hasValue(),
     );
   }
 
@@ -204,7 +204,7 @@ class LoadObject<TValue> {
       this.getOperation(),
       this.getValue(),
       error,
-      this.hasValue()
+      this.hasValue(),
     );
   }
 
@@ -216,7 +216,7 @@ class LoadObject<TValue> {
       'NONE',
       this.getValue(),
       this.getError(),
-      this.hasValue()
+      this.hasValue(),
     );
   }
 
@@ -228,7 +228,7 @@ class LoadObject<TValue> {
       this.getOperation(),
       undefined,
       this.getError(),
-      false
+      false,
     );
   }
 
@@ -240,12 +240,12 @@ class LoadObject<TValue> {
       this.getOperation(),
       this.getValue(),
       undefined,
-      this.hasValue()
+      this.hasValue(),
     );
   }
 
   map<TType>(
-    fn: (value: TValue) => TType | LoadObject<TType>
+    fn: (value: TValue) => TType | LoadObject<TType>,
   ): LoadObject<TType> {
     if (!this.hasValue()) {
       return (this: any);
@@ -260,7 +260,7 @@ class LoadObject<TValue> {
   }
 
   mapError<TType>(
-    fn: (value: Error) => Error | LoadObject<TType>
+    fn: (value: Error) => Error | LoadObject<TType>,
   ): LoadObject<TType> {
     if (!this.hasError()) {
       return (this: any);

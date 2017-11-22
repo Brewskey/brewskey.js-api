@@ -183,11 +183,9 @@ class BaseDAO<TEntity, TEntityMutator> {
     idSelector?: (item: Object) => EntityID = (item: Object): EntityID =>
       item.id,
     method?: RequestMethod = 'get',
-  ): Promise<Array<string>> {
+  ): Promise<Array<EntityID>> {
     const result = await this.__resolve(handler, params, method);
-    return (result.data || [])
-      .map(idSelector)
-      .map((rawId: string | number): EntityID => rawId.toString());
+    return (result.data || []).map(idSelector);
   }
 
   async __resolve(
