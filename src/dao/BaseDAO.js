@@ -23,7 +23,7 @@ class BaseDAO<TEntity, TEntityMutator> {
     this.__config = config;
   }
 
-  static setOrganizationID(organizationID: EntityID) {
+  static setOrganizationID(organizationID: ?EntityID) {
     BaseDAO._organizationID = organizationID;
   }
 

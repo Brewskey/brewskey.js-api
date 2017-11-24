@@ -1,6 +1,6 @@
 // @flow
 
-import type { Headers, OConfig } from './index';
+import type { EntityID, Headers, OConfig } from './index';
 
 import oHandler from 'odata';
 import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
@@ -46,7 +46,24 @@ const setHeaders = (headers: Headers) => {
   });
 };
 
-const setOrganizationID = BaseDAO.setOrganizationID;
+const setOrganizationID = (organizationID: ?EntityID) => {
+  BaseDAO.setOrganizationID(organizationID);
+
+  AccountDAO.flushCache();
+  AvailabilityDAO.flushCache();
+  BeverageDAO.flushCache();
+  DeviceDAO.flushCache();
+  GlassDAO.flushCache();
+  KegDAO.flushCache();
+  LocationDAO.flushCache();
+  PermissionDAO.flushCache();
+  PourDAO.flushCache();
+  ReportDAO.flushCache();
+  ScheduleDAO.flushCache();
+  SrmDAO.flushCache();
+  StyleDAO.flushCache();
+  TapDAO.flushCache();
+};
 
 export { LoadObject, PERMISSIONS_MAP, DAO_ENTITIES, CADENCE_MAP };
 
