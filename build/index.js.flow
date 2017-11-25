@@ -497,6 +497,7 @@ declare export class DAO<
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntity>>>;
   flushCache(): void;
+  flushQueryCaches(): void;
   patch(id: EntityID, params: TEntityMutator): void;
   post(params: TEntityMutator): EntityID;
   put(id: EntityID, params: TEntityMutator): void;

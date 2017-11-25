@@ -10,22 +10,28 @@ class BeverageTranslator extends DefaultTranslator<Beverage, Beverage> {
     }: any): Beverage);
   }
 
-  toApi(
-    {
-      availability,
-      glassware,
-      isOrganic,
-      srm,
-      style,
-      ...props
+  toApi({
+    availability,
+    glass,
+    isOrganic,
+    srm,
+    style,
+    ...props
   }: Beverage): Object {
     return {
       ...props,
       availabilityId: availability && availability.id,
-      glasswareId: glassware && glassware.id,
+      glasswareId: glass && glass.id,
       isOrganic: isOrganic ? 'Y' : 'N',
       srmId: srm && srm.id,
       styleId: style && style.id,
+    };
+  }
+
+  toForm(model: Schedule): ScheduleMutator {
+    return {
+      ...model,
+      locationId: model.location ? model.location.id.toString() : null,
     };
   }
 }

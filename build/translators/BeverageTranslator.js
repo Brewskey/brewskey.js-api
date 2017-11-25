@@ -38,7 +38,7 @@ var BeverageTranslator = function (_DefaultTranslator) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = BeverageTranslator.__proto__ || Object.getPrototypeOf(BeverageTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.fromApi = _this.fromApi.bind(_this), _this.toApi = _this.toApi.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = BeverageTranslator.__proto__ || Object.getPrototypeOf(BeverageTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.fromApi = _this.fromApi.bind(_this), _this.toApi = _this.toApi.bind(_this), _this.toForm = _this.toForm.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(BeverageTranslator, [{
@@ -52,18 +52,25 @@ var BeverageTranslator = function (_DefaultTranslator) {
     key: 'toApi',
     value: function toApi(_ref2) {
       var availability = _ref2.availability,
-          glassware = _ref2.glassware,
+          glass = _ref2.glass,
           isOrganic = _ref2.isOrganic,
           srm = _ref2.srm,
           style = _ref2.style,
-          props = _objectWithoutProperties(_ref2, ['availability', 'glassware', 'isOrganic', 'srm', 'style']);
+          props = _objectWithoutProperties(_ref2, ['availability', 'glass', 'isOrganic', 'srm', 'style']);
 
       return _extends({}, props, {
         availabilityId: availability && availability.id,
-        glasswareId: glassware && glassware.id,
+        glasswareId: glass && glass.id,
         isOrganic: isOrganic ? 'Y' : 'N',
         srmId: srm && srm.id,
         styleId: style && style.id
+      });
+    }
+  }, {
+    key: 'toForm',
+    value: function toForm(model) {
+      return _extends({}, model, {
+        locationId: model.location ? model.location.id.toString() : null
       });
     }
   }]);
