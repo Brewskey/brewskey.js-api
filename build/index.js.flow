@@ -75,18 +75,18 @@ export type Coordinates = {
 
 export type Beverage = {
   abv: number,
-  availability: ?Availability,
+  availability: ?ShortenedEntity,
   beerVariationId: ?string,
   beverageType: BeverageType,
   createDate: Date,
   createdBy: {
-    id: EntityID,
+    id: EntityIDs
     userName: string,
   },
   description: ?string,
   externalId: ?string,
   foodPairings: ?string,
-  glassware: ?Glass,
+  glass: ?ShortenedEntity,
   ibu: number,
   id: EntityID,
   isDeleted: boolean,
@@ -101,7 +101,7 @@ export type Beverage = {
   servingTemperature: ?ServingTemperature,
   servingTemperatureDisplay: ?string,
   srm: ?Srm,
-  style: ?Object,
+  style: ?ShortenedEntity,
   updateDate: Date,
   year: ?number,
 };
