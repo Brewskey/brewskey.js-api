@@ -80,7 +80,7 @@ export type Beverage = {
   beverageType: BeverageType,
   createDate: Date,
   createdBy: {
-    id: EntityIDs
+    id: EntityID,
     userName: string,
   },
   description: ?string,
