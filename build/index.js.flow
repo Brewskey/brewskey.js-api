@@ -90,7 +90,7 @@ export type Beverage = {
   ibu: number,
   id: EntityID,
   isDeleted: boolean,
-  isOrganic: ?string,
+  isOrganic: boolean,
   labels: {
     icon: string,
     large: string,
@@ -103,6 +103,27 @@ export type Beverage = {
   srm: ?Srm,
   style: ?ShortenedEntity,
   updateDate: Date,
+  year: ?number,
+};
+
+export type BeverageMutator = {
+  abv: ?number,
+  availableId: ?EntityID,
+  beerVariationId: ?EntityID,
+  beverageType: BeverageType,
+  description: ?string,
+  externalId: ?EntityID,
+  foodPairings: ?string,
+  glasswareId: ?EntityID,
+  ibu: ?number,
+  id: ?EntityID,
+  isOrganic: ?boolean,
+  name: string,
+  originalGravity: ?number,
+  servingTemperature: ?ServingTemperature,
+  servingTemperatureDisplay: ?string,
+  srmId: ?EntityID,
+  styleId: ?EntityID,
   year: ?number,
 };
 
@@ -514,7 +535,7 @@ declare class brewskey$AvailabilityDAO extends DAO<
   Availability,
   Availability,
 > {}
-declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
+declare class brewskey$BeverageDAO extends DAO<Beverage, BeverageMutator> {}
 declare class brewskey$DeviceDAO extends DAO<Device, DeviceMutator> {}
 declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
 declare class brewskey$KegDAO extends DAO<Keg, Keg> {

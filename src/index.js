@@ -50,18 +50,14 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   BaseDAO.setOrganizationID(organizationID);
 
   AccountDAO.flushCache();
-  AvailabilityDAO.flushCache();
   BeverageDAO.flushCache();
   DeviceDAO.flushCache();
-  GlassDAO.flushCache();
   KegDAO.flushCache();
   LocationDAO.flushCache();
   PermissionDAO.flushCache();
   PourDAO.flushCache();
   ReportDAO.flushCache();
   ScheduleDAO.flushCache();
-  SrmDAO.flushCache();
-  StyleDAO.flushCache();
   TapDAO.flushCache();
 };
 

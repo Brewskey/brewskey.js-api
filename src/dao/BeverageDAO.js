@@ -1,11 +1,11 @@
 // @flow
-import type { Beverage } from '../index';
+import type { Beverage, BeverageMutator } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
 import BeverageTranslator from '../translators/BeverageTranslator';
 
-class BeverageDAO extends DAO<Beverage, Beverage> {
+class BeverageDAO extends DAO<Beverage, BeverageMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.BEVERAGES,

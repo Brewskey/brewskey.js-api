@@ -1,8 +1,8 @@
 // @flow
-import type { Beverage } from '../index';
+import type { Beverage, BeverageMutator } from '../index';
 import DefaultTranslator from './DefaultTranslator';
 
-class BeverageTranslator extends DefaultTranslator<Beverage, Beverage> {
+class BeverageTranslator extends DefaultTranslator<Beverage, BeverageMutator> {
   fromApi(apiValue: Object): Beverage {
     return (({
       ...super.fromApi(apiValue),
@@ -10,28 +10,27 @@ class BeverageTranslator extends DefaultTranslator<Beverage, Beverage> {
     }: any): Beverage);
   }
 
-  toApi({
-    availability,
-    glass,
-    isOrganic,
-    srm,
-    style,
-    ...props
-  }: Beverage): Object {
+  toApi({ isOrganic, ...props }: BeverageMutator): Object {
     return {
       ...props,
-      availabilityId: availability && availability.id,
-      glasswareId: glass && glass.id,
       isOrganic: isOrganic ? 'Y' : 'N',
-      srmId: srm && srm.id,
-      styleId: style && style.id,
     };
   }
 
-  toForm(model: Schedule): ScheduleMutator {
+  toForm({
+    availability,
+    glass,
+    location,
+    srm,
+    style,
+    ...props
+  }: Beverage): BeverageMutator {
     return {
-      ...model,
-      locationId: model.location ? model.location.id.toString() : null,
+      ...props,
+      availableId: availability && availability.id.toString(),
+      glasswareId: glass && glass.id.toString(),
+      srmId: srm && srm.id,
+      styleId: style && style.id,
     };
   }
 }
