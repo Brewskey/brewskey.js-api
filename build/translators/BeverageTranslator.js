@@ -51,26 +51,28 @@ var BeverageTranslator = function (_DefaultTranslator) {
   }, {
     key: 'toApi',
     value: function toApi(_ref2) {
-      var availability = _ref2.availability,
-          glass = _ref2.glass,
-          isOrganic = _ref2.isOrganic,
-          srm = _ref2.srm,
-          style = _ref2.style,
-          props = _objectWithoutProperties(_ref2, ['availability', 'glass', 'isOrganic', 'srm', 'style']);
+      var isOrganic = _ref2.isOrganic,
+          props = _objectWithoutProperties(_ref2, ['isOrganic']);
 
       return _extends({}, props, {
-        availabilityId: availability && availability.id,
-        glasswareId: glass && glass.id,
-        isOrganic: isOrganic ? 'Y' : 'N',
-        srmId: srm && srm.id,
-        styleId: style && style.id
+        isOrganic: isOrganic ? 'Y' : 'N'
       });
     }
   }, {
     key: 'toForm',
-    value: function toForm(model) {
-      return _extends({}, model, {
-        locationId: model.location ? model.location.id.toString() : null
+    value: function toForm(_ref3) {
+      var availability = _ref3.availability,
+          glass = _ref3.glass,
+          location = _ref3.location,
+          srm = _ref3.srm,
+          style = _ref3.style,
+          props = _objectWithoutProperties(_ref3, ['availability', 'glass', 'location', 'srm', 'style']);
+
+      return _extends({}, props, {
+        availableId: availability && availability.id.toString(),
+        glasswareId: glass && glass.id.toString(),
+        srmId: srm && srm.id,
+        styleId: style && style.id
       });
     }
   }]);

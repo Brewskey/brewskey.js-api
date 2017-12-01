@@ -119,18 +119,14 @@ var setOrganizationID = function setOrganizationID(organizationID) {
   _DAO2.default.setOrganizationID(organizationID);
 
   _AccountDAO2.default.flushCache();
-  _AvailabilityDAO2.default.flushCache();
   _BeverageDAO2.default.flushCache();
   _DeviceDAO2.default.flushCache();
-  _GlassDAO2.default.flushCache();
   _KegDAO2.default.flushCache();
   _LocationDAO2.default.flushCache();
   _PermissionDAO2.default.flushCache();
   _PourDAO2.default.flushCache();
   _ReportDAO2.default.flushCache();
   _ScheduleDAO2.default.flushCache();
-  _SrmDAO2.default.flushCache();
-  _StyleDAO2.default.flushCache();
   _TapDAO2.default.flushCache();
 };
 
