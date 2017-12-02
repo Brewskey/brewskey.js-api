@@ -31,6 +31,8 @@ var CADENCE_MAP = exports.CADENCE_MAP = {
   Weekly: 2
 };
 
+// todo clean the translator when we will be merging loadObject to master
+
 var ReportTranslator = function (_DefaultTranslator) {
   _inherits(ReportTranslator, _DefaultTranslator);
 

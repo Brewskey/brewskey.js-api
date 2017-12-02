@@ -55,18 +55,17 @@ var PermissionTranslator = function (_DefaultTranslator) {
   _createClass(PermissionTranslator, [{
     key: 'toApi',
     value: function toApi(_ref2) {
-      var entity = _ref2.entity,
+      var entityId = _ref2.entityId,
           entityType = _ref2.entityType,
           user = _ref2.user,
           organization = _ref2.organization,
-          props = _objectWithoutProperties(_ref2, ['entity', 'entityType', 'user', 'organization']);
+          props = _objectWithoutProperties(_ref2, ['entityId', 'entityType', 'user', 'organization']);
 
       return _extends({}, props, {
-        deviceId: entityType === 'devices' ? entity.id : null,
-        locationId: entityType === 'locations' ? entity.id : null,
-        organizationId: entityType === 'organizations' ? entity.id : null,
-        tapId: entityType === 'taps' ? entity.id : null,
-        userId: user.id
+        deviceId: entityType === 'devices' ? entityId : null,
+        locationId: entityType === 'locations' ? entityId : null,
+        organizationId: entityType === 'organizations' ? entityId : null,
+        tapId: entityType === 'taps' ? entityId : null
       });
     }
   }, {
@@ -75,9 +74,9 @@ var PermissionTranslator = function (_DefaultTranslator) {
       var permissionEntityType = getPermissionEntityTypeFromModel(model);
 
       return _extends({}, model, {
-        entity: model[permissionEntityType.slice(0, -1)],
+        entityId: model[permissionEntityType.slice(0, -1)],
         entityType: permissionEntityType,
-        user: model.forUser
+        userId: model.forUser.id
       });
     }
   }]);

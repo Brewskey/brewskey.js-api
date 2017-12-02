@@ -38,7 +38,7 @@ var TapsTranslator = function (_DefaultTranslator) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = TapsTranslator.__proto__ || Object.getPrototypeOf(TapsTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.fromApi = _this.fromApi.bind(_this), _this.toApi = _this.toApi.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = TapsTranslator.__proto__ || Object.getPrototypeOf(TapsTranslator)).call.apply(_ref, [this].concat(args))), _this), _this.fromApi = _this.fromApi.bind(_this), _this.toForm = _this.toForm.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(TapsTranslator, [{
@@ -49,13 +49,15 @@ var TapsTranslator = function (_DefaultTranslator) {
       });
     }
   }, {
-    key: 'toApi',
-    value: function toApi(_ref2) {
+    key: 'toForm',
+    value: function toForm(_ref2) {
       var device = _ref2.device,
-          props = _objectWithoutProperties(_ref2, ['device']);
+          location = _ref2.location,
+          props = _objectWithoutProperties(_ref2, ['device', 'location']);
 
       return _extends({}, props, {
-        deviceId: device.id
+        deviceId: device && device.id,
+        locationId: location && location.id
       });
     }
   }]);

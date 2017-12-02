@@ -29,7 +29,7 @@ class PermissionTranslator extends DefaultTranslator<
   PermissionMutator<*>,
 > {
   toApi({
-    entity,
+    entityId,
     entityType,
     user,
     organization,
@@ -37,11 +37,10 @@ class PermissionTranslator extends DefaultTranslator<
   }: PermissionMutator<*>): Object {
     return {
       ...props,
-      deviceId: entityType === 'devices' ? entity.id : null,
-      locationId: entityType === 'locations' ? entity.id : null,
-      organizationId: entityType === 'organizations' ? entity.id : null,
-      tapId: entityType === 'taps' ? entity.id : null,
-      userId: user.id,
+      deviceId: entityType === 'devices' ? entityId : null,
+      locationId: entityType === 'locations' ? entityId : null,
+      organizationId: entityType === 'organizations' ? entityId : null,
+      tapId: entityType === 'taps' ? entityId : null,
     };
   }
 
@@ -50,9 +49,9 @@ class PermissionTranslator extends DefaultTranslator<
 
     return {
       ...model,
-      entity: model[permissionEntityType.slice(0, -1)],
+      entityId: model[permissionEntityType.slice(0, -1)],
       entityType: permissionEntityType,
-      user: model.forUser,
+      userId: model.forUser.id,
     };
   }
 }

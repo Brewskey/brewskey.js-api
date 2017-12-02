@@ -1,5 +1,5 @@
 // @flow
-import type { Coordinates, Location } from '../index';
+import type { Coordinates, Location, LocationMutator } from '../index';
 
 import DefaultTranslator from './DefaultTranslator';
 
@@ -20,7 +20,7 @@ const parseLocationCoordinates = (wellKnownText: string): Coordinates => {
   };
 };
 
-class LocationTranslator extends DefaultTranslator<Location, Location> {
+class LocationTranslator extends DefaultTranslator<Location, LocationMutator> {
   fromApi(apiValue: Object): Location {
     return (({
       ...super.fromApi(apiValue),
@@ -33,10 +33,10 @@ class LocationTranslator extends DefaultTranslator<Location, Location> {
     }: any): Location);
   }
 
-  toApi({ organization, ...props }: Location): Object {
+  toForm({ organization, ...props }: Location): LocationMutator {
     return {
       ...props,
-      ...(organization ? { organizationId: organization.id } : {}),
+      organizationId: organization && organization.id,
     };
   }
 }

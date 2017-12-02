@@ -69,8 +69,8 @@ var BeverageTranslator = function (_DefaultTranslator) {
           props = _objectWithoutProperties(_ref3, ['availability', 'glass', 'location', 'srm', 'style']);
 
       return _extends({}, props, {
-        availableId: availability && availability.id.toString(),
-        glasswareId: glass && glass.id.toString(),
+        availableId: availability && availability.id,
+        glasswareId: glass && glass.id,
         srmId: srm && srm.id,
         styleId: style && style.id
       });
