@@ -16,6 +16,7 @@ export const CADENCE_MAP = {
   Weekly: 2,
 };
 
+// todo clean the translator when we will be merging loadObject to master
 class ReportTranslator extends DefaultTranslator<Report, ReportMutator> {
   toApi({
     devices,

@@ -117,7 +117,7 @@ export type BeverageMutator = {
   glasswareId: ?EntityID,
   ibu: ?number,
   id: ?EntityID,
-  isOrganic: ?boolean,
+  isOrganic: boolean,
   name: string,
   originalGravity: ?number,
   servingTemperature: ?ServingTemperature,
@@ -172,9 +172,9 @@ export type Device = {
 
 export type DeviceMutator = {
   deviceStatus: DeviceStatus,
+  deviceType: DeviceType,
   id?: EntityID,
-  isMultiTap: boolean,
-  location: ?Location,
+  locationId: ?EntityID,
   name: string,
   particleId: string,
 };
@@ -227,6 +227,22 @@ export type Location = {
   zipCode: number,
 };
 
+export type LocationMutator = {
+  city: string,
+  description: ?string,
+  id: ?EntityID,
+  isDeleted: boolean,
+  locationType: string,
+  name: string,
+  organizationId: ?EntityID,
+  state: ?string,
+  street: string,
+  suite: string,
+  summary: string,
+  timeZone: string,
+  zipCode: number,
+};
+
 export type Organization = {
   createdDate: Date,
   id: EntityID,
@@ -269,13 +285,13 @@ export type Permission = {
 };
 
 export type PermissionMutator<TEntity> = {
-  entity: TEntity,
+  entityId: EntityID,
   entityType: PermissionEntityType,
   expiresDate: ?Date,
   id: ?EntityID,
   permissionType: PermissionType,
   startDate: ?Date,
-  user: { id: EntityID, userName: string },
+  userId: EntityID,
 };
 
 export type Pour = {
@@ -391,13 +407,13 @@ export type Tap = {
 };
 
 export type TapMutator = {
-  createdDate: ?string,
   description: ?string,
-  device: Device,
+  deviceId: ?EntityID,
   disableBadges: boolean,
   hideLeaderboard: boolean,
   hideStats: boolean,
   id: ?EntityID,
+  locationId: ?EntityID,
   name: string,
   requiresPourPrivilege: boolean,
 };
@@ -541,7 +557,7 @@ declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
 declare class brewskey$KegDAO extends DAO<Keg, Keg> {
   fetchKegByTapID(tapId: string): LoadObject<Array<LoadObject<Keg>>>;
 }
-declare class brewskey$LocationDAO extends DAO<Location, Location> {}
+declare class brewskey$LocationDAO extends DAO<Location, LocationMutator> {}
 declare class brewskey$OrganizationDAO extends DAO<
   Organization,
   Organization,

@@ -27,8 +27,8 @@ class BeverageTranslator extends DefaultTranslator<Beverage, BeverageMutator> {
   }: Beverage): BeverageMutator {
     return {
       ...props,
-      availableId: availability && availability.id.toString(),
-      glasswareId: glass && glass.id.toString(),
+      availableId: availability && availability.id,
+      glasswareId: glass && glass.id,
       srmId: srm && srm.id,
       styleId: style && style.id,
     };

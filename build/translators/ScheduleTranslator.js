@@ -42,6 +42,8 @@ var getCombinedFlag = function getCombinedFlag(days) {
   0);
 };
 
+// todo clean translator when we will implement schedules in mobile app
+
 var SchedulesTranslator = function (_DefaultTranslator) {
   _inherits(SchedulesTranslator, _DefaultTranslator);
 

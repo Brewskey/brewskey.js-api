@@ -22,6 +22,7 @@ const getCombinedFlag = (days: Array<string>): number =>
     0,
   );
 
+// todo clean translator when we will implement schedules in mobile app
 class SchedulesTranslator extends DefaultTranslator<Schedule, ScheduleMutator> {
   fromApi(apiValue: Object): Schedule {
     return {
