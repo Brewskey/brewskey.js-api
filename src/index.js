@@ -20,6 +20,7 @@ import KegDAO from './dao/KegDAO';
 import LocationDAO from './dao/LocationDAO';
 import OrganizationDAO from './dao/OrganizationDAO';
 import PermissionDAO from './dao/PermissionDAO';
+import FlowSensorDAO from './dao/FlowSensorDAO';
 import PourChartDAO from './dao/PourChartDAO';
 import PourDAO from './dao/PourDAO';
 import ReportDAO from './dao/ReportDAO';
@@ -69,6 +70,7 @@ export default {
   AvailabilityDAO,
   BeverageDAO,
   DeviceDAO,
+  FlowSensorDAO,
   GlassDAO,
   KegDAO,
   LocationDAO,

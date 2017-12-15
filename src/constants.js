@@ -1,9 +1,5 @@
 // @flow
-import type {
-  EntityName,
-  FilterOperator,
-  PermissionType,
-} from './index';
+import type { EntityName, FilterOperator, PermissionType } from './index';
 
 export const PERMISSIONS_MAP: { [key: PermissionType]: number } = {
   Administrator: 4,
@@ -20,6 +16,7 @@ export const DAO_ENTITIES: { [key: string]: EntityName } = {
   BEVERAGE_STYLES: 'beverage-styles',
   BEVERAGES: 'beverages',
   DEVICES: 'devices',
+  FLOW_SENSORS: 'flow-sensors',
   KEGS: 'kegs',
   LOCATIONS: 'locations',
   ORGANIZATIONS: 'organizations',
@@ -54,7 +51,4 @@ const FILTER_FUNCTION_OPERATORS = [
   FILTER_OPERATORS.STARTS_WITH,
 ];
 
-export {
-  FILTER_OPERATORS,
-  FILTER_FUNCTION_OPERATORS,
-};
+export { FILTER_OPERATORS, FILTER_FUNCTION_OPERATORS };
