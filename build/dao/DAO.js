@@ -227,9 +227,10 @@ var DAO = function (_BaseDAO) {
       this._entityLoaderByID.set(clientID, _LoadObject2.default.loading());
       this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'post').then(function (result) {
         _this8._flushQueryCaches();
-        _this8._updateCacheForEntity(result);
+        _this8._updateCacheForEntity(result, false);
         // The clientID has a reference to the load object
         _this8._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this8._entityLoaderByID.get(result.id)));
+        _this8._emitChanges();
       }).catch(function (error) {
         _this8._entityLoaderByID.set(clientID, _LoadObject2.default.withError(error));
         _this8._emitChanges();

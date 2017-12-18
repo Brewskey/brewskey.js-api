@@ -231,12 +231,13 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     )
       .then((result: TEntity) => {
         this._flushQueryCaches();
-        this._updateCacheForEntity(result);
+        this._updateCacheForEntity(result, false);
         // The clientID has a reference to the load object
         this._entityLoaderByID.set(
           clientID,
           nullthrows(this._entityLoaderByID.get(result.id)),
         );
+        this._emitChanges();
       })
       .catch((error: Error) => {
         this._entityLoaderByID.set(clientID, LoadObject.withError(error));
