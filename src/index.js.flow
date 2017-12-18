@@ -15,6 +15,7 @@ export type EntityName =
   | 'beverages'
   | 'chart'
   | 'devices'
+  | 'flow-sensors'
   | 'kegs'
   | 'locations'
   | 'organizations'
@@ -177,6 +178,28 @@ export type DeviceMutator = {
   locationId: ?EntityID,
   name: string,
   particleId: string,
+};
+
+export type FlowSensorType =
+  | 'Custom'
+  | 'FT330'
+  | 'Sea'
+  | 'SwissFlowSF800'
+  | 'Titan';
+
+export type FlowSensor = {
+  flowSensorType: FlowSensorType,
+  id: EntityID,
+  isDeleted: boolean,
+  pulsesPerGallon: number,
+  tap: ShortenedEntity,
+};
+
+export type FlowSensorMutator = {
+  flowSensorType: FlowSensorType,
+  id?: EntityID,
+  pulsesPerGallon: number,
+  tapId: EntityID,
 };
 
 export type Glass = {
@@ -554,6 +577,10 @@ declare class brewskey$AvailabilityDAO extends DAO<
 declare class brewskey$BeverageDAO extends DAO<Beverage, BeverageMutator> {}
 declare class brewskey$DeviceDAO extends DAO<Device, DeviceMutator> {}
 declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
+declare class brewskey$FlowSensorDAO extends DAO<
+  FlowSensor,
+  FlowSensorMutator,
+> {}
 declare class brewskey$KegDAO extends DAO<Keg, Keg> {
   fetchKegByTapID(tapId: string): LoadObject<Array<LoadObject<Keg>>>;
 }
@@ -567,7 +594,7 @@ declare class brewskey$PermissionDAO extends DAO<
   PermissionMutator<*>,
 > {}
 declare class brewskey$PourDAO extends DAO<Pour, Pour> {}
-declare class brewkey$PourChartDAO extends BaseDAO<
+declare class brewskey$PourChartDAO extends BaseDAO<
   PourChartDataSet,
   PourChartDataSet,
 > {
@@ -604,12 +631,13 @@ type DAOApi = {
   AvailabilityDAO: brewskey$AvailabilityDAO,
   BeverageDAO: brewskey$BeverageDAO,
   DeviceDAO: brewskey$DeviceDAO,
+  FlowSensorDAO: brewskey$FlowSensorDAO,
   GlassDAO: brewskey$GlassDAO,
   KegDAO: brewskey$KegDAO,
   LocationDAO: brewskey$LocationDAO,
   OrganizationDAO: brewskey$OrganizationDAO,
   PermissionDAO: brewskey$PermissionDAO,
-  PourChartDAO: brewkey$PourChartDAO,
+  PourChartDAO: brewskey$PourChartDAO,
   PourDAO: brewskey$PourDAO,
   ReportDAO: brewskey$ReportDAO,
   ScheduleDAO: brewskey$ScheduleDAO,

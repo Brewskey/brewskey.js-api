@@ -63,6 +63,10 @@ var _PermissionDAO = require('./dao/PermissionDAO');
 
 var _PermissionDAO2 = _interopRequireDefault(_PermissionDAO);
 
+var _FlowSensorDAO = require('./dao/FlowSensorDAO');
+
+var _FlowSensorDAO2 = _interopRequireDefault(_FlowSensorDAO);
+
 var _PourChartDAO = require('./dao/PourChartDAO');
 
 var _PourChartDAO2 = _interopRequireDefault(_PourChartDAO);
@@ -142,6 +146,7 @@ exports.default = {
   AvailabilityDAO: _AvailabilityDAO2.default,
   BeverageDAO: _BeverageDAO2.default,
   DeviceDAO: _DeviceDAO2.default,
+  FlowSensorDAO: _FlowSensorDAO2.default,
   GlassDAO: _GlassDAO2.default,
   KegDAO: _KegDAO2.default,
   LocationDAO: _LocationDAO2.default,
