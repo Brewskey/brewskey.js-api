@@ -6,7 +6,7 @@ import oHandler from 'odata';
 import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
 import BaseDAO from './dao/DAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
-import { KEG_PROPS_BY_TYPE } from './dao/KegDAO';
+import { MAX_OUNCES_BY_KEG_TYPE } from './dao/KegDAO';
 import LoadObject from './LoadObject';
 
 import fetch from './fetch';
@@ -66,8 +66,8 @@ const setOrganizationID = (organizationID: ?EntityID) => {
 export {
   CADENCE_MAP,
   DAO_ENTITIES,
-  KEG_PROPS_BY_TYPE,
   LoadObject,
+  MAX_OUNCES_BY_KEG_TYPE,
   PERMISSIONS_MAP,
 };
 

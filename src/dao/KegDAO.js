@@ -1,6 +1,6 @@
 // @flow
 
-import type { Keg, KegMutator, KegType, KegTypeProps } from '../index';
+import type { Keg, KegMutator, KegType } from '../index';
 
 import DAO from './DAO';
 import KegTranslator from '../translators/KegTranslator';
@@ -8,13 +8,13 @@ import LoadObject from '../LoadObject';
 import { DAO_ENTITIES } from '../constants';
 import { createFilter } from '../filters';
 
-export const KEG_PROPS_BY_TYPE: { [KegType]: KegTypeProps } = {
-  Cornelius: { name: 'Cornelius Keg', size: 640 },
-  HalfBarrel: { name: 'Half Barrel Keg', size: 1984 },
-  Mini: { name: 'Mini Keg', size: 169 },
-  QuarterBarrel: { name: 'Quarter Barrel Keg', size: 992 },
-  SixthBarrel: { name: 'Sixth Barrel Keg', size: 661 },
-  SlimQuarter: { name: 'Slim Quarter Keg', size: 992 },
+export const MAX_OUNCES_BY_KEG_TYPE: { [KegType]: number } = {
+  Cornelius: 640,
+  HalfBarrel: 1984,
+  Mini: 169,
+  QuarterBarrel: 992,
+  SixthBarrel: 661,
+  SlimQuarter: 992,
 };
 
 class KegDAO extends DAO<Keg, KegMutator> {
