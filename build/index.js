@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CADENCE_MAP = exports.DAO_ENTITIES = exports.PERMISSIONS_MAP = exports.LoadObject = undefined;
+exports.PERMISSIONS_MAP = exports.LoadObject = exports.KEG_PROPS_BY_TYPE = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
 
 var _odata = require('odata');
 
@@ -16,6 +16,10 @@ var _DAO = require('./dao/DAO');
 var _DAO2 = _interopRequireDefault(_DAO);
 
 var _ReportTranslator = require('./translators/ReportTranslator');
+
+var _KegDAO = require('./dao/KegDAO');
+
+var _KegDAO2 = _interopRequireDefault(_KegDAO);
 
 var _LoadObject = require('./LoadObject');
 
@@ -46,10 +50,6 @@ var _DeviceDAO2 = _interopRequireDefault(_DeviceDAO);
 var _GlassDAO = require('./dao/GlassDAO');
 
 var _GlassDAO2 = _interopRequireDefault(_GlassDAO);
-
-var _KegDAO = require('./dao/KegDAO');
-
-var _KegDAO2 = _interopRequireDefault(_KegDAO);
 
 var _LocationDAO = require('./dao/LocationDAO');
 
@@ -134,10 +134,11 @@ var setOrganizationID = function setOrganizationID(organizationID) {
   _TapDAO2.default.flushCache();
 };
 
+exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
+exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
+exports.KEG_PROPS_BY_TYPE = _KegDAO.KEG_PROPS_BY_TYPE;
 exports.LoadObject = _LoadObject2.default;
 exports.PERMISSIONS_MAP = _constants.PERMISSIONS_MAP;
-exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
-exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
 
 /* eslint-disable sorting/sort-object-props */
 
