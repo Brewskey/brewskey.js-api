@@ -218,11 +218,6 @@ export type KegType =
   | 'SixthBarrel'
   | 'SlimQuarter';
 
-export type KegTypeProps = {
-  name: string,
-  size: number,
-};
-
 export type Keg = {
   beverage: ShortenedEntity,
   floatedDate: Date,
