@@ -6,6 +6,7 @@ import oHandler from 'odata';
 import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
 import BaseDAO from './dao/DAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
+import { MAX_OUNCES_BY_KEG_TYPE } from './dao/KegDAO';
 import LoadObject from './LoadObject';
 
 import fetch from './fetch';
@@ -62,7 +63,13 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   TapDAO.flushCache();
 };
 
-export { LoadObject, PERMISSIONS_MAP, DAO_ENTITIES, CADENCE_MAP };
+export {
+  CADENCE_MAP,
+  DAO_ENTITIES,
+  LoadObject,
+  MAX_OUNCES_BY_KEG_TYPE,
+  PERMISSIONS_MAP,
+};
 
 /* eslint-disable sorting/sort-object-props */
 export default {

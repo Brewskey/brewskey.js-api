@@ -1,10 +1,10 @@
 // @flow
 
-import type { Keg } from '../index';
+import type { Keg, KegMutator } from '../index';
 
 import DefaultTranslator from './DefaultTranslator';
 
-class KegTranslator extends DefaultTranslator<Keg, Keg> {
+class KegTranslator extends DefaultTranslator<Keg, KegMutator> {
   fromApi(apiValue: Object): Keg {
     return (({
       ...super.fromApi(apiValue),

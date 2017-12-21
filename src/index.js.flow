@@ -210,12 +210,25 @@ export type Glass = {
   updateDate: Date,
 };
 
+export type KegType =
+  | 'Cornelius'
+  | 'HalfBarrel'
+  | 'Mini'
+  | 'QuarterBarrel'
+  | 'SixthBarrel'
+  | 'SlimQuarter';
+
+export type KegTypeProps = {
+  name: string,
+  size: number,
+};
+
 export type Keg = {
   beverage: ShortenedEntity,
   floatedDate: Date,
   id: EntityID,
   isDeleted: boolean,
-  kegType: string,
+  kegType: KegType,
   location: ?ShortenedEntity,
   maxOunces: number,
   organization: ShortenedEntity,
@@ -223,6 +236,13 @@ export type Keg = {
   pulses: number,
   tap: ?ShortenedEntity,
   tapDate: Date,
+};
+
+export type KegMutator = {
+  beverageId: EntityID,
+  id?: EntityID,
+  startingPercentage?: number,
+  tapId: EntityID,
 };
 
 export type Location = {
@@ -581,7 +601,7 @@ declare class brewskey$FlowSensorDAO extends DAO<
   FlowSensor,
   FlowSensorMutator,
 > {}
-declare class brewskey$KegDAO extends DAO<Keg, Keg> {
+declare class brewskey$KegDAO extends DAO<Keg, KegMutator> {
   fetchKegByTapID(tapId: string): LoadObject<Array<LoadObject<Keg>>>;
 }
 declare class brewskey$LocationDAO extends DAO<Location, LocationMutator> {}
@@ -658,6 +678,7 @@ type DAOApi = {
 
 declare export var CADENCE_MAP: { [ReportCadence]: number };
 declare export var DAO_ENTITIES: { [string]: EntityName };
+declare export var MAX_OUNCES_BY_KEG_TYPE: { [KegType]: number };
 declare export var PERMISSIONS_MAP: { [PermissionType]: number };
 declare export var LoadObject;
 // declare export var LoadObject: ILoadObject;
