@@ -11,6 +11,7 @@ var PERMISSIONS_MAP = exports.PERMISSIONS_MAP = {
 };
 var DAO_ENTITIES = exports.DAO_ENTITIES = {
   ACCOUNTS: 'accounts',
+  ACHIEVEMENTS: 'achievements',
   BEVERAGE_AVAILABILITIES: 'beverage-availabilities',
   BEVERAGE_GLASSES: 'beverage-glasses',
   BEVERAGE_SRMS: 'beverage-srms',

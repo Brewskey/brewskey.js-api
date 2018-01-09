@@ -10,6 +10,7 @@ export const PERMISSIONS_MAP: { [key: PermissionType]: number } = {
 
 export const DAO_ENTITIES: { [key: string]: EntityName } = {
   ACCOUNTS: 'accounts',
+  ACHIEVEMENTS: 'achievements',
   BEVERAGE_AVAILABILITIES: 'beverage-availabilities',
   BEVERAGE_GLASSES: 'beverage-glasses',
   BEVERAGE_SRMS: 'beverage-srms',

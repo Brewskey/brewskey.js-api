@@ -13,6 +13,7 @@ import fetch from './fetch';
 import { createFilter, doesSatisfyQueryFilters } from './filters';
 
 import AccountDAO from './dao/AccountDAO';
+import AchievementDAO from './dao/AchievementDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
 import BeverageDAO from './dao/BeverageDAO';
 import DeviceDAO from './dao/DeviceDAO';
@@ -52,6 +53,7 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   BaseDAO.setOrganizationID(organizationID);
 
   AccountDAO.flushCache();
+  AchievementDAO.flushCache();
   BeverageDAO.flushCache();
   DeviceDAO.flushCache();
   KegDAO.flushCache();
@@ -74,6 +76,7 @@ export {
 /* eslint-disable sorting/sort-object-props */
 export default {
   AccountDAO,
+  AchievementDAO,
   AvailabilityDAO,
   BeverageDAO,
   DeviceDAO,
