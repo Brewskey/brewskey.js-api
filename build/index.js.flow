@@ -64,6 +64,7 @@ export type AchievementType =
   | DrankFiveKegs
   | DrankTenKegs
   | Edward40Hands
+  | FirstPourOfTheDay
   | HatTrick
   | KingOfTheKeg
   | LastPourOfTheKeg
