@@ -53,6 +53,32 @@ export type AccountMutator = {
   userName: string,
 };
 
+export type AchievementType =
+  | BackOnTheBus
+  | BeerAficionado
+  | BeerAuthority
+  | BeerBeforeNoon
+  | BeerBuff
+  | BeerConnoisseur
+  | DrankAKeg
+  | DrankFiveKegs
+  | DrankTenKegs
+  | Edward40Hands
+  | HatTrick
+  | KingOfTheKeg
+  | LastPourOfTheKeg
+  | LastPourOfTheNight
+  | LightWeight
+  | PowerHour
+  | SevenDaysStraight
+  | Welcome;
+
+export type Achievement = {|
+  achievementType: AchievementType,
+  createdDate: Date,
+  id: EntityID,
+|};
+
 export type Availability = {
   description: ?string,
   id: EntityID,
@@ -585,6 +611,7 @@ declare export class DAO<
 }
 
 declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}
+declare class brewskey$AchievementDAO extends DAO<Achievement, Achievement> {}
 declare class brewskey$AvailabilityDAO extends DAO<
   Availability,
   Availability,

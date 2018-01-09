@@ -35,6 +35,10 @@ var _AccountDAO = require('./dao/AccountDAO');
 
 var _AccountDAO2 = _interopRequireDefault(_AccountDAO);
 
+var _AchievementDAO = require('./dao/AchievementDAO');
+
+var _AchievementDAO2 = _interopRequireDefault(_AchievementDAO);
+
 var _AvailabilityDAO = require('./dao/AvailabilityDAO');
 
 var _AvailabilityDAO2 = _interopRequireDefault(_AvailabilityDAO);
@@ -123,6 +127,7 @@ var setOrganizationID = function setOrganizationID(organizationID) {
   _DAO2.default.setOrganizationID(organizationID);
 
   _AccountDAO2.default.flushCache();
+  _AchievementDAO2.default.flushCache();
   _BeverageDAO2.default.flushCache();
   _DeviceDAO2.default.flushCache();
   _KegDAO2.default.flushCache();
@@ -144,6 +149,7 @@ exports.PERMISSIONS_MAP = _constants.PERMISSIONS_MAP;
 
 exports.default = {
   AccountDAO: _AccountDAO2.default,
+  AchievementDAO: _AchievementDAO2.default,
   AvailabilityDAO: _AvailabilityDAO2.default,
   BeverageDAO: _BeverageDAO2.default,
   DeviceDAO: _DeviceDAO2.default,
