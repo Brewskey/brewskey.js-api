@@ -1,8 +1,9 @@
 // @flow
-import type { EntityID, QueryOptions } from '../index';
+import type { EntityID, Header, Headers, QueryOptions } from '../index';
 
 import nullthrows from 'nullthrows';
 import BaseDAO from './BaseDAO';
+import oHandler from 'odata';
 import LoadObject from '../LoadObject';
 
 class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
@@ -186,6 +187,45 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         );
       },
     );
+  }
+
+  // todo fix flow inconsistensy TResult with entityLoaders - TEntity
+  fetchCustom<TResult>(customQuery: string): LoadObject<TResult> {
+    if (!this._entityLoaderByID.has(customQuery)) {
+      this._entityLoaderByID.set(customQuery, LoadObject.loading());
+      this._emitChanges();
+
+      const daoHeadersArray = (oHandler().oConfig.headers || []: Headers);
+      const daoHeadersObject = daoHeadersArray.reduce(
+        (result: Object, header: Header): Object => ({
+          ...result,
+          [header.name]: header.value,
+        }),
+        {},
+      );
+
+      const baseUrl = ((oHandler().oConfig.endpoint: any): string);
+      const url = `${baseUrl}/${this.getEntityName()}/${customQuery}`;
+
+      fetch(url, {
+        headers: daoHeadersObject,
+        method: 'GET',
+      })
+        .then((response: Object): Promise<Object> => response.json())
+        .then((result: $FlowFixMe) => {
+          this._entityLoaderByID.set(
+            customQuery,
+            LoadObject.withValue(result.value),
+          );
+          this._emitChanges();
+        })
+        .catch((error: Error) => {
+          this._entityLoaderByID.set(customQuery, LoadObject.withValue(error));
+          this._emitChanges();
+        });
+    }
+
+    return nullthrows(this._entityLoaderByID.get(customQuery));
   }
 
   flushCache() {

@@ -8,6 +8,7 @@ export type EntityID = string | number;
 
 export type EntityName =
   | 'accounts'
+  | 'achievements'
   | 'beverage-availabilities'
   | 'beverage-glasses'
   | 'beverage-srms'
@@ -54,25 +55,25 @@ export type AccountMutator = {
 };
 
 export type AchievementType =
-  | BackOnTheBus
-  | BeerAficionado
-  | BeerAuthority
-  | BeerBeforeNoon
-  | BeerBuff
-  | BeerConnoisseur
-  | DrankAKeg
-  | DrankFiveKegs
-  | DrankTenKegs
-  | Edward40Hands
-  | FirstPourOfTheDay
-  | HatTrick
-  | KingOfTheKeg
-  | LastPourOfTheKeg
-  | LastPourOfTheNight
-  | LightWeight
-  | PowerHour
-  | SevenDaysStraight
-  | Welcome;
+  | 'BackOnTheBus'
+  | 'BeerAficionado'
+  | 'BeerAuthority'
+  | 'BeerBeforeNoon'
+  | 'BeerBuff'
+  | 'BeerConnoisseur'
+  | 'DrankAKeg'
+  | 'DrankFiveKegs'
+  | 'DrankTenKegs'
+  | 'Edward40Hands'
+  | 'FirstPourOfTheDay'
+  | 'HatTrick'
+  | 'KingOfTheKeg'
+  | 'LastPourOfTheKeg'
+  | 'LastPourOfTheNight'
+  | 'LightWeight'
+  | 'PowerHour'
+  | 'SevenDaysStraight'
+  | 'Welcome';
 
 export type Achievement = {|
   achievementType: AchievementType,
@@ -671,6 +672,7 @@ export type OConfig = {
 
 type DAOApi = {
   AccountDAO: brewskey$AccountDAO,
+  AchievementDAO: brewskey$AchievementDAO,
   AvailabilityDAO: brewskey$AvailabilityDAO,
   BeverageDAO: brewskey$BeverageDAO,
   DeviceDAO: brewskey$DeviceDAO,
