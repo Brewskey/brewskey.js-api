@@ -13,6 +13,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
   _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
+  _customLoaderByQuery: Map<string, LoadObject<any>> = new Map();
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
   _subscriptions: Set<() => void> = new Set();
 
@@ -188,6 +189,29 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     );
   }
 
+  fetchCustom<TResult>(queryOptions?: QueryOptions): LoadObject<TResult> {
+    const cacheKey = this._getCacheKey(queryOptions);
+    if (!this._customLoaderByQuery.has(cacheKey)) {
+      this._customLoaderByQuery.set(cacheKey, LoadObject.loading());
+      this._emitChanges();
+
+      this.__resolve(this.__buildHandler(queryOptions))
+        .then((result: Object) => {
+          this._customLoaderByQuery.set(
+            cacheKey,
+            LoadObject.withValue(result.data),
+          );
+          this._emitChanges();
+        })
+        .catch((error: Error) => {
+          this._customLoaderByQuery.set(cacheKey, LoadObject.withValue(error));
+          this._emitChanges();
+        });
+    }
+
+    return nullthrows(this._customLoaderByQuery.get(cacheKey));
+  }
+
   flushCache() {
     this._entityLoaderByID = new Map();
     this._flushQueryCaches();
@@ -329,6 +353,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
   _flushQueryCaches() {
     this._entityIDsLoaderByQuery = new Map();
+    this._customLoaderByQuery = new Map();
     this._countLoaderByQuery = new Map();
   }
 

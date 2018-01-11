@@ -126,6 +126,11 @@ var BaseDAO = function () {
         }
       }
 
+      var apply = queryOptions.apply;
+      if (apply) {
+        handler.customParam('$apply', apply);
+      }
+
       if (BaseDAO._organizationID) {
         handler.customParam('organizationID', BaseDAO._organizationID);
       }
