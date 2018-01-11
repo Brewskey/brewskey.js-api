@@ -81,6 +81,11 @@ export type Achievement = {|
   id: EntityID,
 |};
 
+export type AchievementCounter = {|
+  total: number,
+  achievementType: AchievementType,
+|};
+
 export type Availability = {
   description: ?string,
   id: EntityID,
@@ -614,7 +619,11 @@ declare export class DAO<
 }
 
 declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}
-declare class brewskey$AchievementDAO extends DAO<Achievement, Achievement> {}
+declare class brewskey$AchievementDAO extends DAO<Achievement, Achievement> {
+  fetchAchievementCounters(
+    userID: EntityID,
+  ): LoadObject<Array<AchievementCounter>>;
+}
 declare class brewskey$AvailabilityDAO extends DAO<
   Availability,
   Availability,
