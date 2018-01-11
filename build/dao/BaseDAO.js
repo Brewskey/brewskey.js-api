@@ -126,6 +126,16 @@ var BaseDAO = function () {
         }
       }
 
+      var customQuery = queryOptions.customQuery;
+      if (customQuery) {
+        handler.appendQuery(customQuery);
+      }
+
+      var customFunction = queryOptions.customFunction;
+      if (customFunction) {
+        handler.prependQuery(customFunction);
+      }
+
       if (BaseDAO._organizationID) {
         handler.customParam('organizationID', BaseDAO._organizationID);
       }

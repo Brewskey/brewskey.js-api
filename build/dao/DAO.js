@@ -16,17 +16,11 @@ var _BaseDAO2 = require('./BaseDAO');
 
 var _BaseDAO3 = _interopRequireDefault(_BaseDAO2);
 
-var _odata = require('odata');
-
-var _odata2 = _interopRequireDefault(_odata);
-
 var _LoadObject = require('../LoadObject');
 
 var _LoadObject2 = _interopRequireDefault(_LoadObject);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -48,7 +42,7 @@ var DAO = function (_BaseDAO) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = DAO.__proto__ || Object.getPrototypeOf(DAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.count = _this.count.bind(_this), _this.fetchByID = _this.fetchByID.bind(_this), _this.fetchByIDs = _this.fetchByIDs.bind(_this), _this.fetchMany = _this.fetchMany.bind(_this), _this.fetchCustom = _this.fetchCustom.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.flushQueryCaches = _this.flushQueryCaches.bind(_this), _this.patch = _this.patch.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.subscribe = _this.subscribe.bind(_this), _this.unsubscribe = _this.unsubscribe.bind(_this), _this.waitForLoaded = _this.waitForLoaded.bind(_this), _this._emitChanges = _this._emitChanges.bind(_this), _this._flushQueryCaches = _this._flushQueryCaches.bind(_this), _this._getCacheKey = _this._getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._countLoaderByQuery = new Map(), _this._entityIDsLoaderByQuery = new Map(), _this._entityLoaderByID = new Map(), _this._subscriptions = new Set(), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = DAO.__proto__ || Object.getPrototypeOf(DAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.count = _this.count.bind(_this), _this.fetchByID = _this.fetchByID.bind(_this), _this.fetchByIDs = _this.fetchByIDs.bind(_this), _this.fetchMany = _this.fetchMany.bind(_this), _this.fetchCustom = _this.fetchCustom.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.flushQueryCaches = _this.flushQueryCaches.bind(_this), _this.patch = _this.patch.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.subscribe = _this.subscribe.bind(_this), _this.unsubscribe = _this.unsubscribe.bind(_this), _this.waitForLoaded = _this.waitForLoaded.bind(_this), _this._emitChanges = _this._emitChanges.bind(_this), _this._flushQueryCaches = _this._flushQueryCaches.bind(_this), _this._getCacheKey = _this._getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._countLoaderByQuery = new Map(), _this._entityIDsLoaderByQuery = new Map(), _this._customLoaderByQuery = new Map(), _this._entityLoaderByID = new Map(), _this._subscriptions = new Set(), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(DAO, [{
@@ -193,41 +187,26 @@ var DAO = function (_BaseDAO) {
         });
       });
     }
-
-    // todo fix flow inconsistensy TResult with entityLoaders - TEntity
-
   }, {
     key: 'fetchCustom',
-    value: function fetchCustom(customQuery) {
+    value: function fetchCustom(queryOptions) {
       var _this7 = this;
 
-      if (!this._entityLoaderByID.has(customQuery)) {
-        this._entityLoaderByID.set(customQuery, _LoadObject2.default.loading());
+      var cacheKey = this._getCacheKey(queryOptions);
+      if (!this._customLoaderByQuery.has(cacheKey)) {
+        this._customLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
         this._emitChanges();
 
-        var daoHeadersArray = (0, _odata2.default)().oConfig.headers || [];
-        var daoHeadersObject = daoHeadersArray.reduce(function (result, header) {
-          return _extends({}, result, _defineProperty({}, header.name, header.value));
-        }, {});
-
-        var baseUrl = (0, _odata2.default)().oConfig.endpoint;
-        var url = baseUrl + '/' + this.getEntityName() + '/' + customQuery;
-
-        fetch(url, {
-          headers: daoHeadersObject,
-          method: 'GET'
-        }).then(function (response) {
-          return response.json();
-        }).then(function (result) {
-          _this7._entityLoaderByID.set(customQuery, _LoadObject2.default.withValue(result.value));
+        this.__resolve(this.__buildHandler(queryOptions)).then(function (result) {
+          _this7._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.data));
           _this7._emitChanges();
         }).catch(function (error) {
-          _this7._entityLoaderByID.set(customQuery, _LoadObject2.default.withValue(error));
+          _this7._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(error));
           _this7._emitChanges();
         });
       }
 
-      return (0, _nullthrows2.default)(this._entityLoaderByID.get(customQuery));
+      return (0, _nullthrows2.default)(this._customLoaderByQuery.get(cacheKey));
     }
   }, {
     key: 'flushCache',
@@ -361,6 +340,7 @@ var DAO = function (_BaseDAO) {
     key: '_flushQueryCaches',
     value: function _flushQueryCaches() {
       this._entityIDsLoaderByQuery = new Map();
+      this._customLoaderByQuery = new Map();
       this._countLoaderByQuery = new Map();
     }
   }, {

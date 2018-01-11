@@ -1,9 +1,8 @@
 // @flow
-import type { EntityID, Header, Headers, QueryOptions } from '../index';
+import type { EntityID, QueryOptions } from '../index';
 
 import nullthrows from 'nullthrows';
 import BaseDAO from './BaseDAO';
-import oHandler from 'odata';
 import LoadObject from '../LoadObject';
 
 class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
@@ -14,6 +13,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
   _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
+  _customLoaderByQuery: Map<string, LoadObject<any>> = new Map();
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
   _subscriptions: Set<() => void> = new Set();
 
@@ -189,43 +189,27 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     );
   }
 
-  // todo fix flow inconsistensy TResult with entityLoaders - TEntity
-  fetchCustom<TResult>(customQuery: string): LoadObject<TResult> {
-    if (!this._entityLoaderByID.has(customQuery)) {
-      this._entityLoaderByID.set(customQuery, LoadObject.loading());
+  fetchCustom<TResult>(queryOptions?: QueryOptions): LoadObject<TResult> {
+    const cacheKey = this._getCacheKey(queryOptions);
+    if (!this._customLoaderByQuery.has(cacheKey)) {
+      this._customLoaderByQuery.set(cacheKey, LoadObject.loading());
       this._emitChanges();
 
-      const daoHeadersArray = (oHandler().oConfig.headers || []: Headers);
-      const daoHeadersObject = daoHeadersArray.reduce(
-        (result: Object, header: Header): Object => ({
-          ...result,
-          [header.name]: header.value,
-        }),
-        {},
-      );
-
-      const baseUrl = ((oHandler().oConfig.endpoint: any): string);
-      const url = `${baseUrl}/${this.getEntityName()}/${customQuery}`;
-
-      fetch(url, {
-        headers: daoHeadersObject,
-        method: 'GET',
-      })
-        .then((response: Object): Promise<Object> => response.json())
-        .then((result: $FlowFixMe) => {
-          this._entityLoaderByID.set(
-            customQuery,
-            LoadObject.withValue(result.value),
+      this.__resolve(this.__buildHandler(queryOptions))
+        .then((result: Object) => {
+          this._customLoaderByQuery.set(
+            cacheKey,
+            LoadObject.withValue(result.data),
           );
           this._emitChanges();
         })
         .catch((error: Error) => {
-          this._entityLoaderByID.set(customQuery, LoadObject.withValue(error));
+          this._customLoaderByQuery.set(cacheKey, LoadObject.withValue(error));
           this._emitChanges();
         });
     }
 
-    return nullthrows(this._entityLoaderByID.get(customQuery));
+    return nullthrows(this._customLoaderByQuery.get(cacheKey));
   }
 
   flushCache() {
@@ -369,6 +353,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
   _flushQueryCaches() {
     this._entityIDsLoaderByQuery = new Map();
+    this._customLoaderByQuery = new Map();
     this._countLoaderByQuery = new Map();
   }
 

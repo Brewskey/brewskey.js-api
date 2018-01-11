@@ -556,6 +556,8 @@ export type QueryOrderBy = {
 };
 
 export type QueryOptions = {
+  customFunction?: string,
+  customQuery?: string,
   filters?: Array<QueryFilter>,
   orderBy?: Array<QueryOrderBy>,
   shouldCount?: boolean,
