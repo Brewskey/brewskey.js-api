@@ -99,14 +99,9 @@ class BaseDAO<TEntity, TEntityMutator> {
       }
     }
 
-    const customQuery = queryOptions.customQuery;
-    if (customQuery) {
-      handler.appendQuery(customQuery);
-    }
-
-    const customFunction = queryOptions.customFunction;
-    if (customFunction) {
-      handler.prependQuery(customFunction);
+    const apply = queryOptions.apply;
+    if (apply) {
+      handler.customParam('$apply', apply);
     }
 
     if (BaseDAO._organizationID) {

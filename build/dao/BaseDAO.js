@@ -126,14 +126,9 @@ var BaseDAO = function () {
         }
       }
 
-      var customQuery = queryOptions.customQuery;
-      if (customQuery) {
-        handler.appendQuery(customQuery);
-      }
-
-      var customFunction = queryOptions.customFunction;
-      if (customFunction) {
-        handler.prependQuery(customFunction);
+      var apply = queryOptions.apply;
+      if (apply) {
+        handler.customParam('$apply', apply);
       }
 
       if (BaseDAO._organizationID) {
