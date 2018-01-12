@@ -82,8 +82,8 @@ export type Achievement = {|
 |};
 
 export type AchievementCounter = {|
-  total: number,
   achievementType: AchievementType,
+  total: number,
 |};
 
 export type Availability = {
