@@ -18,11 +18,12 @@ class AchievementDAO extends DAO<Achievement, Achievement> {
   fetchAchievementCounters(
     userID: EntityID,
   ): LoadObject<Array<AchievementCounter>> {
-    return this.fetchCustom({
+    const queryOptions = {
       apply:
         `filter((owner/id eq '${userID}'))` +
         '/groupby((achievementType),aggregate($count as total))',
-    });
+    };
+    return this.__fetchCustom(this.__buildHandler(queryOptions), queryOptions);
   }
 }
 

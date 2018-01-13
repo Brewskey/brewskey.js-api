@@ -42,9 +42,10 @@ var AchievementDAO = function (_DAO) {
   _createClass(AchievementDAO, [{
     key: 'fetchAchievementCounters',
     value: function fetchAchievementCounters(userID) {
-      return this.fetchCustom({
+      var queryOptions = {
         apply: 'filter((owner/id eq \'' + userID + '\'))' + '/groupby((achievementType),aggregate($count as total))'
-      });
+      };
+      return this.__fetchCustom(this.__buildHandler(queryOptions), queryOptions);
     }
   }]);
 

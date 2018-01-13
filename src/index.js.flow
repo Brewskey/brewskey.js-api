@@ -298,6 +298,12 @@ export type Location = {
   zipCode: number,
 };
 
+export type LeaderboardItem = {
+  lastPourDate: Date,
+  totalOunces: number,
+  userName: string,
+};
+
 export type LocationMutator = {
   city: string,
   description: ?string,
@@ -658,7 +664,12 @@ declare class brewskey$ReportDAO extends DAO<Report, ReportMutator> {}
 declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
 declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
 declare class brewskey$StyleDAO extends DAO<Style, Style> {}
-declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {}
+declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {
+  fetchLeaderboard(
+    tapID: EntityID,
+    queryOptions?: QueryOptions,
+  ): LoadObject<Array<LeaderboardItem>>;
+}
 
 /* Utilities */
 export type Header = {

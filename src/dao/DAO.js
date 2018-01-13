@@ -1,5 +1,6 @@
 // @flow
 import type { EntityID, QueryOptions } from '../index';
+import type oHandler from 'odata';
 
 import nullthrows from 'nullthrows';
 import BaseDAO from './BaseDAO';
@@ -189,29 +190,6 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     );
   }
 
-  fetchCustom<TResult>(queryOptions?: QueryOptions): LoadObject<TResult> {
-    const cacheKey = this._getCacheKey(queryOptions);
-    if (!this._customLoaderByQuery.has(cacheKey)) {
-      this._customLoaderByQuery.set(cacheKey, LoadObject.loading());
-      this._emitChanges();
-
-      this.__resolve(this.__buildHandler(queryOptions))
-        .then((result: Object) => {
-          this._customLoaderByQuery.set(
-            cacheKey,
-            LoadObject.withValue(result.data),
-          );
-          this._emitChanges();
-        })
-        .catch((error: Error) => {
-          this._customLoaderByQuery.set(cacheKey, LoadObject.withValue(error));
-          this._emitChanges();
-        });
-    }
-
-    return nullthrows(this._customLoaderByQuery.get(cacheKey));
-  }
-
   flushCache() {
     this._entityLoaderByID = new Map();
     this._flushQueryCaches();
@@ -345,6 +323,34 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         fetchAndResolve();
       },
     );
+  }
+
+  __fetchCustom<TResult>(
+    handler: oHandler<TEntity>,
+    queryOptions?: QueryOptions,
+    key?: string = '',
+  ): LoadObject<TResult> {
+    const cacheKey = this._getCacheKey(queryOptions) + key;
+
+    if (!this._customLoaderByQuery.has(cacheKey)) {
+      this._customLoaderByQuery.set(cacheKey, LoadObject.loading());
+      this._emitChanges();
+
+      this.__resolve(handler)
+        .then((result: Object) => {
+          this._customLoaderByQuery.set(
+            cacheKey,
+            LoadObject.withValue(result.data),
+          );
+          this._emitChanges();
+        })
+        .catch((error: Error) => {
+          this._customLoaderByQuery.set(cacheKey, LoadObject.withValue(error));
+          this._emitChanges();
+        });
+    }
+
+    return nullthrows(this._customLoaderByQuery.get(cacheKey));
   }
 
   _emitChanges() {
