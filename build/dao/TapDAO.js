@@ -4,7 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _odata = require('odata');
+
+var _odata2 = _interopRequireDefault(_odata);
 
 var _DAO2 = require('./DAO');
 
@@ -42,14 +48,30 @@ var TapDAO = function (_DAO) {
       translator: new _TapTranslator2.default()
     }));
 
+    _this.countLeaderboard = _this.countLeaderboard.bind(_this);
     _this.fetchLeaderboard = _this.fetchLeaderboard.bind(_this);
     return _this;
   }
 
   _createClass(TapDAO, [{
+    key: 'countLeaderboard',
+    value: function countLeaderboard(tapID, duration, queryOptions) {
+      var _this2 = this;
+
+      var funcString = 'Default.leaderboard(timeSpan=duration\'' + duration + '\')';
+      var stringifiedID = tapID.toString();
+
+      return this.__countCustom(function (countQueryOptions) {
+        var handler = _this2.__buildHandler(_extends({}, queryOptions, countQueryOptions), false).find(_this2.__reformatIDValue(stringifiedID));
+        handler.func(funcString);
+
+        return handler;
+      }, queryOptions, funcString);
+    }
+  }, {
     key: 'fetchLeaderboard',
-    value: function fetchLeaderboard(tapID, queryOptions) {
-      var funcString = 'Default.leaderboard()';
+    value: function fetchLeaderboard(tapID, duration, queryOptions) {
+      var funcString = 'Default.leaderboard(timeSpan=duration\'' + duration + '\')';
       var stringifiedID = tapID.toString();
 
       var handler = this.__buildHandler(queryOptions, false).find(this.__reformatIDValue(stringifiedID));

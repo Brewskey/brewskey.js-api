@@ -4,7 +4,9 @@
   "main": "./build/index.js",
   "repository": "https://github.com/Brewskey/brewskey.js-api.git",
   "author": "Brewskey",
-  "files": ["build/"],
+  "files": [
+    "build/"
+  ],
   "scripts": {
     "build": "babel src -d build --copy-files",
     "flow": "flow",
@@ -50,10 +52,18 @@
   "ava": {
     "verbose": true,
     "babel": "inherit",
-    "files": ["test/*.test.js"],
-    "require": ["babel-register"]
+    "files": [
+      "test/*.test.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
   },
   "lint-staged": {
-    "src/**/*.{js,json}": ["prettier --write", "lint", "git add"]
+    "src/**/*.{js,json}": [
+      "prettier --write",
+      "lint",
+      "git add"
+    ]
   }
 }
