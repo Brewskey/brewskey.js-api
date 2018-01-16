@@ -247,7 +247,7 @@ export type Friend = {
   },
   friendStatus: FriendStatus,
   id: EntityID,
-}
+};
 
 export type Glass = {
   createDate: Date,
@@ -747,6 +747,7 @@ type DAOApi = {
 
 declare export var CADENCE_MAP: { [ReportCadence]: number };
 declare export var DAO_ENTITIES: { [string]: EntityName };
+declare export var FRIEND_STATUSES: { [string]: FriendStatus };
 declare export var MAX_OUNCES_BY_KEG_TYPE: { [KegType]: number };
 declare export var PERMISSIONS_MAP: { [PermissionType]: number };
 declare export var LoadObject;

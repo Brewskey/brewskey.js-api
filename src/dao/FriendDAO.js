@@ -1,9 +1,16 @@
 // @flow
-import type { Friend } from '../index';
+import type { Friend, FriendStatus } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
+
+export const FRIEND_STATUSES: { [key: string]: FriendStatus } = {
+  APPROVED: 'Approved',
+  BLOCKED: 'Blocked',
+  PENDING: 'Pending',
+  SPAM: 'Spam',
+};
 
 class FriendDAO extends DAO<Friend, Friend> {
   constructor() {

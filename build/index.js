@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PERMISSIONS_MAP = exports.MAX_OUNCES_BY_KEG_TYPE = exports.LoadObject = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
+exports.PERMISSIONS_MAP = exports.MAX_OUNCES_BY_KEG_TYPE = exports.LoadObject = exports.FRIEND_STATUSES = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
 
 var _odata = require('odata');
 
@@ -20,6 +20,10 @@ var _ReportTranslator = require('./translators/ReportTranslator');
 var _KegDAO = require('./dao/KegDAO');
 
 var _KegDAO2 = _interopRequireDefault(_KegDAO);
+
+var _FriendDAO = require('./dao/FriendDAO');
+
+var _FriendDAO2 = _interopRequireDefault(_FriendDAO);
 
 var _LoadObject = require('./LoadObject');
 
@@ -54,10 +58,6 @@ var _DeviceDAO2 = _interopRequireDefault(_DeviceDAO);
 var _FlowSensorDAO = require('./dao/FlowSensorDAO');
 
 var _FlowSensorDAO2 = _interopRequireDefault(_FlowSensorDAO);
-
-var _FriendDAO = require('./dao/FriendDAO');
-
-var _FriendDAO2 = _interopRequireDefault(_FriendDAO);
 
 var _GlassDAO = require('./dao/GlassDAO');
 
@@ -146,6 +146,7 @@ var setOrganizationID = function setOrganizationID(organizationID) {
 
 exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
+exports.FRIEND_STATUSES = _FriendDAO.FRIEND_STATUSES;
 exports.LoadObject = _LoadObject2.default;
 exports.MAX_OUNCES_BY_KEG_TYPE = _KegDAO.MAX_OUNCES_BY_KEG_TYPE;
 exports.PERMISSIONS_MAP = _constants.PERMISSIONS_MAP;
