@@ -51,6 +51,14 @@ var _DeviceDAO = require('./dao/DeviceDAO');
 
 var _DeviceDAO2 = _interopRequireDefault(_DeviceDAO);
 
+var _FlowSensorDAO = require('./dao/FlowSensorDAO');
+
+var _FlowSensorDAO2 = _interopRequireDefault(_FlowSensorDAO);
+
+var _FriendDAO = require('./dao/FriendDAO');
+
+var _FriendDAO2 = _interopRequireDefault(_FriendDAO);
+
 var _GlassDAO = require('./dao/GlassDAO');
 
 var _GlassDAO2 = _interopRequireDefault(_GlassDAO);
@@ -66,10 +74,6 @@ var _OrganizationDAO2 = _interopRequireDefault(_OrganizationDAO);
 var _PermissionDAO = require('./dao/PermissionDAO');
 
 var _PermissionDAO2 = _interopRequireDefault(_PermissionDAO);
-
-var _FlowSensorDAO = require('./dao/FlowSensorDAO');
-
-var _FlowSensorDAO2 = _interopRequireDefault(_FlowSensorDAO);
 
 var _PourChartDAO = require('./dao/PourChartDAO');
 
@@ -130,6 +134,7 @@ var setOrganizationID = function setOrganizationID(organizationID) {
   _AchievementDAO2.default.flushCache();
   _BeverageDAO2.default.flushCache();
   _DeviceDAO2.default.flushCache();
+  _FriendDAO2.default.flushCache();
   _KegDAO2.default.flushCache();
   _LocationDAO2.default.flushCache();
   _PermissionDAO2.default.flushCache();
@@ -154,6 +159,7 @@ exports.default = {
   BeverageDAO: _BeverageDAO2.default,
   DeviceDAO: _DeviceDAO2.default,
   FlowSensorDAO: _FlowSensorDAO2.default,
+  FriendDAO: _FriendDAO2.default,
   GlassDAO: _GlassDAO2.default,
   KegDAO: _KegDAO2.default,
   LocationDAO: _LocationDAO2.default,

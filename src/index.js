@@ -17,12 +17,13 @@ import AchievementDAO from './dao/AchievementDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
 import BeverageDAO from './dao/BeverageDAO';
 import DeviceDAO from './dao/DeviceDAO';
+import FlowSensorDAO from './dao/FlowSensorDAO';
+import FriendDAO from './dao/FriendDAO';
 import GlassDAO from './dao/GlassDAO';
 import KegDAO from './dao/KegDAO';
 import LocationDAO from './dao/LocationDAO';
 import OrganizationDAO from './dao/OrganizationDAO';
 import PermissionDAO from './dao/PermissionDAO';
-import FlowSensorDAO from './dao/FlowSensorDAO';
 import PourChartDAO from './dao/PourChartDAO';
 import PourDAO from './dao/PourDAO';
 import ReportDAO from './dao/ReportDAO';
@@ -56,6 +57,7 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   AchievementDAO.flushCache();
   BeverageDAO.flushCache();
   DeviceDAO.flushCache();
+  FriendDAO.flushCache();
   KegDAO.flushCache();
   LocationDAO.flushCache();
   PermissionDAO.flushCache();
@@ -81,6 +83,7 @@ export default {
   BeverageDAO,
   DeviceDAO,
   FlowSensorDAO,
+  FriendDAO,
   GlassDAO,
   KegDAO,
   LocationDAO,
