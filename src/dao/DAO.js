@@ -41,14 +41,26 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   }
 
   count(queryOptions?: QueryOptions): LoadObject<number> {
-    const cacheKey = this._getCacheKey(queryOptions);
+    return this.__countCustom(
+      (countQueryOptions: QueryOptions): oHandler<TEntity> =>
+        this.__buildHandler({ ...queryOptions, ...countQueryOptions }),
+      queryOptions,
+    );
+  }
+
+  __countCustom(
+    getOHandler: (baseQueryOptions: QueryOptions) => oHandler<*>,
+    queryOptions?: QueryOptions,
+    key?: string = '',
+  ): LoadObject<number> {
+    const cacheKey = this._getCacheKey(queryOptions) + key;
+
     if (!this._countLoaderByQuery.has(cacheKey)) {
       this._countLoaderByQuery.set(cacheKey, LoadObject.loading());
       this._emitChanges();
 
       this.__resolve(
-        this.__buildHandler({
-          ...queryOptions,
+        getOHandler({
           shouldCount: true,
           take: 0,
         }),
