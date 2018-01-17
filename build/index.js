@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PERMISSIONS_MAP = exports.MAX_OUNCES_BY_KEG_TYPE = exports.LoadObject = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
+exports.PERMISSIONS_MAP = exports.MAX_OUNCES_BY_KEG_TYPE = exports.LoadObject = exports.FRIEND_STATUSES = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
 
 var _odata = require('odata');
 
@@ -20,6 +20,10 @@ var _ReportTranslator = require('./translators/ReportTranslator');
 var _KegDAO = require('./dao/KegDAO');
 
 var _KegDAO2 = _interopRequireDefault(_KegDAO);
+
+var _FriendDAO = require('./dao/FriendDAO');
+
+var _FriendDAO2 = _interopRequireDefault(_FriendDAO);
 
 var _LoadObject = require('./LoadObject');
 
@@ -51,6 +55,10 @@ var _DeviceDAO = require('./dao/DeviceDAO');
 
 var _DeviceDAO2 = _interopRequireDefault(_DeviceDAO);
 
+var _FlowSensorDAO = require('./dao/FlowSensorDAO');
+
+var _FlowSensorDAO2 = _interopRequireDefault(_FlowSensorDAO);
+
 var _GlassDAO = require('./dao/GlassDAO');
 
 var _GlassDAO2 = _interopRequireDefault(_GlassDAO);
@@ -66,10 +74,6 @@ var _OrganizationDAO2 = _interopRequireDefault(_OrganizationDAO);
 var _PermissionDAO = require('./dao/PermissionDAO');
 
 var _PermissionDAO2 = _interopRequireDefault(_PermissionDAO);
-
-var _FlowSensorDAO = require('./dao/FlowSensorDAO');
-
-var _FlowSensorDAO2 = _interopRequireDefault(_FlowSensorDAO);
 
 var _PourChartDAO = require('./dao/PourChartDAO');
 
@@ -130,6 +134,7 @@ var setOrganizationID = function setOrganizationID(organizationID) {
   _AchievementDAO2.default.flushCache();
   _BeverageDAO2.default.flushCache();
   _DeviceDAO2.default.flushCache();
+  _FriendDAO2.default.flushCache();
   _KegDAO2.default.flushCache();
   _LocationDAO2.default.flushCache();
   _PermissionDAO2.default.flushCache();
@@ -141,6 +146,7 @@ var setOrganizationID = function setOrganizationID(organizationID) {
 
 exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
 exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
+exports.FRIEND_STATUSES = _FriendDAO.FRIEND_STATUSES;
 exports.LoadObject = _LoadObject2.default;
 exports.MAX_OUNCES_BY_KEG_TYPE = _KegDAO.MAX_OUNCES_BY_KEG_TYPE;
 exports.PERMISSIONS_MAP = _constants.PERMISSIONS_MAP;
@@ -154,6 +160,7 @@ exports.default = {
   BeverageDAO: _BeverageDAO2.default,
   DeviceDAO: _DeviceDAO2.default,
   FlowSensorDAO: _FlowSensorDAO2.default,
+  FriendDAO: _FriendDAO2.default,
   GlassDAO: _GlassDAO2.default,
   KegDAO: _KegDAO2.default,
   LocationDAO: _LocationDAO2.default,

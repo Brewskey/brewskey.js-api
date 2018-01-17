@@ -19,6 +19,7 @@ var DAO_ENTITIES = exports.DAO_ENTITIES = {
   BEVERAGES: 'beverages',
   DEVICES: 'devices',
   FLOW_SENSORS: 'flow-sensors',
+  FRIENDS: 'friends',
   KEGS: 'kegs',
   LOCATIONS: 'locations',
   ORGANIZATIONS: 'organizations',

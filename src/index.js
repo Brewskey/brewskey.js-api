@@ -7,6 +7,7 @@ import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
 import BaseDAO from './dao/DAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
 import { MAX_OUNCES_BY_KEG_TYPE } from './dao/KegDAO';
+import { FRIEND_STATUSES } from './dao/FriendDAO';
 import LoadObject from './LoadObject';
 
 import fetch from './fetch';
@@ -17,12 +18,13 @@ import AchievementDAO from './dao/AchievementDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
 import BeverageDAO from './dao/BeverageDAO';
 import DeviceDAO from './dao/DeviceDAO';
+import FlowSensorDAO from './dao/FlowSensorDAO';
+import FriendDAO from './dao/FriendDAO';
 import GlassDAO from './dao/GlassDAO';
 import KegDAO from './dao/KegDAO';
 import LocationDAO from './dao/LocationDAO';
 import OrganizationDAO from './dao/OrganizationDAO';
 import PermissionDAO from './dao/PermissionDAO';
-import FlowSensorDAO from './dao/FlowSensorDAO';
 import PourChartDAO from './dao/PourChartDAO';
 import PourDAO from './dao/PourDAO';
 import ReportDAO from './dao/ReportDAO';
@@ -56,6 +58,7 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   AchievementDAO.flushCache();
   BeverageDAO.flushCache();
   DeviceDAO.flushCache();
+  FriendDAO.flushCache();
   KegDAO.flushCache();
   LocationDAO.flushCache();
   PermissionDAO.flushCache();
@@ -68,6 +71,7 @@ const setOrganizationID = (organizationID: ?EntityID) => {
 export {
   CADENCE_MAP,
   DAO_ENTITIES,
+  FRIEND_STATUSES,
   LoadObject,
   MAX_OUNCES_BY_KEG_TYPE,
   PERMISSIONS_MAP,
@@ -81,6 +85,7 @@ export default {
   BeverageDAO,
   DeviceDAO,
   FlowSensorDAO,
+  FriendDAO,
   GlassDAO,
   KegDAO,
   LocationDAO,

@@ -17,6 +17,7 @@ export type EntityName =
   | 'chart'
   | 'devices'
   | 'flow-sensors'
+  | 'friends'
   | 'kegs'
   | 'locations'
   | 'organizations'
@@ -233,6 +234,19 @@ export type FlowSensorMutator = {
   id?: EntityID,
   pulsesPerGallon: number,
   tapId: EntityID,
+};
+
+export type FriendStatus = 'Approved' | 'Blocked' | 'Pending' | 'Spam';
+
+export type Friend = {
+  createdDate: Date,
+  friendAccount: {
+    id: EntityID,
+    phoneNumber: string,
+    userName: string,
+  },
+  friendStatus: FriendStatus,
+  id: EntityID,
 };
 
 export type Glass = {
@@ -643,6 +657,7 @@ declare class brewskey$FlowSensorDAO extends DAO<
   FlowSensor,
   FlowSensorMutator,
 > {}
+declare class brewskey$FriendDAO extends DAO<Friend, Friend> {}
 declare class brewskey$KegDAO extends DAO<Keg, KegMutator> {
   fetchKegByTapID(tapId: string): LoadObject<Array<LoadObject<Keg>>>;
 }
@@ -667,6 +682,11 @@ declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
 declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
 declare class brewskey$StyleDAO extends DAO<Style, Style> {}
 declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {
+  countLeaderboard(
+    tapID: EntityID,
+    duration: string,
+    queryOptions?: QueryOptions,
+  ): LoadObject<number>;
   fetchLeaderboard(
     tapID: EntityID,
     queryOptions?: QueryOptions,
@@ -700,6 +720,7 @@ type DAOApi = {
   BeverageDAO: brewskey$BeverageDAO,
   DeviceDAO: brewskey$DeviceDAO,
   FlowSensorDAO: brewskey$FlowSensorDAO,
+  FriendDAO: brewskey$FriendDAO,
   GlassDAO: brewskey$GlassDAO,
   KegDAO: brewskey$KegDAO,
   LocationDAO: brewskey$LocationDAO,
@@ -726,6 +747,7 @@ type DAOApi = {
 
 declare export var CADENCE_MAP: { [ReportCadence]: number };
 declare export var DAO_ENTITIES: { [string]: EntityName };
+declare export var FRIEND_STATUSES: { [string]: FriendStatus };
 declare export var MAX_OUNCES_BY_KEG_TYPE: { [KegType]: number };
 declare export var PERMISSIONS_MAP: { [PermissionType]: number };
 declare export var LoadObject;
