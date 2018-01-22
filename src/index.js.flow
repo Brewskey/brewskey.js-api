@@ -134,8 +134,8 @@ export type PourChartDataSet = {
 export type DeviceStatus = 
   'Active'|
   'Cleaning'|
-  'Free'|
-  'Inactive';
+  'Inactive'|
+  'Unlocked';
 
 export type DeviceType = 'BrewskeyBox' | 'Onsite'
 
