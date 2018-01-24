@@ -30,9 +30,7 @@ var LocationDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (LocationDAO.__proto__ || Object.getPrototypeOf(LocationDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.LOCATIONS,
-      navigationProperties: {
-        organization: ['id', 'isDeleted', 'name']
-      },
+      navigationProperties: [{ name: 'organization', select: ['id', 'isDeleted', 'name'] }],
       translator: new _LocationTranslator2.default()
     }));
   }

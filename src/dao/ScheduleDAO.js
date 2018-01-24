@@ -9,10 +9,10 @@ class ScheduleDAO extends DAO<Schedule, ScheduleMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.SCHEDULES,
-      navigationProperties: {
-        accounts: ['id', 'userName'],
-        location: ['id', 'isDeleted', 'name'],
-      },
+      navigationProperties: [
+        { name: 'accounts', select: ['id', 'userName'] },
+        { name: 'locations', select: ['id', 'isDeleted', 'name'] },
+      ],
       translator: new ScheduleTranslator(),
     });
   }
