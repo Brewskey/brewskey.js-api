@@ -9,7 +9,7 @@ class BeverageDAO extends DAO<Beverage, Beverage> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.BEVERAGES,
-      navigationProperties: [{ name: 'createdBy', select: ['id', 'userName'] }],
+      navigationProperties: { createdBy: { select: ['id', 'userName'] } },
       translator: new BeverageTranslator(),
     });
   }

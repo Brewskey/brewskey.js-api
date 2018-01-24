@@ -30,7 +30,14 @@ var PermissionDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (PermissionDAO.__proto__ || Object.getPrototypeOf(PermissionDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.PERMISSIONS,
-      navigationProperties: [{ name: 'createdBy', select: ['id', 'userName'] }, { name: 'device', select: ['id', 'isDeleted', 'name'] }, { name: 'forUser', select: ['id', 'userName'] }, { name: 'location', select: ['id', 'isDeleted', 'name'] }, { name: 'organization', select: ['id', 'isDeleted', 'name'] }, { name: 'tap', select: ['id', 'isDeleted'] }],
+      navigationProperties: {
+        createdBy: { select: ['id', 'userName'] },
+        device: { select: ['id', 'isDeleted', 'name'] },
+        forUser: { select: ['id', 'userName'] },
+        location: { select: ['id', 'isDeleted', 'name'] },
+        organization: { select: ['id', 'isDeleted', 'name'] },
+        tap: { select: ['id', 'isDeleted'] }
+      },
       translator: new _PermissionTranslator2.default()
     }));
   }

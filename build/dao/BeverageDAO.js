@@ -30,7 +30,7 @@ var BeverageDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (BeverageDAO.__proto__ || Object.getPrototypeOf(BeverageDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.BEVERAGES,
-      navigationProperties: [{ name: 'createdBy', select: ['id', 'userName'] }],
+      navigationProperties: { createdBy: { select: ['id', 'userName'] } },
       translator: new _BeverageTranslator2.default()
     }));
   }

@@ -413,15 +413,16 @@ export type QueryOptions = {
   take?: number,
 };
 
-export type NavigationProperty = {
-  expand?: Array<NavigationProperty>,
-  name: string,
-  select?: Array<string>,
+export type NavigationProperties = {
+  [key: string]: {
+    expand?: NavigationProperties,
+    select?: Array<string>,
+  },
 };
 
 export type DAOConfig<TEntity, TEntityMutator> = {
   entityName: EntityName,
-  navigationProperties?: Array<NavigationProperty>,
+  navigationProperties?: NavigationProperties,
   translator: DAOTranslator<TEntity, TEntityMutator>,
 };
 

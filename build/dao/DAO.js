@@ -8,6 +8,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
@@ -30,14 +32,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var ID_REG_EXP = /\bid\b/;
 
-var parseNavProp = function parseNavProp(navProp) {
-  var expand = navProp.expand,
-      name = navProp.name,
-      select = navProp.select;
+var parseNavProp = function parseNavProp(_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+      name = _ref2[0],
+      navProp = _ref2[1];
+
+  var _ref3 = navProp,
+      expand = _ref3.expand,
+      select = _ref3.select;
 
   var delimiter = select && expand ? ';' : '';
   var selectString = select ? '$select=' + select.join(',') : '';
-  var expandString = expand ? delimiter + '$expand=' + expand.map(parseNavProp).join(',') : '';
+
+  var expandString = expand ? delimiter + '$expand=' + Array.from(Object.entries(expand)).map(parseNavProp).join(',') : '';
 
   return name + '(' + selectString + expandString + ')';
 };
@@ -139,7 +146,7 @@ var DAO = function () {
 
       var navProps = this._config.navigationProperties;
       if (navProps) {
-        var navPropsString = navProps.map(parseNavProp).join(',');
+        var navPropsString = Array.from(Object.entries(navProps)).map(parseNavProp).join(',');
         handler.expand(navPropsString);
       }
 
@@ -156,10 +163,10 @@ var DAO = function () {
       }
 
       if (queryOptions.filters && queryOptions.filters.length > 0) {
-        var renderedFilters = queryOptions.filters.map(function (_ref) {
-          var operator = _ref.operator,
-              params = _ref.params,
-              values = _ref.values;
+        var renderedFilters = queryOptions.filters.map(function (_ref4) {
+          var operator = _ref4.operator,
+              params = _ref4.params,
+              values = _ref4.values;
 
           var isValidOperator = _constants.FILTER_FUNCTION_OPERATORS.find(function (op) {
             return op === operator;
@@ -211,7 +218,7 @@ var DAO = function () {
   }, {
     key: '_resolve',
     value: function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
         var _this2 = this;
 
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
@@ -277,7 +284,7 @@ var DAO = function () {
       }));
 
       function _resolve(_x3, _x4) {
-        return _ref2.apply(this, arguments);
+        return _ref5.apply(this, arguments);
       }
 
       return _resolve;

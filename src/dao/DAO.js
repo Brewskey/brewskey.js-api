@@ -3,7 +3,6 @@ import type {
   DAOConfig,
   DAOTranslator,
   EntityName,
-  NavigationProperty,
   QueryFilter,
   QueryOptions,
   RequestMethod,
@@ -16,12 +15,15 @@ import { createFilter } from '../filters';
 
 const ID_REG_EXP = /\bid\b/;
 
-const parseNavProp = (navProp: NavigationProperty): string => {
-  const { expand, name, select } = navProp;
+const parseNavProp = ([name, navProp]: [string, mixed]): string => {
+  const { expand, select } = (navProp: any);
   const delimiter = select && expand ? ';' : '';
   const selectString = select ? `$select=${select.join(',')}` : '';
+
   const expandString = expand
-    ? `${delimiter}$expand=${expand.map(parseNavProp).join(',')}`
+    ? `${delimiter}$expand=${Array.from(Object.entries(expand))
+        .map(parseNavProp)
+        .join(',')}`
     : '';
 
   return `${name}(${selectString}${expandString})`;
@@ -117,7 +119,9 @@ class DAO<TEntity, TEntityMutator> {
 
     const navProps = this._config.navigationProperties;
     if (navProps) {
-      const navPropsString = navProps.map(parseNavProp).join(',');
+      const navPropsString = Array.from(Object.entries(navProps))
+        .map(parseNavProp)
+        .join(',');
       handler.expand(navPropsString);
     }
 

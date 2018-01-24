@@ -12,12 +12,12 @@ class KegDAO extends DAO<Keg, Keg> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.KEGS,
-      navigationProperties: [
-        { name: 'beverage', select: ['id', 'isDeleted', 'name'] },
-        { name: 'location', select: ['id', 'isDeleted', 'name'] },
-        { name: 'organization', select: ['id', 'isDeleted', 'name'] },
-        { name: 'tap', select: ['id', 'isDeleted'] },
-      ],
+      navigationProperties: {
+        beverage: { select: ['id', 'isDeleted', 'name'] },
+        location: { select: ['id', 'isDeleted', 'name'] },
+        organization: { select: ['id', 'isDeleted', 'name'] },
+        tap: { select: ['id', 'isDeleted'] },
+      },
       translator: new KegTranslator(),
     });
   }

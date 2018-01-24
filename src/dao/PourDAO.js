@@ -9,13 +9,13 @@ class PourDAO extends DAO<Pour, Pour> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.POURS,
-      navigationProperties: [
-        { name: 'beverage', select: ['id', 'isDeleted', 'name'] },
-        { name: 'location', select: ['id', 'isDeleted', 'name'] },
-        { name: 'organization', select: ['id', 'isDeleted', 'name'] },
-        { name: 'owner', select: ['id', 'userName'] },
-        { name: 'tap', select: ['id', 'isDeleted'] },
-      ],
+      navigationProperties: {
+        beverage: { select: ['id', 'isDeleted', 'name'] },
+        location: { select: ['id', 'isDeleted', 'name'] },
+        organization: { select: ['id', 'isDeleted', 'name'] },
+        owner: { select: ['id', 'userName'] },
+        tap: { select: ['id', 'isDeleted'] },
+      },
       translator: new PourTranslator(),
     });
   }
