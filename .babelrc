@@ -3,6 +3,7 @@
   "plugins": [
     "autobind-class-methods",
     "syntax-flow",
+    "transform-class-properties",
     "transform-flow-strip-types",
     "transform-object-rest-spread"
   ]

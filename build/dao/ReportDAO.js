@@ -30,11 +30,7 @@ var ReportDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (ReportDAO.__proto__ || Object.getPrototypeOf(ReportDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.REPORTS,
-      navigationProperties: {
-        devices: ['id', 'isDeleted', 'name'],
-        locations: ['id', 'isDeleted', 'name'],
-        taps: ['id', 'isDeleted', 'name']
-      },
+      navigationProperties: [{ name: 'devices', select: ['id', 'isDeleted', 'name'] }, { name: 'locations', select: ['id', 'isDeleted', 'name'] }, { name: 'taps', select: ['id', 'isDeleted'] }],
       translator: new _ReportTranslator2.default()
     }));
   }

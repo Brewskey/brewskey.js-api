@@ -3,6 +3,7 @@ import type {
   DAOConfig,
   DAOTranslator,
   EntityName,
+  NavigationProperty,
   QueryFilter,
   QueryOptions,
   RequestMethod,
@@ -14,6 +15,17 @@ import { FILTER_FUNCTION_OPERATORS } from '../constants';
 import { createFilter } from '../filters';
 
 const ID_REG_EXP = /\bid\b/;
+
+const parseNavProp = (navProp: NavigationProperty): string => {
+  const { expand, name, select } = navProp;
+  const delimiter = select && expand ? ';' : '';
+  const selectString = select ? `$select=${select.join(',')}` : '';
+  const expandString = expand
+    ? `${delimiter}$expand=${expand.map(parseNavProp).join(',')}`
+    : '';
+
+  return `${name}(${selectString}${expandString})`;
+};
 
 class DAO<TEntity, TEntityMutator> {
   static _organizationID: ?string = null;
@@ -44,23 +56,25 @@ class DAO<TEntity, TEntityMutator> {
   }
 
   count(queryOptions: QueryOptions): Promise<DAOResult<TEntity>> {
-    return this._resolve(this._buildHandler({
-      ...queryOptions,
-      count: true,
-      take: 0,
-    }));
-  }
-
-  fetchByID(id: string): Promise<DAOResult<TEntity>> {
     return this._resolve(
-      this._buildHandler().find(this.__reformatIDValue(id)),
+      this._buildHandler({
+        ...queryOptions,
+        count: true,
+        take: 0,
+      }),
     );
   }
 
+  fetchByID(id: string): Promise<DAOResult<TEntity>> {
+    return this._resolve(this._buildHandler().find(this.__reformatIDValue(id)));
+  }
+
   fetchByIDs(ids: Array<string>): Promise<DAOResult<TEntity>> {
-    return this._resolve(this._buildHandler({
-      filters: [createFilter('id').equals(ids)],
-    }));
+    return this._resolve(
+      this._buildHandler({
+        filters: [createFilter('id').equals(ids)],
+      }),
+    );
   }
 
   fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>> {
@@ -101,17 +115,10 @@ class DAO<TEntity, TEntityMutator> {
     const { count, skip, take } = queryOptions;
     let handler = oHandler(this._config.entityName);
 
-    if (this._config.navigationProperties) {
-      const navigationPropString = Object.entries(
-        this._config.navigationProperties,
-      ).map(([key, value]: [string, mixed]): string => {
-        if (!value || !Array.isArray(value) || !value.length) {
-          return key;
-        }
-        return `${key}($select=${value.join(',')})`;
-      }).join(',');
-
-      handler = handler.expand(navigationPropString);
+    const navProps = this._config.navigationProperties;
+    if (navProps) {
+      const navPropsString = navProps.map(parseNavProp).join(',');
+      handler.expand(navPropsString);
     }
 
     if (count) {
@@ -127,8 +134,8 @@ class DAO<TEntity, TEntityMutator> {
     }
 
     if (queryOptions.filters && queryOptions.filters.length > 0) {
-      const renderedFilters = queryOptions.filters.map(
-        ({ operator, params, values }: QueryFilter): string => {
+      const renderedFilters = queryOptions.filters
+        .map(({ operator, params, values }: QueryFilter): string => {
           const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
             (op: string): boolean => op === operator,
           );
@@ -149,19 +156,20 @@ class DAO<TEntity, TEntityMutator> {
               }
 
               return `(${param} ${operator} ${reformattedValue})`;
-            })
+            }),
           );
 
-          return filters.reduce((
-            previousFilter: Array<string>,
-            currentFilters: Array<string>,
-          ): Array<string> => (
-            [...previousFilter, ...currentFilters]
-          )).join(' or ');
-        }
-      ).map((filter: string): string => (
-        `(${filter})`
-      )).join(' and ');
+          return filters
+            .reduce(
+              (
+                previousFilter: Array<string>,
+                currentFilters: Array<string>,
+              ): Array<string> => [...previousFilter, ...currentFilters],
+            )
+            .join(' or ');
+        })
+        .map((filter: string): string => `(${filter})`)
+        .join(' and ');
 
       handler.filter(renderedFilters);
     }
@@ -215,13 +223,13 @@ class DAO<TEntity, TEntityMutator> {
       const resultHandler = await request;
 
       if (Array.isArray(resultHandler.data)) {
-        resultHandler.data = (resultHandler.data || [])
-          .map((item: Object): ?TEntity =>
-            this._config.translator.fromApi(item),
-          );
+        resultHandler.data = (resultHandler.data || []).map(
+          (item: Object): ?TEntity => this._config.translator.fromApi(item),
+        );
       } else {
-        resultHandler.data =
-          this._config.translator.fromApi(resultHandler.data);
+        resultHandler.data = this._config.translator.fromApi(
+          resultHandler.data,
+        );
       }
 
       return new DAOResult(resultHandler.data, resultHandler.inlinecount);

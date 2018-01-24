@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31,6 +29,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ID_REG_EXP = /\bid\b/;
+
+var parseNavProp = function parseNavProp(navProp) {
+  var expand = navProp.expand,
+      name = navProp.name,
+      select = navProp.select;
+
+  var delimiter = select && expand ? ';' : '';
+  var selectString = select ? '$select=' + select.join(',') : '';
+  var expandString = expand ? delimiter + '$expand=' + expand.map(parseNavProp).join(',') : '';
+
+  return name + '(' + selectString + expandString + ')';
+};
 
 var DAO = function () {
   function DAO(config) {
@@ -127,19 +137,10 @@ var DAO = function () {
 
       var handler = (0, _odata2.default)(this._config.entityName);
 
-      if (this._config.navigationProperties) {
-        var navigationPropString = Object.entries(this._config.navigationProperties).map(function (_ref) {
-          var _ref2 = _slicedToArray(_ref, 2),
-              key = _ref2[0],
-              value = _ref2[1];
-
-          if (!value || !Array.isArray(value) || !value.length) {
-            return key;
-          }
-          return key + '($select=' + value.join(',') + ')';
-        }).join(',');
-
-        handler = handler.expand(navigationPropString);
+      var navProps = this._config.navigationProperties;
+      if (navProps) {
+        var navPropsString = navProps.map(parseNavProp).join(',');
+        handler.expand(navPropsString);
       }
 
       if (count) {
@@ -155,10 +156,10 @@ var DAO = function () {
       }
 
       if (queryOptions.filters && queryOptions.filters.length > 0) {
-        var renderedFilters = queryOptions.filters.map(function (_ref3) {
-          var operator = _ref3.operator,
-              params = _ref3.params,
-              values = _ref3.values;
+        var renderedFilters = queryOptions.filters.map(function (_ref) {
+          var operator = _ref.operator,
+              params = _ref.params,
+              values = _ref.values;
 
           var isValidOperator = _constants.FILTER_FUNCTION_OPERATORS.find(function (op) {
             return op === operator;
@@ -210,7 +211,7 @@ var DAO = function () {
   }, {
     key: '_resolve',
     value: function () {
-      var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(handler, params) {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
         var _this2 = this;
 
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
@@ -275,8 +276,8 @@ var DAO = function () {
         }, _callee, this, [[13, 21]]);
       }));
 
-      function _resolve(_x2, _x3) {
-        return _ref4.apply(this, arguments);
+      function _resolve(_x3, _x4) {
+        return _ref2.apply(this, arguments);
       }
 
       return _resolve;

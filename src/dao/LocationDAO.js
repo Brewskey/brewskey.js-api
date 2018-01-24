@@ -9,9 +9,9 @@ class LocationDAO extends DAO<Location, Location> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.LOCATIONS,
-      navigationProperties: {
-        organization: ['id', 'isDeleted', 'name'],
-      },
+      navigationProperties: [
+        { name: 'organization', select: ['id', 'isDeleted', 'name'] },
+      ],
       translator: new LocationTranslator(),
     });
   }

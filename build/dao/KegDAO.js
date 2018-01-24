@@ -32,12 +32,7 @@ var KegDAO = function (_DAO) {
 
     var _this = _possibleConstructorReturn(this, (KegDAO.__proto__ || Object.getPrototypeOf(KegDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.KEGS,
-      navigationProperties: {
-        beverage: ['id', 'isDeleted', 'name'],
-        location: ['id', 'isDeleted', 'name'],
-        organization: ['id', 'isDeleted', 'name'],
-        tap: ['id', 'isDeleted', 'name']
-      },
+      navigationProperties: [{ name: 'beverage', select: ['id', 'isDeleted', 'name'] }, { name: 'location', select: ['id', 'isDeleted', 'name'] }, { name: 'organization', select: ['id', 'isDeleted', 'name'] }, { name: 'tap', select: ['id', 'isDeleted'] }],
       translator: new _KegTranslator2.default()
     }));
 

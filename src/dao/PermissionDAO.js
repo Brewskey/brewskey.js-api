@@ -1,8 +1,5 @@
 // @flow
-import type {
-  Permission,
-  PermissionMutator,
-} from '../index';
+import type { Permission, PermissionMutator } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
@@ -12,14 +9,14 @@ class PermissionDAO extends DAO<Permission, PermissionMutator<*>> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.PERMISSIONS,
-      navigationProperties: {
-        createdBy: ['id', 'userName'],
-        device: ['id', 'isDeleted', 'name'],
-        forUser: ['id', 'userName'],
-        location: ['id', 'isDeleted', 'name'],
-        organization: ['id', 'isDeleted', 'name'],
-        tap: ['id', 'isDeleted', 'name'],
-      },
+      navigationProperties: [
+        { name: 'createdBy', select: ['id', 'userName'] },
+        { name: 'device', select: ['id', 'isDeleted', 'name'] },
+        { name: 'forUser', select: ['id', 'userName'] },
+        { name: 'location', select: ['id', 'isDeleted', 'name'] },
+        { name: 'organization', select: ['id', 'isDeleted', 'name'] },
+        { name: 'tap', select: ['id', 'isDeleted'] },
+      ],
       translator: new PermissionTranslator(),
     });
   }

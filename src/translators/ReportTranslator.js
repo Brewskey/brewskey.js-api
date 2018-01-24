@@ -12,35 +12,29 @@ export const CADENCE_MAP = {
 };
 
 class ReportTranslator extends DefaultTranslator<Report, ReportMutator> {
-  toApi(
-    {
-      devices,
-      locations,
-      sendToEmails,
-      taps,
-      ...props
-    }: ReportMutator,
-  ): Object {
+  toApi({
+    devices,
+    locations,
+    sendToEmails,
+    taps,
+    ...props
+  }: ReportMutator): Object {
     return {
       ...props,
       deviceIds: devices
         ? devices.map(
-          (device: { id: string, name: string }): string => device.id,
-        )
+            (device: { id: string, name: string }): string => device.id,
+          )
         : [],
       locationIds: locations
         ? locations.map(
-          (location: { id: string, name: string }): string => location.id,
-        )
+            (location: { id: string, name: string }): string => location.id,
+          )
         : [],
       sendToEmails: sendToEmails.map(
         (emailObject: { email: string }): string => emailObject.email,
       ),
-      tapIds: taps
-        ? taps.map(
-          (tap: { id: string, name: string }): string => tap.id,
-        )
-        : [],
+      tapIds: taps ? taps.map((tap: { id: string }): string => tap.id) : [],
     };
   }
 
@@ -48,9 +42,9 @@ class ReportTranslator extends DefaultTranslator<Report, ReportMutator> {
     return {
       ...report,
       reportCadence: CADENCE_MAP[report.reportCadence],
-      sendToEmails: report.sendToEmails.map(
-        (email: string): Object => ({ email }),
-      ),
+      sendToEmails: report.sendToEmails.map((email: string): Object => ({
+        email,
+      })),
     };
   }
 }
