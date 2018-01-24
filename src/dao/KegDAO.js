@@ -16,21 +16,25 @@ class KegDAO extends DAO<Keg, Keg> {
         beverage: ['id', 'isDeleted', 'name'],
         location: ['id', 'isDeleted', 'name'],
         organization: ['id', 'isDeleted', 'name'],
-        tap: ['id', 'isDeleted', 'name'],
+        tap: ['id', 'isDeleted'],
       },
       translator: new KegTranslator(),
     });
   }
 
   fetchKegByTapID = (tapId: string): Promise<DAOResult<Keg>> =>
-    this._resolve(this._buildHandler({
-      filters: [createFilter('tap/id').equals(tapId)],
-      orderBy: [{
-        column: 'tapDate',
-        direction: 'desc',
-      }],
-      take: 1,
-    }));
+    this._resolve(
+      this._buildHandler({
+        filters: [createFilter('tap/id').equals(tapId)],
+        orderBy: [
+          {
+            column: 'tapDate',
+            direction: 'desc',
+          },
+        ],
+        take: 1,
+      }),
+    );
 }
 
 export default new KegDAO();

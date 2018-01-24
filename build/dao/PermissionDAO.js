@@ -36,7 +36,7 @@ var PermissionDAO = function (_DAO) {
         forUser: ['id', 'userName'],
         location: ['id', 'isDeleted', 'name'],
         organization: ['id', 'isDeleted', 'name'],
-        tap: ['id', 'isDeleted', 'name']
+        tap: ['id', 'isDeleted']
       },
       translator: new _PermissionTranslator2.default()
     }));

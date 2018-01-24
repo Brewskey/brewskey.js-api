@@ -36,7 +36,7 @@ var KegDAO = function (_DAO) {
         beverage: ['id', 'isDeleted', 'name'],
         location: ['id', 'isDeleted', 'name'],
         organization: ['id', 'isDeleted', 'name'],
-        tap: ['id', 'isDeleted', 'name']
+        tap: ['id', 'isDeleted']
       },
       translator: new _KegTranslator2.default()
     }));

@@ -78,7 +78,9 @@ var ReportTranslator = function (_DefaultTranslator) {
       return _extends({}, report, {
         reportCadence: CADENCE_MAP[report.reportCadence],
         sendToEmails: report.sendToEmails.map(function (email) {
-          return { email: email };
+          return {
+            email: email
+          };
         })
       });
     }

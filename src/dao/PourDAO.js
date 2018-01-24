@@ -14,7 +14,7 @@ class PourDAO extends DAO<Pour, Pour> {
         location: ['id', 'isDeleted', 'name'],
         organization: ['id', 'isDeleted', 'name'],
         owner: ['id', 'userName'],
-        tap: ['id', 'isDeleted', 'name'],
+        tap: ['id', 'isDeleted'],
       },
       translator: new PourTranslator(),
     });

@@ -35,7 +35,7 @@ var PourDAO = function (_DAO) {
         location: ['id', 'isDeleted', 'name'],
         organization: ['id', 'isDeleted', 'name'],
         owner: ['id', 'userName'],
-        tap: ['id', 'isDeleted', 'name']
+        tap: ['id', 'isDeleted']
       },
       translator: new _PourTranslator2.default()
     }));

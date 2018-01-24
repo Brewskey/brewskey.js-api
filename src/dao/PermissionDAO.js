@@ -1,8 +1,5 @@
 // @flow
-import type {
-  Permission,
-  PermissionMutator,
-} from '../index';
+import type { Permission, PermissionMutator } from '../index';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
@@ -18,7 +15,7 @@ class PermissionDAO extends DAO<Permission, PermissionMutator<*>> {
         forUser: ['id', 'userName'],
         location: ['id', 'isDeleted', 'name'],
         organization: ['id', 'isDeleted', 'name'],
-        tap: ['id', 'isDeleted', 'name'],
+        tap: ['id', 'isDeleted'],
       },
       translator: new PermissionTranslator(),
     });

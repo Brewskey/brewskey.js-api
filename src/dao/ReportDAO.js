@@ -12,7 +12,7 @@ class ReportDAO extends DAO<Report, ReportMutator> {
       navigationProperties: {
         devices: ['id', 'isDeleted', 'name'],
         locations: ['id', 'isDeleted', 'name'],
-        taps: ['id', 'isDeleted', 'name'],
+        taps: ['id', 'isDeleted'],
       },
       translator: new ReportTranslator(),
     });

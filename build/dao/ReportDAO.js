@@ -33,7 +33,7 @@ var ReportDAO = function (_DAO) {
       navigationProperties: {
         devices: ['id', 'isDeleted', 'name'],
         locations: ['id', 'isDeleted', 'name'],
-        taps: ['id', 'isDeleted', 'name']
+        taps: ['id', 'isDeleted']
       },
       translator: new _ReportTranslator2.default()
     }));

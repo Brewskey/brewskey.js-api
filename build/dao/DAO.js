@@ -210,7 +210,7 @@ var DAO = function () {
   }, {
     key: '_resolve',
     value: function () {
-      var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(handler, params) {
+      var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
         var _this2 = this;
 
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
@@ -275,7 +275,7 @@ var DAO = function () {
         }, _callee, this, [[13, 21]]);
       }));
 
-      function _resolve(_x2, _x3) {
+      function _resolve(_x3, _x4) {
         return _ref4.apply(this, arguments);
       }
 
