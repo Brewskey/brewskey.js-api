@@ -30,14 +30,12 @@ var BeverageDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (BeverageDAO.__proto__ || Object.getPrototypeOf(BeverageDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.BEVERAGES,
-      selectExpandQuery: {
-        expand: {
-          availability: ['id', 'name'],
-          createdBy: ['id', 'userName'],
-          glass: ['id', 'name'],
-          srm: ['hex', 'id', 'name'],
-          style: ['id', 'name']
-        }
+      navigationProperties: {
+        availability: { select: ['id', 'name'] },
+        createdBy: { select: ['id', 'userName'] },
+        glass: { select: ['id', 'name'] },
+        srm: { select: ['hex', 'id', 'name'] },
+        style: { select: ['id', 'name'] }
       },
       translator: new _BeverageTranslator2.default()
     }));

@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _odata = require('odata');
 
@@ -23,6 +23,23 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ID_REG_EXP = /\bid\b/;
+
+var parseNavProp = function parseNavProp(_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+      name = _ref2[0],
+      navProp = _ref2[1];
+
+  var _ref3 = navProp,
+      expand = _ref3.expand,
+      select = _ref3.select;
+
+  var delimiter = select && expand ? ';' : '';
+  var selectString = select ? '$select=' + select.join(',') : '';
+
+  var expandString = expand ? delimiter + '$expand=' + Array.from(Object.entries(expand)).map(parseNavProp).join(',') : '';
+
+  return name + '(' + selectString + expandString + ')';
+};
 
 var BaseDAO = function () {
   function BaseDAO(config) {
@@ -73,33 +90,16 @@ var BaseDAO = function () {
     key: '__setupHandler',
     value: function __setupHandler(handler) {
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var shouldSelectExpand = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var shouldExpand = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       var shouldCount = queryOptions.shouldCount,
           skip = queryOptions.skip,
           take = queryOptions.take;
 
-      var selectExpandQuery = this.__config.selectExpandQuery;
-      if (shouldSelectExpand && selectExpandQuery) {
-        var expand = selectExpandQuery.expand,
-            select = selectExpandQuery.select;
 
-        if (select) {
-          handler.select(select.join(','));
-        }
-
-        if (expand) {
-          var navigationPropString = Object.entries(expand).map(function (_ref) {
-            var _ref2 = _slicedToArray(_ref, 2),
-                key = _ref2[0],
-                value = _ref2[1];
-
-            if (!value || !Array.isArray(value) || !value.length) {
-              return key;
-            }
-            return key + '($select=' + value.join(',') + ')';
-          }).join(',');
-          handler.expand(navigationPropString);
-        }
+      var navProps = this.__config.navigationProperties;
+      if (shouldExpand && navProps) {
+        var navPropsString = Array.from(Object.entries(navProps)).map(parseNavProp).join(',');
+        handler.expand(navPropsString);
       }
 
       if (Number.isInteger(skip)) {
@@ -152,10 +152,10 @@ var BaseDAO = function () {
       if (!queryOptions.filters || !queryOptions.filters.length) {
         return handler;
       }
-      var renderedFilters = queryOptions.filters.map(function (_ref3) {
-        var operator = _ref3.operator,
-            params = _ref3.params,
-            values = _ref3.values;
+      var renderedFilters = queryOptions.filters.map(function (_ref4) {
+        var operator = _ref4.operator,
+            params = _ref4.params,
+            values = _ref4.values;
 
         var isValidOperator = _constants.FILTER_FUNCTION_OPERATORS.find(function (op) {
           return op === operator;
@@ -200,7 +200,7 @@ var BaseDAO = function () {
   }, {
     key: '__resolveMany',
     value: function () {
-      var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
         var _this3 = this;
 
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
@@ -227,7 +227,7 @@ var BaseDAO = function () {
       }));
 
       function __resolveMany(_x8, _x9) {
-        return _ref4.apply(this, arguments);
+        return _ref5.apply(this, arguments);
       }
 
       return __resolveMany;
@@ -235,7 +235,7 @@ var BaseDAO = function () {
   }, {
     key: '__resolveManyIDs',
     value: function () {
-      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(handler, params) {
+      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(handler, params) {
         var idSelector = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (item) {
           return item.id;
         };
@@ -261,7 +261,7 @@ var BaseDAO = function () {
       }));
 
       function __resolveManyIDs(_x12, _x13) {
-        return _ref5.apply(this, arguments);
+        return _ref6.apply(this, arguments);
       }
 
       return __resolveManyIDs;
@@ -269,7 +269,7 @@ var BaseDAO = function () {
   }, {
     key: '__resolve',
     value: function () {
-      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(handler, params) {
+      var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(handler, params) {
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
         var request, resultHandler;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
@@ -317,7 +317,7 @@ var BaseDAO = function () {
       }));
 
       function __resolve(_x15, _x16) {
-        return _ref6.apply(this, arguments);
+        return _ref7.apply(this, arguments);
       }
 
       return __resolve;

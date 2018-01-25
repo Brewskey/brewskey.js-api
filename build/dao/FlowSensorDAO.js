@@ -30,10 +30,8 @@ var FlowSensorDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (FlowSensorDAO.__proto__ || Object.getPrototypeOf(FlowSensorDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.FLOW_SENSORS,
-      selectExpandQuery: {
-        expand: {
-          tap: ['id', 'name']
-        }
+      navigationProperties: {
+        tap: { select: ['id', 'isDeleted'] }
       },
       translator: new _DefaultTranslator2.default()
     }));

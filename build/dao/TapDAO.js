@@ -38,12 +38,14 @@ var TapDAO = function (_DAO) {
 
     var _this = _possibleConstructorReturn(this, (TapDAO.__proto__ || Object.getPrototypeOf(TapDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.TAPS,
-      selectExpandQuery: {
-        expand: {
-          device: ['id', 'isDeleted', 'name'],
-          location: ['id', 'isDeleted', 'name'],
-          organization: ['id', 'isDeleted', 'name']
-        }
+      navigationProperties: {
+        currentKeg: {
+          expand: { beverage: { select: ['id', 'name'] } },
+          select: ['id']
+        },
+        device: { select: ['id', 'isDeleted', 'name'] },
+        location: { select: ['id', 'isDeleted', 'name'] },
+        organization: { select: ['id', 'isDeleted', 'name'] }
       },
       translator: new _TapTranslator2.default()
     }));
