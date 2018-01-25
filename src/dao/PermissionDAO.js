@@ -9,15 +9,13 @@ class PermissionDAO extends DAO<Permission, PermissionMutator<*>> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.PERMISSIONS,
-      selectExpandQuery: {
-        expand: {
-          createdBy: ['id', 'userName'],
-          device: ['id', 'isDeleted', 'name'],
-          forUser: ['id', 'userName'],
-          location: ['id', 'isDeleted', 'name'],
-          organization: ['id', 'isDeleted', 'name'],
-          tap: ['id', 'isDeleted', 'name'],
-        },
+      navigationProperties: {
+        createdBy: { select: ['id', 'userName'] },
+        device: { select: ['id', 'isDeleted', 'name'] },
+        forUser: { select: ['id', 'userName'] },
+        location: { select: ['id', 'isDeleted', 'name'] },
+        organization: { select: ['id', 'isDeleted', 'name'] },
+        tap: { select: ['id', 'isDeleted'] },
       },
       translator: new PermissionTranslator(),
     });

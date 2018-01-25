@@ -9,10 +9,8 @@ class FlowSensorDAO extends DAO<FlowSensor, FlowSensorMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.FLOW_SENSORS,
-      selectExpandQuery: {
-        expand: {
-          tap: ['id', 'name'],
-        },
+      navigationProperties: {
+        tap: { select: ['id', 'isDeleted'] },
       },
       translator: new DefaultTranslator(),
     });

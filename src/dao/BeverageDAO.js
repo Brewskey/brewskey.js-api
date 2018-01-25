@@ -9,14 +9,12 @@ class BeverageDAO extends DAO<Beverage, BeverageMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.BEVERAGES,
-      selectExpandQuery: {
-        expand: {
-          availability: ['id', 'name'],
-          createdBy: ['id', 'userName'],
-          glass: ['id', 'name'],
-          srm: ['hex', 'id', 'name'],
-          style: ['id', 'name'],
-        },
+      navigationProperties: {
+        availability: { select: ['id', 'name'] },
+        createdBy: { select: ['id', 'userName'] },
+        glass: { select: ['id', 'name'] },
+        srm: { select: ['hex', 'id', 'name'] },
+        style: { select: ['id', 'name'] },
       },
       translator: new BeverageTranslator(),
     });

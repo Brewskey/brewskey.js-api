@@ -9,13 +9,11 @@ class DeviceDAO extends DAO<Device, DeviceMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.DEVICES,
-      selectExpandQuery: {
-        expand: {
-          createdBy: ['id', 'userName'],
-          lastEditedBy: ['id', 'userName'],
-          location: ['id', 'isDeleted', 'name'],
-          organization: ['id', 'isDeleted', 'name'],
-        },
+      navigationProperties: {
+        createdBy: { select: ['id', 'userName'] },
+        lastEditedBy: { select: ['id', 'userName'] },
+        location: { select: ['id', 'isDeleted', 'name'] },
+        organization: { select: ['id', 'isDeleted', 'name'] },
       },
       translator: new DeviceTranslator(),
     });

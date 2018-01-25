@@ -4,6 +4,7 @@ import type {
   Report,
   ReportMutator,
   ShortenedEntity,
+  ShortenedTap,
 } from '../index';
 
 import DefaultTranslator from './DefaultTranslator';
@@ -36,7 +37,7 @@ class ReportTranslator extends DefaultTranslator<Report, ReportMutator> {
       sendToEmails: sendToEmails.map(
         ({ email }: { email: string }): string => email,
       ),
-      tapIds: taps ? taps.map(({ id }: ShortenedEntity): EntityID => id) : [],
+      tapIds: taps ? taps.map(({ id }: ShortenedTap): EntityID => id) : [],
     };
   }
 

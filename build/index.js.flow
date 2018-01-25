@@ -28,7 +28,13 @@ export type EntityName =
   | 'schedules'
   | 'taps';
 
-export type ShortenedEntity = { id: EntityID, name: string };
+export type ShortenedEntity = {
+  id: EntityID,
+  isDeleted: boolean,
+  name: string,
+};
+
+export type ShortenedTap = { id: EntityID, isDeleted: boolean };
 
 export type Account = {
   accessFailedCount: ?number,
@@ -226,7 +232,7 @@ export type FlowSensor = {
   id: EntityID,
   isDeleted: boolean,
   pulsesPerGallon: number,
-  tap: ShortenedEntity,
+  tap: ShortenedTap,
 };
 
 export type FlowSensorMutator = {
@@ -276,7 +282,7 @@ export type Keg = {
   organization: ShortenedEntity,
   ounces: number,
   pulses: number,
-  tap: ?ShortenedEntity,
+  tap: ?ShortenedTap,
   tapDate: Date,
 };
 
@@ -374,7 +380,7 @@ export type Permission = {
   organization: ?ShortenedEntity,
   permissionType: PermissionType,
   startDate: ?Date,
-  tap: ?ShortenedEntity,
+  tap: ?ShortenedTap,
 };
 
 export type PermissionMutator<TEntity> = {
@@ -397,7 +403,7 @@ export type Pour = {
   owner: { id: EntityID, userName: string },
   pourDate: string,
   pulses: number,
-  tap: ?ShortenedEntity,
+  tap: ?ShortenedTap,
 };
 
 export type Report = {
@@ -411,7 +417,7 @@ export type Report = {
   reportCadence: ReportCadence,
   reportCadenceTimeStamp: Date,
   sendToEmails: Array<string>,
-  taps: Array<ShortenedEntity>,
+  taps: Array<ShortenedTap>,
 };
 
 export type ReportMutator = {
@@ -422,7 +428,7 @@ export type ReportMutator = {
   reportCadence: ReportCadence,
   reportCadenceTimeStamp: Date,
   sendToEmails: Array<{ email: string }>,
-  taps?: Array<ShortenedEntity>,
+  taps?: Array<ShortenedTap>,
 };
 
 export type ReportCadence =
@@ -487,6 +493,7 @@ export type Style = {
 
 export type Tap = {
   createdDate: Date,
+  currentKeg: { beverage: { id: string, name: string }, id: string },
   description: ?string,
   device: ShortenedEntity,
   disableBadges: boolean,
@@ -494,7 +501,6 @@ export type Tap = {
   hideStats: boolean,
   id: EntityID,
   location: ?ShortenedEntity,
-  name: string,
   organization: ShortenedEntity,
   requiresPourPrivilege: boolean,
 };
@@ -507,7 +513,6 @@ export type TapMutator = {
   hideStats: boolean,
   id: ?EntityID,
   locationId: ?EntityID,
-  name: string,
   requiresPourPrivilege: boolean,
 };
 
@@ -591,14 +596,16 @@ export type QueryOptions = {
   take?: number,
 };
 
-export type SelectExpandQuery<TEntity> = {|
-  expand?: { [key: $Keys<TEntity>]: Array<string> },
-  select?: Array<$Keys<TEntity>>,
-|};
+export type NavigationProperties = {
+  [key: string]: {
+    expand?: NavigationProperties,
+    select?: Array<string>,
+  },
+};
 
 export type DAOConfig<TEntity, TEntityMutator> = {|
   entityName: EntityName,
-  selectExpandQuery?: SelectExpandQuery<TEntity>,
+  navigationProperties?: NavigationProperties,
   translator: DAOTranslator<TEntity, TEntityMutator>,
 |};
 

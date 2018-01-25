@@ -38,10 +38,8 @@ var FriendDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (FriendDAO.__proto__ || Object.getPrototypeOf(FriendDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.FRIENDS,
-      selectExpandQuery: {
-        expand: {
-          friendAccount: ['id', 'phoneNumber', 'userName']
-        }
+      navigationProperties: {
+        friendAccount: { select: ['id', 'phoneNumber', 'userName'] }
       },
       translator: new _DefaultTranslator2.default()
     }));

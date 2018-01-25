@@ -15,6 +15,20 @@ import { FILTER_FUNCTION_OPERATORS } from '../constants';
 
 const ID_REG_EXP = /\bid\b/;
 
+const parseNavProp = ([name, navProp]: [string, mixed]): string => {
+  const { expand, select } = (navProp: any);
+  const delimiter = select && expand ? ';' : '';
+  const selectString = select ? `$select=${select.join(',')}` : '';
+
+  const expandString = expand
+    ? `${delimiter}$expand=${Array.from(Object.entries(expand))
+        .map(parseNavProp)
+        .join(',')}`
+    : '';
+
+  return `${name}(${selectString}${expandString})`;
+};
+
 class BaseDAO<TEntity, TEntityMutator> {
   static _organizationID: ?EntityID = null;
   __config: DAOConfig<TEntity, TEntityMutator>;
@@ -52,27 +66,16 @@ class BaseDAO<TEntity, TEntityMutator> {
   __setupHandler(
     handler: oHandler<TEntity>,
     queryOptions?: QueryOptions = {},
-    shouldSelectExpand: boolean = true,
+    shouldExpand: boolean = true,
   ): oHandler<TEntity> {
     const { shouldCount, skip, take } = queryOptions;
-    const selectExpandQuery = this.__config.selectExpandQuery;
-    if (shouldSelectExpand && selectExpandQuery) {
-      const { expand, select } = selectExpandQuery;
-      if (select) {
-        handler.select(select.join(','));
-      }
 
-      if (expand) {
-        const navigationPropString = Object.entries(expand)
-          .map(([key, value]: [string, mixed]): string => {
-            if (!value || !Array.isArray(value) || !value.length) {
-              return key;
-            }
-            return `${key}($select=${value.join(',')})`;
-          })
-          .join(',');
-        handler.expand(navigationPropString);
-      }
+    const navProps = this.__config.navigationProperties;
+    if (shouldExpand && navProps) {
+      const navPropsString = Array.from(Object.entries(navProps))
+        .map(parseNavProp)
+        .join(',');
+      handler.expand(navPropsString);
     }
 
     if (Number.isInteger(skip)) {

@@ -16,10 +16,8 @@ class FriendDAO extends DAO<Friend, Friend> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.FRIENDS,
-      selectExpandQuery: {
-        expand: {
-          friendAccount: ['id', 'phoneNumber', 'userName'],
-        },
+      navigationProperties: {
+        friendAccount: { select: ['id', 'phoneNumber', 'userName'] },
       },
       translator: new DefaultTranslator(),
     });

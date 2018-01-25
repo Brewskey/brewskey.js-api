@@ -30,14 +30,12 @@ var PourDAO = function (_DAO) {
 
     return _possibleConstructorReturn(this, (PourDAO.__proto__ || Object.getPrototypeOf(PourDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.POURS,
-      selectExpandQuery: {
-        expand: {
-          beverage: ['id', 'isDeleted', 'name'],
-          location: ['id', 'isDeleted', 'name'],
-          organization: ['id', 'isDeleted', 'name'],
-          owner: ['id', 'userName'],
-          tap: ['id', 'isDeleted', 'name']
-        }
+      navigationProperties: {
+        beverage: { select: ['id', 'isDeleted', 'name'] },
+        location: { select: ['id', 'isDeleted', 'name'] },
+        organization: { select: ['id', 'isDeleted', 'name'] },
+        owner: { select: ['id', 'userName'] },
+        tap: { select: ['id', 'isDeleted'] }
       },
       translator: new _PourTranslator2.default()
     }));
