@@ -61,7 +61,7 @@ var BaseDAO = function () {
     };
 
     this.__reformatQueryValue = function (value) {
-      return typeof value === 'string' ? '\'' + value + '\'' : value;
+      return typeof value === 'string' ? '\'' + escape(value) + '\'' : value;
     };
 
     this.__config = config;
