@@ -111,7 +111,7 @@ class DAO<TEntity, TEntityMutator> {
     isNaN(value) || value === '' ? `'${value}'` : value;
 
   __reformatQueryValue = (value: string | number): string | number =>
-    typeof value === 'string' ? `'${escape(value)}'` : value;
+    typeof value === 'string' ? `'${encodeURIComponent(value)}'` : value;
 
   _buildHandler(queryOptions?: QueryOptions = {}): oHandler<TEntity> {
     const { count, skip, take } = queryOptions;
