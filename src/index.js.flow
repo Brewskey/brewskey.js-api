@@ -196,6 +196,24 @@ export type DeviceStatus = 'Active' | 'Cleaning' | 'Inactive' | 'Unlocked';
 
 export type DeviceType = 'BrewskeyBox' | 'Onsite';
 
+export type ParticleAttributes = {
+  cellular: ?string,
+  connected: boolean,
+  currentBuildTarget: ?string,
+  functions: Array<string>,
+  id: string,
+  imei: ?string,
+  lastApp: ?string,
+  lastHeard: Date,
+  lastIccid: ?string,
+  lastIpAddress: string,
+  name: string,
+  platformId: number,
+  productFirmwareVersion: number,
+  productId: number,
+  status: string,
+};
+
 export type Device = {
   createdBy: { id: EntityID, userName: string },
   deviceStatus: DeviceStatus,
@@ -658,7 +676,9 @@ declare class brewskey$AvailabilityDAO extends DAO<
   Availability,
 > {}
 declare class brewskey$BeverageDAO extends DAO<Beverage, BeverageMutator> {}
-declare class brewskey$DeviceDAO extends DAO<Device, DeviceMutator> {}
+declare class brewskey$DeviceDAO extends DAO<Device, DeviceMutator> {
+  fetchParticleAttributes(deviceID: EntityID): LoadObject<ParticleAttributes>;
+}
 declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
 declare class brewskey$FlowSensorDAO extends DAO<
   FlowSensor,

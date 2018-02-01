@@ -148,7 +148,7 @@ var DAO = function (_BaseDAO) {
             if (entity) {
               _this6._updateCacheForEntity(entity);
             } else {
-              _this6._updateCacheForError(id, new Error('Could not load ' + _this6.getEntityName() + ' ' + id));
+              _this6._updateCacheForError(id, new Error('Could not load ' + _this6.getEntityName() + ' ' + id.toString()));
             }
           });
 

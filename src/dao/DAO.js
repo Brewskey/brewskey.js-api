@@ -129,14 +129,16 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
             ]),
           );
 
-          idsToLoad.forEach((id: string) => {
+          idsToLoad.forEach((id: EntityID) => {
             const entity = entitiesByID.get(id);
             if (entity) {
               this._updateCacheForEntity(entity);
             } else {
               this._updateCacheForError(
                 id,
-                new Error(`Could not load ${this.getEntityName()} ${id}`),
+                new Error(
+                  `Could not load ${this.getEntityName()} ${id.toString()}`,
+                ),
               );
             }
           });
