@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _DAO2 = require('./DAO');
 
 var _DAO3 = _interopRequireDefault(_DAO2);
@@ -28,7 +30,7 @@ var DeviceDAO = function (_DAO) {
   function DeviceDAO() {
     _classCallCheck(this, DeviceDAO);
 
-    return _possibleConstructorReturn(this, (DeviceDAO.__proto__ || Object.getPrototypeOf(DeviceDAO)).call(this, {
+    var _this = _possibleConstructorReturn(this, (DeviceDAO.__proto__ || Object.getPrototypeOf(DeviceDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.DEVICES,
       navigationProperties: {
         createdBy: { select: ['id', 'userName'] },
@@ -38,7 +40,23 @@ var DeviceDAO = function (_DAO) {
       },
       translator: new _DeviceTranslator2.default()
     }));
+
+    _this.fetchParticleAttributes = _this.fetchParticleAttributes.bind(_this);
+    return _this;
   }
+
+  _createClass(DeviceDAO, [{
+    key: 'fetchParticleAttributes',
+    value: function fetchParticleAttributes(deviceID) {
+      var funcString = 'Default.particleAttributes()';
+      var stringifiedID = deviceID.toString();
+
+      var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID));
+      handler.func(funcString);
+
+      return this.__fetchCustom(handler, {}, '' + funcString + deviceID);
+    }
+  }]);
 
   return DeviceDAO;
 }(_DAO3.default);

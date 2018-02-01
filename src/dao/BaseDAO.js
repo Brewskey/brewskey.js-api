@@ -223,8 +223,8 @@ class BaseDAO<TEntity, TEntityMutator> {
         request = handler.get();
       }
     }
-    const resultHandler = await request;
-    return resultHandler;
+
+    return request;
   }
 }
 

@@ -1,5 +1,12 @@
 // @flow
-import type { Device, DeviceMutator } from '../index';
+
+import type {
+  Device,
+  DeviceMutator,
+  EntityID,
+  ParticleAttributes,
+} from '../index';
+import type LoadObject from '../LoadObject';
 
 import DAO from './DAO';
 import { DAO_ENTITIES } from '../constants';
@@ -17,6 +24,18 @@ class DeviceDAO extends DAO<Device, DeviceMutator> {
       },
       translator: new DeviceTranslator(),
     });
+  }
+
+  fetchParticleAttributes(deviceID: EntityID): LoadObject<ParticleAttributes> {
+    const funcString = 'Default.particleAttributes()';
+    const stringifiedID = deviceID.toString();
+
+    const handler = this.__buildHandler({}, false).find(
+      this.__reformatIDValue(stringifiedID),
+    );
+    handler.func(funcString);
+
+    return this.__fetchCustom(handler, {}, `${funcString}${deviceID}`);
   }
 }
 

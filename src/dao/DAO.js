@@ -129,14 +129,16 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
             ]),
           );
 
-          stringifiedIds.forEach((id: string) => {
+          idsToLoad.forEach((id: EntityID) => {
             const entity = entitiesByID.get(id);
             if (entity) {
               this._updateCacheForEntity(entity);
             } else {
               this._updateCacheForError(
                 id,
-                new Error(`Could not load ${this.getEntityName()} ${id}`),
+                new Error(
+                  `Could not load ${this.getEntityName()} ${id.toString()}`,
+                ),
               );
             }
           });
@@ -357,7 +359,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this._emitChanges();
         })
         .catch((error: Error) => {
-          this._customLoaderByQuery.set(cacheKey, LoadObject.withValue(error));
+          this._customLoaderByQuery.set(cacheKey, LoadObject.withError(error));
           this._emitChanges();
         });
     }

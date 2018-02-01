@@ -143,12 +143,12 @@ var DAO = function (_BaseDAO) {
             return [item.id, item];
           }));
 
-          stringifiedIds.forEach(function (id) {
+          idsToLoad.forEach(function (id) {
             var entity = entitiesByID.get(id);
             if (entity) {
               _this6._updateCacheForEntity(entity);
             } else {
-              _this6._updateCacheForError(id, new Error('Could not load ' + _this6.getEntityName() + ' ' + id));
+              _this6._updateCacheForError(id, new Error('Could not load ' + _this6.getEntityName() + ' ' + id.toString()));
             }
           });
 
@@ -337,7 +337,7 @@ var DAO = function (_BaseDAO) {
           _this12._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.data));
           _this12._emitChanges();
         }).catch(function (error) {
-          _this12._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(error));
+          _this12._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withError(error));
           _this12._emitChanges();
         });
       }
