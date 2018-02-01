@@ -35,7 +35,7 @@ class DeviceDAO extends DAO<Device, DeviceMutator> {
     );
     handler.func(funcString);
 
-    return this.__fetchCustom(handler, {}, funcString);
+    return this.__fetchCustom(handler, {}, `${funcString}${deviceID}`);
   }
 }
 
