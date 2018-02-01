@@ -143,7 +143,7 @@ var DAO = function (_BaseDAO) {
             return [item.id, item];
           }));
 
-          stringifiedIds.forEach(function (id) {
+          idsToLoad.forEach(function (id) {
             var entity = entitiesByID.get(id);
             if (entity) {
               _this6._updateCacheForEntity(entity);

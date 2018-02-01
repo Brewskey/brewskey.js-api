@@ -129,7 +129,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
             ]),
           );
 
-          stringifiedIds.forEach((id: string) => {
+          idsToLoad.forEach((id: string) => {
             const entity = entitiesByID.get(id);
             if (entity) {
               this._updateCacheForEntity(entity);
