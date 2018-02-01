@@ -271,7 +271,7 @@ var BaseDAO = function () {
     value: function () {
       var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(handler, params) {
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
-        var request, resultHandler;
+        var request;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
@@ -301,14 +301,9 @@ var BaseDAO = function () {
                 request = handler.get();
 
               case 13:
-                _context3.next = 15;
-                return request;
+                return _context3.abrupt('return', request);
 
-              case 15:
-                resultHandler = _context3.sent;
-                return _context3.abrupt('return', resultHandler);
-
-              case 17:
+              case 14:
               case 'end':
                 return _context3.stop();
             }

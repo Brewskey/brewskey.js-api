@@ -337,7 +337,7 @@ var DAO = function (_BaseDAO) {
           _this12._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.data));
           _this12._emitChanges();
         }).catch(function (error) {
-          _this12._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(error));
+          _this12._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withError(error));
           _this12._emitChanges();
         });
       }

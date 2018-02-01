@@ -359,7 +359,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this._emitChanges();
         })
         .catch((error: Error) => {
-          this._customLoaderByQuery.set(cacheKey, LoadObject.withValue(error));
+          this._customLoaderByQuery.set(cacheKey, LoadObject.withError(error));
           this._emitChanges();
         });
     }
