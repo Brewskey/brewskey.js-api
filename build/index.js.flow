@@ -511,7 +511,12 @@ export type Style = {
 
 export type Tap = {
   createdDate: Date,
-  currentKeg: { beverage: { id: string, name: string }, id: string },
+  currentKeg: {
+    beverage: { id: string, name: string },
+    id: string,
+    maxOunces: number,
+    ounces: number,
+  },
   description: ?string,
   device: ShortenedEntity,
   disableBadges: boolean,

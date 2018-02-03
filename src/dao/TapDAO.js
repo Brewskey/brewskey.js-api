@@ -20,7 +20,7 @@ class TapDAO extends DAO<Tap, TapMutator> {
       navigationProperties: {
         currentKeg: {
           expand: { beverage: { select: ['id', 'name'] } },
-          select: ['id'],
+          select: ['id', 'maxOunces', 'ounces'],
         },
         device: { select: ['id', 'isDeleted', 'name'] },
         location: { select: ['id', 'isDeleted', 'name'] },
