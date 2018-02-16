@@ -29,16 +29,30 @@ const parseNavProp = ([name, navProp]: [string, mixed]): string => {
   return `${name}(${selectString}${expandString})`;
 };
 
+type ErrorHandler = (error: Error) => void;
+
 class BaseDAO<TEntity, TEntityMutator> {
   static _organizationID: ?EntityID = null;
+  static _errorHandlers: Array<ErrorHandler> = [];
+
+  static setOrganizationID(organizationID: ?EntityID) {
+    BaseDAO._organizationID = organizationID;
+  }
+
+  static onError = (handler: ErrorHandler) => {
+    BaseDAO._errorHandlers.push(handler);
+  };
+
+  static __handleError = (error: Error) => {
+    BaseDAO._errorHandlers.forEach((handler: ErrorHandler): void =>
+      handler(error),
+    );
+  };
+
   __config: DAOConfig<TEntity, TEntityMutator>;
 
   constructor(config: DAOConfig<TEntity, TEntityMutator>) {
     this.__config = config;
-  }
-
-  static setOrganizationID(organizationID: ?EntityID) {
-    BaseDAO._organizationID = organizationID;
   }
 
   getEntityName(): EntityName {

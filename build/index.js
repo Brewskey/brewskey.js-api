@@ -178,6 +178,7 @@ exports.default = {
   fetch: _fetch2.default,
   getHeaders: getHeaders,
   initializeDAOApi: initializeDAOApi,
+  onError: _DAO2.default.onError,
   setHeaders: setHeaders,
   setOrganizationID: setOrganizationID
 };

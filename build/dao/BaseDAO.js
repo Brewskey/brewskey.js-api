@@ -42,6 +42,13 @@ var parseNavProp = function parseNavProp(_ref) {
 };
 
 var BaseDAO = function () {
+  _createClass(BaseDAO, null, [{
+    key: 'setOrganizationID',
+    value: function setOrganizationID(organizationID) {
+      BaseDAO._organizationID = organizationID;
+    }
+  }]);
+
   function BaseDAO(config) {
     _classCallCheck(this, BaseDAO);
 
@@ -317,15 +324,22 @@ var BaseDAO = function () {
 
       return __resolve;
     }()
-  }], [{
-    key: 'setOrganizationID',
-    value: function setOrganizationID(organizationID) {
-      BaseDAO._organizationID = organizationID;
-    }
   }]);
 
   return BaseDAO;
 }();
 
 BaseDAO._organizationID = null;
+BaseDAO._errorHandlers = [];
+
+BaseDAO.onError = function (handler) {
+  BaseDAO._errorHandlers.push(handler);
+};
+
+BaseDAO.__handleError = function (error) {
+  BaseDAO._errorHandlers.forEach(function (handler) {
+    return handler(error);
+  });
+};
+
 exports.default = BaseDAO;

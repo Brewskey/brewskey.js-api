@@ -35,9 +35,10 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._flushQueryCaches();
         this._emitChanges();
       })
-      .catch((error: Error): void =>
-        this._updateCacheForError(stringifiedID, error),
-      );
+      .catch((error: Error) => {
+        BaseDAO.__handleError(error);
+        this._updateCacheForError(stringifiedID, error);
+      });
   }
 
   count(queryOptions?: QueryOptions): LoadObject<number> {
@@ -73,6 +74,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this._emitChanges();
         })
         .catch((error: Error) => {
+          BaseDAO.__handleError(error);
           const loader = this._countLoaderByQuery.get(cacheKey);
           this._countLoaderByQuery.set(
             cacheKey,
@@ -94,9 +96,10 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       )
         .then((result: TEntity): void => this._updateCacheForEntity(result))
-        .catch((error: Error): void =>
-          this._updateCacheForError(stringifiedID, error),
-        );
+        .catch((error: Error) => {
+          BaseDAO.__handleError(error);
+          this._updateCacheForError(stringifiedID, error);
+        });
     }
 
     return nullthrows(this._entityLoaderByID.get(stringifiedID));
@@ -146,6 +149,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this._emitChanges();
         })
         .catch((error: Error) => {
+          BaseDAO.__handleError(error);
           stringifiedIds.forEach((id: EntityID): void =>
             this._updateCacheForError(id, error, false),
           );
@@ -185,6 +189,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this.fetchByIDs(stringifiedIds);
         })
         .catch((error: Error) => {
+          BaseDAO.__handleError(error);
           const loader = this._entityIDsLoaderByQuery.get(cacheKey);
           this._entityIDsLoaderByQuery.set(
             cacheKey,
@@ -231,9 +236,10 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._flushQueryCaches();
         this._updateCacheForEntity(result);
       })
-      .catch((error: Error): void =>
-        this._updateCacheForError(stringifiedID, error),
-      );
+      .catch((error: Error) => {
+        BaseDAO.__handleError(error);
+        this._updateCacheForError(stringifiedID, error);
+      });
   }
 
   post(mutator: TEntityMutator): EntityID {
@@ -256,6 +262,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._emitChanges();
       })
       .catch((error: Error) => {
+        BaseDAO.__handleError(error);
         this._entityLoaderByID.set(clientID, LoadObject.withError(error));
         this._emitChanges();
       });
@@ -277,9 +284,10 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       .then((result: TEntity) => {
         this._updateCacheForEntity(result);
       })
-      .catch((error: Error): void =>
-        this._updateCacheForError(stringifiedID, error),
-      );
+      .catch((error: Error) => {
+        BaseDAO.__handleError(error);
+        this._updateCacheForError(stringifiedID, error);
+      });
   }
 
   subscribe(handler: () => void) {
@@ -359,6 +367,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this._emitChanges();
         })
         .catch((error: Error) => {
+          BaseDAO.__handleError(error);
           this._customLoaderByQuery.set(cacheKey, LoadObject.withError(error));
           this._emitChanges();
         });

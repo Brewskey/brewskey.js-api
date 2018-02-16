@@ -103,6 +103,7 @@ export default {
   fetch,
   getHeaders,
   initializeDAOApi,
+  onError: BaseDAO.onError,
   setHeaders,
   setOrganizationID,
 };
