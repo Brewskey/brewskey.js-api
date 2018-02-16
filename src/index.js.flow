@@ -778,6 +778,7 @@ type DAOApi = {
   fetch(path: string, init: ?Object): Promise<*>,
   getHeaders(): Headers,
   initializeDAOApi(config: OConfig): void,
+  onError(handler: (error: Error) => void): void,
   setHeaders(headers: Headers): void,
   setOrganizationID(organizationID: ?EntityID): void,
 };

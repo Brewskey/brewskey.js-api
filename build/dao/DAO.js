@@ -61,7 +61,8 @@ var DAO = function (_BaseDAO) {
         _this2._flushQueryCaches();
         _this2._emitChanges();
       }).catch(function (error) {
-        return _this2._updateCacheForError(stringifiedID, error);
+        _BaseDAO3.default.__handleError(error);
+        _this2._updateCacheForError(stringifiedID, error);
       });
     }
   }, {
@@ -93,6 +94,7 @@ var DAO = function (_BaseDAO) {
           _this4._countLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.inlinecount));
           _this4._emitChanges();
         }).catch(function (error) {
+          _BaseDAO3.default.__handleError(error);
           var loader = _this4._countLoaderByQuery.get(cacheKey);
           _this4._countLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
           _this4._emitChanges();
@@ -113,7 +115,8 @@ var DAO = function (_BaseDAO) {
         this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID))).then(function (result) {
           return _this5._updateCacheForEntity(result);
         }).catch(function (error) {
-          return _this5._updateCacheForError(stringifiedID, error);
+          _BaseDAO3.default.__handleError(error);
+          _this5._updateCacheForError(stringifiedID, error);
         });
       }
 
@@ -154,6 +157,7 @@ var DAO = function (_BaseDAO) {
 
           _this6._emitChanges();
         }).catch(function (error) {
+          _BaseDAO3.default.__handleError(error);
           stringifiedIds.forEach(function (id) {
             return _this6._updateCacheForError(id, error, false);
           });
@@ -186,6 +190,7 @@ var DAO = function (_BaseDAO) {
           _this7._emitChanges();
           _this7.fetchByIDs(stringifiedIds);
         }).catch(function (error) {
+          _BaseDAO3.default.__handleError(error);
           var loader = _this7._entityIDsLoaderByQuery.get(cacheKey);
           _this7._entityIDsLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
           _this7._emitChanges();
@@ -226,7 +231,8 @@ var DAO = function (_BaseDAO) {
         _this8._flushQueryCaches();
         _this8._updateCacheForEntity(result);
       }).catch(function (error) {
-        return _this8._updateCacheForError(stringifiedID, error);
+        _BaseDAO3.default.__handleError(error);
+        _this8._updateCacheForError(stringifiedID, error);
       });
     }
   }, {
@@ -244,6 +250,7 @@ var DAO = function (_BaseDAO) {
         _this9._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this9._entityLoaderByID.get(result.id)));
         _this9._emitChanges();
       }).catch(function (error) {
+        _BaseDAO3.default.__handleError(error);
         _this9._entityLoaderByID.set(clientID, _LoadObject2.default.withError(error));
         _this9._emitChanges();
       });
@@ -262,7 +269,8 @@ var DAO = function (_BaseDAO) {
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
         _this10._updateCacheForEntity(result);
       }).catch(function (error) {
-        return _this10._updateCacheForError(stringifiedID, error);
+        _BaseDAO3.default.__handleError(error);
+        _this10._updateCacheForError(stringifiedID, error);
       });
     }
   }, {
@@ -337,6 +345,7 @@ var DAO = function (_BaseDAO) {
           _this12._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.data));
           _this12._emitChanges();
         }).catch(function (error) {
+          _BaseDAO3.default.__handleError(error);
           _this12._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withError(error));
           _this12._emitChanges();
         });
