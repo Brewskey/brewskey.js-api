@@ -215,6 +215,16 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     this._emitChanges();
   }
 
+  flushCacheForEntity(entityID: EntityID) {
+    this._entityLoaderByID.delete(entityID);
+    this._emitChanges();
+  }
+
+  flushCustomCache() {
+    this._customLoaderByQuery = new Map();
+    this._emitChanges();
+  }
+
   flushQueryCaches() {
     this._flushQueryCaches();
     this._emitChanges();
