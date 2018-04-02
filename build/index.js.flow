@@ -663,6 +663,8 @@ declare export class DAO<
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntity>>>;
   flushCache(): void;
+  flushCacheForEntity(entityID: EntityID): void;
+  flushCustomCache(): void;
   flushQueryCaches(): void;
   patch(id: EntityID, params: TEntityMutator): void;
   post(params: TEntityMutator): EntityID;
