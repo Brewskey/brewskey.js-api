@@ -55,7 +55,7 @@ var DAO = function (_BaseDAO) {
       this._entityLoaderByID.set(stringifiedID, entity.deleting());
       this._emitChanges();
 
-      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
+      return this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       /* params */{}, 'delete').then(function () {
         _this2._entityLoaderByID.delete(id);
         _this2._flushQueryCaches();

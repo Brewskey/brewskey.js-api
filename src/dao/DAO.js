@@ -18,14 +18,14 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
   _subscriptions: Set<() => void> = new Set();
 
-  deleteByID(id: EntityID) {
+  deleteByID(id: EntityID): Promise<void> {
     const stringifiedID = id.toString();
     const entity =
       this._entityLoaderByID.get(stringifiedID) || LoadObject.empty();
     this._entityLoaderByID.set(stringifiedID, entity.deleting());
     this._emitChanges();
 
-    this.__resolveSingle(
+    return this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       /* params */ {},
       'delete',

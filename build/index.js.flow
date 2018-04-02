@@ -653,7 +653,7 @@ declare export class DAO<
   TEntityMutator,
 > extends BaseDAO<TEntity, TEntityMutator> {
   count(queryOptions?: QueryOptions): LoadObject<number>;
-  deleteByID(id: EntityID): void;
+  deleteByID(id: EntityID): Promise<void>;
   fetchByID(id: EntityID): LoadObject<TEntity>;
   fetchByIDs(
     ids: Array<string>,
