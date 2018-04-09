@@ -351,11 +351,16 @@ export type Style = {
   srmMax: number,
   srmMin: number,
   updateDate: Date,
-};
+}
 
 export type Tap = {
   createdDate: Date,
-  currentKeg: { beverage: { id: string, name: string }, id: string },
+  currentKeg: {
+    beverage: { id: string, name: string },
+    id: string,
+    maxOunces: number,
+    ounces: number,
+  },
   description: ?string,
   device: ShortenedEntity,
   disableBadges: boolean,
@@ -545,4 +550,4 @@ declare export var CADENCE_MAP: { [ReportCadence]: number };
 declare export var DAO_ENTITIES: { [string]: EntityName };
 declare export var PERMISSIONS_MAP: { [PermissionType]: number };
 
-declare export default DAOApi
+declare export default DAOApi;
