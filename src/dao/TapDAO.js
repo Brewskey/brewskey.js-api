@@ -20,7 +20,7 @@ class TapDAO extends DAO<Tap, TapMutator> {
       navigationProperties: {
         currentKeg: {
           expand: { beverage: { select: ['id', 'name'] } },
-          select: ['id', 'maxOunces', 'ounces'],
+          select: ['id', 'kegType', 'maxOunces', 'ounces'],
         },
         device: { select: ['id', 'isDeleted', 'name'] },
         location: { select: ['id', 'isDeleted', 'name'] },
@@ -33,7 +33,7 @@ class TapDAO extends DAO<Tap, TapMutator> {
   countLeaderboard(
     tapID: EntityID,
     duration: string,
-    queryOptions?: QueryOptions,
+    queryOptions?: QueryOptions
   ): LoadObject<number> {
     const funcString = `Default.leaderboard(timeSpan=duration'${duration}')`;
     const stringifiedID = tapID.toString();
@@ -45,27 +45,27 @@ class TapDAO extends DAO<Tap, TapMutator> {
             ...queryOptions,
             ...countQueryOptions,
           },
-          false,
+          false
         ).find(this.__reformatIDValue(stringifiedID));
         handler.func(funcString);
 
         return handler;
       },
       queryOptions,
-      funcString,
+      funcString
     );
   }
 
   fetchLeaderboard(
     tapID: EntityID,
     duration: string,
-    queryOptions?: QueryOptions,
+    queryOptions?: QueryOptions
   ): LoadObject<Array<LeaderboardItem>> {
     const funcString = `Default.leaderboard(timeSpan=duration'${duration}')`;
     const stringifiedID = tapID.toString();
 
     const handler = this.__buildHandler(queryOptions, false).find(
-      this.__reformatIDValue(stringifiedID),
+      this.__reformatIDValue(stringifiedID)
     );
     handler.func(funcString);
 

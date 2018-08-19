@@ -41,7 +41,7 @@ var TapDAO = function (_DAO) {
       navigationProperties: {
         currentKeg: {
           expand: { beverage: { select: ['id', 'name'] } },
-          select: ['id', 'maxOunces', 'ounces']
+          select: ['id', 'kegType', 'maxOunces', 'ounces']
         },
         device: { select: ['id', 'isDeleted', 'name'] },
         location: { select: ['id', 'isDeleted', 'name'] },
