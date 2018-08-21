@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.FRIEND_STATUSES = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _DAO2 = require('./DAO');
 
 var _DAO3 = _interopRequireDefault(_DAO2);
@@ -14,6 +16,10 @@ var _constants = require('../constants');
 var _DefaultTranslator = require('../translators/DefaultTranslator');
 
 var _DefaultTranslator2 = _interopRequireDefault(_DefaultTranslator);
+
+var _fetch = require('../fetch');
+
+var _fetch2 = _interopRequireDefault(_fetch);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36,14 +42,28 @@ var FriendDAO = function (_DAO) {
   function FriendDAO() {
     _classCallCheck(this, FriendDAO);
 
-    return _possibleConstructorReturn(this, (FriendDAO.__proto__ || Object.getPrototypeOf(FriendDAO)).call(this, {
+    var _this = _possibleConstructorReturn(this, (FriendDAO.__proto__ || Object.getPrototypeOf(FriendDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.FRIENDS,
       navigationProperties: {
         friendAccount: { select: ['id', 'phoneNumber', 'userName'] }
       },
       translator: new _DefaultTranslator2.default()
     }));
+
+    _this.addFriend = _this.addFriend.bind(_this);
+    return _this;
   }
+
+  _createClass(FriendDAO, [{
+    key: 'addFriend',
+    value: function addFriend(userNameOrEmail) {
+      return (0, _fetch2.default)('friends/Default.addByUserName()/', {
+        body: JSON.stringify({ userName: userNameOrEmail }),
+        headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }],
+        method: 'post'
+      });
+    }
+  }]);
 
   return FriendDAO;
 }(_DAO3.default);
