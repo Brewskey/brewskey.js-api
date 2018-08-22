@@ -276,6 +276,11 @@ export type Friend = {
   },
   friendStatus: FriendStatus,
   id: EntityID,
+  owningAccount: {
+    id: EntityID,
+    phoneNumber: string,
+    userName: string,
+  },
 };
 
 export type Glass = {

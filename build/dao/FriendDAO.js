@@ -45,7 +45,8 @@ var FriendDAO = function (_DAO) {
     var _this = _possibleConstructorReturn(this, (FriendDAO.__proto__ || Object.getPrototypeOf(FriendDAO)).call(this, {
       entityName: _constants.DAO_ENTITIES.FRIENDS,
       navigationProperties: {
-        friendAccount: { select: ['id', 'phoneNumber', 'userName'] }
+        friendAccount: { select: ['id', 'phoneNumber', 'userName'] },
+        owningAccount: { select: ['id', 'phoneNumber', 'userName'] }
       },
       translator: new _DefaultTranslator2.default()
     }));
