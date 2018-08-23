@@ -271,14 +271,12 @@ export type Friend = {
   createdDate: Date,
   friendAccount: {
     id: EntityID,
-    phoneNumber: string,
     userName: string,
   },
   friendStatus: FriendStatus,
   id: EntityID,
   owningAccount: {
     id: EntityID,
-    phoneNumber: string,
     userName: string,
   },
 };
