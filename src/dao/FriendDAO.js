@@ -18,8 +18,8 @@ class FriendDAO extends DAO<Friend, Friend> {
     super({
       entityName: DAO_ENTITIES.FRIENDS,
       navigationProperties: {
-        friendAccount: { select: ['id', 'phoneNumber', 'userName'] },
-        owningAccount: { select: ['id', 'phoneNumber', 'userName'] },
+        friendAccount: { select: ['id', 'userName'] },
+        owningAccount: { select: ['id', 'userName'] },
       },
       translator: new DefaultTranslator(),
     });

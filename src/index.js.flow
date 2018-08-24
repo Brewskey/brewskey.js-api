@@ -271,14 +271,12 @@ export type Friend = {
   createdDate: Date,
   friendAccount: {
     id: EntityID,
-    phoneNumber: string,
     userName: string,
   },
   friendStatus: FriendStatus,
   id: EntityID,
   owningAccount: {
     id: EntityID,
-    phoneNumber: string,
     userName: string,
   },
 };
@@ -702,7 +700,9 @@ declare class brewskey$FlowSensorDAO extends DAO<
   FlowSensor,
   FlowSensorMutator,
 > {}
-declare class brewskey$FriendDAO extends DAO<Friend, Friend> {}
+declare class brewskey$FriendDAO extends DAO<Friend, Friend> {
+  addFriend(userNameOrEmail: string): Promise<any>;
+}
 declare class brewskey$KegDAO extends DAO<Keg, KegMutator> {
   fetchKegByTapID(tapId: string): LoadObject<Array<LoadObject<Keg>>>;
 }
