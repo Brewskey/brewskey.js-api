@@ -127,6 +127,15 @@ var setHeaders = function setHeaders(headers) {
   });
 };
 
+var DAOArray = [_AccountDAO2.default, _AchievementDAO2.default, _AvailabilityDAO2.default, _BeverageDAO2.default, _DeviceDAO2.default, _FlowSensorDAO2.default, _FriendDAO2.default, _GlassDAO2.default, _KegDAO2.default, _LocationDAO2.default, _OrganizationDAO2.default, _PermissionDAO2.default, _PourChartDAO2.default, _PourDAO2.default, _ReportDAO2.default, _ScheduleDAO2.default, _SrmDAO2.default, _StyleDAO2.default, _TapDAO2.default];
+
+var flushCache = function flushCache() {
+  DAOArray.forEach(function (dao) {
+    dao.flushCache();
+    dao.flushCustomCache();
+  });
+};
+
 var setOrganizationID = function setOrganizationID(organizationID) {
   _DAO2.default.setOrganizationID(organizationID);
 
@@ -176,6 +185,7 @@ exports.default = {
   createFilter: _filters.createFilter,
   doesSatisfyQueryFilters: _filters.doesSatisfyQueryFilters,
   fetch: _fetch2.default,
+  flushCache: flushCache,
   getHeaders: getHeaders,
   initializeDAOApi: initializeDAOApi,
   onError: _DAO2.default.onError,

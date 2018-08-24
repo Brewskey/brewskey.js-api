@@ -51,6 +51,35 @@ const setHeaders = (headers: Headers) => {
   });
 };
 
+const DAOArray = [
+  AccountDAO,
+  AchievementDAO,
+  AvailabilityDAO,
+  BeverageDAO,
+  DeviceDAO,
+  FlowSensorDAO,
+  FriendDAO,
+  GlassDAO,
+  KegDAO,
+  LocationDAO,
+  OrganizationDAO,
+  PermissionDAO,
+  PourChartDAO,
+  PourDAO,
+  ReportDAO,
+  ScheduleDAO,
+  SrmDAO,
+  StyleDAO,
+  TapDAO,
+];
+
+const flushCache = () => {
+  DAOArray.forEach((dao: DAO<*>) => {
+    dao.flushCache();
+    dao.flushCustomCache();
+  });
+};
+
 const setOrganizationID = (organizationID: ?EntityID) => {
   BaseDAO.setOrganizationID(organizationID);
 
@@ -101,6 +130,7 @@ export default {
   createFilter,
   doesSatisfyQueryFilters,
   fetch,
+  flushCache,
   getHeaders,
   initializeDAOApi,
   onError: BaseDAO.onError,
