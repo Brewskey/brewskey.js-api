@@ -784,6 +784,7 @@ type DAOApi = {
     queryFilters: Array<QueryFilter>,
   ): boolean,
   fetch(path: string, init: ?Object): Promise<*>,
+  flushCache(): void,
   getHeaders(): Headers,
   initializeDAOApi(config: OConfig): void,
   onError(handler: (error: Error) => void): void,
