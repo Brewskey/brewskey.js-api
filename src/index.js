@@ -64,7 +64,6 @@ const DAOArray = [
   LocationDAO,
   OrganizationDAO,
   PermissionDAO,
-  PourChartDAO,
   PourDAO,
   ReportDAO,
   ScheduleDAO,
