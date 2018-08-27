@@ -517,14 +517,17 @@ export type Style = {
   updateDate: Date,
 };
 
+export type CurrentKeg = {
+  beverage: { id: string, name: string },
+  id: string,
+  kegType: KegType,
+  maxOunces: number,
+  ounces: number,
+};
+
 export type Tap = {
   createdDate: Date,
-  currentKeg: {
-    beverage: { id: string, name: string },
-    id: string,
-    maxOunces: number,
-    ounces: number,
-  },
+  currentKeg: CurrentKeg,
   description: ?string,
   device: ShortenedEntity,
   disableBadges: boolean,
@@ -548,12 +551,76 @@ export type TapMutator = {
   requiresPourPrivilege: boolean,
 };
 
+type Unwrap = <T>(loadObject: LoadObject<T>) => T;
+
 /* DAO */
 declare export class LoadObject<VType> {
   static creating<Vtype>(): LoadObject<Vtype>;
   static deleting<Vtype>(): LoadObject<Vtype>;
   static empty<Vtype>(): LoadObject<Vtype>;
   static loading<Vtype>(): LoadObject<Vtype>;
+  static merge<
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    T6,
+    T7,
+    T8,
+    T9,
+    T:
+      | [LoadObject<T1>, LoadObject<T2>]
+      | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>]
+      | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>, LoadObject<T4>]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+          LoadObject<T8>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+          LoadObject<T8>,
+          LoadObject<T9>,
+        ],
+  >(
+    loadObjects: T,
+  ): LoadObject<$TupleMap<T, Unwrap>>;
   static updating<Vtype>(): LoadObject<Vtype>;
   static withError<Vtype>(error: Error): LoadObject<Vtype>;
   static withValue<Vtype>(value: Vtype): LoadObject<Vtype>;

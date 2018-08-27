@@ -354,6 +354,33 @@ var LoadObject = function () {
     value: function withValue(value) {
       return LoadObject._create('NONE', value, undefined, true);
     }
+  }, {
+    key: 'merge',
+    value: function merge(loadObjects) {
+      var values = [];
+      var error = null;
+      var operation = null;
+
+      loadObjects.forEach(function (loadObject) {
+        error = error || loadObject.getError();
+
+        if (loadObject.hasOperation()) {
+          operation = operation || loadObject.getOperation();
+        }
+
+        values.push(loadObject.getValue());
+      });
+
+      if (error) {
+        return LoadObject.withError(error);
+      }
+
+      if (operation) {
+        return LoadObject.empty().setOperation(operation);
+      }
+
+      return LoadObject.withValue(values);
+    }
   }]);
 
   return LoadObject;

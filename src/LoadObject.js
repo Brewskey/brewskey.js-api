@@ -18,6 +18,8 @@ export type LoadObjectOperation =
   | 'UPDATING'
   | 'DELETING';
 
+type Unwrap = <T>(loadObject: LoadObject<T>) => T;
+
 /**
  * A secret key that is used to prevent direct construction of these objects,
  * this is effectively used to ensure that the constructor is private.
@@ -346,6 +348,91 @@ class LoadObject<TValue> {
 
   static withValue<V>(value: V): LoadObject<V> {
     return LoadObject._create('NONE', value, undefined, true);
+  }
+
+  static merge<
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    T6,
+    T7,
+    T8,
+    T9,
+    T:
+      | [LoadObject<T1>, LoadObject<T2>]
+      | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>]
+      | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>, LoadObject<T4>]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+          LoadObject<T8>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+          LoadObject<T8>,
+          LoadObject<T9>,
+        ],
+  >(loadObjects: T): LoadObject<$TupleMap<T, Unwrap>> {
+    const values = [];
+    let error = null;
+    let operation = null;
+
+    loadObjects.forEach((loadObject: LoadObject<any>) => {
+      error = error || loadObject.getError();
+
+      if (loadObject.hasOperation()) {
+        operation = operation || loadObject.getOperation();
+      }
+
+      values.push(loadObject.getValue());
+    });
+
+    if (error) {
+      return LoadObject.withError(error);
+    }
+
+    if (operation) {
+      return LoadObject.empty().setOperation(operation);
+    }
+
+    return LoadObject.withValue(((values: any): $TupleMap<T, Unwrap>));
   }
 }
 
