@@ -412,11 +412,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     error: Error,
     shouldEmitChanges: boolean = true,
   ) {
-    const loader = this._entityLoaderByID.get(id);
-    this._entityLoaderByID.set(
-      id,
-      loader ? loader.setError(error) : LoadObject.withError(error),
-    );
+    this._entityLoaderByID.set(id, LoadObject.withError(error));
     if (shouldEmitChanges) {
       this._emitChanges();
     }

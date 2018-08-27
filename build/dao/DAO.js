@@ -399,8 +399,7 @@ var DAO = function (_BaseDAO) {
     value: function _updateCacheForError(id, error) {
       var shouldEmitChanges = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-      var loader = this._entityLoaderByID.get(id);
-      this._entityLoaderByID.set(id, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
+      this._entityLoaderByID.set(id, _LoadObject2.default.withError(error));
       if (shouldEmitChanges) {
         this._emitChanges();
       }
