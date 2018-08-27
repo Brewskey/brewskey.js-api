@@ -517,14 +517,17 @@ export type Style = {
   updateDate: Date,
 };
 
+export type CurrentKeg = {
+  beverage: { id: string, name: string },
+  id: string,
+  kegType: KegType,
+  maxOunces: number,
+  ounces: number,
+};
+
 export type Tap = {
   createdDate: Date,
-  currentKeg: {
-    beverage: { id: string, name: string },
-    id: string,
-    maxOunces: number,
-    ounces: number,
-  },
+  currentKeg: CurrentKeg,
   description: ?string,
   device: ShortenedEntity,
   disableBadges: boolean,
