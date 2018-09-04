@@ -32,6 +32,7 @@ var PourDAO = function (_DAO) {
       entityName: _constants.DAO_ENTITIES.POURS,
       navigationProperties: {
         beverage: { select: ['id', 'isDeleted', 'name'] },
+        keg: { select: ['id'] },
         location: { select: ['id', 'isDeleted', 'name'] },
         organization: { select: ['id', 'isDeleted', 'name'] },
         owner: { select: ['id', 'userName'] },

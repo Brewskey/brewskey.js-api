@@ -423,6 +423,7 @@ export type Pour = {
   beverage: ?ShortenedEntity,
   id: EntityID,
   isDeleted: boolean,
+  keg: { id: EntityID },
   location: ?ShortenedEntity,
   organization: ShortenedEntity,
   ounces: number,
