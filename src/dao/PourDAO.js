@@ -11,6 +11,7 @@ class PourDAO extends DAO<Pour, Pour> {
       entityName: DAO_ENTITIES.POURS,
       navigationProperties: {
         beverage: { select: ['id', 'isDeleted', 'name'] },
+        keg: { select: ['id'] },
         location: { select: ['id', 'isDeleted', 'name'] },
         organization: { select: ['id', 'isDeleted', 'name'] },
         owner: { select: ['id', 'userName'] },
