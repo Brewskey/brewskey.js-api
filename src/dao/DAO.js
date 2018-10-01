@@ -95,7 +95,9 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       this.__resolveSingle(
         this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       )
-        .then((result: TEntity): void => this._updateCacheForEntity(result))
+        .then((result: TEntity): void =>
+          this._updateCacheForEntity(result, true),
+        )
         .catch((error: Error) => {
           BaseDAO.__handleError(error);
           this._updateCacheForError(stringifiedID, error);

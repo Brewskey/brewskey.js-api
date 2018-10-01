@@ -113,7 +113,7 @@ var DAO = function (_BaseDAO) {
         this._entityLoaderByID.set(stringifiedID, _LoadObject2.default.loading());
         this._emitChanges();
         this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID))).then(function (result) {
-          return _this5._updateCacheForEntity(result);
+          return _this5._updateCacheForEntity(result, true);
         }).catch(function (error) {
           _BaseDAO3.default.__handleError(error);
           _this5._updateCacheForError(stringifiedID, error);
