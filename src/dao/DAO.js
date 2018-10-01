@@ -1,6 +1,6 @@
 // @flow
 import type { EntityID, QueryOptions } from '../index';
-import type oHandler from 'odata';
+import type OHandler from 'odata';
 
 import nullthrows from 'nullthrows';
 import BaseDAO from './BaseDAO';
@@ -43,14 +43,14 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
   count(queryOptions?: QueryOptions): LoadObject<number> {
     return this.__countCustom(
-      (countQueryOptions: QueryOptions): oHandler<TEntity> =>
+      (countQueryOptions: QueryOptions): OHandler<TEntity> =>
         this.__buildHandler({ ...queryOptions, ...countQueryOptions }),
       queryOptions,
     );
   }
 
   __countCustom(
-    getOHandler: (baseQueryOptions: QueryOptions) => oHandler<*>,
+    getOHandler: (baseQueryOptions: QueryOptions) => OHandler<*>,
     queryOptions?: QueryOptions,
     key?: string = '',
   ): LoadObject<number> {
@@ -209,6 +209,49 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     );
   }
 
+  fetchSingle(queryOptions?: QueryOptions): LoadObject<TEntity> {
+    const combinedQueryOptions = {
+      orderBy: [{ column: 'id', direction: 'desc' }],
+      ...queryOptions,
+      limit: 1,
+    };
+
+    const cacheKey = this._getCacheKey(combinedQueryOptions);
+
+    if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
+      this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
+      this._emitChanges();
+
+      let handler = this.__buildHandler(queryOptions, false);
+      handler = handler.select('id');
+
+      this.__resolveManyIDs(handler)
+        .then((ids: Array<EntityID>) => {
+          const stringifiedIds = ids.map(String);
+          this._entityIDsLoaderByQuery.set(
+            cacheKey,
+            LoadObject.withValue(stringifiedIds),
+          );
+          this._emitChanges();
+          this.fetchByIDs(stringifiedIds);
+        })
+        .catch((error: Error) => {
+          BaseDAO.__handleError(error);
+          const loader = this._entityIDsLoaderByQuery.get(cacheKey);
+          this._entityIDsLoaderByQuery.set(
+            cacheKey,
+            loader ? loader.setError(error) : LoadObject.withError(error),
+          );
+          this._emitChanges();
+        });
+    }
+
+    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
+      (ids: Array<EntityID>): LoadObject<TEntity> =>
+        this.fetchByID(nullthrows(ids[0])),
+    );
+  }
+
   flushCache() {
     this._entityLoaderByID = new Map();
     this._flushQueryCaches();
@@ -358,7 +401,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   }
 
   __fetchCustom<TResult>(
-    handler: oHandler<TEntity>,
+    handler: OHandler<TEntity>,
     queryOptions?: QueryOptions,
     key?: string = '',
   ): LoadObject<TResult> {

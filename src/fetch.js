@@ -31,7 +31,8 @@ export default async (path: string, options: ?Object): Promise<*> => {
 
   if (!response.ok) {
     throw new Error(
-      (responseJson.error && responseJson.error.message) || 'Whoops! Error!',
+      (responseJson && responseJson.error && responseJson.error.message) ||
+        'Whoops! Error!',
     );
   }
 

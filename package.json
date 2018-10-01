@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "babel-preset-react-hmre": "^1.1.1",
-    "nullthrows": "^1.0.0",
+    "nullthrows": "^1.1.0",
     "odata": "git+https://github.com/Brewskey/o.js.git"
   },
   "ava": {

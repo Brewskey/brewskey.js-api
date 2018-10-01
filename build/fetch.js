@@ -73,7 +73,7 @@ exports.default = function () {
               break;
             }
 
-            throw new Error(responseJson.error && responseJson.error.message || 'Whoops! Error!');
+            throw new Error(responseJson && responseJson.error && responseJson.error.message || 'Whoops! Error!');
 
           case 21:
             return _context.abrupt('return', responseJson);

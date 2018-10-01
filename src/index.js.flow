@@ -315,6 +315,7 @@ export type Keg = {
 export type KegMutator = {
   beverageId: EntityID,
   id?: EntityID,
+  kegType: KegType,
   startingPercentage?: number,
   tapId: EntityID,
 };
@@ -555,7 +556,7 @@ export type TapMutator = {
 type Unwrap = <T>(loadObject: LoadObject<T>) => T;
 
 /* DAO */
-declare export class LoadObject<VType> {
+declare export class LoadObject<+VType> {
   static creating<Vtype>(): LoadObject<Vtype>;
   static deleting<Vtype>(): LoadObject<Vtype>;
   static empty<Vtype>(): LoadObject<Vtype>;
@@ -734,6 +735,9 @@ declare export class DAO<
   fetchMany(
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntity>>>;
+  fetchSingle(
+    queryOptions?: QueryOptions,
+  ): LoadObject<TEntity>;
   flushCache(): void;
   flushCacheForEntity(entityID: EntityID): void;
   flushCustomCache(): void;

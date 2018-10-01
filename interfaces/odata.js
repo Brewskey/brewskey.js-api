@@ -78,4 +78,6 @@ declare module 'odata' {
 
 
   declare function exports<TEntity>(args?: Options | string): OHandler<TEntity>
+
+  declare export default typeof exports;
 }

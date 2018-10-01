@@ -73,7 +73,7 @@ const DAOArray = [
 ];
 
 const flushCache = () => {
-  DAOArray.forEach((dao: DAO<*>) => {
+  DAOArray.forEach((dao: *) => {
     dao.flushCache();
     dao.flushCustomCache();
   });
