@@ -221,7 +221,7 @@ var DAO = function (_BaseDAO) {
         this._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
         this._emitChanges();
 
-        var handler = this.__buildHandler(queryOptions, false);
+        var handler = this.__buildHandler(combinedQueryOptions, false);
         handler = handler.select('id');
 
         this.__resolveManyIDs(handler).then(function (ids) {

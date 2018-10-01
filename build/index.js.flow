@@ -645,7 +645,7 @@ declare export class LoadObject<+VType> {
   isUpdating(): boolean;
   loading(): LoadObject<VType>;
   map<TType>(
-    fn: (value: VType) => LoadObject<TType> | TType,
+    fn: (value: VType) => TType | LoadObject<TType>,
   ): LoadObject<TType>;
   mapError<TType>(
     fn: (value: Error) => Error | LoadObject<TType>,

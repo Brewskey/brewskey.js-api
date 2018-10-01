@@ -222,7 +222,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
       this._emitChanges();
 
-      let handler = this.__buildHandler(queryOptions, false);
+      let handler = this.__buildHandler(combinedQueryOptions, false);
       handler = handler.select('id');
 
       this.__resolveManyIDs(handler)
