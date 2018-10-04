@@ -95,9 +95,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       this.__resolveSingle(
         this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       )
-        .then((result: TEntity): void =>
-          this._updateCacheForEntity(result, true),
-        )
+        .then((result: TEntity): void => this._updateCacheForEntity(result))
         .catch((error: Error) => {
           BaseDAO.__handleError(error);
           this._updateCacheForError(stringifiedID, error);
@@ -137,7 +135,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           idsToLoad.forEach((id: EntityID) => {
             const entity = entitiesByID.get(id);
             if (entity) {
-              this._updateCacheForEntity(entity);
+              this._updateCacheForEntity(entity, false);
             } else {
               this._updateCacheForError(
                 id,
@@ -446,7 +444,10 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   }
 
   _updateCacheForEntity(entity: TEntity, shouldEmitChanges: boolean = true) {
-    this._entityLoaderByID.set(entity.id, LoadObject.withValue(entity));
+    this._entityLoaderByID.set(
+      entity.id.toString(),
+      LoadObject.withValue(entity),
+    );
     if (shouldEmitChanges) {
       this._emitChanges();
     }
@@ -457,7 +458,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     error: Error,
     shouldEmitChanges: boolean = true,
   ) {
-    this._entityLoaderByID.set(id, LoadObject.withError(error));
+    this._entityLoaderByID.set(id.toString(), LoadObject.withError(error));
     if (shouldEmitChanges) {
       this._emitChanges();
     }

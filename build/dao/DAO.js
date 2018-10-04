@@ -113,7 +113,7 @@ var DAO = function (_BaseDAO) {
         this._entityLoaderByID.set(stringifiedID, _LoadObject2.default.loading());
         this._emitChanges();
         this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID))).then(function (result) {
-          return _this5._updateCacheForEntity(result, true);
+          return _this5._updateCacheForEntity(result);
         }).catch(function (error) {
           _BaseDAO3.default.__handleError(error);
           _this5._updateCacheForError(stringifiedID, error);
@@ -149,7 +149,7 @@ var DAO = function (_BaseDAO) {
           idsToLoad.forEach(function (id) {
             var entity = entitiesByID.get(id);
             if (entity) {
-              _this6._updateCacheForEntity(entity);
+              _this6._updateCacheForEntity(entity, false);
             } else {
               _this6._updateCacheForError(id, new Error('Could not load ' + _this6.getEntityName() + ' ' + id.toString()));
             }
@@ -426,7 +426,7 @@ var DAO = function (_BaseDAO) {
     value: function _updateCacheForEntity(entity) {
       var shouldEmitChanges = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      this._entityLoaderByID.set(entity.id, _LoadObject2.default.withValue(entity));
+      this._entityLoaderByID.set(entity.id.toString(), _LoadObject2.default.withValue(entity));
       if (shouldEmitChanges) {
         this._emitChanges();
       }
@@ -436,7 +436,7 @@ var DAO = function (_BaseDAO) {
     value: function _updateCacheForError(id, error) {
       var shouldEmitChanges = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-      this._entityLoaderByID.set(id, _LoadObject2.default.withError(error));
+      this._entityLoaderByID.set(id.toString(), _LoadObject2.default.withError(error));
       if (shouldEmitChanges) {
         this._emitChanges();
       }
