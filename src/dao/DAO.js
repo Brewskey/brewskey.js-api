@@ -213,42 +213,12 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     const combinedQueryOptions = {
       orderBy: [{ column: 'id', direction: 'desc' }],
       ...queryOptions,
-      limit: 1,
+      take: 1,
     };
 
-    const cacheKey = this._getCacheKey(combinedQueryOptions);
-
-    if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
-      this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
-      this._emitChanges();
-
-      let handler = this.__buildHandler(combinedQueryOptions, false);
-      handler = handler.select('id');
-
-      this.__resolveManyIDs(handler)
-        .then((ids: Array<EntityID>) => {
-          const stringifiedIds = ids.map(String);
-          this._entityIDsLoaderByQuery.set(
-            cacheKey,
-            LoadObject.withValue(stringifiedIds),
-          );
-          this._emitChanges();
-          this.fetchByIDs(stringifiedIds);
-        })
-        .catch((error: Error) => {
-          BaseDAO.__handleError(error);
-          const loader = this._entityIDsLoaderByQuery.get(cacheKey);
-          this._entityIDsLoaderByQuery.set(
-            cacheKey,
-            loader ? loader.setError(error) : LoadObject.withError(error),
-          );
-          this._emitChanges();
-        });
-    }
-
-    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
-      (ids: Array<EntityID>): LoadObject<TEntity> =>
-        this.fetchByID(nullthrows(ids[0])),
+    return this.fetchMany(combinedQueryOptions).map(
+      (items: Array<LoadObject<TEntity>>): LoadObject<TEntity> =>
+        nullthrows(items[0]),
     );
   }
 
