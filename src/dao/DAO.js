@@ -218,7 +218,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
     return this.fetchMany(combinedQueryOptions).map(
       (items: Array<LoadObject<TEntity>>): LoadObject<TEntity> =>
-        nullthrows(items[0]),
+        items[0] || LoadObject.empty(),
     );
   }
 

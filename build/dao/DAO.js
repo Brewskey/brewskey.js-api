@@ -214,7 +214,7 @@ var DAO = function (_BaseDAO) {
       });
 
       return this.fetchMany(combinedQueryOptions).map(function (items) {
-        return items[0];
+        return items[0] || _LoadObject2.default.empty();
       });
     }
   }, {
