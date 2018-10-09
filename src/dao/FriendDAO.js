@@ -8,6 +8,7 @@ import daoFetch from '../fetch';
 
 export const FRIEND_STATUSES: { [key: string]: FriendStatus } = {
   APPROVED: 'Approved',
+  AWAITING_APPROVAL: 'AwaitingApproval',
   BLOCKED: 'Blocked',
   PENDING: 'Pending',
   SPAM: 'Spam',

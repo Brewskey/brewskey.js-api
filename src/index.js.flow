@@ -265,7 +265,7 @@ export type FlowSensorMutator = {
   tapId: EntityID,
 };
 
-export type FriendStatus = 'Approved' | 'Blocked' | 'Pending' | 'Spam';
+export type FriendStatus = 'Approved' | 'AwaitingApproval' | 'Blocked' | 'Pending' | 'Spam';
 
 export type Friend = {
   createdDate: Date,

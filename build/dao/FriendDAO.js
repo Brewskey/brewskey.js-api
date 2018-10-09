@@ -31,6 +31,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var FRIEND_STATUSES = exports.FRIEND_STATUSES = {
   APPROVED: 'Approved',
+  AWAITING_APPROVAL: 'AwaitingApproval',
   BLOCKED: 'Blocked',
   PENDING: 'Pending',
   SPAM: 'Spam'
