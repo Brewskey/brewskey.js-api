@@ -42,6 +42,18 @@ class KegDAO extends DAO<Keg, KegMutator> {
       ],
       take: 1,
     });
+
+  floatKeg(tapID: string): string {
+    const funcString = 'Default.leaderboard()';
+    const stringifiedID = tapID.toString();
+
+    const handler = this.__buildHandler({}, false).find(
+      this.__reformatIDValue(stringifiedID),
+    );
+    handler.func(funcString);
+
+    return this.__mutateCustom(handler, 'post', funcString, tapID);
+  }
 }
 
 export default new KegDAO();

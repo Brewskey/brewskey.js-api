@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.MAX_OUNCES_BY_KEG_TYPE = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _DAO2 = require('./DAO');
 
 var _DAO3 = _interopRequireDefault(_DAO2);
@@ -55,6 +57,8 @@ var KegDAO = function (_DAO) {
       translator: new _KegTranslator2.default()
     }));
 
+    _this.floatKeg = _this.floatKeg.bind(_this);
+
     _this.fetchKegByTapID = function (tapId) {
       return _this.fetchMany({
         filters: [(0, _filters.createFilter)('tap/id').equals(tapId)],
@@ -68,6 +72,19 @@ var KegDAO = function (_DAO) {
 
     return _this;
   }
+
+  _createClass(KegDAO, [{
+    key: 'floatKeg',
+    value: function floatKeg(tapID) {
+      var funcString = 'Default.leaderboard()';
+      var stringifiedID = tapID.toString();
+
+      var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID));
+      handler.func(funcString);
+
+      return this.__mutateCustom(handler, 'post', funcString, tapID);
+    }
+  }]);
 
   return KegDAO;
 }(_DAO3.default);

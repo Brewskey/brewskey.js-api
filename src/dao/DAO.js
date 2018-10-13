@@ -370,6 +370,62 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     );
   }
 
+  __mutateCustom(
+    handler: OHandler<TEntity>,
+    method: 'delete' | 'patch' | 'post' | 'put',
+    mutator: Object,
+    id: string = null,
+  ): string {
+    let stringifiedID = null;
+    if (id) {
+      stringifiedID = id.toString();
+    }
+
+    DAO._clientID += 1;
+    const clientID = `CLIENT_ID:${DAO._clientID}`;
+
+    const entity =
+      this._entityLoaderByID.get(stringifiedID || clientID) ||
+      LoadObject.empty();
+
+    if (method === 'delete') {
+      this._entityLoaderByID.set(
+        stringifiedID || stringifiedID,
+        entity.deleting(),
+      );
+    } else {
+      this._entityLoaderByID.set(
+        stringifiedID || stringifiedID,
+        entity.updating(),
+      );
+    }
+    this._emitChanges();
+
+    this.__resolveSingle(
+      id
+        ? this.__buildHandler().find(this.__reformatIDValue(stringifiedID))
+        : this._buildHandler(),
+      this.getTranslator().toApi(mutator),
+      method,
+    )
+      .then((result: TEntity) => {
+        this._updateCacheForEntity(result, false);
+        if (!id) {
+          this._entityLoaderByID.set(
+            clientID,
+            nullthrows(this._entityLoaderByID.get(result.id)),
+          );
+        }
+        this._emitChanges();
+      })
+      .catch((error: Error) => {
+        BaseDAO.__handleError(error);
+        this._updateCacheForError(stringifiedID, error);
+      });
+
+    return stringifiedID || stringifiedID;
+  }
+
   __fetchCustom<TResult>(
     handler: OHandler<TEntity>,
     queryOptions?: QueryOptions,

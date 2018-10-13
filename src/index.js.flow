@@ -808,6 +808,7 @@ declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {
     tapID: EntityID,
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LeaderboardItem>>;
+  floatKeg(tapID: string): string;
 }
 
 /* Utilities */
