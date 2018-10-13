@@ -389,15 +389,9 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       LoadObject.empty();
 
     if (method === 'delete') {
-      this._entityLoaderByID.set(
-        stringifiedID || stringifiedID,
-        entity.deleting(),
-      );
+      this._entityLoaderByID.set(stringifiedID || clientID, entity.deleting());
     } else {
-      this._entityLoaderByID.set(
-        stringifiedID || stringifiedID,
-        entity.updating(),
-      );
+      this._entityLoaderByID.set(stringifiedID || clientID, entity.updating());
     }
     this._emitChanges();
 
@@ -420,10 +414,10 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       })
       .catch((error: Error) => {
         BaseDAO.__handleError(error);
-        this._updateCacheForError(stringifiedID, error);
+        this._updateCacheForError(stringifiedID || clientID, error);
       });
 
-    return stringifiedID || stringifiedID;
+    return stringifiedID || clientID;
   }
 
   __fetchCustom<TResult>(

@@ -371,9 +371,9 @@ var DAO = function (_BaseDAO) {
       var entity = this._entityLoaderByID.get(stringifiedID || clientID) || _LoadObject2.default.empty();
 
       if (method === 'delete') {
-        this._entityLoaderByID.set(stringifiedID || stringifiedID, entity.deleting());
+        this._entityLoaderByID.set(stringifiedID || clientID, entity.deleting());
       } else {
-        this._entityLoaderByID.set(stringifiedID || stringifiedID, entity.updating());
+        this._entityLoaderByID.set(stringifiedID || clientID, entity.updating());
       }
       this._emitChanges();
 
@@ -385,10 +385,10 @@ var DAO = function (_BaseDAO) {
         _this12._emitChanges();
       }).catch(function (error) {
         _BaseDAO3.default.__handleError(error);
-        _this12._updateCacheForError(stringifiedID, error);
+        _this12._updateCacheForError(stringifiedID || clientID, error);
       });
 
-      return stringifiedID || stringifiedID;
+      return stringifiedID || clientID;
     }
   }, {
     key: '__fetchCustom',
