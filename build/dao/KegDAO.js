@@ -76,13 +76,12 @@ var KegDAO = function (_DAO) {
   _createClass(KegDAO, [{
     key: 'floatKeg',
     value: function floatKeg(tapID) {
-      var funcString = 'Default.leaderboard()';
+      var funcString = 'Default.floatKeg()';
       var stringifiedID = tapID.toString();
 
-      var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID));
-      handler.func(funcString);
+      var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID)).func(funcString);
 
-      return this.__mutateCustom(handler, 'put', funcString, tapID);
+      return this.__mutateCustom(handler, 'put', tapID, null);
     }
   }]);
 

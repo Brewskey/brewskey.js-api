@@ -44,15 +44,14 @@ class KegDAO extends DAO<Keg, KegMutator> {
     });
 
   floatKeg(tapID: string): string {
-    const funcString = 'Default.leaderboard()';
+    const funcString = 'Default.floatKeg()';
     const stringifiedID = tapID.toString();
 
-    const handler = this.__buildHandler({}, false).find(
-      this.__reformatIDValue(stringifiedID),
-    );
-    handler.func(funcString);
+    const handler = this.__buildHandler({}, false)
+      .find(this.__reformatIDValue(stringifiedID))
+      .func(funcString);
 
-    return this.__mutateCustom(handler, 'put', funcString, tapID);
+    return this.__mutateCustom(handler, 'put', tapID, null);
   }
 }
 

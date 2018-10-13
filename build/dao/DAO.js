@@ -355,10 +355,8 @@ var DAO = function (_BaseDAO) {
     }
   }, {
     key: '__mutateCustom',
-    value: function __mutateCustom(handler, method, mutator) {
+    value: function __mutateCustom(handler, method, id, mutator) {
       var _this12 = this;
-
-      var id = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
       var stringifiedID = null;
       if (id) {
@@ -377,9 +375,12 @@ var DAO = function (_BaseDAO) {
       }
       this._emitChanges();
 
-      this.__resolveSingle(id ? this.__buildHandler().find(this.__reformatIDValue(stringifiedID)) : this._buildHandler(), this.getTranslator().toApi(mutator), method).then(function (result) {
-        _this12._updateCacheForEntity(result, false);
-        if (!id) {
+      this.__resolve(handler, mutator, method).then(function (result) {
+        if (id) {
+          // We want whatever uses this store to refetch the entity
+          _this12._entityLoaderByID.delete(stringifiedID);
+        } else {
+          _this12._updateCacheForEntity(result, false);
           _this12._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this12._entityLoaderByID.get(result.id)));
         }
         _this12._emitChanges();
@@ -388,7 +389,7 @@ var DAO = function (_BaseDAO) {
         _this12._updateCacheForError(stringifiedID || clientID, error);
       });
 
-      return stringifiedID || clientID;
+      return id ? stringifiedID : clientID;
     }
   }, {
     key: '__fetchCustom',

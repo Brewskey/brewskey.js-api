@@ -373,8 +373,8 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   __mutateCustom(
     handler: OHandler<TEntity>,
     method: 'delete' | 'patch' | 'post' | 'put',
-    mutator: Object,
-    id: string = null,
+    id: ?string,
+    mutator: ?Object,
   ): string {
     let stringifiedID = null;
     if (id) {
@@ -395,16 +395,13 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     }
     this._emitChanges();
 
-    this.__resolveSingle(
-      id
-        ? this.__buildHandler().find(this.__reformatIDValue(stringifiedID))
-        : this._buildHandler(),
-      this.getTranslator().toApi(mutator),
-      method,
-    )
+    this.__resolve(handler, mutator, method)
       .then((result: TEntity) => {
-        this._updateCacheForEntity(result, false);
-        if (!id) {
+        if (id) {
+          // We want whatever uses this store to refetch the entity
+          this._entityLoaderByID.delete(stringifiedID);
+        } else {
+          this._updateCacheForEntity(result, false);
           this._entityLoaderByID.set(
             clientID,
             nullthrows(this._entityLoaderByID.get(result.id)),
@@ -417,7 +414,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._updateCacheForError(stringifiedID || clientID, error);
       });
 
-    return stringifiedID || clientID;
+    return id ? stringifiedID : clientID;
   }
 
   __fetchCustom<TResult>(

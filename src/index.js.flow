@@ -777,6 +777,7 @@ declare class brewskey$FriendDAO extends DAO<Friend, Friend> {
 }
 declare class brewskey$KegDAO extends DAO<Keg, KegMutator> {
   fetchKegByTapID(tapId: string): LoadObject<Array<LoadObject<Keg>>>;
+  floatKeg(tapID: string): string;
 }
 declare class brewskey$LocationDAO extends DAO<Location, LocationMutator> {}
 declare class brewskey$OrganizationDAO extends DAO<
@@ -808,7 +809,6 @@ declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {
     tapID: EntityID,
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LeaderboardItem>>;
-  floatKeg(tapID: string): string;
 }
 
 /* Utilities */
