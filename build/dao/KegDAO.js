@@ -82,7 +82,7 @@ var KegDAO = function (_DAO) {
       var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID));
       handler.func(funcString);
 
-      return this.__mutateCustom(handler, 'post', funcString, tapID);
+      return this.__mutateCustom(handler, 'put', funcString, tapID);
     }
   }]);
 

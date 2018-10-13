@@ -52,7 +52,7 @@ class KegDAO extends DAO<Keg, KegMutator> {
     );
     handler.func(funcString);
 
-    return this.__mutateCustom(handler, 'post', funcString, tapID);
+    return this.__mutateCustom(handler, 'put', funcString, tapID);
   }
 }
 
