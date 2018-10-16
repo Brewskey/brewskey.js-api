@@ -11,7 +11,6 @@ import type {
 import oHandler from 'odata';
 import DAOResult from './DAOResult';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
-import { createFilter } from '../filters';
 
 const ID_REG_EXP = /\bid\b/;
 
@@ -72,11 +71,10 @@ class DAO<TEntity, TEntityMutator> {
   }
 
   fetchByIDs(ids: Array<string>): Promise<DAOResult<TEntity>> {
-    return this._resolve(
-      this._buildHandler({
-        filters: [createFilter('id').equals(ids)],
-      }),
-    );
+    const handler = this._buildHandler();
+    handler.customParam('ids', ids.map(this.__reformatIDValue).join(','));
+
+    return this._resolve(handler);
   }
 
   fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>> {
@@ -139,39 +137,44 @@ class DAO<TEntity, TEntityMutator> {
 
     if (queryOptions.filters && queryOptions.filters.length > 0) {
       const renderedFilters = queryOptions.filters
-        .map(({ operator, params, values }: QueryFilter): string => {
-          const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
-            (op: string): boolean => op === operator,
-          );
+        .map(
+          ({ operator, params, values }: QueryFilter): string => {
+            const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
+              (op: string): boolean => op === operator,
+            );
 
-          const filters = values.map((value: string): Array<string> =>
-            params.map((param: string): string => {
-              // we have to use two reformat functions because of the issue:
-              // https://github.com/Brewskey/brewskey.admin/issues/371
-              // this is not ideal though, because it doesn't resolve
-              // situations when we get stringified value from front-end
-              // which is stored as number on the server.
-              const reformattedValue = ID_REG_EXP.test(param)
-                ? this.__reformatIDValue(value)
-                : this.__reformatQueryValue(value);
+            const filters = values.map(
+              (value: string): Array<string> =>
+                params.map(
+                  (param: string): string => {
+                    // we have to use two reformat functions because of the issue:
+                    // https://github.com/Brewskey/brewskey.admin/issues/371
+                    // this is not ideal though, because it doesn't resolve
+                    // situations when we get stringified value from front-end
+                    // which is stored as number on the server.
+                    const reformattedValue = ID_REG_EXP.test(param)
+                      ? this.__reformatIDValue(value)
+                      : this.__reformatQueryValue(value);
 
-              if (isValidOperator) {
-                return `(${operator}(${param}, ${reformattedValue}))`;
-              }
+                    if (isValidOperator) {
+                      return `(${operator}(${param}, ${reformattedValue}))`;
+                    }
 
-              return `(${param} ${operator} ${reformattedValue})`;
-            }),
-          );
+                    return `(${param} ${operator} ${reformattedValue})`;
+                  },
+                ),
+            );
 
-          return filters
-            .reduce(
-              (
-                previousFilter: Array<string>,
-                currentFilters: Array<string>,
-              ): Array<string> => [...previousFilter, ...currentFilters],
-            )
-            .join(' or ');
-        })
+            return filters
+              .reduce(
+                (
+                  previousFilter: Array<string>,
+                  currentFilters: Array<string>,
+                ): Array<string> => [...previousFilter, ...currentFilters],
+              )
+              .join(' or ');
+          },
+        )
         .map((filter: string): string => `(${filter})`)
         .join(' and ');
 

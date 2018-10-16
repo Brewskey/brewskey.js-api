@@ -1899,7 +1899,7 @@ object.omit@^2.0.0:
 
 "odata@git+https://github.com/Brewskey/o.js.git":
   version "0.3.0"
-  resolved "git+https://github.com/Brewskey/o.js.git#197a6d7f88d4e9926cb38426a8277275624acaba"
+  resolved "git+https://github.com/Brewskey/o.js.git#30d7c125c0c209ec59c39c1da402c1fc2029047d"
   dependencies:
     q "*"
     xhr2 "*"
