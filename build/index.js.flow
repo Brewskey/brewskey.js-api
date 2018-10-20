@@ -20,6 +20,8 @@ export type EntityName =
   | 'schedule-groups'
   | 'schedules'
   | 'taps';
+  
+export type EntityID = string;
 
 export type ShortenedEntity = { id: string, isDeleted: boolean, name: string };
 
