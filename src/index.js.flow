@@ -21,6 +21,8 @@ export type EntityName =
   | 'schedules'
   | 'taps';
 
+export type EntityID = string;
+
 export type ShortenedEntity = { id: string, isDeleted: boolean, name: string };
 
 export type ShortenedTap = { id: string, isDeleted: boolean };
