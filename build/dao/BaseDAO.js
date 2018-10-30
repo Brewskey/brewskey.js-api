@@ -64,7 +64,7 @@ var BaseDAO = function () {
     this.__resolve = this.__resolve.bind(this);
 
     this.__reformatIDValue = function (value) {
-      return isNaN(value) || value === '' ? '\'' + value + '\'' : value;
+      return isNaN(value) || value === '' ? '' + value : value;
     };
 
     this.__reformatQueryValue = function (value) {
@@ -84,6 +84,9 @@ var BaseDAO = function () {
     value: function getTranslator() {
       return this.__config.translator;
     }
+
+    // todo figure out if we can remove that completly
+
   }, {
     key: '__buildHandler',
     value: function __buildHandler() {

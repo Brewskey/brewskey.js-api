@@ -252,7 +252,7 @@ var DAO = function (_BaseDAO) {
       this._entityLoaderByID.set(stringifiedID, entity.updating());
       this._emitChanges();
 
-      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
+      return this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
         _this8._flushQueryCaches();
         _this8._updateCacheForEntity(result);
       }).catch(function (error) {
@@ -291,7 +291,7 @@ var DAO = function (_BaseDAO) {
       this._entityLoaderByID.set(stringifiedID, entity.updating());
       this._emitChanges();
 
-      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
+      return this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
         _this10._updateCacheForEntity(result);
       }).catch(function (error) {
         _BaseDAO3.default.__handleError(error);
@@ -321,7 +321,12 @@ var DAO = function (_BaseDAO) {
         }, timeout);
 
         var fetchAndResolve = function fetchAndResolve() {
-          var loader = fn().map(function (result) {
+          var loader = fn();
+          if (loader.isLoading() || loader.isUpdating()) {
+            return;
+          }
+
+          loader = fn().map(function (result) {
             if (!Array.isArray(result)) {
               return result;
             }

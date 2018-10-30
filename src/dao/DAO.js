@@ -243,14 +243,14 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     this._emitChanges();
   }
 
-  patch(id: EntityID, mutator: TEntityMutator) {
+  patch(id: EntityID, mutator: TEntityMutator): Promise<void> {
     const stringifiedID = id.toString();
     const entity =
       this._entityLoaderByID.get(stringifiedID) || LoadObject.empty();
     this._entityLoaderByID.set(stringifiedID, entity.updating());
     this._emitChanges();
 
-    this.__resolveSingle(
+    return this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       this.getTranslator().toApi(mutator),
       'patch',
@@ -292,14 +292,14 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     return clientID;
   }
 
-  put(id: EntityID, mutator: TEntityMutator) {
+  put(id: EntityID, mutator: TEntityMutator): Promise<void> {
     const stringifiedID = id.toString();
     const entity =
       this._entityLoaderByID.get(stringifiedID) || LoadObject.empty();
     this._entityLoaderByID.set(stringifiedID, entity.updating());
     this._emitChanges();
 
-    this.__resolveSingle(
+    return this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       this.getTranslator().toApi(mutator),
       'put',
@@ -333,7 +333,12 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         setTimeout((): void => reject(new Error('Timeout!')), timeout);
 
         const fetchAndResolve = () => {
-          const loader = fn().map((result: $FlowFixMe): $FlowFixMe => {
+          let loader = fn();
+          if (loader.isLoading() || loader.isUpdating()) {
+            return;
+          }
+
+          loader = fn().map((result: $FlowFixMe): $FlowFixMe => {
             if (!Array.isArray(result)) {
               return result;
             }
