@@ -63,8 +63,9 @@ class BaseDAO<TEntity, TEntityMutator> {
     return this.__config.translator;
   }
 
+  // todo figure out if we can remove that completly
   __reformatIDValue = (value: string): string | number =>
-    isNaN(value) || value === '' ? `'${value}'` : value;
+    isNaN(value) || value === '' ? `${value}` : value;
 
   __reformatQueryValue = (value: string | number): string | number =>
     typeof value === 'string' ? `'${encodeURIComponent(value)}'` : value;
