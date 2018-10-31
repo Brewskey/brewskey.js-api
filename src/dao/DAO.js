@@ -18,27 +18,34 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
   _subscriptions: Set<() => void> = new Set();
 
-  deleteByID(id: EntityID): Promise<void> {
+  deleteByID(id: EntityID): EntityID {
     const stringifiedID = id.toString();
     const entity =
       this._entityLoaderByID.get(stringifiedID) || LoadObject.empty();
     this._entityLoaderByID.set(stringifiedID, entity.deleting());
+
+    const clientID = this._getClientID();
+    this._entityLoaderByID.set(clientID, LoadObject.empty().deleting());
+
     this._emitChanges();
 
-    return this.__resolveSingle(
+    this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       /* params */ {},
       'delete',
     )
       .then(() => {
         this._entityLoaderByID.delete(id);
+        this._entityLoaderByID.delete(clientID);
         this._flushQueryCaches();
         this._emitChanges();
       })
       .catch((error: Error) => {
         BaseDAO.__handleError(error);
-        this._updateCacheForError(stringifiedID, error);
+        this._updateCacheForError(clientID, error);
       });
+
+    return clientID;
   }
 
   count(queryOptions?: QueryOptions): LoadObject<number> {
@@ -240,32 +247,43 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     this._emitChanges();
   }
 
-  patch(id: EntityID, mutator: TEntityMutator): Promise<void> {
+  patch(id: EntityID, mutator: TEntityMutator): EntityID {
     const stringifiedID = id.toString();
     const entity =
       this._entityLoaderByID.get(stringifiedID) || LoadObject.empty();
     this._entityLoaderByID.set(stringifiedID, entity.updating());
+
+    const clientID = this._getClientID();
+    this._entityLoaderByID.set(clientID, entity.updating());
+
     this._emitChanges();
 
-    return this.__resolveSingle(
+    this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       this.getTranslator().toApi(mutator),
       'patch',
     )
       .then((result: TEntity) => {
         this._flushQueryCaches();
-        this._updateCacheForEntity(result);
+        this._updateCacheForEntity(result, false);
+        this._entityLoaderByID.set(
+          clientID,
+          nullthrows(this._entityLoaderByID.get(result.id)),
+        );
+
+        this._emitChanges();
       })
       .catch((error: Error) => {
         BaseDAO.__handleError(error);
-        this._updateCacheForError(stringifiedID, error);
+        this._updateCacheForError(clientID, error);
       });
+
+    return clientID;
   }
 
   post(mutator: TEntityMutator): EntityID {
-    DAO._clientID += 1;
-    const clientID = `CLIENT_ID:${DAO._clientID}`;
-    this._entityLoaderByID.set(clientID, LoadObject.loading());
+    const clientID = this._getClientID();
+    this._entityLoaderByID.set(clientID, LoadObject.creating());
     this.__resolveSingle(
       this.__buildHandler(),
       this.getTranslator().toApi(mutator),
@@ -289,25 +307,38 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     return clientID;
   }
 
-  put(id: EntityID, mutator: TEntityMutator): Promise<void> {
+  put(id: EntityID, mutator: TEntityMutator): EntityID {
     const stringifiedID = id.toString();
     const entity =
       this._entityLoaderByID.get(stringifiedID) || LoadObject.empty();
     this._entityLoaderByID.set(stringifiedID, entity.updating());
+
+    const clientID = this._getClientID();
+    this._entityLoaderByID.set(clientID, entity.updating());
+
     this._emitChanges();
 
-    return this.__resolveSingle(
+    this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       this.getTranslator().toApi(mutator),
       'put',
     )
       .then((result: TEntity) => {
-        this._updateCacheForEntity(result);
+        this._flushQueryCaches();
+        this._updateCacheForEntity(result, false);
+        // The clientID has a reference to the load object
+        this._entityLoaderByID.set(
+          clientID,
+          nullthrows(this._entityLoaderByID.get(result.id)),
+        );
+        this._emitChanges();
       })
       .catch((error: Error) => {
         BaseDAO.__handleError(error);
-        this._updateCacheForError(stringifiedID, error);
+        this._updateCacheForError(clientID, error);
       });
+
+    return clientID;
   }
 
   subscribe(handler: () => void) {
@@ -363,7 +394,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
             return;
           }
 
-          resolve(loader.getValueEnforcing());
+          resolve(loader.getValue());
         };
 
         this.subscribe(fetchAndResolve);
@@ -383,8 +414,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       stringifiedID = id.toString();
     }
 
-    DAO._clientID += 1;
-    const clientID = `CLIENT_ID:${DAO._clientID}`;
+    const clientID = this._getClientID();
 
     const entity =
       this._entityLoaderByID.get(stringifiedID || clientID) ||
@@ -446,6 +476,11 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
     }
 
     return nullthrows(this._customLoaderByQuery.get(cacheKey));
+  }
+
+  _getClientID(): string {
+    DAO._clientID += 1;
+    return `CLIENT_ID:${DAO._clientID}`;
   }
 
   _emitChanges() {
