@@ -334,7 +334,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
         const fetchAndResolve = () => {
           let loader = fn();
-          if (loader.isLoading() || loader.isUpdating()) {
+          if (loader.hasOperation()) {
             return;
           }
 
@@ -346,7 +346,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
             if (
               result.some(
                 (item: $FlowFixMe): boolean =>
-                  item instanceof LoadObject ? item.isLoading() : false,
+                  item instanceof LoadObject ? loader.hasOperation() : false,
               )
             ) {
               return LoadObject.loading();
@@ -355,7 +355,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
             return result;
           });
 
-          if (loader.isLoading()) {
+          if (loader.hasOperation()) {
             return;
           }
 

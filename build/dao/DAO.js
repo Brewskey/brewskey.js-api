@@ -322,7 +322,7 @@ var DAO = function (_BaseDAO) {
 
         var fetchAndResolve = function fetchAndResolve() {
           var loader = fn();
-          if (loader.isLoading() || loader.isUpdating()) {
+          if (loader.hasOperation()) {
             return;
           }
 
@@ -332,7 +332,7 @@ var DAO = function (_BaseDAO) {
             }
 
             if (result.some(function (item) {
-              return item instanceof _LoadObject2.default ? item.isLoading() : false;
+              return item instanceof _LoadObject2.default ? loader.hasOperation() : false;
             })) {
               return _LoadObject2.default.loading();
             }
@@ -340,7 +340,7 @@ var DAO = function (_BaseDAO) {
             return result;
           });
 
-          if (loader.isLoading()) {
+          if (loader.hasOperation()) {
             return;
           }
 
