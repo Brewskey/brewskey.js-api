@@ -118,10 +118,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
 
       // This URI will look like `pours/Default.GetManyByIDs(ids=['58','59'])/`
       const handler = this.__buildHandler();
-      handler.customParam(
-        'ids',
-        idsToLoad.map(this.__reformatIDValue).join(','),
-      );
+      handler.customParam('ids', idsToLoad.join(','));
 
       this.__resolveMany(handler)
         .then((results: Array<TEntity>) => {

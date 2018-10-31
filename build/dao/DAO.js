@@ -139,7 +139,7 @@ var DAO = function (_BaseDAO) {
 
         // This URI will look like `pours/Default.GetManyByIDs(ids=['58','59'])/`
         var handler = this.__buildHandler();
-        handler.customParam('ids', idsToLoad.map(this.__reformatIDValue).join(','));
+        handler.customParam('ids', idsToLoad.join(','));
 
         this.__resolveMany(handler).then(function (results) {
           var entitiesByID = new Map(results.map(function (item) {
