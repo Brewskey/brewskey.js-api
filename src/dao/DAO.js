@@ -366,7 +366,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
             return;
           }
 
-          loader = fn().map((result: $FlowFixMe): $FlowFixMe => {
+          loader = loader.map((result: $FlowFixMe): $FlowFixMe => {
             if (!Array.isArray(result)) {
               return result;
             }
@@ -374,13 +374,16 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
             if (
               result.some(
                 (item: $FlowFixMe): boolean =>
-                  item instanceof LoadObject ? loader.hasOperation() : false,
+                  item instanceof LoadObject ? item.hasOperation() : false,
               )
             ) {
               return LoadObject.loading();
             }
 
-            return result;
+            return result.map(
+              (item: $FlowFixMe): $FlowFixMe =>
+                item instanceof LoadObject ? item.getValue() : item,
+            );
           });
 
           if (loader.hasOperation()) {

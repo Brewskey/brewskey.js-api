@@ -351,18 +351,20 @@ var DAO = function (_BaseDAO) {
             return;
           }
 
-          loader = fn().map(function (result) {
+          loader = loader.map(function (result) {
             if (!Array.isArray(result)) {
               return result;
             }
 
             if (result.some(function (item) {
-              return item instanceof _LoadObject2.default ? loader.hasOperation() : false;
+              return item instanceof _LoadObject2.default ? item.hasOperation() : false;
             })) {
               return _LoadObject2.default.loading();
             }
 
-            return result;
+            return result.map(function (item) {
+              return item instanceof _LoadObject2.default ? item.getValue() : item;
+            });
           });
 
           if (loader.hasOperation()) {
