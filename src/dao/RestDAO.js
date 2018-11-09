@@ -23,14 +23,14 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     this._entityLoaderByID.set(stringifiedID, entity.deleting());
 
     this._entityLoaderByID.set(clientID, LoadObject.empty().deleting());
-    this._emitChanges();
+    this.__emitChanges();
 
-    fetch(path, { ...queryParams, method: 'DELETE' })
+    fetch(path, { method: 'DELETE', ...queryParams })
       .then(() => {
         this._entityLoaderByID.delete(id);
         this._entityLoaderByID.delete(clientID);
         this._flushQueryCaches();
-        this._emitChanges();
+        this.__emitChanges();
       })
       .catch(error => {
         this._updateCacheForError(clientID, error);
@@ -49,7 +49,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
       this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
       this.__emitChanges();
 
-      fetch(path, { method: 'GET' })
+      fetch(path, { method: 'GET', ...queryParams })
         .then((items: Array<TEntity>) => {
           // todo items should be an array from api but now its null
           if (!items) {
@@ -87,9 +87,9 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
 
     if (!this._entityLoaderByID.has(stringifiedID)) {
       this._entityLoaderByID.set(stringifiedID, LoadObject.loading());
-      this._emitChanges();
+      this.__emitChanges();
 
-      fetch(path, { ...queryParams, method: 'GET' })
+      fetch(path, { method: 'GET', ...queryParams })
         .then(this._updateCacheForEntity)
         .catch(error => {
           this._updateCacheForError(stringifiedID, error);
@@ -107,7 +107,15 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     const clientID = ClientID.getClientID();
     this._entityLoaderByID.set(clientID, LoadObject.creating());
 
-    fetch(path, { ...queryParams, body: mutator, method: 'POST' })
+    fetch(path, {
+      body: JSON.stringify(mutator),
+      headers: [
+        { name: 'Accept', value: 'application/json' },
+        { name: 'Content-Type', value: 'application/json' },
+      ],
+      method: 'POST',
+      ...queryParams,
+    })
       .then(item => {
         this._flushQueryCaches();
         this._updateCacheForEntity(item, false);
@@ -115,11 +123,11 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
           clientID,
           nullthrows(this._entityLoaderByID.get(item.id)),
         );
-        this._emitChanges();
+        this.__emitChanges();
       })
       .catch(error => {
         this._entityLoaderByID.set(clientID, LoadObject.withError(error));
-        this._emitChanges();
+        this.__emitChanges();
       });
 
     return clientID;
@@ -139,9 +147,16 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     const clientID = ClientID.getClientID();
     this._entityLoaderByID.set(clientID, entity.updating());
 
-    this._emitChanges();
+    this.__emitChanges();
 
-    fetch(path, { ...queryParams, body: mutator, method: 'PUT' })
+    fetch(path, {
+      body: JSON.stringify(mutator),
+      headers: [
+        { name: 'Accept', value: 'application/json' },
+        { name: 'Content-Type', value: 'application/json' },
+      ],
+      ...queryParams,
+    })
       .then(item => {
         this._flushQueryCaches();
         this._updateCacheForEntity(item, false);
@@ -150,7 +165,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
           clientID,
           nullthrows(this._entityLoaderByID.get(item.id)),
         );
-        this._emitChanges();
+        this.__emitChanges();
       })
       .catch(error => {
         this._updateCacheForError(clientID, error);
@@ -162,17 +177,17 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
   flushCache() {
     this._entityLoaderByID = new Map();
     this._flushQueryCaches();
-    this._emitChanges();
+    this.__emitChanges();
   }
 
   flushCacheForEntity(entityID: EntityID) {
     this._entityLoaderByID.delete(entityID);
-    this._emitChanges();
+    this.__emitChanges();
   }
 
   flushQueryCaches() {
     this._flushQueryCaches();
-    this._emitChanges();
+    this.__emitChanges();
   }
 
   _flushQueryCaches() {
@@ -188,7 +203,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
       LoadObject.withValue(entity),
     );
     if (shouldEmitChanges) {
-      this._emitChanges();
+      this.__emitChanges();
     }
   }
 
@@ -199,7 +214,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
   ) {
     this._entityLoaderByID.set(id.toString(), LoadObject.withError(error));
     if (shouldEmitChanges) {
-      this._emitChanges();
+      this.__emitChanges();
     }
   }
 }

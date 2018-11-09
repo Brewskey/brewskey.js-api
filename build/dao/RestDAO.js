@@ -65,13 +65,13 @@ var RestDAO = function (_Subscription) {
       this._entityLoaderByID.set(stringifiedID, entity.deleting());
 
       this._entityLoaderByID.set(clientID, _LoadObject2.default.empty().deleting());
-      this._emitChanges();
+      this.__emitChanges();
 
-      (0, _fetch2.default)(path, _extends({}, queryParams, { method: 'DELETE' })).then(function () {
+      (0, _fetch2.default)(path, _extends({ method: 'DELETE' }, queryParams)).then(function () {
         _this2._entityLoaderByID.delete(id);
         _this2._entityLoaderByID.delete(clientID);
         _this2._flushQueryCaches();
-        _this2._emitChanges();
+        _this2.__emitChanges();
       }).catch(function (error) {
         _this2._updateCacheForError(clientID, error);
       });
@@ -89,7 +89,7 @@ var RestDAO = function (_Subscription) {
         this._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
         this.__emitChanges();
 
-        (0, _fetch2.default)(path, { method: 'GET' }).then(function (items) {
+        (0, _fetch2.default)(path, _extends({ method: 'GET' }, queryParams)).then(function (items) {
           // todo items should be an array from api but now its null
           if (!items) {
             items = []; // eslint-disable-line
@@ -126,9 +126,9 @@ var RestDAO = function (_Subscription) {
 
       if (!this._entityLoaderByID.has(stringifiedID)) {
         this._entityLoaderByID.set(stringifiedID, _LoadObject2.default.loading());
-        this._emitChanges();
+        this.__emitChanges();
 
-        (0, _fetch2.default)(path, _extends({}, queryParams, { method: 'GET' })).then(this._updateCacheForEntity).catch(function (error) {
+        (0, _fetch2.default)(path, _extends({ method: 'GET' }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
           _this4._updateCacheForError(stringifiedID, error);
         });
       }
@@ -143,14 +143,18 @@ var RestDAO = function (_Subscription) {
       var clientID = _ClientID2.default.getClientID();
       this._entityLoaderByID.set(clientID, _LoadObject2.default.creating());
 
-      (0, _fetch2.default)(path, _extends({}, queryParams, { body: mutator, method: 'POST' })).then(function (item) {
+      (0, _fetch2.default)(path, _extends({
+        body: JSON.stringify(mutator),
+        headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }],
+        method: 'POST'
+      }, queryParams)).then(function (item) {
         _this5._flushQueryCaches();
         _this5._updateCacheForEntity(item, false);
         _this5._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this5._entityLoaderByID.get(item.id)));
-        _this5._emitChanges();
+        _this5.__emitChanges();
       }).catch(function (error) {
         _this5._entityLoaderByID.set(clientID, _LoadObject2.default.withError(error));
-        _this5._emitChanges();
+        _this5.__emitChanges();
       });
 
       return clientID;
@@ -167,14 +171,17 @@ var RestDAO = function (_Subscription) {
       var clientID = _ClientID2.default.getClientID();
       this._entityLoaderByID.set(clientID, entity.updating());
 
-      this._emitChanges();
+      this.__emitChanges();
 
-      (0, _fetch2.default)(path, _extends({}, queryParams, { body: mutator, method: 'PUT' })).then(function (item) {
+      (0, _fetch2.default)(path, _extends({
+        body: JSON.stringify(mutator),
+        headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }]
+      }, queryParams)).then(function (item) {
         _this6._flushQueryCaches();
         _this6._updateCacheForEntity(item, false);
         // The clientID has a reference to the load object
         _this6._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this6._entityLoaderByID.get(item.id)));
-        _this6._emitChanges();
+        _this6.__emitChanges();
       }).catch(function (error) {
         _this6._updateCacheForError(clientID, error);
       });
@@ -186,19 +193,19 @@ var RestDAO = function (_Subscription) {
     value: function flushCache() {
       this._entityLoaderByID = new Map();
       this._flushQueryCaches();
-      this._emitChanges();
+      this.__emitChanges();
     }
   }, {
     key: 'flushCacheForEntity',
     value: function flushCacheForEntity(entityID) {
       this._entityLoaderByID.delete(entityID);
-      this._emitChanges();
+      this.__emitChanges();
     }
   }, {
     key: 'flushQueryCaches',
     value: function flushQueryCaches() {
       this._flushQueryCaches();
-      this._emitChanges();
+      this.__emitChanges();
     }
   }, {
     key: '_flushQueryCaches',
@@ -217,7 +224,7 @@ var RestDAO = function (_Subscription) {
 
       this._entityLoaderByID.set(entity.id.toString(), _LoadObject2.default.withValue(entity));
       if (shouldEmitChanges) {
-        this._emitChanges();
+        this.__emitChanges();
       }
     }
   }, {
@@ -227,7 +234,7 @@ var RestDAO = function (_Subscription) {
 
       this._entityLoaderByID.set(id.toString(), _LoadObject2.default.withError(error));
       if (shouldEmitChanges) {
-        this._emitChanges();
+        this.__emitChanges();
       }
     }
   }]);
