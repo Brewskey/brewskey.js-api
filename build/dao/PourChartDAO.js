@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _BaseDAO2 = require('./BaseDAO');
+var _BaseODataDAO2 = require('./BaseODataDAO');
 
-var _BaseDAO3 = _interopRequireDefault(_BaseDAO2);
+var _BaseODataDAO3 = _interopRequireDefault(_BaseODataDAO2);
 
 var _constants = require('../constants');
 
@@ -22,8 +22,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var PourChartDAO = function (_BaseDAO) {
-  _inherits(PourChartDAO, _BaseDAO);
+var PourChartDAO = function (_BaseODataDAO) {
+  _inherits(PourChartDAO, _BaseODataDAO);
 
   function PourChartDAO() {
     _classCallCheck(this, PourChartDAO);
@@ -41,6 +41,6 @@ var PourChartDAO = function (_BaseDAO) {
   }
 
   return PourChartDAO;
-}(_BaseDAO3.default);
+}(_BaseODataDAO3.default);
 
 exports.default = new PourChartDAO();

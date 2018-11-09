@@ -2,7 +2,7 @@
 
 import type { Keg, KegMutator, KegType } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import KegTranslator from '../translators/KegTranslator';
 import LoadObject from '../LoadObject';
 import { DAO_ENTITIES } from '../constants';
@@ -17,7 +17,7 @@ export const MAX_OUNCES_BY_KEG_TYPE: { [KegType]: number } = {
   SlimQuarter: 992,
 };
 
-class KegDAO extends DAO<Keg, KegMutator> {
+class KegDAO extends ODataDAO<Keg, KegMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.KEGS,

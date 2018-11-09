@@ -1,11 +1,11 @@
 // @flow
 import type { Location, LocationMutator } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import LocationTranslator from '../translators/LocationTranslator';
 
-class LocationDAO extends DAO<Location, LocationMutator> {
+class LocationDAO extends ODataDAO<Location, LocationMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.LOCATIONS,

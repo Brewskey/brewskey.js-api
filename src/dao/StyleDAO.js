@@ -1,11 +1,11 @@
 // @flow
 import type { Style } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class StyleDAO extends DAO<Style, Style> {
+class StyleDAO extends ODataDAO<Style, Style> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.BEVERAGE_STYLES,

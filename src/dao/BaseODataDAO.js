@@ -31,20 +31,20 @@ const parseNavProp = ([name, navProp]: [string, mixed]): string => {
 
 type ErrorHandler = (error: Error) => void;
 
-class BaseDAO<TEntity, TEntityMutator> {
+class BaseODataDAO<TEntity, TEntityMutator> {
   static _organizationID: ?EntityID = null;
   static _errorHandlers: Array<ErrorHandler> = [];
 
   static setOrganizationID(organizationID: ?EntityID) {
-    BaseDAO._organizationID = organizationID;
+    BaseODataDAO._organizationID = organizationID;
   }
 
   static onError = (handler: ErrorHandler) => {
-    BaseDAO._errorHandlers.push(handler);
+    BaseODataDAO._errorHandlers.push(handler);
   };
 
   static __handleError = (error: Error) => {
-    BaseDAO._errorHandlers.forEach((handler: ErrorHandler): void =>
+    BaseODataDAO._errorHandlers.forEach((handler: ErrorHandler): void =>
       handler(error),
     );
   };
@@ -122,8 +122,8 @@ class BaseDAO<TEntity, TEntityMutator> {
       handler.customParam('$apply', apply);
     }
 
-    if (BaseDAO._organizationID) {
-      handler.customParam('organizationID', BaseDAO._organizationID);
+    if (BaseODataDAO._organizationID) {
+      handler.customParam('organizationID', BaseODataDAO._organizationID);
     }
 
     return handler;
@@ -243,4 +243,4 @@ class BaseDAO<TEntity, TEntityMutator> {
   }
 }
 
-export default BaseDAO;
+export default BaseODataDAO;

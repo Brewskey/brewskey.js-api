@@ -1,11 +1,11 @@
 // @flow
 import type { Glass } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class GlassDAO extends DAO<Glass, Glass> {
+class GlassDAO extends ODataDAO<Glass, Glass> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.BEVERAGE_GLASSES,

@@ -3,10 +3,10 @@ import type { EntityID, QueryOptions } from '../index';
 import type OHandler from 'odata';
 
 import nullthrows from 'nullthrows';
-import BaseDAO from './BaseDAO';
+import BaseODataDAO from './BaseODataDAO';
 import LoadObject from '../LoadObject';
 
-class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
+class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   TEntity,
   TEntityMutator,
 > {
@@ -41,7 +41,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._emitChanges();
       })
       .catch((error: Error) => {
-        BaseDAO.__handleError(error);
+        BaseODataDAO.__handleError(error);
         this._updateCacheForError(clientID, error);
       });
 
@@ -81,7 +81,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this._emitChanges();
         })
         .catch((error: Error) => {
-          BaseDAO.__handleError(error);
+          BaseODataDAO.__handleError(error);
           const loader = this._countLoaderByQuery.get(cacheKey);
           this._countLoaderByQuery.set(
             cacheKey,
@@ -104,7 +104,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
       )
         .then((result: TEntity): void => this._updateCacheForEntity(result))
         .catch((error: Error) => {
-          BaseDAO.__handleError(error);
+          BaseODataDAO.__handleError(error);
           this._updateCacheForError(stringifiedID, error);
         });
     }
@@ -153,7 +153,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this._emitChanges();
         })
         .catch((error: Error) => {
-          BaseDAO.__handleError(error);
+          BaseODataDAO.__handleError(error);
           stringifiedIds.forEach((id: EntityID): void =>
             this._updateCacheForError(id, error, false),
           );
@@ -193,7 +193,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this.fetchByIDs(stringifiedIds);
         })
         .catch((error: Error) => {
-          BaseDAO.__handleError(error);
+          BaseODataDAO.__handleError(error);
           const loader = this._entityIDsLoaderByQuery.get(cacheKey);
           this._entityIDsLoaderByQuery.set(
             cacheKey,
@@ -274,7 +274,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._emitChanges();
       })
       .catch((error: Error) => {
-        BaseDAO.__handleError(error);
+        BaseODataDAO.__handleError(error);
         this._updateCacheForError(clientID, error);
       });
 
@@ -300,7 +300,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._emitChanges();
       })
       .catch((error: Error) => {
-        BaseDAO.__handleError(error);
+        BaseODataDAO.__handleError(error);
         this._entityLoaderByID.set(clientID, LoadObject.withError(error));
         this._emitChanges();
       });
@@ -334,7 +334,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._emitChanges();
       })
       .catch((error: Error) => {
-        BaseDAO.__handleError(error);
+        BaseODataDAO.__handleError(error);
         this._updateCacheForError(clientID, error);
       });
 
@@ -445,7 +445,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
         this._emitChanges();
       })
       .catch((error: Error) => {
-        BaseDAO.__handleError(error);
+        BaseODataDAO.__handleError(error);
         this._updateCacheForError(stringifiedID || clientID, error);
       });
 
@@ -472,7 +472,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
           this._emitChanges();
         })
         .catch((error: Error) => {
-          BaseDAO.__handleError(error);
+          BaseODataDAO.__handleError(error);
           this._customLoaderByQuery.set(cacheKey, LoadObject.withError(error));
           this._emitChanges();
         });
@@ -482,8 +482,8 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   }
 
   _getClientID(): string {
-    DAO._clientID += 1;
-    return `CLIENT_ID:${DAO._clientID}`;
+    ODataDAO._clientID += 1;
+    return `CLIENT_ID:${ODataDAO._clientID}`;
   }
 
   _emitChanges() {
@@ -522,4 +522,4 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   }
 }
 
-export default DAO;
+export default ODataDAO;

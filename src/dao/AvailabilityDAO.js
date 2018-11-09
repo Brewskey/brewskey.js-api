@@ -1,11 +1,11 @@
 // @flow
 import type { Availability } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class AvailabilityDAO extends DAO<Availability, Availability> {
+class AvailabilityDAO extends ODataDAO<Availability, Availability> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.BEVERAGE_AVAILABILITIES,

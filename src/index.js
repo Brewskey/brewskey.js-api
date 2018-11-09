@@ -4,7 +4,7 @@ import type { EntityID, Headers, OConfig } from './index';
 
 import oHandler from 'odata';
 import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
-import BaseDAO from './dao/DAO';
+import BaseODataDAO from './dao/BaseODataDAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
 import { MAX_OUNCES_BY_KEG_TYPE } from './dao/KegDAO';
 import { FRIEND_STATUSES } from './dao/FriendDAO';
@@ -81,7 +81,7 @@ const flushCache = () => {
 };
 
 const setOrganizationID = (organizationID: ?EntityID) => {
-  BaseDAO.setOrganizationID(organizationID);
+  BaseODataDAO.setOrganizationID(organizationID);
 
   AccountDAO.flushCache();
   AchievementDAO.flushCache();
@@ -134,7 +134,7 @@ export default {
   flushCache,
   getHeaders,
   initializeDAOApi,
-  onError: BaseDAO.onError,
+  onError: BaseODataDAO.onError,
   setHeaders,
   setOrganizationID,
 };

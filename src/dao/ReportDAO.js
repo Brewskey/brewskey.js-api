@@ -1,11 +1,11 @@
 // @flow
 import type { Report, ReportMutator } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import ReportTranslator from '../translators/ReportTranslator';
 
-class ReportDAO extends DAO<Report, ReportMutator> {
+class ReportDAO extends ODataDAO<Report, ReportMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.REPORTS,

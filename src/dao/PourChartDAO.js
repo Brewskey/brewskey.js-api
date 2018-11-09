@@ -1,11 +1,11 @@
 // @flow
 import type { PourChartParams, PourChartDataSet } from '../index';
 
-import BaseDAO from './BaseDAO';
+import BaseODataDAO from './BaseODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class PourChartDAO extends BaseDAO<PourChartDataSet, PourChartDataSet> {
+class PourChartDAO extends BaseODataDAO<PourChartDataSet, PourChartDataSet> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.POUR_CHART,

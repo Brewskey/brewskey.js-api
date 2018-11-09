@@ -7,9 +7,9 @@ exports.FRIEND_STATUSES = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _DAO2 = require('./DAO');
+var _ODataDAO2 = require('./ODataDAO');
 
-var _DAO3 = _interopRequireDefault(_DAO2);
+var _ODataDAO3 = _interopRequireDefault(_ODataDAO2);
 
 var _constants = require('../constants');
 
@@ -37,8 +37,8 @@ var FRIEND_STATUSES = exports.FRIEND_STATUSES = {
   SPAM: 'Spam'
 };
 
-var FriendDAO = function (_DAO) {
-  _inherits(FriendDAO, _DAO);
+var FriendDAO = function (_ODataDAO) {
+  _inherits(FriendDAO, _ODataDAO);
 
   function FriendDAO() {
     _classCallCheck(this, FriendDAO);
@@ -68,6 +68,6 @@ var FriendDAO = function (_DAO) {
   }]);
 
   return FriendDAO;
-}(_DAO3.default);
+}(_ODataDAO3.default);
 
 exports.default = new FriendDAO();

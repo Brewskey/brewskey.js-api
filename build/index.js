@@ -11,9 +11,9 @@ var _odata2 = _interopRequireDefault(_odata);
 
 var _constants = require('./constants');
 
-var _DAO = require('./dao/DAO');
+var _BaseODataDAO = require('./dao/BaseODataDAO');
 
-var _DAO2 = _interopRequireDefault(_DAO);
+var _BaseODataDAO2 = _interopRequireDefault(_BaseODataDAO);
 
 var _ReportTranslator = require('./translators/ReportTranslator');
 
@@ -141,7 +141,7 @@ var flushCache = function flushCache() {
 };
 
 var setOrganizationID = function setOrganizationID(organizationID) {
-  _DAO2.default.setOrganizationID(organizationID);
+  _BaseODataDAO2.default.setOrganizationID(organizationID);
 
   _AccountDAO2.default.flushCache();
   _AchievementDAO2.default.flushCache();
@@ -193,7 +193,7 @@ exports.default = {
   flushCache: flushCache,
   getHeaders: getHeaders,
   initializeDAOApi: initializeDAOApi,
-  onError: _DAO2.default.onError,
+  onError: _BaseODataDAO2.default.onError,
   setHeaders: setHeaders,
   setOrganizationID: setOrganizationID
 };

@@ -3,11 +3,11 @@
 import type LoadObject from '../LoadObject';
 import type { Achievement, AchievementCounter, EntityID } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class AchievementDAO extends DAO<Achievement, Achievement> {
+class AchievementDAO extends ODataDAO<Achievement, Achievement> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.ACHIEVEMENTS,

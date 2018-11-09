@@ -1,11 +1,11 @@
 // @flow
 import type { Pour } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import PourTranslator from '../translators/PourTranslator';
 
-class PourDAO extends DAO<Pour, Pour> {
+class PourDAO extends ODataDAO<Pour, Pour> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.POURS,
