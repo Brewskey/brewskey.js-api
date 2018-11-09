@@ -7,45 +7,16 @@
     "mocha": true,
     "es6": true
   },
-  "plugins": [
-    "flowtype",
-    "sorting"
-  ],
+  "plugins": ["flowtype", "sorting"],
   "rules": {
-    "arrow-parens": [
-      "error",
-      "always"
-    ],
-    "arrow-body-style": [
-      2,
-      "as-needed"
-    ],
-    "comma-dangle": [
-      2,
-      "always-multiline"
-    ],
+    "arrow-parens": 0,
+    "arrow-body-style": [2, "as-needed"],
+    "comma-dangle": [2, "always-multiline"],
     "flowtype/define-flow-type": 1,
-    "flowtype/require-parameter-type": 1,
-    "flowtype/require-valid-file-annotation": [
-      2,
-      "always"
-    ],
-    "flowtype/require-return-type": [
-      1,
-      "always",
-      {
-        "annotateUndefined": "never"
-      }
-    ],
+    "flowtype/require-valid-file-annotation": [2, "always"],
     "flowtype/sort-keys": 2,
-    "flowtype/space-after-type-colon": [
-      1,
-      "always"
-    ],
-    "flowtype/space-before-type-colon": [
-      1,
-      "never"
-    ],
+    "flowtype/space-after-type-colon": [1, "always"],
+    "flowtype/space-before-type-colon": [1, "never"],
     "flowtype/use-flow-type": 1,
     "import/first": 0,
     "import/newline-after-import": 0,

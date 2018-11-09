@@ -75,6 +75,10 @@ var _PermissionDAO = require('./dao/PermissionDAO');
 
 var _PermissionDAO2 = _interopRequireDefault(_PermissionDAO);
 
+var _ProductDAO = require('./dao/ProductDAO');
+
+var _ProductDAO2 = _interopRequireDefault(_ProductDAO);
+
 var _PourChartDAO = require('./dao/PourChartDAO');
 
 var _PourChartDAO2 = _interopRequireDefault(_PourChartDAO);
@@ -177,6 +181,7 @@ exports.default = {
   PermissionDAO: _PermissionDAO2.default,
   PourChartDAO: _PourChartDAO2.default,
   PourDAO: _PourDAO2.default,
+  ProductDAO: _ProductDAO2.default,
   ReportDAO: _ReportDAO2.default,
   ScheduleDAO: _ScheduleDAO2.default,
   SrmDAO: _SrmDAO2.default,

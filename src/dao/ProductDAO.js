@@ -1,20 +1,24 @@
 // @flow
 
-class ProductDAO {
+import RestDAO from './RestDAO';
+
+class ProductDAO extends RestDAO {
   // api/v2/products/{idOrSlug}
   deleteByID() {}
 
   // api/v2/products
-  fetchMany() {}
+  fetchProducts() {
+    return this.__fetchMany('products');
+  }
 
-  // api/v2/products/{idOrSlug}
-  fetchByID() {}
+  fetchProduct(idOrSlug: string) {
+    return this.__fetchOne(`products/${idOrSlug}`, idOrSlug);
+  }
 
-  // "api/v2/products"
   post() {}
 
   // api/v2/products/{idOrSlug}
   put() {}
 }
 
-export default ProductDAO;
+export default new ProductDAO();
