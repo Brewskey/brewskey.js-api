@@ -1,20 +1,37 @@
 // @flow
 
-class ProductDeviceDAO {
-  // api/v2/products/{idOrSlug}/devices
-  fetchMany() {}
+import RestDAO from './RestDAO';
 
-  // api/v2/products/{idOrSlug}/devices/{particleID}
-  fetchByID() {} // + productID
+class ProductDeviceDAO extends RestDAO<*, *> {
+  fetchMany(productIdOrSlug: string) {
+    return this.__fetchMany(`products/${productIdOrSlug}/devices/`);
+  }
 
-  // api/v2/products/{idOrSlug}/devices
-  post() {}
+  fetchOne(productIdOrSlug: string, particleId: string) {
+    return this.__fetchOne(
+      `products/${productIdOrSlug}/devices/${particleId}/`,
+      particleId,
+    );
+  }
 
-  // api/v2/products/{idOrSlug}/devices/{particleID}
-  put() {}
+  post(productIdOrSlug: string, deviceMutator: any) {
+    return this.__post(`products/${productIdOrSlug}/devices/`, deviceMutator);
+  }
 
-  // api/v2/products/{idOrSlug}/devices/{particleID}
-  delete() {}
+  put(productIdOrSlug: string, particleId: string, deviceMutator: any) {
+    return this.__put(
+      `products/${productIdOrSlug}/devices/${particleId}/`,
+      particleId,
+      deviceMutator,
+    );
+  }
+
+  delete(productIdOrSlug: string, particleId: string) {
+    return this.__delete(
+      `products/${productIdOrSlug}/devices/${particleId}`,
+      particleId,
+    );
+  }
 }
 
 export default ProductDeviceDAO;

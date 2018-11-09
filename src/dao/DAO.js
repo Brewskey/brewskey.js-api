@@ -16,6 +16,7 @@ class DAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseDAO<
   _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
   _customLoaderByQuery: Map<string, LoadObject<any>> = new Map();
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
+  _subscriptions: Set<() => void> = new Set();
 
   deleteByID(id: EntityID): EntityID {
     const stringifiedID = id.toString();

@@ -50,7 +50,7 @@ var RestDAO = function (_Subscription) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = RestDAO.__proto__ || Object.getPrototypeOf(RestDAO)).call.apply(_ref, [this].concat(args))), _this), _this.__delete = _this.__delete.bind(_this), _this.__fetchMany = _this.__fetchMany.bind(_this), _this.__fetchOne = _this.__fetchOne.bind(_this), _this.__post = _this.__post.bind(_this), _this.__put = _this.__put.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.flushCacheForEntity = _this.flushCacheForEntity.bind(_this), _this.flushQueryCaches = _this.flushQueryCaches.bind(_this), _this._flushQueryCaches = _this._flushQueryCaches.bind(_this), _this.__getCacheKey = _this.__getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._entityLoaderByID = new Map(), _this._entityIDsLoaderByQuery = new Map(), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = RestDAO.__proto__ || Object.getPrototypeOf(RestDAO)).call.apply(_ref, [this].concat(args))), _this), _this.__delete = _this.__delete.bind(_this), _this.__fetchMany = _this.__fetchMany.bind(_this), _this.__fetchOne = _this.__fetchOne.bind(_this), _this.__fetchOnce = _this.__fetchOnce.bind(_this), _this.__post = _this.__post.bind(_this), _this.__put = _this.__put.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.flushCacheForEntity = _this.flushCacheForEntity.bind(_this), _this.flushQueryCaches = _this.flushQueryCaches.bind(_this), _this._flushQueryCaches = _this._flushQueryCaches.bind(_this), _this.__getCacheKey = _this.__getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._entityLoaderById = new Map(), _this._entityIdsLoaderByQuery = new Map(), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(RestDAO, [{
@@ -58,25 +58,25 @@ var RestDAO = function (_Subscription) {
     value: function __delete(path, id, queryParams) {
       var _this2 = this;
 
-      var clientID = _ClientID2.default.getClientID();
-      var stringifiedID = id.toString();
+      var clientId = _ClientID2.default.getClientId();
+      var stringifiedId = id.toString();
 
-      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject2.default.empty();
-      this._entityLoaderByID.set(stringifiedID, entity.deleting());
+      var entity = this._entityLoaderById.get(stringifiedId) || _LoadObject2.default.empty();
+      this._entityLoaderById.set(stringifiedId, entity.deleting());
 
-      this._entityLoaderByID.set(clientID, _LoadObject2.default.empty().deleting());
+      this._entityLoaderById.set(clientId, _LoadObject2.default.empty().deleting());
       this.__emitChanges();
 
       (0, _fetch2.default)(path, _extends({ method: 'DELETE' }, queryParams)).then(function () {
-        _this2._entityLoaderByID.delete(id);
-        _this2._entityLoaderByID.delete(clientID);
+        _this2._entityLoaderById.delete(id);
+        _this2._entityLoaderById.delete(clientId);
         _this2._flushQueryCaches();
         _this2.__emitChanges();
       }).catch(function (error) {
-        _this2._updateCacheForError(clientID, error);
+        _this2._updateCacheForError(clientId, error);
       });
 
-      return clientID;
+      return clientId;
     }
   }, {
     key: '__fetchMany',
@@ -85,8 +85,8 @@ var RestDAO = function (_Subscription) {
 
       var cacheKey = this.__getCacheKey(path, queryParams);
 
-      if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
-        this._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
+      if (!this._entityIdsLoaderByQuery.has(cacheKey)) {
+        this._entityIdsLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
         this.__emitChanges();
 
         (0, _fetch2.default)(path, _extends({ method: 'GET' }, queryParams)).then(function (items) {
@@ -100,20 +100,20 @@ var RestDAO = function (_Subscription) {
           });
 
           items.forEach(function (item) {
-            return _this3._entityLoaderByID.set(item.id, _LoadObject2.default.withValue(item));
+            return _this3._entityLoaderById.set(item.id, _LoadObject2.default.withValue(item));
           });
 
-          _this3._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(ids));
+          _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(ids));
           _this3.__emitChanges();
         }).catch(function (error) {
-          _this3._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.withError(error));
+          _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject2.default.withError(error));
           _this3.__emitChanges();
         });
       }
 
-      return (0, _nullthrows2.default)(this._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
+      return (0, _nullthrows2.default)(this._entityIdsLoaderByQuery.get(cacheKey)).map(function (ids) {
         return ids.map(function (id) {
-          return (0, _nullthrows2.default)(_this3._entityLoaderByID.get(id.toString()));
+          return (0, _nullthrows2.default)(_this3._entityLoaderById.get(id.toString()));
         });
       });
     }
@@ -122,54 +122,73 @@ var RestDAO = function (_Subscription) {
     value: function __fetchOne(path, id, queryParams) {
       var _this4 = this;
 
-      var stringifiedID = id.toString();
+      var stringifiedId = id.toString();
 
-      if (!this._entityLoaderByID.has(stringifiedID)) {
-        this._entityLoaderByID.set(stringifiedID, _LoadObject2.default.loading());
+      if (!this._entityLoaderById.has(stringifiedId)) {
+        this._entityLoaderById.set(stringifiedId, _LoadObject2.default.loading());
         this.__emitChanges();
 
-        (0, _fetch2.default)(path, _extends({ method: 'GET' }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
-          _this4._updateCacheForError(stringifiedID, error);
+        (0, _fetch2.default)(path, _extends({
+          headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }],
+          method: 'GET'
+        }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
+          _this4._updateCacheForError(stringifiedId, error);
         });
       }
 
-      return (0, _nullthrows2.default)(this._entityLoaderByID.get(stringifiedID));
+      return (0, _nullthrows2.default)(this._entityLoaderById.get(stringifiedId));
+    }
+  }, {
+    key: '__fetchOnce',
+    value: function __fetchOnce(path, queryParams) {
+      var _this5 = this;
+
+      var clientId = _ClientID2.default.getClientId();
+
+      this._entityLoaderById.set(clientId, _LoadObject2.default.loading());
+      this.__emitChanges();
+
+      (0, _fetch2.default)(path, _extends({ method: 'GET' }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
+        _this5._updateCacheForError(clientId, error);
+      });
+
+      return (0, _nullthrows2.default)(this._entityLoaderById.get(clientId));
     }
   }, {
     key: '__post',
     value: function __post(path, mutator, queryParams) {
-      var _this5 = this;
+      var _this6 = this;
 
-      var clientID = _ClientID2.default.getClientID();
-      this._entityLoaderByID.set(clientID, _LoadObject2.default.creating());
+      var clientId = _ClientID2.default.getClientId();
+      this._entityLoaderById.set(clientId, _LoadObject2.default.creating());
 
       (0, _fetch2.default)(path, _extends({
         body: JSON.stringify(mutator),
         headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }],
         method: 'POST'
       }, queryParams)).then(function (item) {
-        _this5._flushQueryCaches();
-        _this5._updateCacheForEntity(item, false);
-        _this5._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this5._entityLoaderByID.get(item.id)));
-        _this5.__emitChanges();
+        _this6._flushQueryCaches();
+        _this6._updateCacheForEntity(item, false);
+        _this6._entityLoaderById.set(clientId, (0, _nullthrows2.default)(_this6._entityLoaderById.get(item.id)));
+        _this6.__emitChanges();
       }).catch(function (error) {
-        _this5._entityLoaderByID.set(clientID, _LoadObject2.default.withError(error));
-        _this5.__emitChanges();
+        _this6._entityLoaderById.set(clientId, _LoadObject2.default.withError(error));
+        _this6.__emitChanges();
       });
 
-      return clientID;
+      return clientId;
     }
   }, {
     key: '__put',
     value: function __put(path, id, mutator, queryParams) {
-      var _this6 = this;
+      var _this7 = this;
 
       var stringifiedID = id.toString();
-      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject2.default.empty();
-      this._entityLoaderByID.set(stringifiedID, entity.updating());
+      var entity = this._entityLoaderById.get(stringifiedID) || _LoadObject2.default.empty();
+      this._entityLoaderById.set(stringifiedID, entity.updating());
 
-      var clientID = _ClientID2.default.getClientID();
-      this._entityLoaderByID.set(clientID, entity.updating());
+      var clientId = _ClientID2.default.getClientId();
+      this._entityLoaderById.set(clientId, entity.updating());
 
       this.__emitChanges();
 
@@ -177,28 +196,28 @@ var RestDAO = function (_Subscription) {
         body: JSON.stringify(mutator),
         headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }]
       }, queryParams)).then(function (item) {
-        _this6._flushQueryCaches();
-        _this6._updateCacheForEntity(item, false);
+        _this7._flushQueryCaches();
+        _this7._updateCacheForEntity(item, false);
         // The clientID has a reference to the load object
-        _this6._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this6._entityLoaderByID.get(item.id)));
-        _this6.__emitChanges();
+        _this7._entityLoaderById.set(clientId, (0, _nullthrows2.default)(_this7._entityLoaderById.get(item.id)));
+        _this7.__emitChanges();
       }).catch(function (error) {
-        _this6._updateCacheForError(clientID, error);
+        _this7._updateCacheForError(clientId, error);
       });
 
-      return clientID;
+      return clientId;
     }
   }, {
     key: 'flushCache',
     value: function flushCache() {
-      this._entityLoaderByID = new Map();
+      this._entityLoaderById = new Map();
       this._flushQueryCaches();
       this.__emitChanges();
     }
   }, {
     key: 'flushCacheForEntity',
-    value: function flushCacheForEntity(entityID) {
-      this._entityLoaderByID.delete(entityID);
+    value: function flushCacheForEntity(entityId) {
+      this._entityLoaderById.delete(entityId);
       this.__emitChanges();
     }
   }, {
@@ -210,7 +229,7 @@ var RestDAO = function (_Subscription) {
   }, {
     key: '_flushQueryCaches',
     value: function _flushQueryCaches() {
-      this._entityIDsLoaderByQuery = new Map();
+      this._entityIdsLoaderByQuery = new Map();
     }
   }, {
     key: '__getCacheKey',
@@ -222,7 +241,7 @@ var RestDAO = function (_Subscription) {
     value: function _updateCacheForEntity(entity) {
       var shouldEmitChanges = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      this._entityLoaderByID.set(entity.id.toString(), _LoadObject2.default.withValue(entity));
+      this._entityLoaderById.set(entity.id.toString(), _LoadObject2.default.withValue(entity));
       if (shouldEmitChanges) {
         this.__emitChanges();
       }
@@ -232,7 +251,7 @@ var RestDAO = function (_Subscription) {
     value: function _updateCacheForError(id, error) {
       var shouldEmitChanges = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-      this._entityLoaderByID.set(id.toString(), _LoadObject2.default.withError(error));
+      this._entityLoaderById.set(id.toString(), _LoadObject2.default.withError(error));
       if (shouldEmitChanges) {
         this.__emitChanges();
       }

@@ -1,11 +1,11 @@
 // @flow
 
 class ClientID {
-  static ClientID;
+  static _clientId: string;
 
-  static getClientID(): string {
-    ClientID._clientID += 1;
-    return `CLIENT_ID:${ClientID._clientID}`;
+  static getClientId(): string {
+    ClientID._clientId += 1;
+    return `CLIENT_ID:${ClientID._clientId}`;
   }
 }
 

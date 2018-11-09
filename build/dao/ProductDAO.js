@@ -32,33 +32,33 @@ var ProductDAO = function (_RestDAO) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductDAO.__proto__ || Object.getPrototypeOf(ProductDAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.fetchProducts = _this.fetchProducts.bind(_this), _this.fetchProduct = _this.fetchProduct.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductDAO.__proto__ || Object.getPrototypeOf(ProductDAO)).call.apply(_ref, [this].concat(args))), _this), _this.fetchMany = _this.fetchMany.bind(_this), _this.fetchOne = _this.fetchOne.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.delete = _this.delete.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(ProductDAO, [{
-    key: 'deleteByID',
-    value: function deleteByID(idOrSlug) {
-      return this.__delete('products/' + idOrSlug, idOrSlug);
+    key: 'fetchMany',
+    value: function fetchMany() {
+      return this.__fetchMany('products/');
     }
   }, {
-    key: 'fetchProducts',
-    value: function fetchProducts() {
-      return this.__fetchMany('products');
-    }
-  }, {
-    key: 'fetchProduct',
-    value: function fetchProduct(idOrSlug) {
-      return this.__fetchOne('products/' + idOrSlug, idOrSlug);
+    key: 'fetchOne',
+    value: function fetchOne(idOrSlug) {
+      return this.__fetchOne('products/' + idOrSlug + '/', idOrSlug);
     }
   }, {
     key: 'post',
     value: function post(mutator) {
-      return this.__post('products', mutator);
+      return this.__post('products/', mutator);
     }
   }, {
     key: 'put',
     value: function put(id, mutator) {
-      return this.__put('products/' + id, id, mutator);
+      return this.__put('products/' + id + '/', id, mutator);
+    }
+  }, {
+    key: 'delete',
+    value: function _delete(idOrSlug) {
+      return this.__delete('products/' + idOrSlug, idOrSlug);
     }
   }]);
 

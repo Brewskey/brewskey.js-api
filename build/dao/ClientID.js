@@ -14,10 +14,10 @@ var ClientID = function () {
   }
 
   _createClass(ClientID, null, [{
-    key: "getClientID",
-    value: function getClientID() {
-      ClientID._clientID += 1;
-      return "CLIENT_ID:" + ClientID._clientID;
+    key: "getClientId",
+    value: function getClientId() {
+      ClientID._clientId += 1;
+      return "CLIENT_ID:" + ClientID._clientId;
     }
   }]);
 
