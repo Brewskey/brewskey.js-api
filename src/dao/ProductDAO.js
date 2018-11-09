@@ -3,10 +3,10 @@
 import RestDAO from './RestDAO';
 
 class ProductDAO extends RestDAO {
-  // api/v2/products/{idOrSlug}
-  deleteByID() {}
+  deleteByID(idOrSlug: string) {
+    return this.__delete(`products/${idOrSlug}`, idOrSlug);
+  }
 
-  // api/v2/products
   fetchProducts() {
     return this.__fetchMany('products');
   }
@@ -15,10 +15,13 @@ class ProductDAO extends RestDAO {
     return this.__fetchOne(`products/${idOrSlug}`, idOrSlug);
   }
 
-  post() {}
+  post(mutator: any) {
+    return this.__post('products', mutator);
+  }
 
-  // api/v2/products/{idOrSlug}
-  put() {}
+  put(id: string, mutator: any) {
+    return this.__put(`products/${id}`, id, mutator);
+  }
 }
 
 export default new ProductDAO();

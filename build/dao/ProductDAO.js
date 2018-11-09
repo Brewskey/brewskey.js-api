@@ -37,12 +37,9 @@ var ProductDAO = function (_RestDAO) {
 
   _createClass(ProductDAO, [{
     key: 'deleteByID',
-
-    // api/v2/products/{idOrSlug}
-    value: function deleteByID() {}
-
-    // api/v2/products
-
+    value: function deleteByID(idOrSlug) {
+      return this.__delete('products/' + idOrSlug, idOrSlug);
+    }
   }, {
     key: 'fetchProducts',
     value: function fetchProducts() {
@@ -55,13 +52,14 @@ var ProductDAO = function (_RestDAO) {
     }
   }, {
     key: 'post',
-    value: function post() {}
-
-    // api/v2/products/{idOrSlug}
-
+    value: function post(mutator) {
+      return this.__post('products', mutator);
+    }
   }, {
     key: 'put',
-    value: function put() {}
+    value: function put(id, mutator) {
+      return this.__put('products/' + id, id, mutator);
+    }
   }]);
 
   return ProductDAO;

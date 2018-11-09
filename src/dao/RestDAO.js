@@ -1,15 +1,43 @@
 // @flow
 
 import nullthrows from 'nullthrows';
+import ClientID from './ClientID';
 import Subscription from './Subcription';
 import LoadObject from '../LoadObject';
 import fetch from '../fetch';
 
-class RestDAO<TEntity> extends Subscription {
+class RestDAO<TEntity, TEntityMutator> extends Subscription {
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
   _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
 
-  __delete() {}
+  __delete<TQueryParams>(
+    path: string,
+    id: EntityID,
+    queryParams?: TQueryParams,
+  ) {
+    const clientID = ClientID.getClientID();
+    const stringifiedID = id.toString();
+
+    const entity =
+      this._entityLoaderByID.get(stringifiedID) || LoadObject.empty();
+    this._entityLoaderByID.set(stringifiedID, entity.deleting());
+
+    this._entityLoaderByID.set(clientID, LoadObject.empty().deleting());
+    this._emitChanges();
+
+    fetch(path, { ...queryParams, method: 'DELETE' })
+      .then(() => {
+        this._entityLoaderByID.delete(id);
+        this._entityLoaderByID.delete(clientID);
+        this._flushQueryCaches();
+        this._emitChanges();
+      })
+      .catch(error => {
+        this._updateCacheForError(clientID, error);
+      });
+
+    return clientID;
+  }
 
   __fetchMany<TQueryParams>(
     path: string,
@@ -71,10 +99,85 @@ class RestDAO<TEntity> extends Subscription {
     return nullthrows(this._entityLoaderByID.get(stringifiedID));
   }
 
-  __post() {}
+  __post<TQueryParams>(
+    path: string,
+    mutator: any,
+    queryParams?: TQueryParams,
+  ): string {
+    const clientID = ClientID.getClientID();
+    this._entityLoaderByID.set(clientID, LoadObject.creating());
 
-  __put() {}
+    fetch(path, { ...queryParams, body: mutator, method: 'POST' })
+      .then(item => {
+        this._flushQueryCaches();
+        this._updateCacheForEntity(item, false);
+        this._entityLoaderByID.set(
+          clientID,
+          nullthrows(this._entityLoaderByID.get(item.id)),
+        );
+        this._emitChanges();
+      })
+      .catch(error => {
+        this._entityLoaderByID.set(clientID, LoadObject.withError(error));
+        this._emitChanges();
+      });
 
+    return clientID;
+  }
+
+  __put<TQueryParams>(
+    path: string,
+    id: EntityID,
+    mutator: TEntityMutator,
+    queryParams?: TQueryParams,
+  ) {
+    const stringifiedID = id.toString();
+    const entity =
+      this._entityLoaderByID.get(stringifiedID) || LoadObject.empty();
+    this._entityLoaderByID.set(stringifiedID, entity.updating());
+
+    const clientID = ClientID.getClientID();
+    this._entityLoaderByID.set(clientID, entity.updating());
+
+    this._emitChanges();
+
+    fetch(path, { ...queryParams, body: mutator, method: 'PUT' })
+      .then(item => {
+        this._flushQueryCaches();
+        this._updateCacheForEntity(item, false);
+        // The clientID has a reference to the load object
+        this._entityLoaderByID.set(
+          clientID,
+          nullthrows(this._entityLoaderByID.get(item.id)),
+        );
+        this._emitChanges();
+      })
+      .catch(error => {
+        this._updateCacheForError(clientID, error);
+      });
+
+    return clientID;
+  }
+
+  flushCache() {
+    this._entityLoaderByID = new Map();
+    this._flushQueryCaches();
+    this._emitChanges();
+  }
+
+  flushCacheForEntity(entityID: EntityID) {
+    this._entityLoaderByID.delete(entityID);
+    this._emitChanges();
+  }
+
+  flushQueryCaches() {
+    this._flushQueryCaches();
+    this._emitChanges();
+  }
+
+  _flushQueryCaches() {
+    this._entityIDsLoaderByQuery = new Map();
+  }
   __getCacheKey(path: string, queryParams?: Object): string {
     return path + JSON.stringify(queryParams || '_');
   }
