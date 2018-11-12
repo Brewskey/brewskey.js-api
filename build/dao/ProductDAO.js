@@ -39,14 +39,14 @@ function (_RestDAO) {
   }
 
   _createClass(ProductDAO, [{
-    key: "fetchMany",
-    value: function fetchMany() {
-      return this.__fetchMany('products/');
+    key: "getMany",
+    value: function getMany() {
+      return this.__getMany('products/');
     }
   }, {
-    key: "fetchOne",
-    value: function fetchOne(idOrSlug) {
-      return this.__fetchOne("products/".concat(idOrSlug, "/"), idOrSlug);
+    key: "getOne",
+    value: function getOne(idOrSlug) {
+      return this.__getOne("products/".concat(idOrSlug, "/"), idOrSlug);
     }
   }, {
     key: "post",

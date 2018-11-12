@@ -3,12 +3,12 @@
 import RestDAO from './RestDAO';
 
 class ProductDeviceDAO extends RestDAO<*, *> {
-  fetchMany(productIdOrSlug: string) {
-    return this.__fetchMany(`products/${productIdOrSlug}/devices/`);
+  getMany(productIdOrSlug: string) {
+    return this.__getMany(`products/${productIdOrSlug}/devices/`);
   }
 
-  fetchOne(productIdOrSlug: string, particleId: string) {
-    return this.__fetchOne(
+  getOne(productIdOrSlug: string, particleId: string) {
+    return this.__getOne(
       `products/${productIdOrSlug}/devices/${particleId}/`,
       particleId,
     );

@@ -39,14 +39,14 @@ function (_RestDAO) {
   }
 
   _createClass(ProductDeviceDAO, [{
-    key: "fetchMany",
-    value: function fetchMany(productIdOrSlug) {
-      return this.__fetchMany("products/".concat(productIdOrSlug, "/devices/"));
+    key: "getMany",
+    value: function getMany(productIdOrSlug) {
+      return this.__getMany("products/".concat(productIdOrSlug, "/devices/"));
     }
   }, {
-    key: "fetchOne",
-    value: function fetchOne(productIdOrSlug, particleId) {
-      return this.__fetchOne("products/".concat(productIdOrSlug, "/devices/").concat(particleId, "/"), particleId);
+    key: "getOne",
+    value: function getOne(productIdOrSlug, particleId) {
+      return this.__getOne("products/".concat(productIdOrSlug, "/devices/").concat(particleId, "/"), particleId);
     }
   }, {
     key: "post",

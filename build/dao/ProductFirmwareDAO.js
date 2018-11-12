@@ -39,9 +39,9 @@ function (_RestDAO) {
   }
 
   _createClass(ProductFirmwareDAO, [{
-    key: "fetchMany",
-    value: function fetchMany(productIdOrSlug) {
-      return this.__fetchMany("products/".concat(productIdOrSlug, "/firmware/"));
+    key: "getMany",
+    value: function getMany(productIdOrSlug) {
+      return this.__getMany("products/".concat(productIdOrSlug, "/firmware/"));
     }
   }, {
     key: "post",

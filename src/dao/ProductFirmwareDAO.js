@@ -3,8 +3,8 @@
 import RestDAO from './RestDAO';
 
 class ProductFirmwareDAO extends RestDAO<*, *> {
-  fetchMany(productIdOrSlug: string) {
-    return this.__fetchMany(`products/${productIdOrSlug}/firmware/`);
+  getMany(productIdOrSlug: string) {
+    return this.__getMany(`products/${productIdOrSlug}/firmware/`);
   }
 
   post(productIdOrSlug: string, mutator: any) {

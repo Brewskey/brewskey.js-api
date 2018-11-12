@@ -39,9 +39,9 @@ function (_RestDAO) {
   }
 
   _createClass(CloudDeviceDAO, [{
-    key: "get",
-    value: function get(particleId) {
-      return this.__fetchOnce("cloud-devices/".concat(particleId, "/"));
+    key: "fetch",
+    value: function fetch(particleId) {
+      return this.__fetchOne("cloud-devices/".concat(particleId, "/"));
     }
   }, {
     key: "flash",
@@ -49,7 +49,7 @@ function (_RestDAO) {
       var formData = new FormData();
       formData.append('file', file); // todo queryParams
 
-      return this.__fetchOnce("cloud-devices/".concat(particleId, "/flash/"), {
+      return this.__fetchOne("cloud-devices/".concat(particleId, "/flash/"), {
         body: formData,
         headers: [{
           name: 'Content-Type',
@@ -61,7 +61,7 @@ function (_RestDAO) {
   }, {
     key: "ping",
     value: function ping(particleId) {
-      return this.__fetchOnce("cloud-devices/".concat(particleId, "/ping/"), {
+      return this.__fetchOne("cloud-devices/".concat(particleId, "/ping/"), {
         method: 'PUT'
       });
     }

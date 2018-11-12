@@ -13,37 +13,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
 
   _entityIdsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
 
-  __delete<TQueryParams: Object>(
-    path: string,
-    id: EntityID,
-    queryParams?: TQueryParams,
-  ) {
-    const clientId = ClientID.getClientId();
-    const stringifiedId = id.toString();
-
-    const entity =
-      this._entityLoaderById.get(stringifiedId) || LoadObject.empty();
-    this._entityLoaderById.set(stringifiedId, entity.deleting());
-
-    this._entityLoaderById.set(clientId, LoadObject.empty().deleting());
-    this.__emitChanges();
-
-    fetch(path, { method: 'DELETE', ...queryParams })
-      .then(() => {
-        this._entityLoaderById.delete(id);
-        this._entityLoaderById.delete(clientId);
-        this._flushQueryCaches();
-        this.__emitChanges();
-      })
-      .catch(error => {
-        Subscription.__emitError(error);
-        this._updateCacheForError(clientId, error);
-      });
-
-    return clientId;
-  }
-
-  __fetchMany<TQueryParams: Object>(
+  __getMany<TQueryParams: Object>(
     path: string,
     queryParams?: TQueryParams,
   ): LoadObject<Array<LoadObject<TEntity>>> {
@@ -83,7 +53,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     );
   }
 
-  __fetchOne<TQueryParams: Object>(
+  __getOne<TQueryParams: Object>(
     path: string,
     id: EntityID,
     queryParams?: TQueryParams,
@@ -112,7 +82,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     return nullthrows(this._entityLoaderById.get(stringifiedId));
   }
 
-  __fetchOnce<TQueryParams: Object>(
+  __fetchOne<TQueryParams: Object>(
     path: string,
     queryParams?: TQueryParams,
   ): ClientID {
@@ -198,6 +168,36 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
           clientId,
           nullthrows(this._entityLoaderById.get(item.id)),
         );
+        this.__emitChanges();
+      })
+      .catch(error => {
+        Subscription.__emitError(error);
+        this._updateCacheForError(clientId, error);
+      });
+
+    return clientId;
+  }
+
+  __delete<TQueryParams: Object>(
+    path: string,
+    id: EntityID,
+    queryParams?: TQueryParams,
+  ) {
+    const clientId = ClientID.getClientId();
+    const stringifiedId = id.toString();
+
+    const entity =
+      this._entityLoaderById.get(stringifiedId) || LoadObject.empty();
+    this._entityLoaderById.set(stringifiedId, entity.deleting());
+
+    this._entityLoaderById.set(clientId, LoadObject.empty().deleting());
+    this.__emitChanges();
+
+    fetch(path, { method: 'DELETE', ...queryParams })
+      .then(() => {
+        this._entityLoaderById.delete(id);
+        this._entityLoaderById.delete(clientId);
+        this._flushQueryCaches();
         this.__emitChanges();
       })
       .catch(error => {

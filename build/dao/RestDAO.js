@@ -65,43 +65,9 @@ function (_Subscription) {
   }
 
   _createClass(RestDAO, [{
-    key: "__delete",
-    value: function __delete(path, id, queryParams) {
+    key: "__getMany",
+    value: function __getMany(path, queryParams) {
       var _this2 = this;
-
-      var clientId = _ClientID.default.getClientId();
-
-      var stringifiedId = id.toString();
-
-      var entity = this._entityLoaderById.get(stringifiedId) || _LoadObject.default.empty();
-
-      this._entityLoaderById.set(stringifiedId, entity.deleting());
-
-      this._entityLoaderById.set(clientId, _LoadObject.default.empty().deleting());
-
-      this.__emitChanges();
-
-      (0, _fetch.default)(path, _objectSpread({
-        method: 'DELETE'
-      }, queryParams)).then(function () {
-        _this2._entityLoaderById.delete(id);
-
-        _this2._entityLoaderById.delete(clientId);
-
-        _this2._flushQueryCaches();
-
-        _this2.__emitChanges();
-      }).catch(function (error) {
-        _Subcription.default.__emitError(error);
-
-        _this2._updateCacheForError(clientId, error);
-      });
-      return clientId;
-    }
-  }, {
-    key: "__fetchMany",
-    value: function __fetchMany(path, queryParams) {
-      var _this3 = this;
 
       var cacheKey = this.__getCacheKey(path, queryParams);
 
@@ -123,31 +89,31 @@ function (_Subscription) {
             return id;
           });
           items.forEach(function (item) {
-            return _this3._entityLoaderById.set(item.id, _LoadObject.default.withValue(item));
+            return _this2._entityLoaderById.set(item.id, _LoadObject.default.withValue(item));
           });
 
-          _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(ids));
+          _this2._entityIdsLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(ids));
 
-          _this3.__emitChanges();
+          _this2.__emitChanges();
         }).catch(function (error) {
           _Subcription.default.__emitError(error);
 
-          _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
+          _this2._entityIdsLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
 
-          _this3.__emitChanges();
+          _this2.__emitChanges();
         });
       }
 
       return (0, _nullthrows.default)(this._entityIdsLoaderByQuery.get(cacheKey)).map(function (ids) {
         return ids.map(function (id) {
-          return (0, _nullthrows.default)(_this3._entityLoaderById.get(id.toString()));
+          return (0, _nullthrows.default)(_this2._entityLoaderById.get(id.toString()));
         });
       });
     }
   }, {
-    key: "__fetchOne",
-    value: function __fetchOne(path, id, queryParams) {
-      var _this4 = this;
+    key: "__getOne",
+    value: function __getOne(path, id, queryParams) {
+      var _this3 = this;
 
       var stringifiedId = id.toString();
 
@@ -168,16 +134,16 @@ function (_Subscription) {
         }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
           _Subcription.default.__emitError(error);
 
-          _this4._updateCacheForError(stringifiedId, error);
+          _this3._updateCacheForError(stringifiedId, error);
         });
       }
 
       return (0, _nullthrows.default)(this._entityLoaderById.get(stringifiedId));
     }
   }, {
-    key: "__fetchOnce",
-    value: function __fetchOnce(path, queryParams) {
-      var _this5 = this;
+    key: "__fetchOne",
+    value: function __fetchOne(path, queryParams) {
+      var _this4 = this;
 
       var clientId = _ClientID.default.getClientId();
 
@@ -190,14 +156,14 @@ function (_Subscription) {
       }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
         _Subcription.default.__emitError(error);
 
-        _this5._updateCacheForError(clientId, error);
+        _this4._updateCacheForError(clientId, error);
       });
       return (0, _nullthrows.default)(this._entityLoaderById.get(clientId));
     }
   }, {
     key: "__post",
     value: function __post(path, mutator, queryParams) {
-      var _this6 = this;
+      var _this5 = this;
 
       var clientId = _ClientID.default.getClientId();
 
@@ -214,26 +180,26 @@ function (_Subscription) {
         }],
         method: 'POST'
       }, queryParams)).then(function (item) {
-        _this6._flushQueryCaches();
+        _this5._flushQueryCaches();
 
-        _this6._updateCacheForEntity(item, false);
+        _this5._updateCacheForEntity(item, false);
 
-        _this6._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this6._entityLoaderById.get(item.id)));
+        _this5._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this5._entityLoaderById.get(item.id)));
 
-        _this6.__emitChanges();
+        _this5.__emitChanges();
       }).catch(function (error) {
         _Subcription.default.__emitError(error);
 
-        _this6._entityLoaderById.set(clientId, _LoadObject.default.withError(error));
+        _this5._entityLoaderById.set(clientId, _LoadObject.default.withError(error));
 
-        _this6.__emitChanges();
+        _this5.__emitChanges();
       });
       return clientId;
     }
   }, {
     key: "__put",
     value: function __put(path, id, mutator, queryParams) {
-      var _this7 = this;
+      var _this6 = this;
 
       var stringifiedID = id.toString();
 
@@ -257,12 +223,46 @@ function (_Subscription) {
           value: 'application/json'
         }]
       }, queryParams)).then(function (item) {
+        _this6._flushQueryCaches();
+
+        _this6._updateCacheForEntity(item, false); // The clientID has a reference to the load object
+
+
+        _this6._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this6._entityLoaderById.get(item.id)));
+
+        _this6.__emitChanges();
+      }).catch(function (error) {
+        _Subcription.default.__emitError(error);
+
+        _this6._updateCacheForError(clientId, error);
+      });
+      return clientId;
+    }
+  }, {
+    key: "__delete",
+    value: function __delete(path, id, queryParams) {
+      var _this7 = this;
+
+      var clientId = _ClientID.default.getClientId();
+
+      var stringifiedId = id.toString();
+
+      var entity = this._entityLoaderById.get(stringifiedId) || _LoadObject.default.empty();
+
+      this._entityLoaderById.set(stringifiedId, entity.deleting());
+
+      this._entityLoaderById.set(clientId, _LoadObject.default.empty().deleting());
+
+      this.__emitChanges();
+
+      (0, _fetch.default)(path, _objectSpread({
+        method: 'DELETE'
+      }, queryParams)).then(function () {
+        _this7._entityLoaderById.delete(id);
+
+        _this7._entityLoaderById.delete(clientId);
+
         _this7._flushQueryCaches();
-
-        _this7._updateCacheForEntity(item, false); // The clientID has a reference to the load object
-
-
-        _this7._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this7._entityLoaderById.get(item.id)));
 
         _this7.__emitChanges();
       }).catch(function (error) {

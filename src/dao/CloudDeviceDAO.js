@@ -3,15 +3,15 @@
 import RestDAO from './RestDAO';
 
 class CloudDeviceDAO extends RestDAO<any, any> {
-  get(particleId: string) {
-    return this.__fetchOnce(`cloud-devices/${particleId}/`);
+  fetch(particleId: string) {
+    return this.__fetchOne(`cloud-devices/${particleId}/`);
   }
 
   flash(particleId: string, file: any) {
     const formData = new FormData();
     formData.append('file', file);
     // todo queryParams
-    return this.__fetchOnce(`cloud-devices/${particleId}/flash/`, {
+    return this.__fetchOne(`cloud-devices/${particleId}/flash/`, {
       body: formData,
       headers: [
         {
@@ -24,7 +24,7 @@ class CloudDeviceDAO extends RestDAO<any, any> {
   }
 
   ping(particleId: string) {
-    return this.__fetchOnce(`cloud-devices/${particleId}/ping/`, {
+    return this.__fetchOne(`cloud-devices/${particleId}/ping/`, {
       method: 'PUT',
     });
   }
