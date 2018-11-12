@@ -12,6 +12,10 @@ var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
 
+var _Subcription = require('./Subcription');
+
+var _Subcription2 = _interopRequireDefault(_Subcription);
+
 var _constants = require('../constants');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -21,6 +25,10 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ID_REG_EXP = /\bid\b/;
 
@@ -41,7 +49,9 @@ var parseNavProp = function parseNavProp(_ref) {
   return name + '(' + selectString + expandString + ')';
 };
 
-var BaseODataDAO = function () {
+var BaseODataDAO = function (_Subscription) {
+  _inherits(BaseODataDAO, _Subscription);
+
   _createClass(BaseODataDAO, null, [{
     key: 'setOrganizationID',
     value: function setOrganizationID(organizationID) {
@@ -52,26 +62,29 @@ var BaseODataDAO = function () {
   function BaseODataDAO(config) {
     _classCallCheck(this, BaseODataDAO);
 
-    this.getEntityName = this.getEntityName.bind(this);
-    this.getTranslator = this.getTranslator.bind(this);
-    this.__buildHandler = this.__buildHandler.bind(this);
-    this.__setupHandler = this.__setupHandler.bind(this);
-    this._getCacheKey = this._getCacheKey.bind(this);
-    this._setFilters = this._setFilters.bind(this);
-    this.__resolveSingle = this.__resolveSingle.bind(this);
-    this.__resolveMany = this.__resolveMany.bind(this);
-    this.__resolveManyIDs = this.__resolveManyIDs.bind(this);
-    this.__resolve = this.__resolve.bind(this);
+    var _this = _possibleConstructorReturn(this, (BaseODataDAO.__proto__ || Object.getPrototypeOf(BaseODataDAO)).call(this));
 
-    this.__reformatIDValue = function (value) {
+    _this.getEntityName = _this.getEntityName.bind(_this);
+    _this.getTranslator = _this.getTranslator.bind(_this);
+    _this.__buildHandler = _this.__buildHandler.bind(_this);
+    _this.__setupHandler = _this.__setupHandler.bind(_this);
+    _this._getCacheKey = _this._getCacheKey.bind(_this);
+    _this._setFilters = _this._setFilters.bind(_this);
+    _this.__resolveSingle = _this.__resolveSingle.bind(_this);
+    _this.__resolveMany = _this.__resolveMany.bind(_this);
+    _this.__resolveManyIDs = _this.__resolveManyIDs.bind(_this);
+    _this.__resolve = _this.__resolve.bind(_this);
+
+    _this.__reformatIDValue = function (value) {
       return isNaN(value) || value === '' ? '\'' + value + '\'' : value;
     };
 
-    this.__reformatQueryValue = function (value) {
+    _this.__reformatQueryValue = function (value) {
       return typeof value === 'string' ? '\'' + encodeURIComponent(value) + '\'' : value;
     };
 
-    this.__config = config;
+    _this.__config = config;
+    return _this;
   }
 
   _createClass(BaseODataDAO, [{
@@ -155,7 +168,7 @@ var BaseODataDAO = function () {
   }, {
     key: '_setFilters',
     value: function _setFilters(handler) {
-      var _this = this;
+      var _this2 = this;
 
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -178,7 +191,7 @@ var BaseODataDAO = function () {
             // this is not ideal though, because it doesn't resolve
             // situations when we get stringified value from front-end
             // which is stored as number on the server.
-            var reformattedValue = ID_REG_EXP.test(param) ? _this.__reformatIDValue(value) : _this.__reformatQueryValue(value);
+            var reformattedValue = ID_REG_EXP.test(param) ? _this2.__reformatIDValue(value) : _this2.__reformatQueryValue(value);
 
             if (isValidOperator) {
               return '(' + operator + '(' + param + ', ' + reformattedValue + '))';
@@ -199,19 +212,19 @@ var BaseODataDAO = function () {
   }, {
     key: '__resolveSingle',
     value: function __resolveSingle(handler, params) {
-      var _this2 = this;
+      var _this3 = this;
 
       var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
 
       return this.__resolve(handler, params, method).then(function (result) {
-        return _this2.getTranslator().fromApi(result.data);
+        return _this3.getTranslator().fromApi(result.data);
       });
     }
   }, {
     key: '__resolveMany',
     value: function () {
       var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
-        var _this3 = this;
+        var _this4 = this;
 
         var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
         var result;
@@ -225,7 +238,7 @@ var BaseODataDAO = function () {
               case 2:
                 result = _context.sent;
                 return _context.abrupt('return', (result.data || []).map(function (item) {
-                  return _this3.getTranslator().fromApi(item);
+                  return _this4.getTranslator().fromApi(item);
                 }));
 
               case 4:
@@ -330,19 +343,7 @@ var BaseODataDAO = function () {
   }]);
 
   return BaseODataDAO;
-}();
+}(_Subcription2.default);
 
 BaseODataDAO._organizationID = null;
-BaseODataDAO._errorHandlers = [];
-
-BaseODataDAO.onError = function (handler) {
-  BaseODataDAO._errorHandlers.push(handler);
-};
-
-BaseODataDAO.__handleError = function (error) {
-  BaseODataDAO._errorHandlers.forEach(function (handler) {
-    return handler(error);
-  });
-};
-
 exports.default = BaseODataDAO;

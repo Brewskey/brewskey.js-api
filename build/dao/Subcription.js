@@ -8,36 +8,49 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Subcription = function () {
-  function Subcription() {
-    _classCallCheck(this, Subcription);
+var Subscription = function () {
+  function Subscription() {
+    _classCallCheck(this, Subscription);
 
     this.subscribe = this.subscribe.bind(this);
     this.unsubscribe = this.unsubscribe.bind(this);
     this.__emitChanges = this.__emitChanges.bind(this);
-    this._subscriptions = new Set();
+    this._dataSubscriptions = new Set();
   }
 
-  _createClass(Subcription, [{
+  _createClass(Subscription, [{
     key: "subscribe",
     value: function subscribe(handler) {
-      this._subscriptions.add(handler);
+      this._dataSubscriptions.add(handler);
     }
   }, {
     key: "unsubscribe",
     value: function unsubscribe(handler) {
-      this._subscriptions.delete(handler);
+      this._dataSubscriptions.delete(handler);
     }
   }, {
     key: "__emitChanges",
     value: function __emitChanges() {
-      this._subscriptions.forEach(function (handler) {
+      this._dataSubscriptions.forEach(function (handler) {
         return handler();
+      });
+    }
+  }], [{
+    key: "__emitError",
+    value: function __emitError(error) {
+      Subscription._errorSubscriptions.forEach(function (handler) {
+        return handler(error);
       });
     }
   }]);
 
-  return Subcription;
+  return Subscription;
 }();
 
-exports.default = Subcription;
+Subscription._errorSubscriptions = new Set();
+
+Subscription.onError = function (handler) {
+  Subscription._errorSubscriptions.add(handler);
+};
+
+exports.default = Subscription;

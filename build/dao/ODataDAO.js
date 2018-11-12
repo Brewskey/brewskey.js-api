@@ -20,6 +20,10 @@ var _LoadObject = require('../LoadObject');
 
 var _LoadObject2 = _interopRequireDefault(_LoadObject);
 
+var _Subcription = require('./Subcription');
+
+var _Subcription2 = _interopRequireDefault(_Subcription);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42,7 +46,7 @@ var ODataDAO = function (_BaseODataDAO) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = ODataDAO.__proto__ || Object.getPrototypeOf(ODataDAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.count = _this.count.bind(_this), _this.__countCustom = _this.__countCustom.bind(_this), _this.fetchByID = _this.fetchByID.bind(_this), _this.fetchByIDs = _this.fetchByIDs.bind(_this), _this.fetchMany = _this.fetchMany.bind(_this), _this.fetchSingle = _this.fetchSingle.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.flushCacheForEntity = _this.flushCacheForEntity.bind(_this), _this.flushCustomCache = _this.flushCustomCache.bind(_this), _this.flushQueryCaches = _this.flushQueryCaches.bind(_this), _this.patch = _this.patch.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.subscribe = _this.subscribe.bind(_this), _this.unsubscribe = _this.unsubscribe.bind(_this), _this.waitForLoaded = _this.waitForLoaded.bind(_this), _this.__mutateCustom = _this.__mutateCustom.bind(_this), _this.__fetchCustom = _this.__fetchCustom.bind(_this), _this._getClientID = _this._getClientID.bind(_this), _this._emitChanges = _this._emitChanges.bind(_this), _this._flushQueryCaches = _this._flushQueryCaches.bind(_this), _this._getCacheKey = _this._getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._countLoaderByQuery = new Map(), _this._entityIDsLoaderByQuery = new Map(), _this._customLoaderByQuery = new Map(), _this._entityLoaderByID = new Map(), _this._subscriptions = new Set(), _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = ODataDAO.__proto__ || Object.getPrototypeOf(ODataDAO)).call.apply(_ref, [this].concat(args))), _this), _this.deleteByID = _this.deleteByID.bind(_this), _this.count = _this.count.bind(_this), _this.__countCustom = _this.__countCustom.bind(_this), _this.fetchByID = _this.fetchByID.bind(_this), _this.fetchByIDs = _this.fetchByIDs.bind(_this), _this.fetchMany = _this.fetchMany.bind(_this), _this.fetchSingle = _this.fetchSingle.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.flushCacheForEntity = _this.flushCacheForEntity.bind(_this), _this.flushCustomCache = _this.flushCustomCache.bind(_this), _this.flushQueryCaches = _this.flushQueryCaches.bind(_this), _this.patch = _this.patch.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.waitForLoaded = _this.waitForLoaded.bind(_this), _this.__mutateCustom = _this.__mutateCustom.bind(_this), _this.__fetchCustom = _this.__fetchCustom.bind(_this), _this._getClientID = _this._getClientID.bind(_this), _this._emitChanges = _this._emitChanges.bind(_this), _this._flushQueryCaches = _this._flushQueryCaches.bind(_this), _this._getCacheKey = _this._getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._countLoaderByQuery = new Map(), _this._entityIDsLoaderByQuery = new Map(), _this._customLoaderByQuery = new Map(), _this._entityLoaderByID = new Map(), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(ODataDAO, [{
@@ -57,16 +61,16 @@ var ODataDAO = function (_BaseODataDAO) {
       var clientID = this._getClientID();
       this._entityLoaderByID.set(clientID, _LoadObject2.default.empty().deleting());
 
-      this._emitChanges();
+      this.__emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       /* params */{}, 'delete').then(function () {
         _this2._entityLoaderByID.delete(id);
         _this2._entityLoaderByID.delete(clientID);
         _this2._flushQueryCaches();
-        _this2._emitChanges();
+        _this2.__emitChanges();
       }).catch(function (error) {
-        _BaseODataDAO3.default.__handleError(error);
+        _Subcription2.default.__emitError(error);
         _this2._updateCacheForError(clientID, error);
       });
 
@@ -92,19 +96,19 @@ var ODataDAO = function (_BaseODataDAO) {
 
       if (!this._countLoaderByQuery.has(cacheKey)) {
         this._countLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
-        this._emitChanges();
+        this.__emitChanges();
 
         this.__resolve(getOHandler({
           shouldCount: true,
           take: 0
         })).then(function (result) {
           _this4._countLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.inlinecount));
-          _this4._emitChanges();
+          _this4.__emitChanges();
         }).catch(function (error) {
-          _BaseODataDAO3.default.__handleError(error);
+          _Subcription2.default.__emitError(error);
           var loader = _this4._countLoaderByQuery.get(cacheKey);
           _this4._countLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
-          _this4._emitChanges();
+          _this4.__emitChanges();
         });
       }
 
@@ -118,11 +122,11 @@ var ODataDAO = function (_BaseODataDAO) {
       var stringifiedID = id.toString();
       if (!this._entityLoaderByID.has(stringifiedID)) {
         this._entityLoaderByID.set(stringifiedID, _LoadObject2.default.loading());
-        this._emitChanges();
+        this.__emitChanges();
         this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID))).then(function (result) {
           return _this5._updateCacheForEntity(result);
         }).catch(function (error) {
-          _BaseODataDAO3.default.__handleError(error);
+          _Subcription2.default.__emitError(error);
           _this5._updateCacheForError(stringifiedID, error);
         });
       }
@@ -162,14 +166,14 @@ var ODataDAO = function (_BaseODataDAO) {
             }
           });
 
-          _this6._emitChanges();
+          _this6.__emitChanges();
         }).catch(function (error) {
-          _BaseODataDAO3.default.__handleError(error);
+          _Subcription2.default.__emitError(error);
           stringifiedIds.forEach(function (id) {
             return _this6._updateCacheForError(id, error, false);
           });
 
-          _this6._emitChanges();
+          _this6.__emitChanges();
         });
       }
 
@@ -186,7 +190,7 @@ var ODataDAO = function (_BaseODataDAO) {
 
       if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
         this._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
-        this._emitChanges();
+        this.__emitChanges();
 
         var handler = this.__buildHandler(queryOptions, false);
         handler = handler.select('id');
@@ -194,13 +198,13 @@ var ODataDAO = function (_BaseODataDAO) {
         this.__resolveManyIDs(handler).then(function (ids) {
           var stringifiedIds = ids.map(String);
           _this7._entityIDsLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(stringifiedIds));
-          _this7._emitChanges();
+          _this7.__emitChanges();
           _this7.fetchByIDs(stringifiedIds);
         }).catch(function (error) {
-          _BaseODataDAO3.default.__handleError(error);
+          _Subcription2.default.__emitError(error);
           var loader = _this7._entityIDsLoaderByQuery.get(cacheKey);
           _this7._entityIDsLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject2.default.withError(error));
-          _this7._emitChanges();
+          _this7.__emitChanges();
         });
       }
 
@@ -229,25 +233,25 @@ var ODataDAO = function (_BaseODataDAO) {
     value: function flushCache() {
       this._entityLoaderByID = new Map();
       this._flushQueryCaches();
-      this._emitChanges();
+      this.__emitChanges();
     }
   }, {
     key: 'flushCacheForEntity',
     value: function flushCacheForEntity(entityID) {
       this._entityLoaderByID.delete(entityID);
-      this._emitChanges();
+      this.__emitChanges();
     }
   }, {
     key: 'flushCustomCache',
     value: function flushCustomCache() {
       this._customLoaderByQuery = new Map();
-      this._emitChanges();
+      this.__emitChanges();
     }
   }, {
     key: 'flushQueryCaches',
     value: function flushQueryCaches() {
       this._flushQueryCaches();
-      this._emitChanges();
+      this.__emitChanges();
     }
   }, {
     key: 'patch',
@@ -261,16 +265,16 @@ var ODataDAO = function (_BaseODataDAO) {
       var clientID = this._getClientID();
       this._entityLoaderByID.set(clientID, entity.updating());
 
-      this._emitChanges();
+      this.__emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
         _this8._flushQueryCaches();
         _this8._updateCacheForEntity(result, false);
         _this8._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this8._entityLoaderByID.get(result.id)));
 
-        _this8._emitChanges();
+        _this8.__emitChanges();
       }).catch(function (error) {
-        _BaseODataDAO3.default.__handleError(error);
+        _Subcription2.default.__emitError(error);
         _this8._updateCacheForError(clientID, error);
       });
 
@@ -288,11 +292,11 @@ var ODataDAO = function (_BaseODataDAO) {
         _this9._updateCacheForEntity(result, false);
         // The clientID has a reference to the load object
         _this9._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this9._entityLoaderByID.get(result.id)));
-        _this9._emitChanges();
+        _this9.__emitChanges();
       }).catch(function (error) {
-        _BaseODataDAO3.default.__handleError(error);
+        _Subcription2.default.__emitError(error);
         _this9._entityLoaderByID.set(clientID, _LoadObject2.default.withError(error));
-        _this9._emitChanges();
+        _this9.__emitChanges();
       });
       return clientID;
     }
@@ -308,30 +312,20 @@ var ODataDAO = function (_BaseODataDAO) {
       var clientID = this._getClientID();
       this._entityLoaderByID.set(clientID, entity.updating());
 
-      this._emitChanges();
+      this.__emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
         _this10._flushQueryCaches();
         _this10._updateCacheForEntity(result, false);
         // The clientID has a reference to the load object
         _this10._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this10._entityLoaderByID.get(result.id)));
-        _this10._emitChanges();
+        _this10.__emitChanges();
       }).catch(function (error) {
-        _BaseODataDAO3.default.__handleError(error);
+        _Subcription2.default.__emitError(error);
         _this10._updateCacheForError(clientID, error);
       });
 
       return clientID;
-    }
-  }, {
-    key: 'subscribe',
-    value: function subscribe(handler) {
-      this._subscriptions.add(handler);
-    }
-  }, {
-    key: 'unsubscribe',
-    value: function unsubscribe(handler) {
-      this._subscriptions.delete(handler);
     }
   }, {
     key: 'waitForLoaded',
@@ -404,7 +398,7 @@ var ODataDAO = function (_BaseODataDAO) {
       } else {
         this._entityLoaderByID.set(stringifiedID || clientID, entity.updating());
       }
-      this._emitChanges();
+      this.__emitChanges();
 
       this.__resolve(handler, mutator, method).then(function (result) {
         if (id) {
@@ -414,9 +408,9 @@ var ODataDAO = function (_BaseODataDAO) {
           _this12._updateCacheForEntity(result, false);
           _this12._entityLoaderByID.set(clientID, (0, _nullthrows2.default)(_this12._entityLoaderByID.get(result.id)));
         }
-        _this12._emitChanges();
+        _this12.__emitChanges();
       }).catch(function (error) {
-        _BaseODataDAO3.default.__handleError(error);
+        _Subcription2.default.__emitError(error);
         _this12._updateCacheForError(stringifiedID || clientID, error);
       });
 
@@ -433,15 +427,15 @@ var ODataDAO = function (_BaseODataDAO) {
 
       if (!this._customLoaderByQuery.has(cacheKey)) {
         this._customLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
-        this._emitChanges();
+        this.__emitChanges();
 
         this.__resolve(handler).then(function (result) {
           _this13._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(result.data));
-          _this13._emitChanges();
+          _this13.__emitChanges();
         }).catch(function (error) {
-          _BaseODataDAO3.default.__handleError(error);
+          _Subcription2.default.__emitError(error);
           _this13._customLoaderByQuery.set(cacheKey, _LoadObject2.default.withError(error));
-          _this13._emitChanges();
+          _this13.__emitChanges();
         });
       }
 
@@ -479,7 +473,7 @@ var ODataDAO = function (_BaseODataDAO) {
 
       this._entityLoaderByID.set(entity.id.toString(), _LoadObject2.default.withValue(entity));
       if (shouldEmitChanges) {
-        this._emitChanges();
+        this.__emitChanges();
       }
     }
   }, {
@@ -489,7 +483,7 @@ var ODataDAO = function (_BaseODataDAO) {
 
       this._entityLoaderByID.set(id.toString(), _LoadObject2.default.withError(error));
       if (shouldEmitChanges) {
-        this._emitChanges();
+        this.__emitChanges();
       }
     }
   }]);

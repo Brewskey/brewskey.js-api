@@ -73,6 +73,7 @@ var RestDAO = function (_Subscription) {
         _this2._flushQueryCaches();
         _this2.__emitChanges();
       }).catch(function (error) {
+        _Subcription2.default.__emitError(error);
         _this2._updateCacheForError(clientId, error);
       });
 
@@ -106,6 +107,7 @@ var RestDAO = function (_Subscription) {
           _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(ids));
           _this3.__emitChanges();
         }).catch(function (error) {
+          _Subcription2.default.__emitError(error);
           _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject2.default.withError(error));
           _this3.__emitChanges();
         });
@@ -132,6 +134,7 @@ var RestDAO = function (_Subscription) {
           headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }],
           method: 'GET'
         }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
+          _Subcription2.default.__emitError(error);
           _this4._updateCacheForError(stringifiedId, error);
         });
       }
@@ -149,6 +152,7 @@ var RestDAO = function (_Subscription) {
       this.__emitChanges();
 
       (0, _fetch2.default)(path, _extends({ method: 'GET' }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
+        _Subcription2.default.__emitError(error);
         _this5._updateCacheForError(clientId, error);
       });
 
@@ -172,6 +176,7 @@ var RestDAO = function (_Subscription) {
         _this6._entityLoaderById.set(clientId, (0, _nullthrows2.default)(_this6._entityLoaderById.get(item.id)));
         _this6.__emitChanges();
       }).catch(function (error) {
+        _Subcription2.default.__emitError(error);
         _this6._entityLoaderById.set(clientId, _LoadObject2.default.withError(error));
         _this6.__emitChanges();
       });
@@ -202,6 +207,7 @@ var RestDAO = function (_Subscription) {
         _this7._entityLoaderById.set(clientId, (0, _nullthrows2.default)(_this7._entityLoaderById.get(item.id)));
         _this7.__emitChanges();
       }).catch(function (error) {
+        _Subcription2.default.__emitError(error);
         _this7._updateCacheForError(clientId, error);
       });
 

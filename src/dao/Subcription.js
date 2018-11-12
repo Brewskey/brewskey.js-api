@@ -1,19 +1,33 @@
 // @flow
 
-class Subcription {
-  _subscriptions: Set<() => void> = new Set();
+export type ErrorHandler = (error: Error) => void;
+
+class Subscription {
+  static _errorSubscriptions: Set<ErrorHandler> = new Set();
+
+  static onError = (handler: ErrorHandler) => {
+    Subscription._errorSubscriptions.add(handler);
+  };
+
+  static __emitError(error: Error) {
+    Subscription._errorSubscriptions.forEach((handler: ErrorHandler) =>
+      handler(error),
+    );
+  }
+
+  _dataSubscriptions: Set<() => void> = new Set();
 
   subscribe(handler: () => void) {
-    this._subscriptions.add(handler);
+    this._dataSubscriptions.add(handler);
   }
 
   unsubscribe(handler: () => void) {
-    this._subscriptions.delete(handler);
+    this._dataSubscriptions.delete(handler);
   }
 
   __emitChanges() {
-    this._subscriptions.forEach((handler: () => void): void => handler());
+    this._dataSubscriptions.forEach((handler: () => void) => handler());
   }
 }
 
-export default Subcription;
+export default Subscription;

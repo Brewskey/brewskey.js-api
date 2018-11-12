@@ -11,6 +11,7 @@ import type {
 } from '../index';
 
 import oHandler from 'odata';
+import Subscription from './Subcription';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
 
 const ID_REG_EXP = /\bid\b/;
@@ -29,29 +30,17 @@ const parseNavProp = ([name, navProp]: [string, mixed]): string => {
   return `${name}(${selectString}${expandString})`;
 };
 
-type ErrorHandler = (error: Error) => void;
-
-class BaseODataDAO<TEntity, TEntityMutator> {
+class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
   static _organizationID: ?EntityID = null;
-  static _errorHandlers: Array<ErrorHandler> = [];
 
   static setOrganizationID(organizationID: ?EntityID) {
     BaseODataDAO._organizationID = organizationID;
   }
 
-  static onError = (handler: ErrorHandler) => {
-    BaseODataDAO._errorHandlers.push(handler);
-  };
-
-  static __handleError = (error: Error) => {
-    BaseODataDAO._errorHandlers.forEach((handler: ErrorHandler): void =>
-      handler(error),
-    );
-  };
-
   __config: DAOConfig<TEntity, TEntityMutator>;
 
   constructor(config: DAOConfig<TEntity, TEntityMutator>) {
+    super();
     this.__config = config;
   }
 

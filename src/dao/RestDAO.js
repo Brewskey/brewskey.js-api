@@ -35,6 +35,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
         this.__emitChanges();
       })
       .catch(error => {
+        Subscription.__emitError(error);
         this._updateCacheForError(clientId, error);
       });
 
@@ -67,6 +68,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
           this.__emitChanges();
         })
         .catch(error => {
+          Subscription.__emitError(error);
           this._entityIdsLoaderByQuery.set(
             cacheKey,
             LoadObject.withError(error),
@@ -101,6 +103,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
       })
         .then(this._updateCacheForEntity)
         .catch(error => {
+          Subscription.__emitError(error);
           this._updateCacheForError(stringifiedId, error);
         });
     }
@@ -120,6 +123,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     fetch(path, { method: 'GET', ...queryParams })
       .then(this._updateCacheForEntity)
       .catch(error => {
+        Subscription.__emitError(error);
         this._updateCacheForError(clientId, error);
       });
 
@@ -153,6 +157,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
         this.__emitChanges();
       })
       .catch(error => {
+        Subscription.__emitError(error);
         this._entityLoaderById.set(clientId, LoadObject.withError(error));
         this.__emitChanges();
       });
@@ -195,6 +200,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
         this.__emitChanges();
       })
       .catch(error => {
+        Subscription.__emitError(error);
         this._updateCacheForError(clientId, error);
       });
 
