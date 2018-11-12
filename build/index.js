@@ -29,6 +29,10 @@ var _LoadObject = require('./LoadObject');
 
 var _LoadObject2 = _interopRequireDefault(_LoadObject);
 
+var _Subcription = require('./dao/Subcription');
+
+var _Subcription2 = _interopRequireDefault(_Subcription);
+
 var _fetch = require('./fetch');
 
 var _fetch2 = _interopRequireDefault(_fetch);
@@ -50,6 +54,10 @@ var _AvailabilityDAO2 = _interopRequireDefault(_AvailabilityDAO);
 var _BeverageDAO = require('./dao/BeverageDAO');
 
 var _BeverageDAO2 = _interopRequireDefault(_BeverageDAO);
+
+var _CloudDeviceDAO = require('./dao/CloudDeviceDAO');
+
+var _CloudDeviceDAO2 = _interopRequireDefault(_CloudDeviceDAO);
 
 var _DeviceDAO = require('./dao/DeviceDAO');
 
@@ -75,10 +83,6 @@ var _PermissionDAO = require('./dao/PermissionDAO');
 
 var _PermissionDAO2 = _interopRequireDefault(_PermissionDAO);
 
-var _ProductDAO = require('./dao/ProductDAO');
-
-var _ProductDAO2 = _interopRequireDefault(_ProductDAO);
-
 var _PourChartDAO = require('./dao/PourChartDAO');
 
 var _PourChartDAO2 = _interopRequireDefault(_PourChartDAO);
@@ -86,6 +90,18 @@ var _PourChartDAO2 = _interopRequireDefault(_PourChartDAO);
 var _PourDAO = require('./dao/PourDAO');
 
 var _PourDAO2 = _interopRequireDefault(_PourDAO);
+
+var _ProductDAO = require('./dao/ProductDAO');
+
+var _ProductDAO2 = _interopRequireDefault(_ProductDAO);
+
+var _ProductDeviceDAO = require('./dao/ProductDeviceDAO');
+
+var _ProductDeviceDAO2 = _interopRequireDefault(_ProductDeviceDAO);
+
+var _ProductFirmwareDAO = require('./dao/ProductFirmwareDAO');
+
+var _ProductFirmwareDAO2 = _interopRequireDefault(_ProductFirmwareDAO);
 
 var _ReportDAO = require('./dao/ReportDAO');
 
@@ -171,6 +187,7 @@ exports.default = {
   AchievementDAO: _AchievementDAO2.default,
   AvailabilityDAO: _AvailabilityDAO2.default,
   BeverageDAO: _BeverageDAO2.default,
+  ClouDeviceDAO: _CloudDeviceDAO2.default,
   DeviceDAO: _DeviceDAO2.default,
   FlowSensorDAO: _FlowSensorDAO2.default,
   FriendDAO: _FriendDAO2.default,
@@ -181,7 +198,9 @@ exports.default = {
   PermissionDAO: _PermissionDAO2.default,
   PourChartDAO: _PourChartDAO2.default,
   PourDAO: _PourDAO2.default,
+  ProductFirmwareDAO: _ProductFirmwareDAO2.default,
   ProductDAO: _ProductDAO2.default,
+  ProductDeviceDAO: _ProductDeviceDAO2.default,
   ReportDAO: _ReportDAO2.default,
   ScheduleDAO: _ScheduleDAO2.default,
   SrmDAO: _SrmDAO2.default,
@@ -193,7 +212,7 @@ exports.default = {
   flushCache: flushCache,
   getHeaders: getHeaders,
   initializeDAOApi: initializeDAOApi,
-  onError: _BaseODataDAO2.default.onError,
+  onError: _Subcription2.default.onError,
   setHeaders: setHeaders,
   setOrganizationID: setOrganizationID
 };
