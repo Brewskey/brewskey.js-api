@@ -1,11 +1,11 @@
 // @flow
 import type { Organization } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class OrganizationDAO extends DAO<Organization, Organization> {
+class OrganizationDAO extends ODataDAO<Organization, Organization> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.ORGANIZATIONS,

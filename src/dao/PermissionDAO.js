@@ -1,11 +1,11 @@
 // @flow
 import type { Permission, PermissionMutator } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import PermissionTranslator from '../translators/PermissionTranslator';
 
-class PermissionDAO extends DAO<Permission, PermissionMutator<*>> {
+class PermissionDAO extends ODataDAO<Permission, PermissionMutator<*>> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.PERMISSIONS,

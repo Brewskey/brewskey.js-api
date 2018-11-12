@@ -6,15 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ODataDAO2 = require('./ODataDAO');
+var _RestDAO2 = require('./RestDAO');
 
-var _ODataDAO3 = _interopRequireDefault(_ODataDAO2);
-
-var _constants = require('../constants');
-
-var _DeviceTranslator = require('../translators/DeviceTranslator');
-
-var _DeviceTranslator2 = _interopRequireDefault(_DeviceTranslator);
+var _RestDAO3 = _interopRequireDefault(_RestDAO2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24,41 +18,51 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DeviceDAO = function (_ODataDAO) {
-  _inherits(DeviceDAO, _ODataDAO);
+var ProductDAO = function (_RestDAO) {
+  _inherits(ProductDAO, _RestDAO);
 
-  function DeviceDAO() {
-    _classCallCheck(this, DeviceDAO);
+  function ProductDAO() {
+    var _ref;
 
-    var _this = _possibleConstructorReturn(this, (DeviceDAO.__proto__ || Object.getPrototypeOf(DeviceDAO)).call(this, {
-      entityName: _constants.DAO_ENTITIES.DEVICES,
-      navigationProperties: {
-        createdBy: { select: ['id', 'userName'] },
-        lastEditedBy: { select: ['id', 'userName'] },
-        location: { select: ['id', 'isDeleted', 'name'] },
-        organization: { select: ['id', 'isDeleted', 'name'] }
-      },
-      translator: new _DeviceTranslator2.default()
-    }));
+    var _temp, _this, _ret;
 
-    _this.fetchParticleAttributes = _this.fetchParticleAttributes.bind(_this);
-    return _this;
+    _classCallCheck(this, ProductDAO);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductDAO.__proto__ || Object.getPrototypeOf(ProductDAO)).call.apply(_ref, [this].concat(args))), _this), _this.fetchMany = _this.fetchMany.bind(_this), _this.fetchOne = _this.fetchOne.bind(_this), _this.post = _this.post.bind(_this), _this.put = _this.put.bind(_this), _this.delete = _this.delete.bind(_this), _temp), _possibleConstructorReturn(_this, _ret);
   }
 
-  _createClass(DeviceDAO, [{
-    key: 'fetchParticleAttributes',
-    value: function fetchParticleAttributes(deviceID) {
-      var funcString = 'Default.particleAttributes()';
-      var stringifiedID = deviceID.toString();
-
-      var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID));
-      handler.func(funcString);
-
-      return this.__fetchCustom(handler, {}, '' + funcString + deviceID);
+  _createClass(ProductDAO, [{
+    key: 'fetchMany',
+    value: function fetchMany() {
+      return this.__fetchMany('products/');
+    }
+  }, {
+    key: 'fetchOne',
+    value: function fetchOne(idOrSlug) {
+      return this.__fetchOne('products/' + idOrSlug + '/', idOrSlug);
+    }
+  }, {
+    key: 'post',
+    value: function post(mutator) {
+      return this.__post('products/', mutator);
+    }
+  }, {
+    key: 'put',
+    value: function put(id, mutator) {
+      return this.__put('products/' + id + '/', id, mutator);
+    }
+  }, {
+    key: 'delete',
+    value: function _delete(idOrSlug) {
+      return this.__delete('products/' + idOrSlug, idOrSlug);
     }
   }]);
 
-  return DeviceDAO;
-}(_ODataDAO3.default);
+  return ProductDAO;
+}(_RestDAO3.default);
 
-exports.default = new DeviceDAO();
+exports.default = new ProductDAO();

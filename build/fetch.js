@@ -47,7 +47,7 @@ exports.default = function () {
             });
 
             _context.next = 8;
-            return fetch(endpoint + '/' + path, _extends({}, options, { headers: headers }));
+            return fetch('' + endpoint + path, _extends({}, options, { headers: headers }));
 
           case 8:
             response = _context.sent;

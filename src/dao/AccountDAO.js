@@ -1,11 +1,11 @@
 // @flow
 import type { Account, AccountMutator } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-class AccountDAO extends DAO<Account, AccountMutator> {
+class AccountDAO extends ODataDAO<Account, AccountMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.ACCOUNTS,

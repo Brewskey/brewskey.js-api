@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _DAO2 = require('./DAO');
+var _ODataDAO2 = require('./ODataDAO');
 
-var _DAO3 = _interopRequireDefault(_DAO2);
+var _ODataDAO3 = _interopRequireDefault(_ODataDAO2);
 
 var _constants = require('../constants');
 
@@ -22,8 +22,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var PermissionDAO = function (_DAO) {
-  _inherits(PermissionDAO, _DAO);
+var PermissionDAO = function (_ODataDAO) {
+  _inherits(PermissionDAO, _ODataDAO);
 
   function PermissionDAO() {
     _classCallCheck(this, PermissionDAO);
@@ -43,6 +43,6 @@ var PermissionDAO = function (_DAO) {
   }
 
   return PermissionDAO;
-}(_DAO3.default);
+}(_ODataDAO3.default);
 
 exports.default = new PermissionDAO();

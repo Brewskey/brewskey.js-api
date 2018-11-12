@@ -12,9 +12,9 @@ var _odata = require('odata');
 
 var _odata2 = _interopRequireDefault(_odata);
 
-var _DAO2 = require('./DAO');
+var _ODataDAO2 = require('./ODataDAO');
 
-var _DAO3 = _interopRequireDefault(_DAO2);
+var _ODataDAO3 = _interopRequireDefault(_ODataDAO2);
 
 var _constants = require('../constants');
 
@@ -30,8 +30,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var TapDAO = function (_DAO) {
-  _inherits(TapDAO, _DAO);
+var TapDAO = function (_ODataDAO) {
+  _inherits(TapDAO, _ODataDAO);
 
   function TapDAO() {
     _classCallCheck(this, TapDAO);
@@ -84,6 +84,6 @@ var TapDAO = function (_DAO) {
   }]);
 
   return TapDAO;
-}(_DAO3.default);
+}(_ODataDAO3.default);
 
 exports.default = new TapDAO();

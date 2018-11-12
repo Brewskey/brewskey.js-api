@@ -7,9 +7,9 @@ exports.MAX_OUNCES_BY_KEG_TYPE = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _DAO2 = require('./DAO');
+var _ODataDAO2 = require('./ODataDAO');
 
-var _DAO3 = _interopRequireDefault(_DAO2);
+var _ODataDAO3 = _interopRequireDefault(_ODataDAO2);
 
 var _KegTranslator = require('../translators/KegTranslator');
 
@@ -40,8 +40,8 @@ var MAX_OUNCES_BY_KEG_TYPE = exports.MAX_OUNCES_BY_KEG_TYPE = {
   SlimQuarter: 992
 };
 
-var KegDAO = function (_DAO) {
-  _inherits(KegDAO, _DAO);
+var KegDAO = function (_ODataDAO) {
+  _inherits(KegDAO, _ODataDAO);
 
   function KegDAO() {
     _classCallCheck(this, KegDAO);
@@ -86,6 +86,6 @@ var KegDAO = function (_DAO) {
   }]);
 
   return KegDAO;
-}(_DAO3.default);
+}(_ODataDAO3.default);
 
 exports.default = new KegDAO();

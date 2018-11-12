@@ -8,11 +8,11 @@ import type {
 } from '../index';
 import type LoadObject from '../LoadObject';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DeviceTranslator from '../translators/DeviceTranslator';
 
-class DeviceDAO extends DAO<Device, DeviceMutator> {
+class DeviceDAO extends ODataDAO<Device, DeviceMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.DEVICES,

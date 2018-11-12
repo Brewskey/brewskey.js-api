@@ -1,7 +1,7 @@
 // @flow
 import type { Friend, FriendStatus } from '../index';
 
-import DAO from './DAO';
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 import daoFetch from '../fetch';
@@ -14,7 +14,7 @@ export const FRIEND_STATUSES: { [key: string]: FriendStatus } = {
   SPAM: 'Spam',
 };
 
-class FriendDAO extends DAO<Friend, Friend> {
+class FriendDAO extends ODataDAO<Friend, Friend> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.FRIENDS,

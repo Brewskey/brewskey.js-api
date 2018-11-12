@@ -20,7 +20,7 @@ export default async (path: string, options: ?Object): Promise<*> => {
     ({ name, value }: Header): void => headers.append(name, value),
   );
 
-  const response = await fetch(`${endpoint}/${path}`, { ...options, headers });
+  const response = await fetch(`${endpoint}${path}`, { ...options, headers });
 
   let responseJson;
   try {

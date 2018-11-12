@@ -4,11 +4,12 @@ import type { EntityID, Headers, OConfig } from './index';
 
 import oHandler from 'odata';
 import { DAO_ENTITIES, PERMISSIONS_MAP } from './constants';
-import BaseDAO from './dao/DAO';
+import BaseODataDAO from './dao/BaseODataDAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
 import { MAX_OUNCES_BY_KEG_TYPE } from './dao/KegDAO';
 import { FRIEND_STATUSES } from './dao/FriendDAO';
 import LoadObject from './LoadObject';
+import Subscription from './dao/Subcription';
 
 import fetch from './fetch';
 import { createFilter, doesSatisfyQueryFilters } from './filters';
@@ -17,6 +18,7 @@ import AccountDAO from './dao/AccountDAO';
 import AchievementDAO from './dao/AchievementDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
 import BeverageDAO from './dao/BeverageDAO';
+import ClouDeviceDAO from './dao/CloudDeviceDAO';
 import DeviceDAO from './dao/DeviceDAO';
 import FlowSensorDAO from './dao/FlowSensorDAO';
 import FriendDAO from './dao/FriendDAO';
@@ -27,6 +29,9 @@ import OrganizationDAO from './dao/OrganizationDAO';
 import PermissionDAO from './dao/PermissionDAO';
 import PourChartDAO from './dao/PourChartDAO';
 import PourDAO from './dao/PourDAO';
+import ProductDAO from './dao/ProductDAO';
+import ProductDeviceDAO from './dao/ProductDeviceDAO';
+import ProductFirmwareDAO from './dao/ProductFirmwareDAO';
 import ReportDAO from './dao/ReportDAO';
 import ScheduleDAO from './dao/ScheduleDAO';
 import SrmDAO from './dao/SrmDAO';
@@ -80,7 +85,7 @@ const flushCache = () => {
 };
 
 const setOrganizationID = (organizationID: ?EntityID) => {
-  BaseDAO.setOrganizationID(organizationID);
+  BaseODataDAO.setOrganizationID(organizationID);
 
   AccountDAO.flushCache();
   AchievementDAO.flushCache();
@@ -111,6 +116,7 @@ export default {
   AchievementDAO,
   AvailabilityDAO,
   BeverageDAO,
+  ClouDeviceDAO,
   DeviceDAO,
   FlowSensorDAO,
   FriendDAO,
@@ -121,6 +127,9 @@ export default {
   PermissionDAO,
   PourChartDAO,
   PourDAO,
+  ProductFirmwareDAO,
+  ProductDAO,
+  ProductDeviceDAO,
   ReportDAO,
   ScheduleDAO,
   SrmDAO,
@@ -132,7 +141,7 @@ export default {
   flushCache,
   getHeaders,
   initializeDAOApi,
-  onError: BaseDAO.onError,
+  onError: Subscription.onError,
   setHeaders,
   setOrganizationID,
 };
