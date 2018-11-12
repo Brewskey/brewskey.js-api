@@ -31,10 +31,12 @@ const CACHE: Map<
   any,
   Map<boolean, Map<?LoadObjectOperation, LoadObject<any>>>,
 > = new Map(
-  VALUES_TO_CACHE.map((value: any): any => [
-    value,
-    new Map([[true, new Map()], [false, new Map()]]),
-  ]),
+  VALUES_TO_CACHE.map(
+    (value: any): any => [
+      value,
+      new Map([[true, new Map()], [false, new Map()]]),
+    ],
+  ),
 );
 
 /**
@@ -62,8 +64,11 @@ const CACHE: Map<
  */
 class LoadObject<TValue> {
   _operation: ?LoadObjectOperation;
+
   _value: ?TValue;
+
   _error: ?Error;
+
   _hasValue: boolean;
 
   /**

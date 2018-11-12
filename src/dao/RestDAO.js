@@ -10,6 +10,7 @@ import fetch from '../fetch';
 
 class RestDAO<TEntity, TEntityMutator> extends Subscription {
   _entityLoaderById: Map<EntityID, LoadObject<?TEntity>> = new Map();
+
   _entityIdsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
 
   __delete<TQueryParams: Object>(
@@ -226,6 +227,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
   _flushQueryCaches() {
     this._entityIdsLoaderByQuery = new Map();
   }
+
   __getCacheKey(path: string, queryParams?: Object): string {
     return path + JSON.stringify(queryParams || '_');
   }

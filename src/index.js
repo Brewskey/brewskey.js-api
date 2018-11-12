@@ -1,5 +1,6 @@
 // @flow
 
+// eslint-disable-next-line import/no-self-import
 import type { EntityID, Headers, OConfig } from './index';
 
 import oHandler from 'odata';

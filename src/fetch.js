@@ -12,8 +12,8 @@ export default async (path: string, options: ?Object): Promise<*> => {
   }
 
   const headers = new Headers();
-  oheaders.forEach(({ name, value }: Header): void =>
-    headers.append(name, value),
+  oheaders.forEach(
+    ({ name, value }: Header): void => headers.append(name, value),
   );
 
   ((options && options.headers) || []).forEach(

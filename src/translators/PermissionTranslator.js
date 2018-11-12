@@ -17,11 +17,13 @@ const getPermissionEntityTypeFromModel = (
   // eslint-disable-next-line prefer-template
 ): PermissionEntityType =>
   (`${
-    (Object.entries(model).find((entry: [string, mixed]): boolean => {
-      const key = entry[0];
-      const value = entry[1];
-      return PERMISSION_ENTITY_KEYS.includes(key) && !!value;
-    }) || {})[0]
+    (Object.entries(model).find(
+      (entry: [string, mixed]): boolean => {
+        const key = entry[0];
+        const value = entry[1];
+        return PERMISSION_ENTITY_KEYS.includes(key) && !!value;
+      },
+    ) || {})[0]
   }s`: any);
 
 class PermissionTranslator extends DefaultTranslator<

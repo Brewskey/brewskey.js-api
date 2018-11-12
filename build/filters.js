@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.doesSatisfyQueryFilters = exports.createFilter = undefined;
+exports.doesSatisfyQueryFilters = exports.createFilter = void 0;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _constants = require("./constants");
 
-var _constants = require('./constants');
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -41,23 +41,22 @@ var makeFilter = function makeFilter(operator, params) {
   };
 };
 
-var createFilter = exports.createFilter = function createFilter(params) {
+var createFilter = function createFilter(params) {
   return Object.keys(FILTERS).reduce(function (filters, filter) {
-    return _extends({}, filters, _defineProperty({}, filter, makeFilter(FILTERS[filter], params)));
+    return _objectSpread({}, filters, _defineProperty({}, filter, makeFilter(FILTERS[filter], params)));
   }, {});
-};
+}; // todo make unit tests
 
-// todo make unit tests
-var doesSatisfyQueryFilters = exports.doesSatisfyQueryFilters = function doesSatisfyQueryFilters(item, queryFilters) {
+
+exports.createFilter = createFilter;
+
+var doesSatisfyQueryFilters = function doesSatisfyQueryFilters(item, queryFilters) {
   return queryFilters.every(function (queryFilter) {
     var params = queryFilter.params,
         values = queryFilter.values,
         operator = queryFilter.operator;
-
-
     return params.some(function (param) {
       var itemValue = getIn(param.split('/'), item);
-
       return values.some(function (value) {
         switch (operator) {
           // todo add other cases
@@ -65,14 +64,17 @@ var doesSatisfyQueryFilters = exports.doesSatisfyQueryFilters = function doesSat
             {
               return itemValue.toString().includes(value.toString());
             }
+
           case _constants.FILTER_OPERATORS.EQUALS:
             {
               return value === itemValue;
             }
+
           case _constants.FILTER_OPERATORS.NOT_EQUALS:
             {
               return value !== itemValue;
             }
+
           default:
             {
               return false;
@@ -82,3 +84,5 @@ var doesSatisfyQueryFilters = exports.doesSatisfyQueryFilters = function doesSat
     });
   });
 };
+
+exports.doesSatisfyQueryFilters = doesSatisfyQueryFilters;

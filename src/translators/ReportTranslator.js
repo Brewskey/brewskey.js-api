@@ -45,9 +45,11 @@ class ReportTranslator extends DefaultTranslator<Report, ReportMutator> {
     return {
       ...report,
       reportCadence: CADENCE_MAP[report.reportCadence],
-      sendToEmails: report.sendToEmails.map((email: string): Object => ({
-        email,
-      })),
+      sendToEmails: report.sendToEmails.map(
+        (email: string): Object => ({
+          email,
+        }),
+      ),
     };
   }
 }

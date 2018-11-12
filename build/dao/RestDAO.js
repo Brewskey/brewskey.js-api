@@ -1,263 +1,328 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _nullthrows = _interopRequireDefault(require("nullthrows"));
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _ClientID = _interopRequireDefault(require("./ClientID"));
 
-var _nullthrows = require('nullthrows');
+var _Subcription = _interopRequireDefault(require("./Subcription"));
 
-var _nullthrows2 = _interopRequireDefault(_nullthrows);
+var _LoadObject = _interopRequireDefault(require("../LoadObject"));
 
-var _ClientID = require('./ClientID');
-
-var _ClientID2 = _interopRequireDefault(_ClientID);
-
-var _Subcription = require('./Subcription');
-
-var _Subcription2 = _interopRequireDefault(_Subcription);
-
-var _LoadObject = require('../LoadObject');
-
-var _LoadObject2 = _interopRequireDefault(_LoadObject);
-
-var _fetch = require('../fetch');
-
-var _fetch2 = _interopRequireDefault(_fetch);
+var _fetch = _interopRequireDefault(require("../fetch"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var RestDAO = function (_Subscription) {
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var RestDAO =
+/*#__PURE__*/
+function (_Subscription) {
   _inherits(RestDAO, _Subscription);
 
   function RestDAO() {
-    var _ref;
+    var _getPrototypeOf2;
 
-    var _temp, _temp2, _this, _ret;
+    var _this;
 
     _classCallCheck(this, RestDAO);
 
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_temp2 = (_this = _possibleConstructorReturn(this, (_ref = RestDAO.__proto__ || Object.getPrototypeOf(RestDAO)).call.apply(_ref, [this].concat(args))), _this), _this.__delete = _this.__delete.bind(_this), _this.__fetchMany = _this.__fetchMany.bind(_this), _this.__fetchOne = _this.__fetchOne.bind(_this), _this.__fetchOnce = _this.__fetchOnce.bind(_this), _this.__post = _this.__post.bind(_this), _this.__put = _this.__put.bind(_this), _this.flushCache = _this.flushCache.bind(_this), _this.flushCacheForEntity = _this.flushCacheForEntity.bind(_this), _this.flushQueryCaches = _this.flushQueryCaches.bind(_this), _this._flushQueryCaches = _this._flushQueryCaches.bind(_this), _this.__getCacheKey = _this.__getCacheKey.bind(_this), _this._updateCacheForEntity = _this._updateCacheForEntity.bind(_this), _this._updateCacheForError = _this._updateCacheForError.bind(_this), _temp2), _this._entityLoaderById = new Map(), _this._entityIdsLoaderByQuery = new Map(), _temp), _possibleConstructorReturn(_this, _ret);
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(RestDAO)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_entityLoaderById", new Map());
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_entityIdsLoaderByQuery", new Map());
+
+    return _this;
   }
 
   _createClass(RestDAO, [{
-    key: '__delete',
+    key: "__delete",
     value: function __delete(path, id, queryParams) {
       var _this2 = this;
 
-      var clientId = _ClientID2.default.getClientId();
+      var clientId = _ClientID.default.getClientId();
+
       var stringifiedId = id.toString();
 
-      var entity = this._entityLoaderById.get(stringifiedId) || _LoadObject2.default.empty();
+      var entity = this._entityLoaderById.get(stringifiedId) || _LoadObject.default.empty();
+
       this._entityLoaderById.set(stringifiedId, entity.deleting());
 
-      this._entityLoaderById.set(clientId, _LoadObject2.default.empty().deleting());
+      this._entityLoaderById.set(clientId, _LoadObject.default.empty().deleting());
+
       this.__emitChanges();
 
-      (0, _fetch2.default)(path, _extends({ method: 'DELETE' }, queryParams)).then(function () {
+      (0, _fetch.default)(path, _objectSpread({
+        method: 'DELETE'
+      }, queryParams)).then(function () {
         _this2._entityLoaderById.delete(id);
+
         _this2._entityLoaderById.delete(clientId);
+
         _this2._flushQueryCaches();
+
         _this2.__emitChanges();
       }).catch(function (error) {
-        _Subcription2.default.__emitError(error);
+        _Subcription.default.__emitError(error);
+
         _this2._updateCacheForError(clientId, error);
       });
-
       return clientId;
     }
   }, {
-    key: '__fetchMany',
+    key: "__fetchMany",
     value: function __fetchMany(path, queryParams) {
       var _this3 = this;
 
       var cacheKey = this.__getCacheKey(path, queryParams);
 
       if (!this._entityIdsLoaderByQuery.has(cacheKey)) {
-        this._entityIdsLoaderByQuery.set(cacheKey, _LoadObject2.default.loading());
+        this._entityIdsLoaderByQuery.set(cacheKey, _LoadObject.default.loading());
+
         this.__emitChanges();
 
-        (0, _fetch2.default)(path, _extends({ method: 'GET' }, queryParams)).then(function (items) {
+        (0, _fetch.default)(path, _objectSpread({
+          method: 'GET'
+        }, queryParams)).then(function (items) {
           // todo items should be an array from api but now its null
           if (!items) {
             items = []; // eslint-disable-line
           }
-          var ids = items.map(function (_ref2) {
-            var id = _ref2.id;
+
+          var ids = items.map(function (_ref) {
+            var id = _ref.id;
             return id;
           });
-
           items.forEach(function (item) {
-            return _this3._entityLoaderById.set(item.id, _LoadObject2.default.withValue(item));
+            return _this3._entityLoaderById.set(item.id, _LoadObject.default.withValue(item));
           });
 
-          _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject2.default.withValue(ids));
+          _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(ids));
+
           _this3.__emitChanges();
         }).catch(function (error) {
-          _Subcription2.default.__emitError(error);
-          _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject2.default.withError(error));
+          _Subcription.default.__emitError(error);
+
+          _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
+
           _this3.__emitChanges();
         });
       }
 
-      return (0, _nullthrows2.default)(this._entityIdsLoaderByQuery.get(cacheKey)).map(function (ids) {
+      return (0, _nullthrows.default)(this._entityIdsLoaderByQuery.get(cacheKey)).map(function (ids) {
         return ids.map(function (id) {
-          return (0, _nullthrows2.default)(_this3._entityLoaderById.get(id.toString()));
+          return (0, _nullthrows.default)(_this3._entityLoaderById.get(id.toString()));
         });
       });
     }
   }, {
-    key: '__fetchOne',
+    key: "__fetchOne",
     value: function __fetchOne(path, id, queryParams) {
       var _this4 = this;
 
       var stringifiedId = id.toString();
 
       if (!this._entityLoaderById.has(stringifiedId)) {
-        this._entityLoaderById.set(stringifiedId, _LoadObject2.default.loading());
+        this._entityLoaderById.set(stringifiedId, _LoadObject.default.loading());
+
         this.__emitChanges();
 
-        (0, _fetch2.default)(path, _extends({
-          headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }],
+        (0, _fetch.default)(path, _objectSpread({
+          headers: [{
+            name: 'Accept',
+            value: 'application/json'
+          }, {
+            name: 'Content-Type',
+            value: 'application/json'
+          }],
           method: 'GET'
         }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
-          _Subcription2.default.__emitError(error);
+          _Subcription.default.__emitError(error);
+
           _this4._updateCacheForError(stringifiedId, error);
         });
       }
 
-      return (0, _nullthrows2.default)(this._entityLoaderById.get(stringifiedId));
+      return (0, _nullthrows.default)(this._entityLoaderById.get(stringifiedId));
     }
   }, {
-    key: '__fetchOnce',
+    key: "__fetchOnce",
     value: function __fetchOnce(path, queryParams) {
       var _this5 = this;
 
-      var clientId = _ClientID2.default.getClientId();
+      var clientId = _ClientID.default.getClientId();
 
-      this._entityLoaderById.set(clientId, _LoadObject2.default.loading());
+      this._entityLoaderById.set(clientId, _LoadObject.default.loading());
+
       this.__emitChanges();
 
-      (0, _fetch2.default)(path, _extends({ method: 'GET' }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
-        _Subcription2.default.__emitError(error);
+      (0, _fetch.default)(path, _objectSpread({
+        method: 'GET'
+      }, queryParams)).then(this._updateCacheForEntity).catch(function (error) {
+        _Subcription.default.__emitError(error);
+
         _this5._updateCacheForError(clientId, error);
       });
-
-      return (0, _nullthrows2.default)(this._entityLoaderById.get(clientId));
+      return (0, _nullthrows.default)(this._entityLoaderById.get(clientId));
     }
   }, {
-    key: '__post',
+    key: "__post",
     value: function __post(path, mutator, queryParams) {
       var _this6 = this;
 
-      var clientId = _ClientID2.default.getClientId();
-      this._entityLoaderById.set(clientId, _LoadObject2.default.creating());
+      var clientId = _ClientID.default.getClientId();
 
-      (0, _fetch2.default)(path, _extends({
+      this._entityLoaderById.set(clientId, _LoadObject.default.creating());
+
+      (0, _fetch.default)(path, _objectSpread({
         body: JSON.stringify(mutator),
-        headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }],
+        headers: [{
+          name: 'Accept',
+          value: 'application/json'
+        }, {
+          name: 'Content-Type',
+          value: 'application/json'
+        }],
         method: 'POST'
       }, queryParams)).then(function (item) {
         _this6._flushQueryCaches();
+
         _this6._updateCacheForEntity(item, false);
-        _this6._entityLoaderById.set(clientId, (0, _nullthrows2.default)(_this6._entityLoaderById.get(item.id)));
+
+        _this6._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this6._entityLoaderById.get(item.id)));
+
         _this6.__emitChanges();
       }).catch(function (error) {
-        _Subcription2.default.__emitError(error);
-        _this6._entityLoaderById.set(clientId, _LoadObject2.default.withError(error));
+        _Subcription.default.__emitError(error);
+
+        _this6._entityLoaderById.set(clientId, _LoadObject.default.withError(error));
+
         _this6.__emitChanges();
       });
-
       return clientId;
     }
   }, {
-    key: '__put',
+    key: "__put",
     value: function __put(path, id, mutator, queryParams) {
       var _this7 = this;
 
       var stringifiedID = id.toString();
-      var entity = this._entityLoaderById.get(stringifiedID) || _LoadObject2.default.empty();
+
+      var entity = this._entityLoaderById.get(stringifiedID) || _LoadObject.default.empty();
+
       this._entityLoaderById.set(stringifiedID, entity.updating());
 
-      var clientId = _ClientID2.default.getClientId();
+      var clientId = _ClientID.default.getClientId();
+
       this._entityLoaderById.set(clientId, entity.updating());
 
       this.__emitChanges();
 
-      (0, _fetch2.default)(path, _extends({
+      (0, _fetch.default)(path, _objectSpread({
         body: JSON.stringify(mutator),
-        headers: [{ name: 'Accept', value: 'application/json' }, { name: 'Content-Type', value: 'application/json' }]
+        headers: [{
+          name: 'Accept',
+          value: 'application/json'
+        }, {
+          name: 'Content-Type',
+          value: 'application/json'
+        }]
       }, queryParams)).then(function (item) {
         _this7._flushQueryCaches();
-        _this7._updateCacheForEntity(item, false);
-        // The clientID has a reference to the load object
-        _this7._entityLoaderById.set(clientId, (0, _nullthrows2.default)(_this7._entityLoaderById.get(item.id)));
+
+        _this7._updateCacheForEntity(item, false); // The clientID has a reference to the load object
+
+
+        _this7._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this7._entityLoaderById.get(item.id)));
+
         _this7.__emitChanges();
       }).catch(function (error) {
-        _Subcription2.default.__emitError(error);
+        _Subcription.default.__emitError(error);
+
         _this7._updateCacheForError(clientId, error);
       });
-
       return clientId;
     }
   }, {
-    key: 'flushCache',
+    key: "flushCache",
     value: function flushCache() {
       this._entityLoaderById = new Map();
+
       this._flushQueryCaches();
+
       this.__emitChanges();
     }
   }, {
-    key: 'flushCacheForEntity',
+    key: "flushCacheForEntity",
     value: function flushCacheForEntity(entityId) {
       this._entityLoaderById.delete(entityId);
+
       this.__emitChanges();
     }
   }, {
-    key: 'flushQueryCaches',
+    key: "flushQueryCaches",
     value: function flushQueryCaches() {
       this._flushQueryCaches();
+
       this.__emitChanges();
     }
   }, {
-    key: '_flushQueryCaches',
+    key: "_flushQueryCaches",
     value: function _flushQueryCaches() {
       this._entityIdsLoaderByQuery = new Map();
     }
   }, {
-    key: '__getCacheKey',
+    key: "__getCacheKey",
     value: function __getCacheKey(path, queryParams) {
       return path + JSON.stringify(queryParams || '_');
     }
   }, {
-    key: '_updateCacheForEntity',
+    key: "_updateCacheForEntity",
     value: function _updateCacheForEntity(entity) {
       var shouldEmitChanges = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      this._entityLoaderById.set(entity.id.toString(), _LoadObject2.default.withValue(entity));
+      this._entityLoaderById.set(entity.id.toString(), _LoadObject.default.withValue(entity));
+
       if (shouldEmitChanges) {
         this.__emitChanges();
       }
     }
   }, {
-    key: '_updateCacheForError',
+    key: "_updateCacheForError",
     value: function _updateCacheForError(id, error) {
       var shouldEmitChanges = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-      this._entityLoaderById.set(id.toString(), _LoadObject2.default.withError(error));
+      this._entityLoaderById.set(id.toString(), _LoadObject.default.withError(error));
+
       if (shouldEmitChanges) {
         this.__emitChanges();
       }
@@ -265,6 +330,7 @@ var RestDAO = function (_Subscription) {
   }]);
 
   return RestDAO;
-}(_Subcription2.default);
+}(_Subcription.default);
 
-exports.default = RestDAO;
+var _default = RestDAO;
+exports.default = _default;

@@ -265,7 +265,12 @@ export type FlowSensorMutator = {
   tapId: EntityID,
 };
 
-export type FriendStatus = 'Approved' | 'AwaitingApproval' | 'Blocked' | 'Pending' | 'Spam';
+export type FriendStatus =
+  | 'Approved'
+  | 'AwaitingApproval'
+  | 'Blocked'
+  | 'Pending'
+  | 'Spam';
 
 export type Friend = {
   createdDate: Date,
@@ -735,9 +740,7 @@ declare export class DAO<
   fetchMany(
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntity>>>;
-  fetchSingle(
-    queryOptions?: QueryOptions,
-  ): LoadObject<TEntity>;
+  fetchSingle(queryOptions?: QueryOptions): LoadObject<TEntity>;
   flushCache(): void;
   flushCacheForEntity(entityID: EntityID): void;
   flushCustomCache(): void;

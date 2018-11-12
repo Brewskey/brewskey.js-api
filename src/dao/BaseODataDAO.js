@@ -54,6 +54,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
 
   // todo figure out if we can remove that completly
   __reformatIDValue = (value: string): string | number =>
+    // eslint-disable-next-line no-restricted-globals
     isNaN(value) || value === '' ? `'${value}'` : value;
 
   __reformatQueryValue = (value: string | number): string | number =>
@@ -97,8 +98,8 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     this._setFilters(handler, queryOptions);
 
     if (queryOptions.orderBy) {
-      const orderBy = queryOptions.orderBy[0].column;
-      const direction = queryOptions.orderBy[0].direction;
+      const { column: orderBy, direction } = queryOptions.orderBy[0];
+
       if (direction === 'desc') {
         handler.orderByDesc(orderBy);
       } else if (orderBy) {
@@ -106,7 +107,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       }
     }
 
-    const apply = queryOptions.apply;
+    const { apply } = queryOptions;
     if (apply) {
       handler.customParam('$apply', apply);
     }
@@ -130,39 +131,44 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       return handler;
     }
     const renderedFilters = queryOptions.filters
-      .map(({ operator, params, values }: QueryFilter): string => {
-        const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
-          (op: string): boolean => op === operator,
-        );
+      .map(
+        ({ operator, params, values }: QueryFilter): string => {
+          const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
+            (op: string): boolean => op === operator,
+          );
 
-        const filters = values.map((value: string): Array<string> =>
-          params.map((param: string): string => {
-            // we have to use two reformat functions because of the issue:
-            // https://github.com/Brewskey/brewskey.admin/issues/371
-            // this is not ideal though, because it doesn't resolve
-            // situations when we get stringified value from front-end
-            // which is stored as number on the server.
-            const reformattedValue = ID_REG_EXP.test(param)
-              ? this.__reformatIDValue(value)
-              : this.__reformatQueryValue(value);
+          const filters = values.map(
+            (value: string): Array<string> =>
+              params.map(
+                (param: string): string => {
+                  // we have to use two reformat functions because of the issue:
+                  // https://github.com/Brewskey/brewskey.admin/issues/371
+                  // this is not ideal though, because it doesn't resolve
+                  // situations when we get stringified value from front-end
+                  // which is stored as number on the server.
+                  const reformattedValue = ID_REG_EXP.test(param)
+                    ? this.__reformatIDValue(value)
+                    : this.__reformatQueryValue(value);
 
-            if (isValidOperator) {
-              return `(${operator}(${param}, ${reformattedValue}))`;
-            }
+                  if (isValidOperator) {
+                    return `(${operator}(${param}, ${reformattedValue}))`;
+                  }
 
-            return `(${param} ${operator} ${reformattedValue})`;
-          }),
-        );
+                  return `(${param} ${operator} ${reformattedValue})`;
+                },
+              ),
+          );
 
-        return filters
-          .reduce(
-            (
-              previousFilter: Array<string>,
-              currentFilters: Array<string>,
-            ): Array<string> => [...previousFilter, ...currentFilters],
-          )
-          .join(' or ');
-      })
+          return filters
+            .reduce(
+              (
+                previousFilter: Array<string>,
+                currentFilters: Array<string>,
+              ): Array<string> => [...previousFilter, ...currentFilters],
+            )
+            .join(' or ');
+        },
+      )
       .map((filter: string): string => `(${filter})`)
       .join(' and ');
     return handler.filter(renderedFilters);
@@ -184,8 +190,8 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     method?: RequestMethod = 'get',
   ): Promise<Array<TEntity>> {
     const result = await this.__resolve(handler, params, method);
-    return (result.data || []).map((item: Object): TEntity =>
-      this.getTranslator().fromApi(item),
+    return (result.data || []).map(
+      (item: Object): TEntity => this.getTranslator().fromApi(item),
     );
   }
 

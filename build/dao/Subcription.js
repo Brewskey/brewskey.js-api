@@ -3,19 +3,23 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports.default = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Subscription = function () {
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Subscription =
+/*#__PURE__*/
+function () {
   function Subscription() {
     _classCallCheck(this, Subscription);
 
-    this.subscribe = this.subscribe.bind(this);
-    this.unsubscribe = this.unsubscribe.bind(this);
-    this.__emitChanges = this.__emitChanges.bind(this);
-    this._dataSubscriptions = new Set();
+    _defineProperty(this, "_dataSubscriptions", new Set());
   }
 
   _createClass(Subscription, [{
@@ -47,10 +51,11 @@ var Subscription = function () {
   return Subscription;
 }();
 
-Subscription._errorSubscriptions = new Set();
+_defineProperty(Subscription, "_errorSubscriptions", new Set());
 
-Subscription.onError = function (handler) {
+_defineProperty(Subscription, "onError", function (handler) {
   Subscription._errorSubscriptions.add(handler);
-};
+});
 
-exports.default = Subscription;
+var _default = Subscription;
+exports.default = _default;

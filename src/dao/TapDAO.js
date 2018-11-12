@@ -1,4 +1,6 @@
 // @flow
+
+import type LoadObject from '../LoadObject';
 import type {
   EntityID,
   LeaderboardItem,
@@ -6,9 +8,8 @@ import type {
   Tap,
   TapMutator,
 } from '../index';
-import type LoadObject from '../LoadObject';
-import oHandler from 'odata';
 
+import oHandler from 'odata';
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import TapTranslator from '../translators/TapTranslator';

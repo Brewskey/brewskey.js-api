@@ -1,6 +1,7 @@
 // @flow
-import type { EntityID, QueryOptions } from '../index';
+
 import type OHandler from 'odata';
+import type { EntityID, QueryOptions } from '../index';
 
 import nullthrows from 'nullthrows';
 import BaseODataDAO from './BaseODataDAO';
@@ -14,8 +15,11 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   static _clientID: number = 0;
 
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
+
   _entityIDsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
+
   _customLoaderByQuery: Map<string, LoadObject<any>> = new Map();
+
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
 
   deleteByID(id: EntityID): EntityID {
@@ -130,10 +134,9 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this.__resolveMany(handler)
         .then((results: Array<TEntity>) => {
           const entitiesByID = new Map(
-            results.map((item: TEntity): [EntityID, TEntity] => [
-              item.id,
-              item,
-            ]),
+            results.map(
+              (item: TEntity): [EntityID, TEntity] => [item.id, item],
+            ),
           );
 
           idsToLoad.forEach((id: EntityID) => {
@@ -154,8 +157,8 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
         })
         .catch((error: Error) => {
           Subscription.__emitError(error);
-          stringifiedIds.forEach((id: EntityID): void =>
-            this._updateCacheForError(id, error, false),
+          stringifiedIds.forEach(
+            (id: EntityID): void => this._updateCacheForError(id, error, false),
           );
 
           this.__emitChanges();
@@ -163,10 +166,12 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     }
 
     return new Map(
-      stringifiedIds.map((id: string): [string, LoadObject<TEntity>] => [
-        id,
-        nullthrows(this._entityLoaderByID.get(id)),
-      ]),
+      stringifiedIds.map(
+        (id: string): [string, LoadObject<TEntity>] => [
+          id,
+          nullthrows(this._entityLoaderByID.get(id)),
+        ],
+      ),
     );
   }
 
@@ -206,8 +211,9 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
       (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
         const resultMap = this.fetchByIDs(ids);
-        return ids.map((id: EntityID): LoadObject<TEntity> =>
-          nullthrows(resultMap.get(id.toString())),
+        return ids.map(
+          (id: EntityID): LoadObject<TEntity> =>
+            nullthrows(resultMap.get(id.toString())),
         );
       },
     );
@@ -358,25 +364,27 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
             return;
           }
 
-          loader = loader.map((result: $FlowFixMe): $FlowFixMe => {
-            if (!Array.isArray(result)) {
-              return result;
-            }
+          loader = loader.map(
+            (result: $FlowFixMe): $FlowFixMe => {
+              if (!Array.isArray(result)) {
+                return result;
+              }
 
-            if (
-              result.some(
-                (item: $FlowFixMe): boolean =>
-                  item instanceof LoadObject ? item.hasOperation() : false,
-              )
-            ) {
-              return LoadObject.loading();
-            }
+              if (
+                result.some(
+                  (item: $FlowFixMe): boolean =>
+                    item instanceof LoadObject ? item.hasOperation() : false,
+                )
+              ) {
+                return LoadObject.loading();
+              }
 
-            return result.map(
-              (item: $FlowFixMe): $FlowFixMe =>
-                item instanceof LoadObject ? item.getValue() : item,
-            );
-          });
+              return result.map(
+                (item: $FlowFixMe): $FlowFixMe =>
+                  item instanceof LoadObject ? item.getValue() : item,
+              );
+            },
+          );
 
           if (loader.hasOperation()) {
             return;
