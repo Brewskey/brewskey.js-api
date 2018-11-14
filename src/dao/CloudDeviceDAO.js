@@ -48,4 +48,4 @@ class CloudDeviceDAO extends RestDAO<any, any> {
   }
 }
 
-export default CloudDeviceDAO;
+export default new CloudDeviceDAO();

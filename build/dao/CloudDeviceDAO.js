@@ -70,5 +70,6 @@ function (_RestDAO) {
   return CloudDeviceDAO;
 }(_RestDAO2.default);
 
-var _default = CloudDeviceDAO;
+var _default = new CloudDeviceDAO();
+
 exports.default = _default;
