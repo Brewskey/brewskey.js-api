@@ -3,34 +3,16 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "DAO_ENTITIES", {
-  enumerable: true,
-  get: function get() {
-    return _constants.DAO_ENTITIES;
-  }
-});
-Object.defineProperty(exports, "PERMISSIONS_MAP", {
-  enumerable: true,
-  get: function get() {
-    return _constants.PERMISSIONS_MAP;
-  }
-});
+var _exportNames = {
+  CADENCE_MAP: true,
+  LoadObject: true,
+  RestDAO: true,
+  ODataDAO: true
+};
 Object.defineProperty(exports, "CADENCE_MAP", {
   enumerable: true,
   get: function get() {
     return _ReportTranslator.CADENCE_MAP;
-  }
-});
-Object.defineProperty(exports, "MAX_OUNCES_BY_KEG_TYPE", {
-  enumerable: true,
-  get: function get() {
-    return _KegDAO.MAX_OUNCES_BY_KEG_TYPE;
-  }
-});
-Object.defineProperty(exports, "FRIEND_STATUSES", {
-  enumerable: true,
-  get: function get() {
-    return _FriendDAO.FRIEND_STATUSES;
   }
 });
 Object.defineProperty(exports, "LoadObject", {
@@ -39,21 +21,25 @@ Object.defineProperty(exports, "LoadObject", {
     return _LoadObject.default;
   }
 });
+Object.defineProperty(exports, "RestDAO", {
+  enumerable: true,
+  get: function get() {
+    return _RestDAO.default;
+  }
+});
+Object.defineProperty(exports, "ODataDAO", {
+  enumerable: true,
+  get: function get() {
+    return _ODataDAO.default;
+  }
+});
 exports.default = void 0;
 
 var _odata = _interopRequireDefault(require("odata"));
 
-var _constants = require("./constants");
-
 var _BaseODataDAO = _interopRequireDefault(require("./dao/BaseODataDAO"));
 
 var _ReportTranslator = require("./translators/ReportTranslator");
-
-var _KegDAO = _interopRequireWildcard(require("./dao/KegDAO"));
-
-var _FriendDAO = _interopRequireWildcard(require("./dao/FriendDAO"));
-
-var _LoadObject = _interopRequireDefault(require("./LoadObject"));
 
 var _Subcription = _interopRequireDefault(require("./dao/Subcription"));
 
@@ -61,47 +47,347 @@ var _fetch = _interopRequireDefault(require("./fetch"));
 
 var _filters = require("./filters");
 
-var _AccountDAO = _interopRequireDefault(require("./dao/AccountDAO"));
+var _AccountDAO = _interopRequireWildcard(require("./dao/AccountDAO"));
 
-var _AchievementDAO = _interopRequireDefault(require("./dao/AchievementDAO"));
+Object.keys(_AccountDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _AccountDAO[key];
+    }
+  });
+});
 
-var _AvailabilityDAO = _interopRequireDefault(require("./dao/AvailabilityDAO"));
+var _AchievementDAO = _interopRequireWildcard(require("./dao/AchievementDAO"));
 
-var _BeverageDAO = _interopRequireDefault(require("./dao/BeverageDAO"));
+Object.keys(_AchievementDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _AchievementDAO[key];
+    }
+  });
+});
 
-var _CloudDeviceDAO = _interopRequireDefault(require("./dao/CloudDeviceDAO"));
+var _AvailabilityDAO = _interopRequireWildcard(require("./dao/AvailabilityDAO"));
 
-var _DeviceDAO = _interopRequireDefault(require("./dao/DeviceDAO"));
+Object.keys(_AvailabilityDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _AvailabilityDAO[key];
+    }
+  });
+});
 
-var _FlowSensorDAO = _interopRequireDefault(require("./dao/FlowSensorDAO"));
+var _BeverageDAO = _interopRequireWildcard(require("./dao/BeverageDAO"));
 
-var _GlassDAO = _interopRequireDefault(require("./dao/GlassDAO"));
+Object.keys(_BeverageDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _BeverageDAO[key];
+    }
+  });
+});
 
-var _LocationDAO = _interopRequireDefault(require("./dao/LocationDAO"));
+var _CloudDeviceDAO = _interopRequireWildcard(require("./dao/CloudDeviceDAO"));
 
-var _OrganizationDAO = _interopRequireDefault(require("./dao/OrganizationDAO"));
+Object.keys(_CloudDeviceDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _CloudDeviceDAO[key];
+    }
+  });
+});
 
-var _PermissionDAO = _interopRequireDefault(require("./dao/PermissionDAO"));
+var _DeviceDAO = _interopRequireWildcard(require("./dao/DeviceDAO"));
 
-var _PourChartDAO = _interopRequireDefault(require("./dao/PourChartDAO"));
+Object.keys(_DeviceDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _DeviceDAO[key];
+    }
+  });
+});
 
-var _PourDAO = _interopRequireDefault(require("./dao/PourDAO"));
+var _FlowSensorDAO = _interopRequireWildcard(require("./dao/FlowSensorDAO"));
 
-var _ProductDAO = _interopRequireDefault(require("./dao/ProductDAO"));
+Object.keys(_FlowSensorDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _FlowSensorDAO[key];
+    }
+  });
+});
 
-var _ProductDeviceDAO = _interopRequireDefault(require("./dao/ProductDeviceDAO"));
+var _FriendDAO = _interopRequireWildcard(require("./dao/FriendDAO"));
 
-var _ProductFirmwareDAO = _interopRequireDefault(require("./dao/ProductFirmwareDAO"));
+Object.keys(_FriendDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _FriendDAO[key];
+    }
+  });
+});
 
-var _ReportDAO = _interopRequireDefault(require("./dao/ReportDAO"));
+var _GlassDAO = _interopRequireWildcard(require("./dao/GlassDAO"));
 
-var _ScheduleDAO = _interopRequireDefault(require("./dao/ScheduleDAO"));
+Object.keys(_GlassDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _GlassDAO[key];
+    }
+  });
+});
 
-var _SrmDAO = _interopRequireDefault(require("./dao/SrmDAO"));
+var _KegDAO = _interopRequireWildcard(require("./dao/KegDAO"));
 
-var _StyleDAO = _interopRequireDefault(require("./dao/StyleDAO"));
+Object.keys(_KegDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _KegDAO[key];
+    }
+  });
+});
 
-var _TapDAO = _interopRequireDefault(require("./dao/TapDAO"));
+var _LocationDAO = _interopRequireWildcard(require("./dao/LocationDAO"));
+
+Object.keys(_LocationDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _LocationDAO[key];
+    }
+  });
+});
+
+var _OrganizationDAO = _interopRequireWildcard(require("./dao/OrganizationDAO"));
+
+Object.keys(_OrganizationDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _OrganizationDAO[key];
+    }
+  });
+});
+
+var _PermissionDAO = _interopRequireWildcard(require("./dao/PermissionDAO"));
+
+Object.keys(_PermissionDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _PermissionDAO[key];
+    }
+  });
+});
+
+var _PourChartDAO = _interopRequireWildcard(require("./dao/PourChartDAO"));
+
+Object.keys(_PourChartDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _PourChartDAO[key];
+    }
+  });
+});
+
+var _PourDAO = _interopRequireWildcard(require("./dao/PourDAO"));
+
+Object.keys(_PourDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _PourDAO[key];
+    }
+  });
+});
+
+var _ProductDAO = _interopRequireWildcard(require("./dao/ProductDAO"));
+
+Object.keys(_ProductDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ProductDAO[key];
+    }
+  });
+});
+
+var _ProductDeviceDAO = _interopRequireWildcard(require("./dao/ProductDeviceDAO"));
+
+Object.keys(_ProductDeviceDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ProductDeviceDAO[key];
+    }
+  });
+});
+
+var _ProductFirmwareDAO = _interopRequireWildcard(require("./dao/ProductFirmwareDAO"));
+
+Object.keys(_ProductFirmwareDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ProductFirmwareDAO[key];
+    }
+  });
+});
+
+var _ReportDAO = _interopRequireWildcard(require("./dao/ReportDAO"));
+
+Object.keys(_ReportDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ReportDAO[key];
+    }
+  });
+});
+
+var _ScheduleDAO = _interopRequireWildcard(require("./dao/ScheduleDAO"));
+
+Object.keys(_ScheduleDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ScheduleDAO[key];
+    }
+  });
+});
+
+var _SrmDAO = _interopRequireWildcard(require("./dao/SrmDAO"));
+
+Object.keys(_SrmDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _SrmDAO[key];
+    }
+  });
+});
+
+var _StyleDAO = _interopRequireWildcard(require("./dao/StyleDAO"));
+
+Object.keys(_StyleDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _StyleDAO[key];
+    }
+  });
+});
+
+var _TapDAO = _interopRequireWildcard(require("./dao/TapDAO"));
+
+Object.keys(_TapDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _TapDAO[key];
+    }
+  });
+});
+
+var _constants = require("./constants");
+
+Object.keys(_constants).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _constants[key];
+    }
+  });
+});
+
+var _types = require("./types");
+
+Object.keys(_types).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _types[key];
+    }
+  });
+});
+
+var _LoadObject = _interopRequireWildcard(require("./LoadObject"));
+
+Object.keys(_LoadObject).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _LoadObject[key];
+    }
+  });
+});
+
+var _RestDAO = _interopRequireDefault(require("./dao/RestDAO"));
+
+var _ODataDAO = _interopRequireDefault(require("./dao/ODataDAO"));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 

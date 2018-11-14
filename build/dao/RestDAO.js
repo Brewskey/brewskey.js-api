@@ -110,11 +110,11 @@ function (_Subscription) {
         (0, _fetch.default)(path, _objectSpread({
           method: 'GET'
         }, queryParams)).then(function (items) {
-          var ids = items.map(function (_ref) {
+          var ids = (0, _nullthrows.default)(items).map(function (_ref) {
             var id = _ref.id;
             return id;
           });
-          items.forEach(function (item) {
+          (0, _nullthrows.default)(items).forEach(function (item) {
             return _this3._entityLoaderById.set(item.id, _LoadObject.default.withValue(item));
           });
 
@@ -158,7 +158,7 @@ function (_Subscription) {
           }],
           method: 'GET'
         }, queryParams)).then(function (result) {
-          return _this4._updateCacheForEntity(result);
+          return _this4._updateCacheForEntity((0, _nullthrows.default)(result));
         }).catch(function (error) {
           _Subcription.default.__emitError(error);
 
@@ -182,13 +182,13 @@ function (_Subscription) {
       (0, _fetch.default)(path, _objectSpread({
         method: 'GET'
       }, queryParams)).then(function (result) {
-        return _this5._updateCacheForEntity(result);
+        return _this5._updateCacheForEntity((0, _nullthrows.default)(result));
       }).catch(function (error) {
         _Subcription.default.__emitError(error);
 
         _this5._updateCacheForError(clientId, error);
       });
-      return (0, _nullthrows.default)(this._entityLoaderById.get(clientId));
+      return clientId;
     }
   }, {
     key: "__post",
@@ -212,9 +212,9 @@ function (_Subscription) {
       }, queryParams)).then(function (item) {
         _this6._flushQueryCaches();
 
-        _this6._updateCacheForEntity(item, false);
+        _this6._updateCacheForEntity((0, _nullthrows.default)(item), false);
 
-        _this6._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this6._entityLoaderById.get(item.id)));
+        _this6._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this6._entityLoaderById.get((0, _nullthrows.default)(item).id)));
 
         _this6.__emitChanges();
       }).catch(function (error) {
@@ -255,10 +255,10 @@ function (_Subscription) {
       }, queryParams)).then(function (item) {
         _this7._flushQueryCaches();
 
-        _this7._updateCacheForEntity(item, false); // The clientID has a reference to the load object
+        _this7._updateCacheForEntity((0, _nullthrows.default)(item), false); // The clientID has a reference to the load object
 
 
-        _this7._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this7._entityLoaderById.get(item.id)));
+        _this7._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this7._entityLoaderById.get((0, _nullthrows.default)(item).id)));
 
         _this7.__emitChanges();
       }).catch(function (error) {

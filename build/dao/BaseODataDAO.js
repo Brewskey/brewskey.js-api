@@ -170,7 +170,7 @@ function (_Subscription) {
       }
 
       if (BaseODataDAO._organizationID) {
-        handler.customParam('organizationID', BaseODataDAO._organizationID);
+        handler.customParam('organizationID', BaseODataDAO._organizationID.toString());
       }
 
       return handler;
