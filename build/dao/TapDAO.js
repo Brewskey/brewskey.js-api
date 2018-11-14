@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _odata = _interopRequireDefault(require("odata"));
-
 var _ODataDAO2 = _interopRequireDefault(require("./ODataDAO"));
 
 var _constants = require("../constants");

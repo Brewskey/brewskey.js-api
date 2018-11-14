@@ -476,7 +476,7 @@ function (_BaseODataDAO) {
       this.__emitChanges();
 
       this.__resolve(handler, mutator, method).then(function (result) {
-        if (id) {
+        if (stringifiedID) {
           // We want whatever uses this store to refetch the entity
           _this12._entityLoaderByID.delete(stringifiedID);
         } else {
@@ -492,7 +492,7 @@ function (_BaseODataDAO) {
         _this12._updateCacheForError(stringifiedID || clientID, error);
       });
 
-      return id ? stringifiedID : clientID;
+      return stringifiedID || clientID;
     }
   }, {
     key: "__fetchCustom",
@@ -527,13 +527,6 @@ function (_BaseODataDAO) {
     value: function _getClientID() {
       ODataDAO._clientID += 1;
       return "CLIENT_ID:".concat(ODataDAO._clientID);
-    }
-  }, {
-    key: "_emitChanges",
-    value: function _emitChanges() {
-      this._subscriptions.forEach(function (handler) {
-        return handler();
-      });
     }
   }, {
     key: "_flushQueryCaches",
