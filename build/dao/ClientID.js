@@ -24,14 +24,14 @@ function () {
     key: "getClientId",
     value: function getClientId() {
       ClientID._clientId += 1;
-      return "CLIENT_ID:".concat(ClientID._clientId);
+      return "CLIENT_ID:".concat(ClientID._clientId.toString());
     }
   }]);
 
   return ClientID;
 }();
 
-_defineProperty(ClientID, "_clientId", void 0);
+_defineProperty(ClientID, "_clientId", 0);
 
 var _default = ClientID;
 exports.default = _default;
