@@ -46,7 +46,10 @@ function (_RestDAO) {
   }, {
     key: "getMany",
     value: function getMany() {
-      return this.__getMany('products/');
+      var queryOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var skip = queryOptions.skip,
+          take = queryOptions.take;
+      return this.__getMany("products/?skip=".concat(skip, "&take=").concat(take));
     }
   }, {
     key: "getOne",

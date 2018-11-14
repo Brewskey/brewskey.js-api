@@ -1,14 +1,41 @@
 // @flow
 
+import type { EntityID } from '../types';
+
 import RestDAO from './RestDAO';
 
-class ProductDAO extends RestDAO<*, *> {
+export type ProductPlatformId = '0' | '6' | '8' | '10' | '103';
+
+export type ProductPlatformName =
+  | 'Bluz'
+  | 'Core'
+  | 'Electron'
+  | 'P1'
+  | 'Photon';
+
+export type ProductType = 'Consumer' | 'Industrial' | 'Hobbyist';
+
+export type Product = {|
+  configID: string,
+  createdAt: Date,
+  description: string,
+  hardwareVersion: string,
+  id: EntityID,
+  name: string,
+  organization: string,
+  platformID: ProductPlatformId,
+  slug: string,
+  type: ProductType,
+|};
+
+class ProductDAO extends RestDAO<Product, *> {
   count() {
     return this.__count('products/count');
   }
 
-  getMany() {
-    return this.__getMany('products/');
+  getMany(queryOptions?: Object = {}) {
+    const { skip, take } = queryOptions;
+    return this.__getMany(`products/?skip=${skip}&take=${take}`);
   }
 
   getOne(idOrSlug: string) {

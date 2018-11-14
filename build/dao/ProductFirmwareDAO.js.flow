@@ -1,8 +1,34 @@
 // @flow
 
+import type { EntityID } from '../types';
+
 import RestDAO from './RestDAO';
 
-class ProductFirmwareDAO extends RestDAO<*, *> {
+export type ProductFirmware = {
+  current: boolean,
+  description?: string,
+  deviceCount: number,
+  id: EntityID,
+  name: string,
+  productId: string,
+  size: number,
+  title: string,
+  updatedAt: Date,
+  version: number,
+};
+
+export type ProductFirmwareMutator = {
+  binary?: Buffer,
+  current?: boolean,
+  description?: string,
+  title?: string,
+  version?: string,
+};
+
+class ProductFirmwareDAO extends RestDAO<
+  ProductFirmware,
+  ProductFirmwareMutator,
+> {
   getMany(productIdOrSlug: string) {
     return this.__getMany(`products/${productIdOrSlug}/firmware/`);
   }

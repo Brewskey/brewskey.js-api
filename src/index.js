@@ -113,10 +113,9 @@ export * from './dao/OrganizationDAO';
 export * from './dao/PermissionDAO';
 export * from './dao/PourChartDAO';
 export * from './dao/PourDAO';
-// todo uncomment when add types
-// export * from './dao/ProductDAO';
-// export * from './dao/ProductDeviceDAO';
-// export * from './dao/ProductFirmwareDAO';
+export * from './dao/ProductDAO';
+export * from './dao/ProductDeviceDAO';
+export * from './dao/ProductFirmwareDAO';
 export * from './dao/ReportDAO';
 export * from './dao/ScheduleDAO';
 export * from './dao/SrmDAO';

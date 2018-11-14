@@ -1,8 +1,35 @@
 // @flow
 
+import type { EntityID } from '../types';
+
 import RestDAO from './RestDAO';
 
-class ProductDeviceDAO extends RestDAO<*, *> {
+export type ProductDevice = {
+  denied: boolean,
+  desiredFirmwareVersion: ?number,
+  development: boolean,
+  functions: Array<Object>,
+  id: EntityID,
+  lastHeard: Date,
+  lastIpAddress: string,
+  name: string,
+  notes: string,
+  platformId: string,
+  productId: string,
+  quarantined: boolean,
+  status: string,
+  variables: Object,
+};
+
+export type ProductDeviceMutator = {
+  denied?: boolean,
+  desiredFirmwareVersion?: ?number,
+  development?: boolean,
+  notes?: ?string,
+  quarantined?: boolean,
+};
+
+class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
   count(productIdOrSlug: string) {
     return this.__count(`products/${productIdOrSlug}/devices/count`);
   }
