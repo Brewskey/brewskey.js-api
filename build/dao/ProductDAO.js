@@ -39,6 +39,11 @@ function (_RestDAO) {
   }
 
   _createClass(ProductDAO, [{
+    key: "count",
+    value: function count() {
+      return this.__count('products/count');
+    }
+  }, {
     key: "getMany",
     value: function getMany() {
       return this.__getMany('products/');

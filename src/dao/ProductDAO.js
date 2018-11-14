@@ -3,6 +3,10 @@
 import RestDAO from './RestDAO';
 
 class ProductDAO extends RestDAO<*, *> {
+  count() {
+    return this.__count('products/count');
+  }
+
   getMany() {
     return this.__getMany('products/');
   }

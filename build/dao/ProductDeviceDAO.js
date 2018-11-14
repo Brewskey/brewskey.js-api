@@ -39,6 +39,11 @@ function (_RestDAO) {
   }
 
   _createClass(ProductDeviceDAO, [{
+    key: "count",
+    value: function count(productIdOrSlug) {
+      return this.__count("products/".concat(productIdOrSlug, "/devices/count"));
+    }
+  }, {
     key: "getMany",
     value: function getMany(productIdOrSlug) {
       return this.__getMany("products/".concat(productIdOrSlug, "/devices/"));

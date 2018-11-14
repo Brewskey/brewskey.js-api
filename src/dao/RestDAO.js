@@ -9,9 +9,39 @@ import LoadObject from '../LoadObject';
 import fetch from '../fetch';
 
 class RestDAO<TEntity, TEntityMutator> extends Subscription {
+  _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
+
   _entityLoaderById: Map<EntityID, LoadObject<?TEntity>> = new Map();
 
   _entityIdsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
+
+  __count<TQueryParams: Object>(
+    path: string,
+    queryParams?: TQueryParams,
+  ): LoadObject<number> {
+    const cacheKey = this.__getCacheKey(path, queryParams);
+
+    if (!this._countLoaderByQuery.has(cacheKey)) {
+      this._countLoaderByQuery.set(cacheKey, LoadObject.loading());
+      this.__emitChanges();
+
+      fetch(path, { method: 'GET', ...queryParams })
+        .then((countResult: ?number) => {
+          this._countLoaderByQuery.set(
+            cacheKey,
+            LoadObject.withValue(nullthrows(countResult)),
+          );
+          this.__emitChanges();
+        })
+        .catch(error => {
+          Subscription.__emitError(error);
+          this._countLoaderByQuery.set(cacheKey, LoadObject.withError(error));
+          this.__emitChanges();
+        });
+    }
+
+    return nullthrows(this._countLoaderByQuery.get(cacheKey));
+  }
 
   __getMany<TQueryParams: Object>(
     path: string,
@@ -25,10 +55,6 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
 
       fetch(path, { method: 'GET', ...queryParams })
         .then((items: ?Array<TEntity>) => {
-          // todo items should be an array from api but now its null
-          if (!items) {
-            items = []; // eslint-disable-line
-          }
           const ids = items.map(({ id }) => id);
 
           items.forEach(item =>
@@ -72,7 +98,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
         method: 'GET',
         ...queryParams,
       })
-        .then(this._updateCacheForEntity)
+        .then(result => this._updateCacheForEntity(result))
         .catch(error => {
           Subscription.__emitError(error);
           this._updateCacheForError(stringifiedId, error);
@@ -92,7 +118,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     this.__emitChanges();
 
     fetch(path, { method: 'GET', ...queryParams })
-      .then(this._updateCacheForEntity)
+      .then(result => this._updateCacheForEntity(result))
       .catch(error => {
         Subscription.__emitError(error);
         this._updateCacheForError(clientId, error);
