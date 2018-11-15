@@ -46,7 +46,10 @@ function (_RestDAO) {
   }, {
     key: "getMany",
     value: function getMany(productIdOrSlug) {
-      return this.__getMany("products/".concat(productIdOrSlug, "/devices/"));
+      var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var skip = queryOptions.skip,
+          take = queryOptions.take;
+      return this.__getMany("products/".concat(productIdOrSlug, "/devices/?skip=").concat(skip, "&take=").concat(take));
     }
   }, {
     key: "getOne",
@@ -73,5 +76,6 @@ function (_RestDAO) {
   return ProductDeviceDAO;
 }(_RestDAO2.default);
 
-var _default = ProductDeviceDAO;
+var _default = new ProductDeviceDAO();
+
 exports.default = _default;

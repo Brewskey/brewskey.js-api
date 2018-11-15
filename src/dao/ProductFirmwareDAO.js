@@ -29,8 +29,11 @@ class ProductFirmwareDAO extends RestDAO<
   ProductFirmware,
   ProductFirmwareMutator,
 > {
-  getMany(productIdOrSlug: string) {
-    return this.__getMany(`products/${productIdOrSlug}/firmware/`);
+  getMany(productIdOrSlug: string, queryOptions?: Object = {}) {
+    const { skip, take } = queryOptions;
+    return this.__getMany(
+      `products/${productIdOrSlug}/firmware/?skip=${skip}&take=${take}`,
+    );
   }
 
   post(productIdOrSlug: string, mutator: any) {
@@ -77,4 +80,4 @@ class ProductFirmwareDAO extends RestDAO<
   }
 }
 
-export default ProductFirmwareDAO;
+export default new ProductFirmwareDAO();

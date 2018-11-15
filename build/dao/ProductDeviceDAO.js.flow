@@ -34,8 +34,11 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
     return this.__count(`products/${productIdOrSlug}/devices/count`);
   }
 
-  getMany(productIdOrSlug: string) {
-    return this.__getMany(`products/${productIdOrSlug}/devices/`);
+  getMany(productIdOrSlug: string, queryOptions?: Object = {}) {
+    const { skip, take } = queryOptions;
+    return this.__getMany(
+      `products/${productIdOrSlug}/devices/?skip=${skip}&take=${take}`,
+    );
   }
 
   getOne(productIdOrSlug: string, particleId: string) {
@@ -65,4 +68,4 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
   }
 }
 
-export default ProductDeviceDAO;
+export default new ProductDeviceDAO();

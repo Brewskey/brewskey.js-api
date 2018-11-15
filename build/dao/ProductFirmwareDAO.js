@@ -41,7 +41,10 @@ function (_RestDAO) {
   _createClass(ProductFirmwareDAO, [{
     key: "getMany",
     value: function getMany(productIdOrSlug) {
-      return this.__getMany("products/".concat(productIdOrSlug, "/firmware/"));
+      var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var skip = queryOptions.skip,
+          take = queryOptions.take;
+      return this.__getMany("products/".concat(productIdOrSlug, "/firmware/?skip=").concat(skip, "&take=").concat(take));
     }
   }, {
     key: "post",
@@ -79,5 +82,6 @@ function (_RestDAO) {
   return ProductFirmwareDAO;
 }(_RestDAO2.default);
 
-var _default = ProductFirmwareDAO;
+var _default = new ProductFirmwareDAO();
+
 exports.default = _default;
