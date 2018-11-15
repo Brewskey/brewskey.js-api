@@ -14,7 +14,7 @@ import AccountDAO from './dao/AccountDAO';
 import AchievementDAO from './dao/AchievementDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
 import BeverageDAO from './dao/BeverageDAO';
-import ClouDeviceDAO from './dao/CloudDeviceDAO';
+import CloudDeviceDAO from './dao/CloudDeviceDAO';
 import DeviceDAO from './dao/DeviceDAO';
 import FlowSensorDAO from './dao/FlowSensorDAO';
 import FriendDAO from './dao/FriendDAO';
@@ -137,7 +137,7 @@ export default {
   AchievementDAO,
   AvailabilityDAO,
   BeverageDAO,
-  ClouDeviceDAO,
+  CloudDeviceDAO,
   DeviceDAO,
   FlowSensorDAO,
   FriendDAO,

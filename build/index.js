@@ -455,7 +455,7 @@ var _default = {
   AchievementDAO: _AchievementDAO.default,
   AvailabilityDAO: _AvailabilityDAO.default,
   BeverageDAO: _BeverageDAO.default,
-  ClouDeviceDAO: _CloudDeviceDAO.default,
+  CloudDeviceDAO: _CloudDeviceDAO.default,
   DeviceDAO: _DeviceDAO.default,
   FlowSensorDAO: _FlowSensorDAO.default,
   FriendDAO: _FriendDAO.default,

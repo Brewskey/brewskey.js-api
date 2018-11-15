@@ -2,24 +2,6 @@
 
 import RestDAO from './RestDAO';
 
-export type ParticleAttributes = {
-  cellular: ?string,
-  connected: boolean,
-  currentBuildTarget: ?string,
-  functions: Array<string>,
-  id: string,
-  imei: ?string,
-  lastApp: ?string,
-  lastHeard: Date,
-  lastIccid: ?string,
-  lastIpAddress: string,
-  name: string,
-  platformId: number,
-  productFirmwareVersion: number,
-  productId: number,
-  status: string,
-};
-
 class CloudDeviceDAO extends RestDAO<any, any> {
   fetch(particleId: string) {
     return this.__fetchOne(`cloud-devices/${particleId}/`);
@@ -43,6 +25,12 @@ class CloudDeviceDAO extends RestDAO<any, any> {
 
   ping(particleId: string) {
     return this.__fetchOne(`cloud-devices/${particleId}/ping/`, {
+      method: 'PUT',
+    });
+  }
+
+  getPing(particleId: string) {
+    return this.__getOne(`cloud-devices/${particleId}/ping/`, particleId, {
       method: 'PUT',
     });
   }

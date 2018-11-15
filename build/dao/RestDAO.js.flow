@@ -98,10 +98,20 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
         method: 'GET',
         ...queryParams,
       })
-        .then(result => this._updateCacheForEntity(nullthrows(result)))
+        .then(result => {
+          this._entityLoaderById.set(
+            stringifiedId,
+            LoadObject.withValue(nullthrows(result)),
+          );
+          this.__emitChanges();
+        })
         .catch(error => {
           Subscription.__emitError(error);
-          this._updateCacheForError(stringifiedId, error);
+          this._entityLoaderById.set(
+            stringifiedId,
+            LoadObject.withError(error),
+          );
+          this.__emitChanges();
         });
     }
 
@@ -118,10 +128,17 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
     this.__emitChanges();
 
     fetch(path, { method: 'GET', ...queryParams })
-      .then(result => this._updateCacheForEntity(nullthrows(result)))
+      .then(result => {
+        this._entityLoaderById.set(
+          clientId,
+          LoadObject.withValue(nullthrows(result)),
+        );
+        this.__emitChanges();
+      })
       .catch(error => {
         Subscription.__emitError(error);
-        this._updateCacheForError(clientId, error);
+        this._entityLoaderById.set(clientId, LoadObject.withError(error));
+        this.__emitChanges();
       });
 
     return clientId;
@@ -146,7 +163,10 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
     })
       .then(item => {
         this._flushQueryCaches();
-        this._updateCacheForEntity(nullthrows(item), false);
+        this._entityLoaderById.set(
+          nullthrows(item).id,
+          LoadObject.withValue(nullthrows(item)),
+        );
         this._entityLoaderById.set(
           clientId,
           nullthrows(this._entityLoaderById.get(nullthrows(item).id)),
@@ -188,8 +208,12 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
     })
       .then(item => {
         this._flushQueryCaches();
-        this._updateCacheForEntity(nullthrows(item), false);
-        // The clientID has a reference to the load object
+
+        this._entityLoaderById.set(
+          nullthrows(item).id,
+          LoadObject.withValue(nullthrows(item)),
+        );
+
         this._entityLoaderById.set(
           clientId,
           nullthrows(this._entityLoaderById.get(nullthrows(item).id)),
@@ -198,7 +222,8 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
       })
       .catch(error => {
         Subscription.__emitError(error);
-        this._updateCacheForError(clientId, error);
+        this._entityLoaderById.set(clientId, LoadObject.withError(error));
+        this.__emitChanges();
       });
 
     return clientId;
@@ -228,7 +253,8 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
       })
       .catch(error => {
         Subscription.__emitError(error);
-        this._updateCacheForError(clientId, error);
+        this._entityLoaderById.set(clientId, LoadObject.withError(error));
+        this.__emitChanges();
       });
 
     return clientId;
@@ -250,33 +276,71 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
     this.__emitChanges();
   }
 
+  waitForLoaded<TResponse>(
+    fn: () => LoadObject<?TResponse>,
+    timeout?: number = 10000,
+  ): Promise<?TResponse> {
+    return new Promise(
+      (
+        resolve: (response: TResponse) => void,
+        reject: (error: Error) => void,
+      ) => {
+        setTimeout((): void => reject(new Error('Timeout!')), timeout);
+
+        const fetchAndResolve = () => {
+          let loader = fn();
+          if (loader.hasOperation()) {
+            return;
+          }
+
+          loader = loader.map(
+            (result: $FlowFixMe): $FlowFixMe => {
+              if (!Array.isArray(result)) {
+                return result;
+              }
+
+              if (
+                result.some(
+                  (item: $FlowFixMe): boolean =>
+                    item instanceof LoadObject ? item.hasOperation() : false,
+                )
+              ) {
+                return LoadObject.loading();
+              }
+
+              return result.map(
+                (item: $FlowFixMe): $FlowFixMe =>
+                  item instanceof LoadObject ? item.getValue() : item,
+              );
+            },
+          );
+
+          if (loader.hasOperation()) {
+            return;
+          }
+
+          this.unsubscribe(fetchAndResolve);
+
+          if (loader.hasError()) {
+            reject(loader.getErrorEnforcing());
+            return;
+          }
+
+          resolve(loader.getValue());
+        };
+
+        this.subscribe(fetchAndResolve);
+        fetchAndResolve();
+      },
+    );
+  }
+
   _flushQueryCaches() {
     this._entityIdsLoaderByQuery = new Map();
   }
 
   __getCacheKey(path: string, queryParams?: Object): string {
     return path + JSON.stringify(queryParams || '_');
-  }
-
-  _updateCacheForEntity(entity: TEntity, shouldEmitChanges: boolean = true) {
-    this._entityLoaderById.set(
-      entity.id.toString(),
-      LoadObject.withValue(entity),
-    );
-    if (shouldEmitChanges) {
-      this.__emitChanges();
-    }
-  }
-
-  _updateCacheForError(
-    id: EntityID,
-    error: Error,
-    shouldEmitChanges: boolean = true,
-  ) {
-    this._entityLoaderById.set(id.toString(), LoadObject.withError(error));
-    if (shouldEmitChanges) {
-      this.__emitChanges();
-    }
   }
 }
 

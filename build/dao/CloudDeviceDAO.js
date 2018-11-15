@@ -65,6 +65,13 @@ function (_RestDAO) {
         method: 'PUT'
       });
     }
+  }, {
+    key: "getPing",
+    value: function getPing(particleId) {
+      return this.__getOne("cloud-devices/".concat(particleId, "/ping/"), particleId, {
+        method: 'PUT'
+      });
+    }
   }]);
 
   return CloudDeviceDAO;
