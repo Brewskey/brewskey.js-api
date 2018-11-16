@@ -18,7 +18,7 @@ export type ProductDevice = {
   productId: string,
   quarantined: boolean,
   status: string,
-  variables: Object,
+  variables: ?Object,
 };
 
 export type ProductDeviceMutator = {
@@ -48,8 +48,34 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
     );
   }
 
-  post(productIdOrSlug: string, deviceMutator: any) {
-    return this.__post(`products/${productIdOrSlug}/devices/`, deviceMutator);
+  addToProduct(productIdOrSlug: string, deviceMutator: any) {
+    const { file, particleId } = deviceMutator;
+    let body;
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('import_method', 'many');
+      body = formData;
+    } else {
+      body = JSON.stringify({ import_method: 'one', particleID: particleId });
+    }
+
+    return this.__fetchOne(`products/${productIdOrSlug}/devices/`, {
+      body,
+      headers: file
+        ? [
+            {
+              name: 'Content-Type',
+              value: 'multipart/form-data',
+            },
+          ]
+        : [
+            { name: 'Accept', value: 'application/json' },
+            { name: 'Content-Type', value: 'application/json' },
+          ],
+      method: 'POST',
+    });
   }
 
   put(productIdOrSlug: string, particleId: string, deviceMutator: any) {

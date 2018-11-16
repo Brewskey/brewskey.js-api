@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.PRODUCT_TYPES = exports.PLATFORM_NAME_BY_ID = void 0;
 
 var _RestDAO2 = _interopRequireDefault(require("./RestDAO"));
 
@@ -26,6 +26,17 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var PLATFORM_NAME_BY_ID = {
+  '0': 'Core',
+  '10': 'Electron',
+  '103': 'Bluz',
+  '6': 'Photon',
+  '8': 'P1'
+};
+exports.PLATFORM_NAME_BY_ID = PLATFORM_NAME_BY_ID;
+var PRODUCT_TYPES = ['Consumer', 'Hobbyist', 'Industrial'];
+exports.PRODUCT_TYPES = PRODUCT_TYPES;
 
 var ProductDAO =
 /*#__PURE__*/

@@ -205,6 +205,7 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
         { name: 'Content-Type', value: 'application/json' },
       ],
       ...queryParams,
+      method: 'PUT',
     })
       .then(item => {
         this._flushQueryCaches();

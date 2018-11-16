@@ -260,7 +260,9 @@ function (_Subscription) {
           name: 'Content-Type',
           value: 'application/json'
         }]
-      }, queryParams)).then(function (item) {
+      }, queryParams, {
+        method: 'PUT'
+      })).then(function (item) {
         _this7._flushQueryCaches();
 
         _this7._entityLoaderById.set((0, _nullthrows.default)(item).id, _LoadObject.default.withValue((0, _nullthrows.default)(item)));

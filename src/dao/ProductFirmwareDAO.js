@@ -29,10 +29,14 @@ class ProductFirmwareDAO extends RestDAO<
   ProductFirmware,
   ProductFirmwareMutator,
 > {
+  count(productIdOrSlug: string) {
+    return this.__count(`products/${productIdOrSlug}/firmwares/count`);
+  }
+
   getMany(productIdOrSlug: string, queryOptions?: Object = {}) {
     const { skip, take } = queryOptions;
     return this.__getMany(
-      `products/${productIdOrSlug}/firmware/?skip=${skip}&take=${take}`,
+      `products/${productIdOrSlug}/firmwares/?skip=${skip}&take=${take}`,
     );
   }
 

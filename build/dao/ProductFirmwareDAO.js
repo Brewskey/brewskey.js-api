@@ -39,12 +39,17 @@ function (_RestDAO) {
   }
 
   _createClass(ProductFirmwareDAO, [{
+    key: "count",
+    value: function count(productIdOrSlug) {
+      return this.__count("products/".concat(productIdOrSlug, "/firmwares/count"));
+    }
+  }, {
     key: "getMany",
     value: function getMany(productIdOrSlug) {
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var skip = queryOptions.skip,
           take = queryOptions.take;
-      return this.__getMany("products/".concat(productIdOrSlug, "/firmware/?skip=").concat(skip, "&take=").concat(take));
+      return this.__getMany("products/".concat(productIdOrSlug, "/firmwares/?skip=").concat(skip, "&take=").concat(take));
     }
   }, {
     key: "post",

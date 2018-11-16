@@ -15,18 +15,34 @@ export type ProductPlatformName =
 
 export type ProductType = 'Consumer' | 'Industrial' | 'Hobbyist';
 
-export type Product = {|
-  configID: string,
+export type Product = {
+  configId: string,
   createdAt: Date,
   description: string,
   hardwareVersion: string,
   id: EntityID,
   name: string,
   organization: string,
-  platformID: ProductPlatformId,
+  platformId: ProductPlatformId,
   slug: string,
   type: ProductType,
-|};
+};
+
+export const PLATFORM_NAME_BY_ID: {
+  [key: ProductPlatformId]: ProductPlatformName,
+} = {
+  '0': 'Core',
+  '10': 'Electron',
+  '103': 'Bluz',
+  '6': 'Photon',
+  '8': 'P1',
+};
+
+export const PRODUCT_TYPES: Array<ProductType> = [
+  'Consumer',
+  'Hobbyist',
+  'Industrial',
+];
 
 class ProductDAO extends RestDAO<Product, *> {
   count() {

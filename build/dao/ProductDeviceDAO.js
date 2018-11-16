@@ -57,9 +57,38 @@ function (_RestDAO) {
       return this.__getOne("products/".concat(productIdOrSlug, "/devices/").concat(particleId, "/"), particleId);
     }
   }, {
-    key: "post",
-    value: function post(productIdOrSlug, deviceMutator) {
-      return this.__post("products/".concat(productIdOrSlug, "/devices/"), deviceMutator);
+    key: "addToProduct",
+    value: function addToProduct(productIdOrSlug, deviceMutator) {
+      var file = deviceMutator.file,
+          particleId = deviceMutator.particleId;
+      var body;
+
+      if (file) {
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('import_method', 'many');
+        body = formData;
+      } else {
+        body = JSON.stringify({
+          import_method: 'one',
+          particleID: particleId
+        });
+      }
+
+      return this.__fetchOne("products/".concat(productIdOrSlug, "/devices/"), {
+        body: body,
+        headers: file ? [{
+          name: 'Content-Type',
+          value: 'multipart/form-data'
+        }] : [{
+          name: 'Accept',
+          value: 'application/json'
+        }, {
+          name: 'Content-Type',
+          value: 'application/json'
+        }],
+        method: 'POST'
+      });
     }
   }, {
     key: "put",
