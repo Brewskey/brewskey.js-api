@@ -39,8 +39,11 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       'delete',
     )
       .then(() => {
-        this._entityLoaderByID.delete(id);
+        this._entityLoaderByID.set(clientID, LoadObject.empty());
+        this.__emitChanges();
+
         this._entityLoaderByID.delete(clientID);
+        this._entityLoaderByID.delete(id);
         this._flushQueryCaches();
         this.__emitChanges();
       })

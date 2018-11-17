@@ -299,6 +299,10 @@ function (_Subscription) {
       (0, _fetch.default)(path, _objectSpread({
         method: 'DELETE'
       }, queryParams)).then(function () {
+        _this8._entityLoaderById.set(clientId, _LoadObject.default.empty());
+
+        _this8.__emitChanges();
+
         _this8._entityLoaderById.delete(id);
 
         _this8._entityLoaderById.delete(clientId);
