@@ -33,6 +33,10 @@ class ProductFirmwareDAO extends RestDAO<
     return this.__count(`products/${productIdOrSlug}/firmwares/count`);
   }
 
+  getOne(productIdOrSlug: string, id: EntityID) {
+    return this.__getOne(`products/${productIdOrSlug}/firmwares/${id}/`, id);
+  }
+
   getMany(productIdOrSlug: string, queryOptions?: Object = {}) {
     const { skip, take } = queryOptions;
     return this.__getMany(

@@ -44,6 +44,11 @@ function (_RestDAO) {
       return this.__count("products/".concat(productIdOrSlug, "/firmwares/count"));
     }
   }, {
+    key: "getOne",
+    value: function getOne(productIdOrSlug, id) {
+      return this.__getOne("products/".concat(productIdOrSlug, "/firmwares/").concat(id, "/"), id);
+    }
+  }, {
     key: "getMany",
     value: function getMany(productIdOrSlug) {
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};

@@ -398,7 +398,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
             return;
           }
 
-          resolve(loader.getValueEnforcing());
+          resolve(loader.getValue());
         };
 
         this.subscribe(fetchAndResolve);

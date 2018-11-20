@@ -385,7 +385,7 @@ function (_Subscription) {
             return;
           }
 
-          resolve(loader.getValueEnforcing());
+          resolve(loader.getValue());
         };
 
         _this9.subscribe(fetchAndResolve);
@@ -397,6 +397,7 @@ function (_Subscription) {
     key: "_flushQueryCaches",
     value: function _flushQueryCaches() {
       this._entityIdsLoaderByQuery = new Map();
+      this._countLoaderByQuery = new Map();
     }
   }, {
     key: "__getCacheKey",

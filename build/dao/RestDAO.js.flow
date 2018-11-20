@@ -328,7 +328,7 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
             return;
           }
 
-          resolve(loader.getValueEnforcing());
+          resolve(loader.getValue());
         };
 
         this.subscribe(fetchAndResolve);
@@ -339,6 +339,7 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
 
   _flushQueryCaches() {
     this._entityIdsLoaderByQuery = new Map();
+    this._countLoaderByQuery = new Map();
   }
 
   __getCacheKey(path: string, queryParams?: Object): string {

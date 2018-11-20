@@ -446,7 +446,7 @@ function (_BaseODataDAO) {
             return;
           }
 
-          resolve(loader.getValueEnforcing());
+          resolve(loader.getValue());
         };
 
         _this11.subscribe(fetchAndResolve);
