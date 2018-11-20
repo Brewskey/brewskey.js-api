@@ -413,7 +413,7 @@ function (_BaseODataDAO) {
         }, timeout);
 
         var fetchAndResolve = function fetchAndResolve() {
-          var loader = fn();
+          var loader = fn(_this11);
 
           if (loader.hasOperation()) {
             return;
@@ -446,7 +446,7 @@ function (_BaseODataDAO) {
             return;
           }
 
-          resolve(loader.getValue());
+          resolve(loader.getValueEnforcing());
         };
 
         _this11.subscribe(fetchAndResolve);

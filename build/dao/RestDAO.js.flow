@@ -279,9 +279,9 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
   }
 
   waitForLoaded<TResponse>(
-    fn: () => LoadObject<?TResponse>,
+    fn: this => LoadObject<TResponse>,
     timeout?: number = 10000,
-  ): Promise<?TResponse> {
+  ): Promise<TResponse> {
     return new Promise(
       (
         resolve: (response: TResponse) => void,
@@ -290,7 +290,7 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
         setTimeout((): void => reject(new Error('Timeout!')), timeout);
 
         const fetchAndResolve = () => {
-          let loader = fn();
+          let loader = fn(this);
           if (loader.hasOperation()) {
             return;
           }
@@ -328,7 +328,7 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
             return;
           }
 
-          resolve(loader.getValue());
+          resolve(loader.getValueEnforcing());
         };
 
         this.subscribe(fetchAndResolve);

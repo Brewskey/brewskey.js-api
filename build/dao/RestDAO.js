@@ -352,7 +352,7 @@ function (_Subscription) {
         }, timeout);
 
         var fetchAndResolve = function fetchAndResolve() {
-          var loader = fn();
+          var loader = fn(_this9);
 
           if (loader.hasOperation()) {
             return;
@@ -385,7 +385,7 @@ function (_Subscription) {
             return;
           }
 
-          resolve(loader.getValue());
+          resolve(loader.getValueEnforcing());
         };
 
         _this9.subscribe(fetchAndResolve);
