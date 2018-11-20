@@ -66,12 +66,12 @@ function (_RestDAO) {
       if (file) {
         var formData = new FormData();
         formData.append('file', file);
-        formData.append('import_method', 'many');
+        formData.append('importMethod', 'many');
         body = formData;
       } else {
         body = JSON.stringify({
-          import_method: 'one',
-          particleID: particleId
+          importMethod: 'one',
+          particleId: particleId
         });
       }
 

@@ -248,10 +248,8 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
     fetch(path, { method: 'DELETE', ...queryParams })
       .then(() => {
         this._entityLoaderById.set(clientId, LoadObject.empty());
+        this._entityLoaderById.set(id, LoadObject.empty());
         this.__emitChanges();
-
-        this._entityLoaderById.delete(id);
-        this._entityLoaderById.delete(clientId);
         this._flushQueryCaches();
         this.__emitChanges();
       })

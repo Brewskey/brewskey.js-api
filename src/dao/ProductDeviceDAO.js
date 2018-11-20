@@ -55,10 +55,10 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('import_method', 'many');
+      formData.append('importMethod', 'many');
       body = formData;
     } else {
-      body = JSON.stringify({ import_method: 'one', particleID: particleId });
+      body = JSON.stringify({ importMethod: 'one', particleId });
     }
 
     return this.__fetchOne(`products/${productIdOrSlug}/devices/`, {

@@ -301,11 +301,9 @@ function (_Subscription) {
       }, queryParams)).then(function () {
         _this8._entityLoaderById.set(clientId, _LoadObject.default.empty());
 
+        _this8._entityLoaderById.set(id, _LoadObject.default.empty());
+
         _this8.__emitChanges();
-
-        _this8._entityLoaderById.delete(id);
-
-        _this8._entityLoaderById.delete(clientId);
 
         _this8._flushQueryCaches();
 

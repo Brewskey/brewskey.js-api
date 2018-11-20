@@ -40,10 +40,8 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     )
       .then(() => {
         this._entityLoaderByID.set(clientID, LoadObject.empty());
+        this._entityLoaderByID.set(id, LoadObject.empty());
         this.__emitChanges();
-
-        this._entityLoaderByID.delete(clientID);
-        this._entityLoaderByID.delete(id);
         this._flushQueryCaches();
         this.__emitChanges();
       })

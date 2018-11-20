@@ -88,11 +88,9 @@ function (_BaseODataDAO) {
       {}, 'delete').then(function () {
         _this2._entityLoaderByID.set(clientID, _LoadObject.default.empty());
 
+        _this2._entityLoaderByID.set(id, _LoadObject.default.empty());
+
         _this2.__emitChanges();
-
-        _this2._entityLoaderByID.delete(clientID);
-
-        _this2._entityLoaderByID.delete(id);
 
         _this2._flushQueryCaches();
 
