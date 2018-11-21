@@ -46,20 +46,15 @@ class ProductFirmwareDAO extends RestDAO<
 
   post(productIdOrSlug: string, mutator: any) {
     const formData = new FormData();
-    formData.append('binary', (mutator.binary: any));
-    formData.append('current', (false: any));
+    formData.append('file', (mutator.binary: any));
+    formData.append('isCurrent', (false: any));
     formData.append('description', (mutator.description: any));
     formData.append('title', (mutator.title: any));
     formData.append('version', (mutator.version: any));
 
     return this.__post(`products/${productIdOrSlug}/firmwares/`, mutator, {
       body: formData,
-      headers: [
-        {
-          name: 'Content-Type',
-          value: 'multipart/form-data',
-        },
-      ],
+      headers: [],
       method: 'POST',
     });
   }

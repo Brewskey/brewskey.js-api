@@ -64,12 +64,7 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
     return this.__fetchOne(`products/${productIdOrSlug}/devices/`, {
       body,
       headers: file
-        ? [
-            {
-              name: 'Content-Type',
-              value: 'multipart/form-data',
-            },
-          ]
+        ? []
         : [
             { name: 'Accept', value: 'application/json' },
             { name: 'Content-Type', value: 'application/json' },

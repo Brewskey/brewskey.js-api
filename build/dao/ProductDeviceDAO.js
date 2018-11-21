@@ -77,10 +77,7 @@ function (_RestDAO) {
 
       return this.__fetchOne("products/".concat(productIdOrSlug, "/devices/"), {
         body: body,
-        headers: file ? [{
-          name: 'Content-Type',
-          value: 'multipart/form-data'
-        }] : [{
+        headers: file ? [] : [{
           name: 'Accept',
           value: 'application/json'
         }, {
