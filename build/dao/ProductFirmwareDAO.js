@@ -65,7 +65,7 @@ function (_RestDAO) {
       formData.append('description', mutator.description);
       formData.append('title', mutator.title);
       formData.append('version', mutator.version);
-      return this.__post("products/".concat(productIdOrSlug, "/firmware/"), mutator, {
+      return this.__post("products/".concat(productIdOrSlug, "/firmwares/"), mutator, {
         body: formData,
         headers: [{
           name: 'Content-Type',

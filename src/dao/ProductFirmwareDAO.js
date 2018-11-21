@@ -52,7 +52,7 @@ class ProductFirmwareDAO extends RestDAO<
     formData.append('title', (mutator.title: any));
     formData.append('version', (mutator.version: any));
 
-    return this.__post(`products/${productIdOrSlug}/firmware/`, mutator, {
+    return this.__post(`products/${productIdOrSlug}/firmwares/`, mutator, {
       body: formData,
       headers: [
         {
