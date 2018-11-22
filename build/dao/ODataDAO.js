@@ -403,7 +403,14 @@ function (_BaseODataDAO) {
     }
   }, {
     key: "waitForLoaded",
-    value: function waitForLoaded(fn) {
+    value: function waitForLoaded(fn, timeout) {
+      return this.waitForLoadedNullable(fn, timeout).then(function (result) {
+        return (0, _nullthrows.default)(result);
+      });
+    }
+  }, {
+    key: "waitForLoadedNullable",
+    value: function waitForLoadedNullable(fn) {
       var _this11 = this;
 
       var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10000;
@@ -446,11 +453,7 @@ function (_BaseODataDAO) {
             return;
           }
 
-          try {
-            resolve(loader.getValueEnforcing());
-          } catch (exception) {
-            reject(exception);
-          }
+          resolve(loader.getValue());
         };
 
         _this11.subscribe(fetchAndResolve);
