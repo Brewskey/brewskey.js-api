@@ -351,10 +351,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   waitForLoaded<TResponse>(
     fn: this => LoadObject<TResponse>,
     timeout?: number = 10000,
-  ): Promise<?TResponse> {
+  ): Promise<TResponse> {
     return new Promise(
       (
-        resolve: (response: ?TResponse) => void,
+        resolve: (response: TResponse) => void,
         reject: (error: Error) => void,
       ) => {
         setTimeout((): void => reject(new Error('Timeout!')), timeout);
@@ -398,7 +398,11 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
             return;
           }
 
-          resolve(loader.getValue());
+          try {
+            resolve(loader.getValueEnforcing());
+          } catch (exception) {
+            reject(exception);
+          }
         };
 
         this.subscribe(fetchAndResolve);
