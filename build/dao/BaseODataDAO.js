@@ -313,42 +313,44 @@ function (_Subscription) {
     value: function () {
       var _resolve = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3(handler, params) {
-        var method,
+      regeneratorRuntime.mark(function _callee3(handler) {
+        var params,
+            method,
             request,
             _args3 = arguments;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
+                params = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : null;
                 method = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : 'get';
                 _context3.t0 = method;
-                _context3.next = _context3.t0 === 'delete' ? 4 : _context3.t0 === 'patch' ? 6 : _context3.t0 === 'post' ? 8 : _context3.t0 === 'put' ? 10 : 12;
+                _context3.next = _context3.t0 === 'delete' ? 5 : _context3.t0 === 'patch' ? 7 : _context3.t0 === 'post' ? 9 : _context3.t0 === 'put' ? 11 : 13;
                 break;
 
-              case 4:
+              case 5:
                 request = handler.remove().save();
-                return _context3.abrupt("break", 13);
+                return _context3.abrupt("break", 14);
 
-              case 6:
+              case 7:
                 request = handler.patch(params).save();
-                return _context3.abrupt("break", 13);
+                return _context3.abrupt("break", 14);
 
-              case 8:
+              case 9:
                 request = handler.post(params).save();
-                return _context3.abrupt("break", 13);
+                return _context3.abrupt("break", 14);
 
-              case 10:
+              case 11:
                 request = handler.put(params).save();
-                return _context3.abrupt("break", 13);
-
-              case 12:
-                request = handler.get();
+                return _context3.abrupt("break", 14);
 
               case 13:
-                return _context3.abrupt("return", request);
+                request = handler.get();
 
               case 14:
+                return _context3.abrupt("return", request);
+
+              case 15:
               case "end":
                 return _context3.stop();
             }
@@ -356,7 +358,7 @@ function (_Subscription) {
         }, _callee3, this);
       }));
 
-      return function __resolve(_x5, _x6) {
+      return function __resolve(_x5) {
         return _resolve.apply(this, arguments);
       };
     }()

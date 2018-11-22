@@ -456,9 +456,10 @@ function (_BaseODataDAO) {
     }
   }, {
     key: "__mutateCustom",
-    value: function __mutateCustom(handler, method, id, mutator) {
+    value: function __mutateCustom(handler, method, id) {
       var _this12 = this;
 
+      var mutator = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       var stringifiedID = null;
 
       if (id) {
@@ -477,7 +478,10 @@ function (_BaseODataDAO) {
 
       this.__emitChanges();
 
-      this.__resolve(handler, mutator, method).then(function (result) {
+      this.__resolve(handler, mutator, method) // TODO - We need to rethink how the chache should be changed here..
+      // I'm not sure what the expected behavior is for this response. Is it
+      // standardized?
+      .then(function (result) {
         if (stringifiedID) {
           // We want whatever uses this store to refetch the entity
           _this12._entityLoaderByID.delete(stringifiedID);

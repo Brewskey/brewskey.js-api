@@ -130,11 +130,13 @@ function (_Subscription) {
         });
       }
 
-      return (0, _nullthrows.default)(this._entityIdsLoaderByQuery.get(cacheKey)).map(function (ids) {
+      var result = (0, _nullthrows.default)(this._entityIdsLoaderByQuery.get(cacheKey)).map(function (ids) {
         return ids.map(function (id) {
-          return (0, _nullthrows.default)(_this3._entityLoaderById.get(id.toString()));
+          var loader = (0, _nullthrows.default)(_this3._entityLoaderById.get(id.toString()));
+          return loader;
         });
       });
+      return result;
     }
   }, {
     key: "__getOne",

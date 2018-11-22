@@ -214,7 +214,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
 
   async __resolve(
     handler: OHandler<TEntity>,
-    params?: Object,
+    params?: ?Object = null,
     method?: RequestMethod = 'get',
   ): Promise<ODataDAOResult> {
     let request;
