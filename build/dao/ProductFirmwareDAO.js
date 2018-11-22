@@ -59,17 +59,7 @@ function (_RestDAO) {
   }, {
     key: "post",
     value: function post(productIdOrSlug, mutator) {
-      var formData = new FormData();
-      formData.append('file', mutator.binary);
-      formData.append('isCurrent', false);
-      formData.append('description', mutator.description);
-      formData.append('title', mutator.title);
-      formData.append('version', mutator.version);
-      return this.__post("products/".concat(productIdOrSlug, "/firmwares/"), mutator, {
-        body: formData,
-        headers: [],
-        method: 'POST'
-      });
+      return this.__post("products/".concat(productIdOrSlug, "/firmwares/"), mutator);
     } // todo this probably wrong  ^.^, i think it basically should be used
     // as `release` product firmware, but why do we need to complex
     // arguments here then...

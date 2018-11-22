@@ -19,8 +19,8 @@ export type ProductFirmware = {
 
 export type ProductFirmwareMutator = {
   binary?: Buffer,
-  current?: boolean,
   description?: string,
+  isCurrent?: boolean,
   title?: string,
   version?: string,
 };
@@ -45,18 +45,7 @@ class ProductFirmwareDAO extends RestDAO<
   }
 
   post(productIdOrSlug: string, mutator: any) {
-    const formData = new FormData();
-    formData.append('file', (mutator.binary: any));
-    formData.append('isCurrent', (false: any));
-    formData.append('description', (mutator.description: any));
-    formData.append('title', (mutator.title: any));
-    formData.append('version', (mutator.version: any));
-
-    return this.__post(`products/${productIdOrSlug}/firmwares/`, mutator, {
-      body: formData,
-      headers: [],
-      method: 'POST',
-    });
+    return this.__post(`products/${productIdOrSlug}/firmwares/`, mutator);
   }
 
   // todo this probably wrong  ^.^, i think it basically should be used
