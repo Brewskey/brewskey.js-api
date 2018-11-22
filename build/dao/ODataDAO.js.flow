@@ -351,10 +351,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   waitForLoaded<TResponse>(
     fn: this => LoadObject<TResponse>,
     timeout?: number = 10000,
-  ): Promise<TResponse> {
+  ): Promise<?TResponse> {
     return new Promise(
       (
-        resolve: (response: TResponse) => void,
+        resolve: (response: ?TResponse) => void,
         reject: (error: Error) => void,
       ) => {
         setTimeout((): void => reject(new Error('Timeout!')), timeout);
@@ -411,7 +411,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     handler: OHandler<TEntity>,
     method: 'delete' | 'patch' | 'post' | 'put',
     id: ?string,
-    mutator: ?Object,
+    mutator: ?Object = null,
   ): string {
     let stringifiedID = null;
     if (id) {
@@ -432,7 +432,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     this.__emitChanges();
 
     this.__resolve(handler, mutator, method)
-      .then((result: TEntity) => {
+      // TODO - We need to rethink how the chache should be changed here..
+      // I'm not sure what the expected behavior is for this response. Is it
+      // standardized?
+      .then((result: any) => {
         if (stringifiedID) {
           // We want whatever uses this store to refetch the entity
           this._entityLoaderByID.delete(stringifiedID);

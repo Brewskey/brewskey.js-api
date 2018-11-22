@@ -11,7 +11,7 @@ import fetch from '../fetch';
 class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
 
-  _entityLoaderById: Map<EntityID, LoadObject<?TEntity>> = new Map();
+  _entityLoaderById: Map<EntityID, LoadObject<TEntity>> = new Map();
 
   _entityIdsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
 
@@ -74,16 +74,24 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
         });
     }
 
-    return nullthrows(this._entityIdsLoaderByQuery.get(cacheKey)).map(ids =>
-      ids.map(id => nullthrows(this._entityLoaderById.get(id.toString()))),
+    const result = nullthrows(this._entityIdsLoaderByQuery.get(cacheKey)).map(
+      ids =>
+        ids.map(id => {
+          const loader: LoadObject<TEntity> = nullthrows(
+            this._entityLoaderById.get(id.toString()),
+          );
+          return loader;
+        }),
     );
+
+    return result;
   }
 
   __getOne<TQueryParams: Object>(
     path: string,
     id: EntityID,
     queryParams?: TQueryParams,
-  ): LoadObject<?TEntity> {
+  ): LoadObject<TEntity> {
     const stringifiedId = id.toString();
 
     if (!this._entityLoaderById.has(stringifiedId)) {
@@ -281,10 +289,10 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
   waitForLoaded<TResponse>(
     fn: this => LoadObject<TResponse>,
     timeout?: number = 10000,
-  ): Promise<TResponse> {
+  ): Promise<?TResponse> {
     return new Promise(
       (
-        resolve: (response: TResponse) => void,
+        resolve: (response: ?TResponse) => void,
         reject: (error: Error) => void,
       ) => {
         setTimeout((): void => reject(new Error('Timeout!')), timeout);
