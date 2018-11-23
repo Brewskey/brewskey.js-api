@@ -50,14 +50,11 @@ class ProductFirmwareDAO extends RestDAO<
     });
   }
 
-  // todo this probably wrong  ^.^, i think it basically should be used
-  // as `release` product firmware, but why do we need to complex
-  // arguments here then...
   updateProductFirmware(
     productIdOrSlug: string,
-    firmwareId: string,
-    firmwareVersion: string,
-    mutator: any,
+    firmwareId: EntityID,
+    firmwareVersion: number,
+    mutator: ProductFirmwareMutator,
   ) {
     return this.__put(
       `products/${productIdOrSlug}/firmware/${firmwareVersion}`,

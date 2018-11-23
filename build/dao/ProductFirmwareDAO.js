@@ -64,14 +64,11 @@ function (_RestDAO) {
           return error.error;
         }
       });
-    } // todo this probably wrong  ^.^, i think it basically should be used
-    // as `release` product firmware, but why do we need to complex
-    // arguments here then...
-
+    }
   }, {
     key: "updateProductFirmware",
     value: function updateProductFirmware(productIdOrSlug, firmwareId, firmwareVersion, mutator) {
-      return this.__put("products/".concat(productIdOrSlug, "/firmware/").concat(firmwareVersion), firmwareId, mutator);
+      return this.__put("products/".concat(productIdOrSlug, "/firmwares/").concat(firmwareVersion), firmwareId, mutator);
     }
   }, {
     key: "delete",
