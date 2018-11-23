@@ -63,9 +63,13 @@ class ProductFirmwareDAO extends RestDAO<
     );
   }
 
-  delete(productIdOrSlug: string, firmwareId: string) {
+  delete(
+    productIdOrSlug: string,
+    firmwareId: EntityID,
+    firmwareVersion: number,
+  ) {
     return this.__delete(
-      `products/${productIdOrSlug}/firmware/${firmwareId}/`,
+      `products/${productIdOrSlug}/firmwares/${firmwareVersion}/`,
       firmwareId,
     );
   }

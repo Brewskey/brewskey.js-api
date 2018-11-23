@@ -57,15 +57,19 @@ class ProductFirmwareDAO extends RestDAO<
     mutator: ProductFirmwareMutator,
   ) {
     return this.__put(
-      `products/${productIdOrSlug}/firmware/${firmwareVersion}`,
+      `products/${productIdOrSlug}/firmwares/${firmwareVersion}`,
       firmwareId,
       mutator,
     );
   }
 
-  delete(productIdOrSlug: string, firmwareId: string) {
+  delete(
+    productIdOrSlug: string,
+    firmwareId: EntityID,
+    firmwareVersion: number,
+  ) {
     return this.__delete(
-      `products/${productIdOrSlug}/firmware/${firmwareId}/`,
+      `products/${productIdOrSlug}/firmwares/${firmwareVersion}/`,
       firmwareId,
     );
   }

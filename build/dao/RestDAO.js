@@ -344,7 +344,14 @@ function (_Subscription) {
     }
   }, {
     key: "waitForLoaded",
-    value: function waitForLoaded(fn) {
+    value: function waitForLoaded(fn, timeout) {
+      return this.waitForLoadedNullable(fn, timeout).then(function (result) {
+        return (0, _nullthrows.default)(result);
+      });
+    }
+  }, {
+    key: "waitForLoadedNullable",
+    value: function waitForLoadedNullable(fn) {
       var _this9 = this;
 
       var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10000;

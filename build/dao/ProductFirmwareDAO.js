@@ -72,8 +72,8 @@ function (_RestDAO) {
     }
   }, {
     key: "delete",
-    value: function _delete(productIdOrSlug, firmwareId) {
-      return this.__delete("products/".concat(productIdOrSlug, "/firmware/").concat(firmwareId, "/"), firmwareId);
+    value: function _delete(productIdOrSlug, firmwareId, firmwareVersion) {
+      return this.__delete("products/".concat(productIdOrSlug, "/firmwares/").concat(firmwareVersion, "/"), firmwareId);
     }
   }]);
 
