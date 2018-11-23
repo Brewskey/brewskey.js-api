@@ -1,10 +1,9 @@
 // @flow
 
-import type { Header } from './types';
-
 import oHandler from 'odata';
 
-export default async (path: string, options: ?Object): Promise<*> => {
+export default async (path: string, options?: Object = {}): Promise<*> => {
+  const { reformatError, ...fetchOptions } = options;
   const { endpoint, headers: oheaders = [] } = oHandler().oConfig;
 
   if (!endpoint) {
@@ -12,15 +11,16 @@ export default async (path: string, options: ?Object): Promise<*> => {
   }
 
   const headers = new Headers();
-  oheaders.forEach(
-    ({ name, value }: Header): void => headers.append(name, value),
+  oheaders.forEach(({ name, value }) => headers.append(name, value));
+
+  (options.headers || []).forEach(({ name, value }) =>
+    headers.append(name, value),
   );
 
-  ((options && options.headers) || []).forEach(
-    ({ name, value }: Header): void => headers.append(name, value),
-  );
-
-  const response = await fetch(`${endpoint}${path}`, { ...options, headers });
+  const response = await fetch(`${endpoint}${path}`, {
+    ...fetchOptions,
+    headers,
+  });
 
   let responseJson;
   try {
@@ -30,6 +30,10 @@ export default async (path: string, options: ?Object): Promise<*> => {
   }
 
   if (!response.ok) {
+    if (responseJson && reformatError) {
+      throw new Error(reformatError(responseJson));
+    }
+
     throw new Error(
       (responseJson && responseJson.error && responseJson.error.message) ||
         'Whoops! Error!',

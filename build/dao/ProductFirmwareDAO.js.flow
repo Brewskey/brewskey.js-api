@@ -45,7 +45,9 @@ class ProductFirmwareDAO extends RestDAO<
   }
 
   post(productIdOrSlug: string, mutator: any) {
-    return this.__post(`products/${productIdOrSlug}/firmwares/`, mutator);
+    return this.__post(`products/${productIdOrSlug}/firmwares/`, mutator, {
+      reformatError: error => error.error,
+    });
   }
 
   // todo this probably wrong  ^.^, i think it basically should be used

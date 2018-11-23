@@ -74,7 +74,10 @@ function (_RestDAO) {
           name: 'Content-Type',
           value: 'application/json'
         }],
-        method: 'POST'
+        method: 'POST',
+        reformatError: function reformatError(error) {
+          return "invalid device ids: ".concat(error.invalidDeviceIds.join(', '));
+        }
       });
     }
   }, {

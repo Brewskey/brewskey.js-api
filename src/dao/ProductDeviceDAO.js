@@ -61,6 +61,8 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
         { name: 'Content-Type', value: 'application/json' },
       ],
       method: 'POST',
+      reformatError: error =>
+        `invalid device ids: ${error.invalidDeviceIds.join(', ')}`,
     });
   }
 

@@ -59,7 +59,11 @@ function (_RestDAO) {
   }, {
     key: "post",
     value: function post(productIdOrSlug, mutator) {
-      return this.__post("products/".concat(productIdOrSlug, "/firmwares/"), mutator);
+      return this.__post("products/".concat(productIdOrSlug, "/firmwares/"), mutator, {
+        reformatError: function reformatError(error) {
+          return error.error;
+        }
+      });
     } // todo this probably wrong  ^.^, i think it basically should be used
     // as `release` product firmware, but why do we need to complex
     // arguments here then...
