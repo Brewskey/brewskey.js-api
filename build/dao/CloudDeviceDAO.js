@@ -46,16 +46,22 @@ function (_RestDAO) {
   }, {
     key: "flash",
     value: function flash(particleId, file) {
-      var formData = new FormData();
-      formData.append('file', file); // todo queryParams
-
       return this.__fetchOne("cloud-devices/".concat(particleId, "/flash/"), {
-        body: formData,
+        body: JSON.stringify({
+          file: file,
+          particleId: particleId
+        }),
         headers: [{
+          name: 'Accept',
+          value: 'application/json'
+        }, {
           name: 'Content-Type',
-          value: 'multipart/form-data'
+          value: 'application/json'
         }],
-        method: 'PUT'
+        method: 'PUT',
+        reformatError: function reformatError(error) {
+          return error.error;
+        }
       });
     }
   }, {
@@ -64,6 +70,11 @@ function (_RestDAO) {
       return this.__fetchOne("cloud-devices/".concat(particleId, "/ping/"), {
         method: 'PUT'
       });
+    }
+  }, {
+    key: "get",
+    value: function get(clientId) {
+      return this.__getOne('', clientId);
     }
   }, {
     key: "getPing",

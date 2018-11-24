@@ -1,5 +1,7 @@
 // @flow
 
+import type { EntityID } from '../types';
+
 import RestDAO from './RestDAO';
 
 class CloudDeviceDAO extends RestDAO<any, any> {
@@ -8,18 +10,14 @@ class CloudDeviceDAO extends RestDAO<any, any> {
   }
 
   flash(particleId: string, file: any) {
-    const formData = new FormData();
-    formData.append('file', file);
-    // todo queryParams
     return this.__fetchOne(`cloud-devices/${particleId}/flash/`, {
-      body: formData,
+      body: JSON.stringify({ file, particleId }),
       headers: [
-        {
-          name: 'Content-Type',
-          value: 'multipart/form-data',
-        },
+        { name: 'Accept', value: 'application/json' },
+        { name: 'Content-Type', value: 'application/json' },
       ],
       method: 'PUT',
+      reformatError: error => error.error,
     });
   }
 
@@ -27,6 +25,10 @@ class CloudDeviceDAO extends RestDAO<any, any> {
     return this.__fetchOne(`cloud-devices/${particleId}/ping/`, {
       method: 'PUT',
     });
+  }
+
+  get(clientId: EntityID) {
+    return this.__getOne('', clientId);
   }
 
   getPing(particleId: string) {
