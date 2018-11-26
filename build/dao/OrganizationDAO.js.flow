@@ -19,6 +19,17 @@ class OrganizationDAO extends ODataDAO<Organization, Organization> {
       translator: new DefaultTranslator(),
     });
   }
+
+  addStripeAccount(organizationID: string, code: string): string {
+    const funcString = 'Default.addStripeAccount()';
+    const stringifiedID = organizationID.toString();
+
+    const handler = this.__buildHandler({}, false)
+      .find(this.__reformatIDValue(stringifiedID))
+      .func(funcString);
+
+    return this.__mutateCustom(handler, 'post', stringifiedID, { code });
+  }
 }
 
 export default new OrganizationDAO();
