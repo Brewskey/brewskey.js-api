@@ -19,8 +19,8 @@ export type ProductFirmware = {
 
 export type ProductFirmwareMutator = {
   binary?: Buffer,
-  current?: boolean,
   description?: string,
+  isCurrent?: boolean,
   title?: string,
   version?: string,
 };
@@ -45,39 +45,31 @@ class ProductFirmwareDAO extends RestDAO<
   }
 
   post(productIdOrSlug: string, mutator: any) {
-    const formData = new FormData();
-    formData.append('file', (mutator.binary: any));
-    formData.append('isCurrent', (false: any));
-    formData.append('description', (mutator.description: any));
-    formData.append('title', (mutator.title: any));
-    formData.append('version', (mutator.version: any));
-
     return this.__post(`products/${productIdOrSlug}/firmwares/`, mutator, {
-      body: formData,
-      headers: [],
-      method: 'POST',
+      reformatError: error => error.error,
     });
   }
 
-  // todo this probably wrong  ^.^, i think it basically should be used
-  // as `release` product firmware, but why do we need to complex
-  // arguments here then...
   updateProductFirmware(
     productIdOrSlug: string,
-    firmwareId: string,
-    firmwareVersion: string,
-    mutator: any,
+    firmwareId: EntityID,
+    firmwareVersion: number,
+    mutator: ProductFirmwareMutator,
   ) {
     return this.__put(
-      `products/${productIdOrSlug}/firmware/${firmwareVersion}`,
+      `products/${productIdOrSlug}/firmwares/${firmwareVersion}`,
       firmwareId,
       mutator,
     );
   }
 
-  delete(productIdOrSlug: string, firmwareId: string) {
+  delete(
+    productIdOrSlug: string,
+    firmwareId: EntityID,
+    firmwareVersion: number,
+  ) {
     return this.__delete(
-      `products/${productIdOrSlug}/firmware/${firmwareId}/`,
+      `products/${productIdOrSlug}/firmwares/${firmwareVersion}/`,
       firmwareId,
     );
   }

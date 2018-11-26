@@ -288,6 +288,15 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
 
   waitForLoaded<TResponse>(
     fn: this => LoadObject<TResponse>,
+    timeout?: number,
+  ): Promise<TResponse> {
+    return this.waitForLoadedNullable(fn, timeout).then(result =>
+      nullthrows(result),
+    );
+  }
+
+  waitForLoadedNullable<TResponse>(
+    fn: this => LoadObject<TResponse>,
     timeout?: number = 10000,
   ): Promise<?TResponse> {
     return new Promise(

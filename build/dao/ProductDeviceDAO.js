@@ -58,33 +58,26 @@ function (_RestDAO) {
     }
   }, {
     key: "addToProduct",
-    value: function addToProduct(productIdOrSlug, deviceMutator) {
-      var file = deviceMutator.file,
-          particleId = deviceMutator.particleId;
-      var body;
-
-      if (file) {
-        var formData = new FormData();
-        formData.append('file', file);
-        formData.append('importMethod', 'many');
-        body = formData;
-      } else {
-        body = JSON.stringify({
-          importMethod: 'one',
-          particleId: particleId
-        });
-      }
-
+    value: function addToProduct(productIdOrSlug, payload) {
+      var file = payload.file,
+          particleId = payload.particleId;
       return this.__fetchOne("products/".concat(productIdOrSlug, "/devices/"), {
-        body: body,
-        headers: file ? [] : [{
+        body: JSON.stringify({
+          file: file,
+          importMethod: file ? 'many' : 'one',
+          particleId: particleId
+        }),
+        headers: [{
           name: 'Accept',
           value: 'application/json'
         }, {
           name: 'Content-Type',
           value: 'application/json'
         }],
-        method: 'POST'
+        method: 'POST',
+        reformatError: function reformatError(error) {
+          return "invalid device ids: ".concat(error.invalidDeviceIds.join(', '));
+        }
       });
     }
   }, {

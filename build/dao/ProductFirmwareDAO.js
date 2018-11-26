@@ -59,30 +59,21 @@ function (_RestDAO) {
   }, {
     key: "post",
     value: function post(productIdOrSlug, mutator) {
-      var formData = new FormData();
-      formData.append('file', mutator.binary);
-      formData.append('isCurrent', false);
-      formData.append('description', mutator.description);
-      formData.append('title', mutator.title);
-      formData.append('version', mutator.version);
       return this.__post("products/".concat(productIdOrSlug, "/firmwares/"), mutator, {
-        body: formData,
-        headers: [],
-        method: 'POST'
+        reformatError: function reformatError(error) {
+          return error.error;
+        }
       });
-    } // todo this probably wrong  ^.^, i think it basically should be used
-    // as `release` product firmware, but why do we need to complex
-    // arguments here then...
-
+    }
   }, {
     key: "updateProductFirmware",
     value: function updateProductFirmware(productIdOrSlug, firmwareId, firmwareVersion, mutator) {
-      return this.__put("products/".concat(productIdOrSlug, "/firmware/").concat(firmwareVersion), firmwareId, mutator);
+      return this.__put("products/".concat(productIdOrSlug, "/firmwares/").concat(firmwareVersion), firmwareId, mutator);
     }
   }, {
     key: "delete",
-    value: function _delete(productIdOrSlug, firmwareId) {
-      return this.__delete("products/".concat(productIdOrSlug, "/firmware/").concat(firmwareId, "/"), firmwareId);
+    value: function _delete(productIdOrSlug, firmwareId, firmwareVersion) {
+      return this.__delete("products/".concat(productIdOrSlug, "/firmwares/").concat(firmwareVersion, "/"), firmwareId);
     }
   }]);
 

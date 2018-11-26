@@ -48,28 +48,21 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
     );
   }
 
-  addToProduct(productIdOrSlug: string, deviceMutator: any) {
-    const { file, particleId } = deviceMutator;
-    let body;
-
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('importMethod', 'many');
-      body = formData;
-    } else {
-      body = JSON.stringify({ importMethod: 'one', particleId });
-    }
-
+  addToProduct(productIdOrSlug: string, payload: any) {
+    const { file, particleId } = payload;
     return this.__fetchOne(`products/${productIdOrSlug}/devices/`, {
-      body,
-      headers: file
-        ? []
-        : [
-            { name: 'Accept', value: 'application/json' },
-            { name: 'Content-Type', value: 'application/json' },
-          ],
+      body: JSON.stringify({
+        file,
+        importMethod: file ? 'many' : 'one',
+        particleId,
+      }),
+      headers: [
+        { name: 'Accept', value: 'application/json' },
+        { name: 'Content-Type', value: 'application/json' },
+      ],
       method: 'POST',
+      reformatError: error =>
+        `invalid device ids: ${error.invalidDeviceIds.join(', ')}`,
     });
   }
 

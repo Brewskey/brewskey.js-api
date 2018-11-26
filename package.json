@@ -65,7 +65,6 @@
     "src/**/*.{js,json}": [
       "prettier --write",
       "eslint --fix --max-warnings 0",
-      "yarn lint",
       "git add"
     ]
   }

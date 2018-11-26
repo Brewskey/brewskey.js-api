@@ -1,6 +1,12 @@
 // @flow
 
 import type { QueryFilter } from './filters';
+import type ODataDAO from './dao/ODataDAO';
+import type RestDAO from './dao/RestDAO';
+
+export type DAO<TEntity, TEntityMutator> =
+  | ODataDAO<TEntity, TEntityMutator>
+  | RestDAO<TEntity, TEntityMutator>;
 
 export type EntityName =
   | 'accounts'
