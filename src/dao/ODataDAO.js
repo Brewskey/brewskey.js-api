@@ -84,14 +84,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     this._currentCountQueries.add(cacheKey);
 
     if (!this._countLoaderByQuery.has(cacheKey)) {
-      this._hydrateCount(
-        getOHandler({
-          shouldCount: true,
-          take: 0,
-        }),
-        queryOptions,
-        key,
-      );
+      this._hydrateCount(getOHandler, queryOptions, key);
     }
 
     return nullthrows(this._countLoaderByQuery.get(cacheKey));
@@ -563,17 +556,23 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     this._setLoadersToUpdating(this._entityIDsLoaderByQuery);
     this._setLoadersToUpdating(this._countLoaderByQuery);
     this._setLoadersToUpdating(this._customLoaderByQuery);
+
     this._runFlushCache = debounce(() => {
       this._entityIDsLoaderByQuery = this._rebuildMap(
         this._entityIDsLoaderByQuery,
         this._currentEntityIDsQueries,
-        this._hydrateMany,
+        queryOptions => this._hydrateMany(queryOptions),
       );
 
       this._countLoaderByQuery = this._rebuildMap(
         this._countLoaderByQuery,
-        this._currentEntityIDsQueries,
-        this._hydrateCount,
+        this._currentCountQueries,
+        queryOptions =>
+          this._hydrateCount(
+            countQueryOptions =>
+              this.__buildHandler({ ...queryOptions, ...countQueryOptions }),
+            queryOptions,
+          ),
       );
 
       // TODO
@@ -582,6 +581,8 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this._runFlushCache = null;
       this.__emitChanges();
     }, 10);
+
+    this._runFlushCache();
   }
 
   _flushCustomCache() {
@@ -600,19 +601,21 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this._runFlushCache = null;
       this.__emitChanges();
     }, 10);
+
+    this._runFlushCache();
   }
 
   _setLoadersToUpdating(map: Map<string, LoadObject<any>>) {
-    map.forEach(([key, value]) => map.set(key, value.loading()));
+    map.forEach((value, key) => map.set(key, value.loading()));
   }
 
   _rebuildMap(
     map: Map<string, LoadObject<any>>,
     set: Set<string>,
-    updateFunction: (?QueryOptions) => void,
+    onUpdate: (queryOptions: ?QueryOptions) => void,
   ): Map<string, LoadObject<any>> {
-    const savedItems = set.map(queryOptionString => {
-      updateFunction(JSON.parse(queryOptionString));
+    const savedItems = Array.from(set).map(queryOptionString => {
+      onUpdate(JSON.parse(queryOptionString));
 
       const loader = nullthrows(map.get(queryOptionString));
       return [queryOptionString, loader];
@@ -656,9 +659,9 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   _hydrateCount(
     getOHandler: (baseQueryOptions: QueryOptions) => OHandler<*>,
-    queryOptions?: QueryOptions,
+    queryOptions: ?QueryOptions,
     key?: string = '',
-  ): LoadObject<number> {
+  ): void {
     const cacheKey = this._getCacheKey({
       ...queryOptions,
       __custom_key__: key,
@@ -695,7 +698,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       });
   }
 
-  _getCacheKey(queryOptions: QueryOptions): string {
+  _getCacheKey(queryOptions?: QueryOptions): string {
     return JSON.stringify(queryOptions || '_');
   }
 
