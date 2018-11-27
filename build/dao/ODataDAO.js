@@ -17,6 +17,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -261,6 +269,70 @@ function (_BaseODataDAO) {
       });
     }
   }, {
+    key: "fetchAll",
+    value: function fetchAll(queryOptions) {
+      var _this8 = this;
+
+      var CHUNK_SIZE = 40;
+      var ALL_KEY_PREFIX = 'all';
+
+      var cacheKey = ALL_KEY_PREFIX + this._getCacheKey(queryOptions);
+
+      if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
+        this._entityIDsLoaderByQuery.set(cacheKey, _LoadObject.default.loading());
+
+        this.__emitChanges();
+
+        var countPromise = this.waitForLoaded(function (dao) {
+          return dao.count(queryOptions);
+        });
+        countPromise.then(function (count) {
+          var defaultResult = _toConsumableArray(Array(count));
+
+          return Promise.all(_toConsumableArray(Array(Math.ceil(count / CHUNK_SIZE))).map(function (_, index) {
+            var skip = index * CHUNK_SIZE;
+            var take = CHUNK_SIZE;
+
+            var chunkQueryOptions = _objectSpread({}, queryOptions || {}, {
+              skip: skip,
+              take: take
+            });
+
+            var handler = _this8.__buildHandler(chunkQueryOptions, false);
+
+            handler = handler.select('id');
+            return _this8.__resolveManyIDs(handler).then(function (chunkIds) {
+              var stringifiedChunkIds = chunkIds.map(String);
+              var existingIds = (0, _nullthrows.default)(_this8._entityIDsLoaderByQuery.get(cacheKey)).getValue() || defaultResult;
+              existingIds.splice.apply(existingIds, [skip, take].concat(_toConsumableArray(stringifiedChunkIds)));
+
+              _this8._entityIDsLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(existingIds));
+
+              _this8.fetchByIDs(stringifiedChunkIds);
+
+              _this8.__emitChanges();
+            });
+          }));
+        }).catch(function (error) {
+          _Subcription.default.__emitError(error);
+
+          var loader = _this8._entityIDsLoaderByQuery.get(cacheKey);
+
+          _this8._entityIDsLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject.default.withError(error));
+
+          _this8.__emitChanges();
+        });
+      }
+
+      return (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).map(function (nullableIds) {
+        var resultMap = _this8.fetchByIDs(nullableIds.filter(Boolean));
+
+        return nullableIds.map(function (id) {
+          return id ? (0, _nullthrows.default)(resultMap.get(id.toString())) : _LoadObject.default.loading();
+        });
+      });
+    }
+  }, {
     key: "fetchSingle",
     value: function fetchSingle(queryOptions) {
       var combinedQueryOptions = _objectSpread({
@@ -309,7 +381,7 @@ function (_BaseODataDAO) {
   }, {
     key: "patch",
     value: function patch(id, mutator) {
-      var _this8 = this;
+      var _this9 = this;
 
       var stringifiedID = id.toString();
 
@@ -324,35 +396,9 @@ function (_BaseODataDAO) {
       this.__emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
-        _this8._flushQueryCaches();
-
-        _this8._updateCacheForEntity(result, false);
-
-        _this8._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this8._entityLoaderByID.get(result.id)));
-
-        _this8.__emitChanges();
-      }).catch(function (error) {
-        _Subcription.default.__emitError(error);
-
-        _this8._updateCacheForError(clientID, error);
-      });
-
-      return clientID;
-    }
-  }, {
-    key: "post",
-    value: function post(mutator) {
-      var _this9 = this;
-
-      var clientID = this._getClientID();
-
-      this._entityLoaderByID.set(clientID, _LoadObject.default.creating());
-
-      this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'post').then(function (result) {
         _this9._flushQueryCaches();
 
-        _this9._updateCacheForEntity(result, false); // The clientID has a reference to the load object
-
+        _this9._updateCacheForEntity(result, false);
 
         _this9._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this9._entityLoaderByID.get(result.id)));
 
@@ -360,9 +406,35 @@ function (_BaseODataDAO) {
       }).catch(function (error) {
         _Subcription.default.__emitError(error);
 
-        _this9._entityLoaderByID.set(clientID, _LoadObject.default.withError(error));
+        _this9._updateCacheForError(clientID, error);
+      });
 
-        _this9.__emitChanges();
+      return clientID;
+    }
+  }, {
+    key: "post",
+    value: function post(mutator) {
+      var _this10 = this;
+
+      var clientID = this._getClientID();
+
+      this._entityLoaderByID.set(clientID, _LoadObject.default.creating());
+
+      this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'post').then(function (result) {
+        _this10._flushQueryCaches();
+
+        _this10._updateCacheForEntity(result, false); // The clientID has a reference to the load object
+
+
+        _this10._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this10._entityLoaderByID.get(result.id)));
+
+        _this10.__emitChanges();
+      }).catch(function (error) {
+        _Subcription.default.__emitError(error);
+
+        _this10._entityLoaderByID.set(clientID, _LoadObject.default.withError(error));
+
+        _this10.__emitChanges();
       });
 
       return clientID;
@@ -370,7 +442,7 @@ function (_BaseODataDAO) {
   }, {
     key: "put",
     value: function put(id, mutator) {
-      var _this10 = this;
+      var _this11 = this;
 
       var stringifiedID = id.toString();
 
@@ -385,18 +457,18 @@ function (_BaseODataDAO) {
       this.__emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
-        _this10._flushQueryCaches();
+        _this11._flushQueryCaches();
 
-        _this10._updateCacheForEntity(result, false); // The clientID has a reference to the load object
+        _this11._updateCacheForEntity(result, false); // The clientID has a reference to the load object
 
 
-        _this10._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this10._entityLoaderByID.get(result.id)));
+        _this11._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this11._entityLoaderByID.get(result.id)));
 
-        _this10.__emitChanges();
+        _this11.__emitChanges();
       }).catch(function (error) {
         _Subcription.default.__emitError(error);
 
-        _this10._updateCacheForError(clientID, error);
+        _this11._updateCacheForError(clientID, error);
       });
 
       return clientID;
@@ -411,7 +483,7 @@ function (_BaseODataDAO) {
   }, {
     key: "waitForLoadedNullable",
     value: function waitForLoadedNullable(fn) {
-      var _this11 = this;
+      var _this12 = this;
 
       var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10000;
       return new Promise(function (resolve, reject) {
@@ -420,7 +492,7 @@ function (_BaseODataDAO) {
         }, timeout);
 
         var fetchAndResolve = function fetchAndResolve() {
-          var loader = fn(_this11);
+          var loader = fn(_this12);
 
           if (loader.hasOperation()) {
             return;
@@ -446,7 +518,7 @@ function (_BaseODataDAO) {
             return;
           }
 
-          _this11.unsubscribe(fetchAndResolve);
+          _this12.unsubscribe(fetchAndResolve);
 
           if (loader.hasError()) {
             reject(loader.getErrorEnforcing());
@@ -456,7 +528,7 @@ function (_BaseODataDAO) {
           resolve(loader.getValue());
         };
 
-        _this11.subscribe(fetchAndResolve);
+        _this12.subscribe(fetchAndResolve);
 
         fetchAndResolve();
       });
@@ -464,7 +536,7 @@ function (_BaseODataDAO) {
   }, {
     key: "__mutateCustom",
     value: function __mutateCustom(handler, method, id) {
-      var _this12 = this;
+      var _this13 = this;
 
       var mutator = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       var stringifiedID = null;
@@ -491,18 +563,18 @@ function (_BaseODataDAO) {
       .then(function (result) {
         if (stringifiedID) {
           // We want whatever uses this store to refetch the entity
-          _this12._entityLoaderByID.delete(stringifiedID);
+          _this13._entityLoaderByID.delete(stringifiedID);
         } else {
-          _this12._updateCacheForEntity(result, false);
+          _this13._updateCacheForEntity(result, false);
 
-          _this12._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this12._entityLoaderByID.get(result.id)));
+          _this13._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this13._entityLoaderByID.get(result.id)));
         }
 
-        _this12.__emitChanges();
+        _this13.__emitChanges();
       }).catch(function (error) {
         _Subcription.default.__emitError(error);
 
-        _this12._updateCacheForError(stringifiedID || clientID, error);
+        _this13._updateCacheForError(stringifiedID || clientID, error);
       });
 
       return stringifiedID || clientID;
@@ -510,7 +582,7 @@ function (_BaseODataDAO) {
   }, {
     key: "__fetchCustom",
     value: function __fetchCustom(handler, queryOptions) {
-      var _this13 = this;
+      var _this14 = this;
 
       var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
       var cacheKey = this._getCacheKey(queryOptions) + key;
@@ -521,15 +593,15 @@ function (_BaseODataDAO) {
         this.__emitChanges();
 
         this.__resolve(handler).then(function (result) {
-          _this13._customLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(result.data));
+          _this14._customLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(result.data));
 
-          _this13.__emitChanges();
+          _this14.__emitChanges();
         }).catch(function (error) {
           _Subcription.default.__emitError(error);
 
-          _this13._customLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
+          _this14._customLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
 
-          _this13.__emitChanges();
+          _this14.__emitChanges();
         });
       }
 
