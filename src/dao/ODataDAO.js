@@ -4,6 +4,7 @@ import type OHandler from 'odata';
 import type { EntityID, QueryOptions } from '../index';
 
 import nullthrows from 'nullthrows';
+import debounce from 'debounce';
 import BaseODataDAO from './BaseODataDAO';
 import LoadObject from '../LoadObject';
 import Subscription from './Subcription';
@@ -21,6 +22,15 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   _customLoaderByQuery: Map<string, LoadObject<any>> = new Map();
 
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
+
+  // Sets used for tracking current queries
+  _runFlushCache = null;
+
+  _currentCountQueries: Set<string> = new Set();
+
+  _currentEntityIDsQueries: Set<string> = new Set();
+
+  _currentCustomQueries: Set<string> = new Set();
 
   deleteByID(id: EntityID): EntityID {
     const stringifiedID = id.toString();
@@ -66,34 +76,22 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     queryOptions?: QueryOptions,
     key?: string = '',
   ): LoadObject<number> {
-    const cacheKey = this._getCacheKey(queryOptions) + key;
+    const cacheKey = this._getCacheKey({
+      ...queryOptions,
+      __custom_key__: key,
+    });
+
+    this._currentCountQueries.add(cacheKey);
 
     if (!this._countLoaderByQuery.has(cacheKey)) {
-      this._countLoaderByQuery.set(cacheKey, LoadObject.loading());
-      this.__emitChanges();
-
-      this.__resolve(
+      this._hydrateCount(
         getOHandler({
           shouldCount: true,
           take: 0,
         }),
-      )
-        .then((result: Object) => {
-          this._countLoaderByQuery.set(
-            cacheKey,
-            LoadObject.withValue(result.inlinecount),
-          );
-          this.__emitChanges();
-        })
-        .catch((error: Error) => {
-          Subscription.__emitError(error);
-          const loader = this._countLoaderByQuery.get(cacheKey);
-          this._countLoaderByQuery.set(
-            cacheKey,
-            loader ? loader.setError(error) : LoadObject.withError(error),
-          );
-          this.__emitChanges();
-        });
+        queryOptions,
+        key,
+      );
     }
 
     return nullthrows(this._countLoaderByQuery.get(cacheKey));
@@ -180,33 +178,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntity>>> {
     const cacheKey = this._getCacheKey(queryOptions);
+    this._currentEntityIDsQueries.add(cacheKey);
 
     if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
-      this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
-      this.__emitChanges();
-
-      let handler = this.__buildHandler(queryOptions, false);
-      handler = handler.select('id');
-
-      this.__resolveManyIDs(handler)
-        .then((ids: Array<EntityID>) => {
-          const stringifiedIds = ids.map(String);
-          this._entityIDsLoaderByQuery.set(
-            cacheKey,
-            LoadObject.withValue(stringifiedIds),
-          );
-          this.__emitChanges();
-          this.fetchByIDs(stringifiedIds);
-        })
-        .catch((error: Error) => {
-          Subscription.__emitError(error);
-          const loader = this._entityIDsLoaderByQuery.get(cacheKey);
-          this._entityIDsLoaderByQuery.set(
-            cacheKey,
-            loader ? loader.setError(error) : LoadObject.withError(error),
-          );
-          this.__emitChanges();
-        });
+      this._hydrateMany(queryOptions);
     }
 
     return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
@@ -245,8 +220,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   flushCustomCache() {
-    this._customLoaderByQuery = new Map();
-    this.__emitChanges();
+    this._flushCustomCache();
   }
 
   flushQueryCaches() {
@@ -470,7 +444,11 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     queryOptions?: QueryOptions,
     key?: string = '',
   ): LoadObject<TResult> {
-    const cacheKey = this._getCacheKey(queryOptions) + key;
+    const cacheKey = this._getCacheKey({
+      ...queryOptions,
+      __custom_key__: key,
+    });
+    this._currentCustomQueries.add(cacheKey);
 
     if (!this._customLoaderByQuery.has(cacheKey)) {
       this._customLoaderByQuery.set(cacheKey, LoadObject.loading());
@@ -500,12 +478,150 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   _flushQueryCaches() {
-    this._entityIDsLoaderByQuery = new Map();
-    this._customLoaderByQuery = new Map();
-    this._countLoaderByQuery = new Map();
+    if (this._runFlushCache) {
+      return;
+    }
+
+    this._currentCountQueries.clear();
+    this._currentCustomQueries.clear();
+    this._currentEntityIDsQueries.clear();
+
+    this._setLoadersToUpdating(this._entityIDsLoaderByQuery);
+    this._setLoadersToUpdating(this._countLoaderByQuery);
+    this._setLoadersToUpdating(this._customLoaderByQuery);
+    this._runFlushCache = debounce(() => {
+      this._entityIDsLoaderByQuery = this._rebuildMap(
+        this._entityIDsLoaderByQuery,
+        this._currentEntityIDsQueries,
+        this._hydrateMany,
+      );
+
+      this._countLoaderByQuery = this._rebuildMap(
+        this._countLoaderByQuery,
+        this._currentEntityIDsQueries,
+        this._hydrateCount,
+      );
+
+      // TODO
+      this._customLoaderByQuery = new Map();
+
+      this._runFlushCache = null;
+      this.__emitChanges();
+    }, 10);
   }
 
-  _getCacheKey(queryOptions?: QueryOptions): string {
+  _flushCustomCache() {
+    if (this._runFlushCache) {
+      return;
+    }
+
+    this._currentCountQueries.clear();
+    this._currentCustomQueries.clear();
+    this._currentEntityIDsQueries.clear();
+
+    this._setLoadersToUpdating(this._customLoaderByQuery);
+    this._runFlushCache = debounce(() => {
+      this._customLoaderByQuery = new Map();
+
+      this._runFlushCache = null;
+      this.__emitChanges();
+    }, 10);
+  }
+
+  _setLoadersToUpdating(map: Map<string, LoadObject<any>>) {
+    map.forEach(([key, value]) => map.set(key, value.loading()));
+  }
+
+  _rebuildMap(
+    map: Map<string, LoadObject<any>>,
+    set: Set<string>,
+    updateFunction: (?QueryOptions) => void,
+  ): Map<string, LoadObject<any>> {
+    const savedItems = set.map(queryOptionString => {
+      updateFunction(JSON.parse(queryOptionString));
+
+      const loader = nullthrows(map.get(queryOptionString));
+      return [queryOptionString, loader];
+    });
+
+    return new Map(savedItems);
+  }
+
+  _hydrateMany(queryOptions?: QueryOptions): void {
+    const cacheKey = this._getCacheKey(queryOptions);
+
+    const initialLoader = this._entityIDsLoaderByQuery.has(cacheKey)
+      ? nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).updating()
+      : LoadObject.loading();
+    this._entityIDsLoaderByQuery.set(cacheKey, initialLoader);
+    this.__emitChanges();
+
+    let handler = this.__buildHandler(queryOptions, false);
+    handler = handler.select('id');
+
+    this.__resolveManyIDs(handler)
+      .then((ids: Array<EntityID>) => {
+        const stringifiedIds = ids.map(String);
+        this._entityIDsLoaderByQuery.set(
+          cacheKey,
+          LoadObject.withValue(stringifiedIds),
+        );
+        this.__emitChanges();
+        this.fetchByIDs(stringifiedIds);
+      })
+      .catch((error: Error) => {
+        Subscription.__emitError(error);
+        const loader = this._entityIDsLoaderByQuery.get(cacheKey);
+        this._entityIDsLoaderByQuery.set(
+          cacheKey,
+          loader ? loader.setError(error) : LoadObject.withError(error),
+        );
+        this.__emitChanges();
+      });
+  }
+
+  _hydrateCount(
+    getOHandler: (baseQueryOptions: QueryOptions) => OHandler<*>,
+    queryOptions?: QueryOptions,
+    key?: string = '',
+  ): LoadObject<number> {
+    const cacheKey = this._getCacheKey({
+      ...queryOptions,
+      __custom_key__: key,
+    });
+
+    const initialLoader = this._countLoaderByQuery.has(cacheKey)
+      ? nullthrows(this._countLoaderByQuery.get(cacheKey)).updating()
+      : LoadObject.loading();
+
+    this._countLoaderByQuery.set(cacheKey, initialLoader);
+    this.__emitChanges();
+
+    this.__resolve(
+      getOHandler({
+        shouldCount: true,
+        take: 0,
+      }),
+    )
+      .then((result: Object) => {
+        this._countLoaderByQuery.set(
+          cacheKey,
+          LoadObject.withValue(result.inlinecount),
+        );
+        this.__emitChanges();
+      })
+      .catch((error: Error) => {
+        Subscription.__emitError(error);
+        const loader = this._countLoaderByQuery.get(cacheKey);
+        this._countLoaderByQuery.set(
+          cacheKey,
+          loader ? loader.setError(error) : LoadObject.withError(error),
+        );
+        this.__emitChanges();
+      });
+  }
+
+  _getCacheKey(queryOptions: QueryOptions): string {
     return JSON.stringify(queryOptions || '_');
   }
 
