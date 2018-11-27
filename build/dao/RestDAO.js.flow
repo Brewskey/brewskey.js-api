@@ -270,6 +270,8 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
     return clientId;
   }
 
+  flushCustomCache() {}
+
   flushCache() {
     this._entityLoaderById = new Map();
     this._flushQueryCaches();

@@ -15,6 +15,7 @@ import AchievementDAO from './dao/AchievementDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
 import BeverageDAO from './dao/BeverageDAO';
 import CloudDeviceDAO from './dao/CloudDeviceDAO';
+import CloudDevicePingDAO from './dao/CloudDevicePingDAO';
 import DeviceDAO from './dao/DeviceDAO';
 import FlowSensorDAO from './dao/FlowSensorDAO';
 import FriendDAO from './dao/FriendDAO';
@@ -57,6 +58,8 @@ const DAOArray = [
   AchievementDAO,
   AvailabilityDAO,
   BeverageDAO,
+  CloudDeviceDAO,
+  CloudDevicePingDAO,
   DeviceDAO,
   FlowSensorDAO,
   FriendDAO,
@@ -66,6 +69,9 @@ const DAOArray = [
   OrganizationDAO,
   PermissionDAO,
   PourDAO,
+  ProductDAO,
+  ProductDeviceDAO,
+  ProductFirmwareDAO,
   ReportDAO,
   ScheduleDAO,
   SrmDAO,
@@ -90,7 +96,6 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   FriendDAO.flushCache();
   KegDAO.flushCache();
   LocationDAO.flushCache();
-  PermissionDAO.flushCache();
   PourDAO.flushCache();
   ReportDAO.flushCache();
   ScheduleDAO.flushCache();
@@ -103,6 +108,7 @@ export * from './dao/AvailabilityDAO';
 export * from './dao/BeverageDAO';
 // todo uncomment when add types
 // export * from './dao/CloudDeviceDAO';
+export * from './dao/CloudDevicePingDAO';
 export * from './dao/DeviceDAO';
 export * from './dao/FlowSensorDAO';
 export * from './dao/FriendDAO';
@@ -138,6 +144,7 @@ export default {
   AvailabilityDAO,
   BeverageDAO,
   CloudDeviceDAO,
+  CloudDevicePingDAO,
   DeviceDAO,
   FlowSensorDAO,
   FriendDAO,

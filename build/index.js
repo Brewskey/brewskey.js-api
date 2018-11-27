@@ -101,6 +101,19 @@ Object.keys(_BeverageDAO).forEach(function (key) {
 
 var _CloudDeviceDAO = _interopRequireDefault(require("./dao/CloudDeviceDAO"));
 
+var _CloudDevicePingDAO = _interopRequireWildcard(require("./dao/CloudDevicePingDAO"));
+
+Object.keys(_CloudDevicePingDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _CloudDevicePingDAO[key];
+    }
+  });
+});
+
 var _DeviceDAO = _interopRequireWildcard(require("./dao/DeviceDAO"));
 
 Object.keys(_DeviceDAO).forEach(function (key) {
@@ -412,7 +425,7 @@ var setHeaders = function setHeaders(headers) {
   });
 };
 
-var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PermissionDAO.default, _PourDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
+var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _CloudDevicePingDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PermissionDAO.default, _PourDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
 
 var flushCache = function flushCache() {
   DAOArray.forEach(function (dao) {
@@ -438,8 +451,6 @@ var setOrganizationID = function setOrganizationID(organizationID) {
 
   _LocationDAO.default.flushCache();
 
-  _PermissionDAO.default.flushCache();
-
   _PourDAO.default.flushCache();
 
   _ReportDAO.default.flushCache();
@@ -456,6 +467,7 @@ var _default = {
   AvailabilityDAO: _AvailabilityDAO.default,
   BeverageDAO: _BeverageDAO.default,
   CloudDeviceDAO: _CloudDeviceDAO.default,
+  CloudDevicePingDAO: _CloudDevicePingDAO.default,
   DeviceDAO: _DeviceDAO.default,
   FlowSensorDAO: _FlowSensorDAO.default,
   FriendDAO: _FriendDAO.default,

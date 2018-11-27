@@ -320,6 +320,9 @@ function (_Subscription) {
       return clientId;
     }
   }, {
+    key: "flushCustomCache",
+    value: function flushCustomCache() {}
+  }, {
     key: "flushCache",
     value: function flushCache() {
       this._entityLoaderById = new Map();
