@@ -31,7 +31,9 @@ class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
   _isOnlineStatusListenerToggled: boolean = false;
 
   getOne(particleId: string) {
-    return this.__getOne(`cloud-devices/${particleId}/`, particleId);
+    return this.__getOne(`cloud-devices/${particleId}/`, particleId, {
+      reformatError: error => error.error,
+    });
   }
 
   flash(particleId: string, file: any) {

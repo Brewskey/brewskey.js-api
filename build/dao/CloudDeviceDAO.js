@@ -61,7 +61,11 @@ function (_RestDAO) {
   _createClass(CloudDeviceDAO, [{
     key: "getOne",
     value: function getOne(particleId) {
-      return this.__getOne("cloud-devices/".concat(particleId, "/"), particleId);
+      return this.__getOne("cloud-devices/".concat(particleId, "/"), particleId, {
+        reformatError: function reformatError(error) {
+          return error.error;
+        }
+      });
     }
   }, {
     key: "flash",
