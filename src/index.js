@@ -5,7 +5,7 @@ import type { EntityID, Headers, ODataConfig } from './types';
 import oHandler from 'odata';
 import BaseODataDAO from './dao/BaseODataDAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
-import Subscription from './dao/Subcription';
+import Subscription from './dao/Subscription';
 
 import fetch from './fetch';
 import { createFilter, doesSatisfyQueryFilters } from './filters';
@@ -34,6 +34,8 @@ import ScheduleDAO from './dao/ScheduleDAO';
 import SrmDAO from './dao/SrmDAO';
 import StyleDAO from './dao/StyleDAO';
 import TapDAO from './dao/TapDAO';
+
+import CloudSSEManager from './CloudSSEManager';
 
 const initializeDAOApi = ({ endpoint, headers }: ODataConfig) => {
   oHandler().config({
@@ -130,6 +132,7 @@ export * from './dao/TapDAO';
 
 export * from './constants';
 export * from './types';
+export * from './CloudSSEManager';
 export * from './LoadObject';
 export { default as LoadObject } from './LoadObject';
 export { default as RestDAO } from './dao/RestDAO';
@@ -145,6 +148,7 @@ export default {
   BeverageDAO,
   CloudDeviceDAO,
   CloudDevicePingDAO,
+  CloudSSEManager,
   DeviceDAO,
   FlowSensorDAO,
   FriendDAO,
@@ -155,9 +159,9 @@ export default {
   PermissionDAO,
   PourChartDAO,
   PourDAO,
-  ProductFirmwareDAO,
   ProductDAO,
   ProductDeviceDAO,
+  ProductFirmwareDAO,
   ReportDAO,
   ScheduleDAO,
   SrmDAO,

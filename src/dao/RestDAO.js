@@ -4,7 +4,7 @@ import type { EntityID } from '../index';
 
 import nullthrows from 'nullthrows';
 import ClientID from './ClientID';
-import Subscription from './Subcription';
+import Subscription from './Subscription';
 import LoadObject from '../LoadObject';
 import fetch from '../fetch';
 

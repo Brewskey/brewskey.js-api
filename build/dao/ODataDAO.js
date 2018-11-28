@@ -13,7 +13,7 @@ var _BaseODataDAO2 = _interopRequireDefault(require("./BaseODataDAO"));
 
 var _LoadObject = _interopRequireDefault(require("../LoadObject"));
 
-var _Subcription = _interopRequireDefault(require("./Subcription"));
+var _Subscription = _interopRequireDefault(require("./Subscription"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -114,7 +114,7 @@ function (_BaseODataDAO) {
 
         _this2.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription.default.__emitError(error);
 
         _this2._updateCacheForError(clientID, error);
       });
@@ -162,7 +162,7 @@ function (_BaseODataDAO) {
         this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID))).then(function (result) {
           return _this4._updateCacheForEntity(result);
         }).catch(function (error) {
-          _Subcription.default.__emitError(error);
+          _Subscription.default.__emitError(error);
 
           _this4._updateCacheForError(stringifiedID, error);
         });
@@ -205,7 +205,7 @@ function (_BaseODataDAO) {
 
           _this5.__emitChanges();
         }).catch(function (error) {
-          _Subcription.default.__emitError(error);
+          _Subscription.default.__emitError(error);
 
           stringifiedIds.forEach(function (id) {
             return _this5._updateCacheForError(id, error, false);
@@ -286,7 +286,7 @@ function (_BaseODataDAO) {
             });
           }));
         }).catch(function (error) {
-          _Subcription.default.__emitError(error);
+          _Subscription.default.__emitError(error);
 
           var loader = _this7._entityIDsLoaderByQuery.get(cacheKey);
 
@@ -374,7 +374,7 @@ function (_BaseODataDAO) {
 
         _this8.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription.default.__emitError(error);
 
         _this8._updateCacheForError(clientID, error);
       });
@@ -400,7 +400,7 @@ function (_BaseODataDAO) {
 
         _this9.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription.default.__emitError(error);
 
         _this9._entityLoaderByID.set(clientID, _LoadObject.default.withError(error));
 
@@ -436,7 +436,7 @@ function (_BaseODataDAO) {
 
         _this10.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription.default.__emitError(error);
 
         _this10._updateCacheForError(clientID, error);
       });
@@ -542,7 +542,7 @@ function (_BaseODataDAO) {
 
         _this12.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription.default.__emitError(error);
 
         _this12._updateCacheForError(stringifiedID || clientID, error);
       });
@@ -572,7 +572,7 @@ function (_BaseODataDAO) {
 
           _this13.__emitChanges();
         }).catch(function (error) {
-          _Subcription.default.__emitError(error);
+          _Subscription.default.__emitError(error);
 
           _this13._customLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
 
@@ -696,7 +696,7 @@ function (_BaseODataDAO) {
 
         _this16.fetchByIDs(stringifiedIds);
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription.default.__emitError(error);
 
         var loader = _this16._entityIDsLoaderByQuery.get(cacheKey);
 
@@ -730,7 +730,7 @@ function (_BaseODataDAO) {
 
         _this17.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription.default.__emitError(error);
 
         var loader = _this17._countLoaderByQuery.get(cacheKey);
 

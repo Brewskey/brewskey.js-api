@@ -1,12 +1,18 @@
 // @flow
 
-import type { EntityID } from '../types';
+import type { CloudEvent } from '../CloudSSEManager';
 
 import RestDAO from './RestDAO';
+import CloudSSEManager from '../CloudSSEManager';
+import LoadObject from '../LoadObject';
+
+const DEVICE_ONLINE_STATUS_EVENT_NAME = 'spark/status';
 
 class CloudDeviceDAO extends RestDAO<any, any> {
-  fetch(particleId: string) {
-    return this.__fetchOne(`cloud-devices/${particleId}/`);
+  _isOnlineStatusListenerToggled: boolean = false;
+
+  getOne(particleId: string) {
+    return this.__getOne(`cloud-devices/${particleId}/`, particleId);
   }
 
   flash(particleId: string, file: any) {
@@ -21,20 +27,35 @@ class CloudDeviceDAO extends RestDAO<any, any> {
     });
   }
 
-  ping(particleId: string) {
-    return this.__fetchOne(`cloud-devices/${particleId}/ping/`, {
-      method: 'PUT',
-    });
+  toggleOnlineStatusListener() {
+    if (!this._isOnlineStatusListenerToggled) {
+      CloudSSEManager.subscribe(this._onNewCloudSystemEvent, {
+        eventNamePrefix: 'spark',
+      });
+    } else {
+      CloudSSEManager.unsubscribe(this._onNewCloudSystemEvent);
+    }
   }
 
-  get(clientId: EntityID) {
-    return this.__getOne('', clientId);
-  }
+  _onNewCloudSystemEvent(cloudEvent: CloudEvent) {
+    const { data, name, particleId } = cloudEvent;
+    if (name !== DEVICE_ONLINE_STATUS_EVENT_NAME) {
+      return;
+    }
 
-  getPing(particleId: string) {
-    return this.__getOne(`cloud-devices/${particleId}/ping/`, particleId, {
-      method: 'PUT',
-    });
+    const loader = this._entityLoaderById.get(particleId);
+    if (!loader || !loader.hasValue()) {
+      return;
+    }
+
+    this._entityLoaderById.set(
+      particleId,
+      LoadObject.withValue({
+        ...loader.getValueEnforcing(),
+        connected: data === 'online',
+      }),
+    );
+    this.__emitChanges();
   }
 }
 
