@@ -1,14 +1,33 @@
 // @flow
 
 import type { CloudEvent } from '../CloudSSEManager';
+import type { EntityID } from '../types';
 
 import RestDAO from './RestDAO';
 import CloudSSEManager from '../CloudSSEManager';
-import LoadObject from '../LoadObject';
 
 const DEVICE_ONLINE_STATUS_EVENT_NAME = 'spark/status';
 
-class CloudDeviceDAO extends RestDAO<any, any> {
+export type CloudDevice = {|
+  cellural: ?boolean,
+  connected: boolean,
+  current_build_target: ?string,
+  functions: Array<string>,
+  id: EntityID,
+  imei: ?string,
+  last_app: ?string,
+  last_heard: ?Date,
+  last_iccid: ?string,
+  last_ip_address: ?string,
+  name: string,
+  platform_id: number,
+  product_firmware_version: ?number,
+  product_id: ?number,
+  status: string,
+  variables: Object,
+|};
+
+class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
   _isOnlineStatusListenerToggled: boolean = false;
 
   getOne(particleId: string) {
@@ -50,10 +69,10 @@ class CloudDeviceDAO extends RestDAO<any, any> {
 
     this._entityLoaderById.set(
       particleId,
-      LoadObject.withValue({
-        ...loader.getValueEnforcing(),
+      loader.map(cloudDevice => ({
+        ...cloudDevice,
         connected: data === 'online',
-      }),
+      })),
     );
     this.__emitChanges();
   }

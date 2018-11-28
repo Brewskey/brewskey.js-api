@@ -4,20 +4,20 @@ import oHandler from 'odata';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import Subscription from './dao/Subscription';
 
-export type SSESubscriptionOptions = {
+export type SSESubscriptionOptions = {|
   eventNamePrefix?: string,
   isMyDevices?: boolean,
   onError?: (error: Error) => any,
   onOpen?: () => any,
   particleId?: string,
-};
+|};
 
-export type CloudEvent = {
+export type CloudEvent = {|
   data: any,
   name: string,
   particleId: string,
   publishedAt: Date,
-};
+|};
 
 type SSEHandler = (event: CloudEvent) => any;
 
@@ -43,14 +43,18 @@ class CloudSSEManager extends Subscription {
         const cloudEvent = JSON.parse(cloudEventStr);
 
         const {
+          name,
           coreid: particleId,
           data,
           published_at: publishedAt,
         } = cloudEvent;
 
-        handler({ data, particleId, publishedAt });
+        handler({ data, name, particleId, publishedAt });
       } catch (error) {
-        // todo error
+        CloudSSEManager.__emitError(error);
+        if (onError) {
+          onError(error);
+        }
       }
     });
 

@@ -58,15 +58,22 @@ function (_Subscription) {
         try {
           var cloudEventStr = sseEvent.data;
           var cloudEvent = JSON.parse(cloudEventStr);
-          var particleId = cloudEvent.coreid,
+          var name = cloudEvent.name,
+              particleId = cloudEvent.coreid,
               data = cloudEvent.data,
               publishedAt = cloudEvent.published_at;
           handler({
             data: data,
+            name: name,
             particleId: particleId,
             publishedAt: publishedAt
           });
-        } catch (error) {// todo error
+        } catch (error) {
+          CloudSSEManager.__emitError(error);
+
+          if (onError) {
+            onError(error);
+          }
         }
       });
 

@@ -9,8 +9,6 @@ var _RestDAO2 = _interopRequireDefault(require("./RestDAO"));
 
 var _CloudSSEManager = _interopRequireDefault(require("../CloudSSEManager"));
 
-var _LoadObject = _interopRequireDefault(require("../LoadObject"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -114,9 +112,11 @@ function (_RestDAO) {
         return;
       }
 
-      this._entityLoaderById.set(particleId, _LoadObject.default.withValue(_objectSpread({}, loader.getValueEnforcing(), {
-        connected: data === 'online'
-      })));
+      this._entityLoaderById.set(particleId, loader.map(function (cloudDevice) {
+        return _objectSpread({}, cloudDevice, {
+          connected: data === 'online'
+        });
+      }));
 
       this.__emitChanges();
     }
