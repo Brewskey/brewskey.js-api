@@ -65,7 +65,7 @@ class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
     }
 
     const loader = this._entityLoaderById.get(particleId);
-    if (!loader || !loader.hasValue()) {
+    if (!loader) {
       return;
     }
 

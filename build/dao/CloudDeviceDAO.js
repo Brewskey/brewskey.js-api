@@ -112,7 +112,7 @@ function (_RestDAO) {
 
       var loader = this._entityLoaderById.get(particleId);
 
-      if (!loader || !loader.hasValue()) {
+      if (!loader) {
         return;
       }
 
