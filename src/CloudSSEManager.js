@@ -6,7 +6,6 @@ import Subscription from './dao/Subscription';
 
 export type SSESubscriptionOptions = {|
   eventNamePrefix?: string,
-  isMyDevices?: boolean,
   onError?: (error: Error) => any,
   onOpen?: () => any,
   particleId?: string,
@@ -80,19 +79,12 @@ class CloudSSEManager extends Subscription {
     CloudSSEManager._sessionByHandler.delete(handler);
   }
 
-  static _getUrl({
-    eventNamePrefix = '',
-    isMyDevices,
-    particleId,
-  }: SSESubscriptionOptions) {
+  static _getUrl({ eventNamePrefix = '', particleId }: SSESubscriptionOptions) {
     const { endpoint }: any = oHandler().oConfig;
 
-    const particleIdUrl = particleId ? `/${particleId}` : '';
-    const myDevicesUrl = isMyDevices
-      ? `devices${particleIdUrl}/events/`
-      : 'events/';
+    const devicesUrl = particleId ? `devices/${particleId}/events/` : 'events/';
 
-    return `${endpoint}${myDevicesUrl}${eventNamePrefix}`;
+    return `${endpoint}${devicesUrl}${eventNamePrefix}`;
   }
 
   static _getHeaders() {

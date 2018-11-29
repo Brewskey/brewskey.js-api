@@ -349,7 +349,7 @@ function (_Subscription) {
 
               case 14:
                 return _context3.abrupt("return", request.catch(function (error) {
-                  window['console']['error'](method || 'get', error, handler, params);
+                  window.console.error(method || 'get', error, handler, params);
                   throw error;
                 }));
 

@@ -107,12 +107,10 @@ function (_Subscription) {
     value: function _getUrl(_ref) {
       var _ref$eventNamePrefix = _ref.eventNamePrefix,
           eventNamePrefix = _ref$eventNamePrefix === void 0 ? '' : _ref$eventNamePrefix,
-          isMyDevices = _ref.isMyDevices,
           particleId = _ref.particleId;
       var endpoint = (0, _odata.default)().oConfig.endpoint;
-      var particleIdUrl = particleId ? "/".concat(particleId) : '';
-      var myDevicesUrl = isMyDevices ? "devices".concat(particleIdUrl, "/events/") : 'events/';
-      return "".concat(endpoint).concat(myDevicesUrl).concat(eventNamePrefix);
+      var devicesUrl = particleId ? "devices/".concat(particleId, "/events/") : 'events/';
+      return "".concat(endpoint).concat(devicesUrl).concat(eventNamePrefix);
     }
   }, {
     key: "_getHeaders",
