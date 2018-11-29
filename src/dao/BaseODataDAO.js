@@ -240,7 +240,10 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       }
     }
 
-    return (request: any);
+    return (request: any).catch(error => {
+      window.console.error(method || 'get', error, handler, params);
+      throw error;
+    });
   }
 }
 
