@@ -624,11 +624,11 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return new Map(savedItems);
   }
 
-  _hydrateMany(queryOptions?: QueryOptions): void {
+  _hydrateMany(queryOptions: ?QueryOptions): void {
     const cacheKey = this._getCacheKey(queryOptions);
 
     const initialLoader = this._entityIDsLoaderByQuery.has(cacheKey)
-      ? nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).updating()
+      ? nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).loading()
       : LoadObject.loading();
     this._entityIDsLoaderByQuery.set(cacheKey, initialLoader);
     this.__emitChanges();
@@ -668,7 +668,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     });
 
     const initialLoader = this._countLoaderByQuery.has(cacheKey)
-      ? nullthrows(this._countLoaderByQuery.get(cacheKey)).updating()
+      ? nullthrows(this._countLoaderByQuery.get(cacheKey)).loading()
       : LoadObject.loading();
 
     this._countLoaderByQuery.set(cacheKey, initialLoader);

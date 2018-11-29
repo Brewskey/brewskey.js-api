@@ -677,7 +677,7 @@ function (_BaseODataDAO) {
 
       var cacheKey = this._getCacheKey(queryOptions);
 
-      var initialLoader = this._entityIDsLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).updating() : _LoadObject.default.loading();
+      var initialLoader = this._entityIDsLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).loading() : _LoadObject.default.loading();
 
       this._entityIDsLoaderByQuery.set(cacheKey, initialLoader);
 
@@ -716,7 +716,7 @@ function (_BaseODataDAO) {
         __custom_key__: key
       }));
 
-      var initialLoader = this._countLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._countLoaderByQuery.get(cacheKey)).updating() : _LoadObject.default.loading();
+      var initialLoader = this._countLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._countLoaderByQuery.get(cacheKey)).loading() : _LoadObject.default.loading();
 
       this._countLoaderByQuery.set(cacheKey, initialLoader);
 
