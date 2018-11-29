@@ -9,7 +9,7 @@ var _nullthrows = _interopRequireDefault(require("nullthrows"));
 
 var _ClientID = _interopRequireDefault(require("./ClientID"));
 
-var _Subcription = _interopRequireDefault(require("./Subcription"));
+var _Subscription2 = _interopRequireDefault(require("./Subscription"));
 
 var _LoadObject = _interopRequireDefault(require("../LoadObject"));
 
@@ -85,7 +85,7 @@ function (_Subscription) {
 
           _this2.__emitChanges();
         }).catch(function (error) {
-          _Subcription.default.__emitError(error);
+          _Subscription2.default.__emitError(error);
 
           _this2._countLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
 
@@ -122,7 +122,7 @@ function (_Subscription) {
 
           _this3.__emitChanges();
         }).catch(function (error) {
-          _Subcription.default.__emitError(error);
+          _Subscription2.default.__emitError(error);
 
           _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
 
@@ -164,7 +164,7 @@ function (_Subscription) {
 
           _this4.__emitChanges();
         }).catch(function (error) {
-          _Subcription.default.__emitError(error);
+          _Subscription2.default.__emitError(error);
 
           _this4._entityLoaderById.set(stringifiedId, _LoadObject.default.withError(error));
 
@@ -192,7 +192,7 @@ function (_Subscription) {
 
         _this5.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription2.default.__emitError(error);
 
         _this5._entityLoaderById.set(clientId, _LoadObject.default.withError(error));
 
@@ -228,7 +228,7 @@ function (_Subscription) {
 
         _this6.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription2.default.__emitError(error);
 
         _this6._entityLoaderById.set(clientId, _LoadObject.default.withError(error));
 
@@ -273,7 +273,7 @@ function (_Subscription) {
 
         _this7.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription2.default.__emitError(error);
 
         _this7._entityLoaderById.set(clientId, _LoadObject.default.withError(error));
 
@@ -311,7 +311,7 @@ function (_Subscription) {
 
         _this8.__emitChanges();
       }).catch(function (error) {
-        _Subcription.default.__emitError(error);
+        _Subscription2.default.__emitError(error);
 
         _this8._entityLoaderById.set(clientId, _LoadObject.default.withError(error));
 
@@ -419,7 +419,7 @@ function (_Subscription) {
   }]);
 
   return RestDAO;
-}(_Subcription.default);
+}(_Subscription2.default);
 
 var _default = RestDAO;
 exports.default = _default;

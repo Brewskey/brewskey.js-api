@@ -41,7 +41,7 @@ var _BaseODataDAO = _interopRequireDefault(require("./dao/BaseODataDAO"));
 
 var _ReportTranslator = require("./translators/ReportTranslator");
 
-var _Subcription = _interopRequireDefault(require("./dao/Subcription"));
+var _Subscription = _interopRequireDefault(require("./dao/Subscription"));
 
 var _fetch = _interopRequireDefault(require("./fetch"));
 
@@ -348,6 +348,19 @@ Object.keys(_TapDAO).forEach(function (key) {
   });
 });
 
+var _CloudSSEManager = _interopRequireWildcard(require("./CloudSSEManager"));
+
+Object.keys(_CloudSSEManager).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _CloudSSEManager[key];
+    }
+  });
+});
+
 var _constants = require("./constants");
 
 Object.keys(_constants).forEach(function (key) {
@@ -468,6 +481,7 @@ var _default = {
   BeverageDAO: _BeverageDAO.default,
   CloudDeviceDAO: _CloudDeviceDAO.default,
   CloudDevicePingDAO: _CloudDevicePingDAO.default,
+  CloudSSEManager: _CloudSSEManager.default,
   DeviceDAO: _DeviceDAO.default,
   FlowSensorDAO: _FlowSensorDAO.default,
   FriendDAO: _FriendDAO.default,
@@ -478,9 +492,9 @@ var _default = {
   PermissionDAO: _PermissionDAO.default,
   PourChartDAO: _PourChartDAO.default,
   PourDAO: _PourDAO.default,
-  ProductFirmwareDAO: _ProductFirmwareDAO.default,
   ProductDAO: _ProductDAO.default,
   ProductDeviceDAO: _ProductDeviceDAO.default,
+  ProductFirmwareDAO: _ProductFirmwareDAO.default,
   ReportDAO: _ReportDAO.default,
   ScheduleDAO: _ScheduleDAO.default,
   SrmDAO: _SrmDAO.default,
@@ -492,7 +506,7 @@ var _default = {
   flushCache: flushCache,
   getHeaders: getHeaders,
   initializeDAOApi: initializeDAOApi,
-  onError: _Subcription.default.onError,
+  onError: _Subscription.default.onError,
   setHeaders: setHeaders,
   setOrganizationID: setOrganizationID
 };

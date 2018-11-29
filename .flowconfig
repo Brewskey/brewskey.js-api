@@ -7,3 +7,6 @@
 flow-typed/
 
 [options]
+
+[version]
+^0.87.0

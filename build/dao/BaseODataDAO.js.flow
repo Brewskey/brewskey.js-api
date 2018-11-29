@@ -13,7 +13,7 @@ import type {
 import type { QueryFilter } from '../filters';
 
 import oHandler from 'odata';
-import Subscription from './Subcription';
+import Subscription from './Subscription';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
 
 const ID_REG_EXP = /\bid\b/;

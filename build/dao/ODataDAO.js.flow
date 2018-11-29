@@ -7,7 +7,7 @@ import nullthrows from 'nullthrows';
 import debounce from 'debounce';
 import BaseODataDAO from './BaseODataDAO';
 import LoadObject from '../LoadObject';
-import Subscription from './Subcription';
+import Subscription from './Subscription';
 
 class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   TEntity,

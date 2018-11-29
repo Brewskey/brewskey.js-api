@@ -7,7 +7,7 @@ exports.default = void 0;
 
 var _odata = _interopRequireDefault(require("odata"));
 
-var _Subcription = _interopRequireDefault(require("./Subcription"));
+var _Subscription2 = _interopRequireDefault(require("./Subscription"));
 
 var _constants = require("../constants");
 
@@ -365,7 +365,7 @@ function (_Subscription) {
   }]);
 
   return BaseODataDAO;
-}(_Subcription.default);
+}(_Subscription2.default);
 
 _defineProperty(BaseODataDAO, "_organizationID", null);
 
