@@ -348,7 +348,10 @@ function (_Subscription) {
                 request = handler.get();
 
               case 14:
-                return _context3.abrupt("return", request);
+                return _context3.abrupt("return", request.catch(function (error) {
+                  window['console']['error'](method || 'get', error, handler, params);
+                  throw error;
+                }));
 
               case 15:
               case "end":
