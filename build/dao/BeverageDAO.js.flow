@@ -6,6 +6,7 @@ import type { Srm } from './SrmDAO';
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import BeverageTranslator from '../translators/BeverageTranslator';
+import fetch from '../fetch';
 
 export type BeverageType = 'Beer' | 'Cider' | 'Coffee' | 'Soda';
 
@@ -83,6 +84,18 @@ class BeverageDAO extends ODataDAO<Beverage, BeverageMutator> {
         style: { select: ['id', 'name'] },
       },
       translator: new BeverageTranslator(),
+    });
+  }
+
+  // todo move to BeverageImageDAO extends RestDAO ?
+  uploadImage(beverageId: EntityID, image: string): Promise<*> {
+    return fetch(`beverages/${beverageId}/photo/`, {
+      body: JSON.stringify({ photo: image }),
+      headers: [
+        { name: 'Accept', value: 'application/json' },
+        { name: 'Content-Type', value: 'application/json' },
+      ],
+      method: 'PUT',
     });
   }
 }
