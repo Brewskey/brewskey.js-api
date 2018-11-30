@@ -15,6 +15,8 @@ var _LoadObject = _interopRequireDefault(require("../LoadObject"));
 
 var _Subscription = _interopRequireDefault(require("./Subscription"));
 
+var _arrayFlatten = _interopRequireDefault(require("array-flatten"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -246,64 +248,88 @@ function (_BaseODataDAO) {
       var _this7 = this;
 
       var CHUNK_SIZE = 40;
-      var ALL_KEY_PREFIX = 'all';
-
-      var cacheKey = ALL_KEY_PREFIX + this._getCacheKey(queryOptions);
-
-      if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
-        this._entityIDsLoaderByQuery.set(cacheKey, _LoadObject.default.loading());
-
-        this.__emitChanges();
-
-        var countPromise = this.waitForLoaded(function (dao) {
-          return dao.count(queryOptions);
-        });
-        countPromise.then(function (count) {
-          var defaultResult = _toConsumableArray(Array(count));
-
-          return Promise.all(_toConsumableArray(Array(Math.ceil(count / CHUNK_SIZE))).map(function (_, index) {
-            var skip = index * CHUNK_SIZE;
-            var take = CHUNK_SIZE;
-
-            var chunkQueryOptions = _objectSpread({}, queryOptions || {}, {
-              skip: skip,
-              take: take
-            });
-
-            var handler = _this7.__buildHandler(chunkQueryOptions, false);
-
-            handler = handler.select('id');
-            return _this7.__resolveManyIDs(handler).then(function (chunkIds) {
-              var stringifiedChunkIds = chunkIds.map(String);
-              var existingIds = (0, _nullthrows.default)(_this7._entityIDsLoaderByQuery.get(cacheKey)).getValue() || defaultResult;
-              existingIds.splice.apply(existingIds, [skip, take].concat(_toConsumableArray(stringifiedChunkIds)));
-
-              _this7._entityIDsLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(existingIds));
-
-              _this7.fetchByIDs(stringifiedChunkIds);
-
-              _this7.__emitChanges();
-            });
+      return this.count(queryOptions).map(function (count) {
+        return (0, _arrayFlatten.default)(_toConsumableArray(Array(Math.ceil(count / CHUNK_SIZE))).map(function (_, index) {
+          var loader = _this7.fetchMany(_objectSpread({}, queryOptions, {
+            skip: CHUNK_SIZE * index,
+            take: CHUNK_SIZE
           }));
-        }).catch(function (error) {
-          _Subscription.default.__emitError(error);
 
-          var loader = _this7._entityIDsLoaderByQuery.get(cacheKey);
+          if (loader.isLoading()) {
+            return _toConsumableArray(Array(CHUNK_SIZE)).map(function () {
+              return _LoadObject.default.loading();
+            });
+          } // Do some error stuff
 
-          _this7._entityIDsLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject.default.withError(error));
 
-          _this7.__emitChanges();
-        });
-      }
-
-      return (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).map(function (nullableIds) {
-        var resultMap = _this7.fetchByIDs(nullableIds.filter(Boolean));
-
-        return nullableIds.map(function (id) {
-          return id ? (0, _nullthrows.default)(resultMap.get(id.toString())) : _LoadObject.default.loading();
-        });
+          return loader.getValueEnforcing();
+        }));
       });
-    }
+    } // fetchAll(
+    //   queryOptions?: QueryOptions,
+    // ): LoadObject<Array<LoadObject<TEntity>>> {
+    //   const CHUNK_SIZE = 40;
+    //   const ALL_KEY_PREFIX = 'all';
+    //   const cacheKey = ALL_KEY_PREFIX + this._getCacheKey(queryOptions);
+    //   if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
+    //     this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
+    //     this.__emitChanges();
+    //     const countPromise = this.waitForLoaded(dao => dao.count(queryOptions));
+    //     countPromise
+    //       .then(count => {
+    //         const defaultResult = [...Array(count)];
+    //         return Promise.all(
+    //           [...Array(Math.ceil(count / CHUNK_SIZE))].map((_, index) => {
+    //             const skip = index * CHUNK_SIZE;
+    //             const take = CHUNK_SIZE;
+    //             const chunkQueryOptions = {
+    //               ...(queryOptions || {}),
+    //               skip,
+    //               take,
+    //             };
+    //             let handler = this.__buildHandler(chunkQueryOptions, false);
+    //             handler = handler.select('id');
+    //             return this.__resolveManyIDs(handler).then(chunkIds => {
+    //               const stringifiedChunkIds = chunkIds.map(String);
+    //               const existingIds =
+    //                 nullthrows(
+    //                   this._entityIDsLoaderByQuery.get(cacheKey),
+    //                 ).getValue() || defaultResult;
+    //               existingIds.splice(skip, take, ...stringifiedChunkIds);
+    //               this._entityIDsLoaderByQuery.set(
+    //                 cacheKey,
+    //                 LoadObject.withValue(existingIds),
+    //               );
+    //               this.fetchByIDs(stringifiedChunkIds);
+    //               this.__emitChanges();
+    //             });
+    //           }),
+    //         );
+    //       })
+    //       .catch((error: Error) => {
+    //         Subscription.__emitError(error);
+    //         const loader = this._entityIDsLoaderByQuery.get(cacheKey);
+    //         this._entityIDsLoaderByQuery.set(
+    //           cacheKey,
+    //           loader ? loader.setError(error) : LoadObject.withError(error),
+    //         );
+    //         this.__emitChanges();
+    //       });
+    //   }
+    //
+    //   return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
+    //     (nullableIds: Array<EntityID>): Array<LoadObject<TEntity>> => {
+    //       const resultMap = this.fetchByIDs(nullableIds.filter(Boolean));
+    //       return nullableIds.map(
+    //         (id: ?EntityID): LoadObject<TEntity> =>
+    //           id
+    //             ? nullthrows(resultMap.get(id.toString()))
+    //             : LoadObject.loading(),
+    //       );
+    //     },
+    //   );
+    // }
+
   }, {
     key: "fetchSingle",
     value: function fetchSingle(queryOptions) {

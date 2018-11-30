@@ -43,6 +43,7 @@
     "prettier": "^1.15.2"
   },
   "dependencies": {
+    "array-flatten": "^2.1.1",
     "debounce": "^1.2.0",
     "event-source-polyfill": "^1.0.4",
     "nullthrows": "^1.1.0",

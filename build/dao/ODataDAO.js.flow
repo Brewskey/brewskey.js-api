@@ -8,6 +8,7 @@ import debounce from 'debounce';
 import BaseODataDAO from './BaseODataDAO';
 import LoadObject from '../LoadObject';
 import Subscription from './Subscription';
+import arrayFlatten from 'array-flatten';
 
 class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   TEntity,
@@ -188,79 +189,102 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     );
   }
 
-  fetchAll(
-    queryOptions?: QueryOptions,
-  ): LoadObject<Array<LoadObject<TEntity>>> {
+  fetchAll(queryOptions?: QueryOptions) {
     const CHUNK_SIZE = 40;
-    const ALL_KEY_PREFIX = 'all';
-    const cacheKey = ALL_KEY_PREFIX + this._getCacheKey(queryOptions);
+    return this.count(queryOptions).map(count =>
+      arrayFlatten(
+        [...Array(Math.ceil(count / CHUNK_SIZE))].map((_, index) => {
+          const loader = this.fetchMany({
+            ...queryOptions,
+            skip: CHUNK_SIZE * index,
+            take: CHUNK_SIZE,
+          });
 
-    if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
-      this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
-      this.__emitChanges();
+          if (loader.isLoading()) {
+            return [...Array(CHUNK_SIZE)].map(() => LoadObject.loading());
+          }
 
-      const countPromise = this.waitForLoaded(dao => dao.count(queryOptions));
+          // Do some error stuff
 
-      countPromise
-        .then(count => {
-          const defaultResult = [...Array(count)];
-
-          return Promise.all(
-            [...Array(Math.ceil(count / CHUNK_SIZE))].map((_, index) => {
-              const skip = index * CHUNK_SIZE;
-              const take = CHUNK_SIZE;
-              const chunkQueryOptions = {
-                ...(queryOptions || {}),
-                skip,
-                take,
-              };
-
-              let handler = this.__buildHandler(chunkQueryOptions, false);
-              handler = handler.select('id');
-
-              return this.__resolveManyIDs(handler).then(chunkIds => {
-                const stringifiedChunkIds = chunkIds.map(String);
-                const existingIds =
-                  nullthrows(
-                    this._entityIDsLoaderByQuery.get(cacheKey),
-                  ).getValue() || defaultResult;
-
-                existingIds.splice(skip, take, ...stringifiedChunkIds);
-
-                this._entityIDsLoaderByQuery.set(
-                  cacheKey,
-                  LoadObject.withValue(existingIds),
-                );
-                this.fetchByIDs(stringifiedChunkIds);
-
-                this.__emitChanges();
-              });
-            }),
-          );
-        })
-        .catch((error: Error) => {
-          Subscription.__emitError(error);
-          const loader = this._entityIDsLoaderByQuery.get(cacheKey);
-          this._entityIDsLoaderByQuery.set(
-            cacheKey,
-            loader ? loader.setError(error) : LoadObject.withError(error),
-          );
-          this.__emitChanges();
-        });
-    }
-
-    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
-      (nullableIds: Array<EntityID>): Array<LoadObject<TEntity>> => {
-        const resultMap = this.fetchByIDs(nullableIds.filter(Boolean));
-        return nullableIds.map(
-          (id: ?EntityID): LoadObject<TEntity> =>
-            id
-              ? nullthrows(resultMap.get(id.toString()))
-              : LoadObject.loading(),
-        );
-      },
+          return loader.getValueEnforcing();
+        }),
+      ),
     );
   }
+
+  // fetchAll(
+  //   queryOptions?: QueryOptions,
+  // ): LoadObject<Array<LoadObject<TEntity>>> {
+  //   const CHUNK_SIZE = 40;
+  //   const ALL_KEY_PREFIX = 'all';
+  //   const cacheKey = ALL_KEY_PREFIX + this._getCacheKey(queryOptions);
+
+  //   if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
+  //     this._entityIDsLoaderByQuery.set(cacheKey, LoadObject.loading());
+  //     this.__emitChanges();
+
+  //     const countPromise = this.waitForLoaded(dao => dao.count(queryOptions));
+
+  //     countPromise
+  //       .then(count => {
+  //         const defaultResult = [...Array(count)];
+
+  //         return Promise.all(
+  //           [...Array(Math.ceil(count / CHUNK_SIZE))].map((_, index) => {
+  //             const skip = index * CHUNK_SIZE;
+  //             const take = CHUNK_SIZE;
+  //             const chunkQueryOptions = {
+  //               ...(queryOptions || {}),
+  //               skip,
+  //               take,
+  //             };
+
+  //             let handler = this.__buildHandler(chunkQueryOptions, false);
+  //             handler = handler.select('id');
+
+  //             return this.__resolveManyIDs(handler).then(chunkIds => {
+  //               const stringifiedChunkIds = chunkIds.map(String);
+  //               const existingIds =
+  //                 nullthrows(
+  //                   this._entityIDsLoaderByQuery.get(cacheKey),
+  //                 ).getValue() || defaultResult;
+
+  //               existingIds.splice(skip, take, ...stringifiedChunkIds);
+
+  //               this._entityIDsLoaderByQuery.set(
+  //                 cacheKey,
+  //                 LoadObject.withValue(existingIds),
+  //               );
+  //               this.fetchByIDs(stringifiedChunkIds);
+
+  //               this.__emitChanges();
+  //             });
+  //           }),
+  //         );
+  //       })
+  //       .catch((error: Error) => {
+  //         Subscription.__emitError(error);
+  //         const loader = this._entityIDsLoaderByQuery.get(cacheKey);
+  //         this._entityIDsLoaderByQuery.set(
+  //           cacheKey,
+  //           loader ? loader.setError(error) : LoadObject.withError(error),
+  //         );
+  //         this.__emitChanges();
+  //       });
+  //   }
+  //
+  //   return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
+  //     (nullableIds: Array<EntityID>): Array<LoadObject<TEntity>> => {
+  //       const resultMap = this.fetchByIDs(nullableIds.filter(Boolean));
+  //       return nullableIds.map(
+  //         (id: ?EntityID): LoadObject<TEntity> =>
+  //           id
+  //             ? nullthrows(resultMap.get(id.toString()))
+  //             : LoadObject.loading(),
+  //       );
+  //     },
+  //   );
+  // }
 
   fetchSingle(queryOptions?: QueryOptions): LoadObject<TEntity> {
     const combinedQueryOptions = {
