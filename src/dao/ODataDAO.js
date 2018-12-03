@@ -194,14 +194,16 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return this.count(queryOptions).map(count =>
       arrayFlatten(
         [...Array(Math.ceil(count / CHUNK_SIZE))].map((_, index) => {
+          const skip = CHUNK_SIZE * index;
+          const take = Math.min(CHUNK_SIZE, count - skip);
           const loader = this.fetchMany({
             ...queryOptions,
-            skip: CHUNK_SIZE * index,
-            take: CHUNK_SIZE,
+            skip,
+            take,
           });
 
           if (loader.isLoading()) {
-            return [...Array(CHUNK_SIZE)].map(() => LoadObject.loading());
+            return [...Array(take)].map(() => LoadObject.loading());
           }
 
           // Do some error stuff

@@ -250,13 +250,16 @@ function (_BaseODataDAO) {
       var CHUNK_SIZE = 40;
       return this.count(queryOptions).map(function (count) {
         return (0, _arrayFlatten.default)(_toConsumableArray(Array(Math.ceil(count / CHUNK_SIZE))).map(function (_, index) {
+          var skip = CHUNK_SIZE * index;
+          var take = Math.min(CHUNK_SIZE, count - skip);
+
           var loader = _this7.fetchMany(_objectSpread({}, queryOptions, {
-            skip: CHUNK_SIZE * index,
-            take: CHUNK_SIZE
+            skip: skip,
+            take: take
           }));
 
           if (loader.isLoading()) {
-            return _toConsumableArray(Array(CHUNK_SIZE)).map(function () {
+            return _toConsumableArray(Array(take)).map(function () {
               return _LoadObject.default.loading();
             });
           } // Do some error stuff
