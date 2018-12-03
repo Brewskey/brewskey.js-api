@@ -91,6 +91,7 @@ function () {
 
 var _default = {
   startAll: startAll,
-  stopAll: stopAll
+  stopAll: stopAll,
+  TapHub: _TapHub.default
 };
 exports.default = _default;

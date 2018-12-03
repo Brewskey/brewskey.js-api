@@ -21,12 +21,6 @@ class TapHub extends Hub {
     super('tapHub', {
       logging: true,
     });
-
-    this.registerListener('newPour', this._newPour);
-  }
-
-  _newPour() {
-    // todo add new Pour handling logic
   }
 }
 

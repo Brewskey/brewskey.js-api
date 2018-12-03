@@ -6,6 +6,7 @@ import type { ShortenedTap } from './TapDAO';
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import PourTranslator from '../translators/PourTranslator';
+import Signalr from '../signalr';
 
 export type Pour = {
   beverage: ?ShortenedEntity,
@@ -35,7 +36,14 @@ class PourDAO extends ODataDAO<Pour, Pour> {
       },
       translator: new PourTranslator(),
     });
+
+    Signalr.TapHub.registerListener('newPour', this._onNewPour);
   }
+
+  _onNewPour = ({ id }) => {
+    this.fetchByID(id);
+    this.flushQueryCaches();
+  };
 }
 
 export default new PourDAO();

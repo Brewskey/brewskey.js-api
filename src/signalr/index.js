@@ -25,4 +25,5 @@ const stopAll = async (): Promise<void> => {
 export default {
   startAll,
   stopAll,
+  TapHub,
 };
