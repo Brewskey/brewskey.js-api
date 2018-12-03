@@ -34,6 +34,7 @@ import ScheduleDAO from './dao/ScheduleDAO';
 import SrmDAO from './dao/SrmDAO';
 import StyleDAO from './dao/StyleDAO';
 import TapDAO from './dao/TapDAO';
+import Signalr from './signalr';
 
 import CloudSSEManager from './CloudSSEManager';
 
@@ -164,6 +165,7 @@ export default {
   ProductFirmwareDAO,
   ReportDAO,
   ScheduleDAO,
+  Signalr,
   SrmDAO,
   StyleDAO,
   TapDAO,

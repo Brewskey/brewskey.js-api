@@ -267,9 +267,11 @@ function (_Subscription) {
         }, _callee, this);
       }));
 
-      return function __resolveMany(_x, _x2) {
+      function __resolveMany(_x, _x2) {
         return _resolveMany.apply(this, arguments);
-      };
+      }
+
+      return __resolveMany;
     }()
   }, {
     key: "__resolveManyIDs",
@@ -304,9 +306,11 @@ function (_Subscription) {
         }, _callee2, this);
       }));
 
-      return function __resolveManyIDs(_x3, _x4) {
+      function __resolveManyIDs(_x3, _x4) {
         return _resolveManyIDs.apply(this, arguments);
-      };
+      }
+
+      return __resolveManyIDs;
     }()
   }, {
     key: "__resolve",
@@ -361,9 +365,11 @@ function (_Subscription) {
         }, _callee3, this);
       }));
 
-      return function __resolve(_x5) {
+      function __resolve(_x5) {
         return _resolve.apply(this, arguments);
-      };
+      }
+
+      return __resolve;
     }()
   }]);
 

@@ -348,6 +348,8 @@ Object.keys(_TapDAO).forEach(function (key) {
   });
 });
 
+var _signalr = _interopRequireDefault(require("./signalr"));
+
 var _CloudSSEManager = _interopRequireWildcard(require("./CloudSSEManager"));
 
 Object.keys(_CloudSSEManager).forEach(function (key) {
@@ -497,6 +499,7 @@ var _default = {
   ProductFirmwareDAO: _ProductFirmwareDAO.default,
   ReportDAO: _ReportDAO.default,
   ScheduleDAO: _ScheduleDAO.default,
+  Signalr: _signalr.default,
   SrmDAO: _SrmDAO.default,
   StyleDAO: _StyleDAO.default,
   TapDAO: _TapDAO.default,
