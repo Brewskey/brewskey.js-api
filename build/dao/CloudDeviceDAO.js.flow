@@ -30,6 +30,10 @@ export type CloudDevice = {|
 class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
   _isOnlineStatusListenerToggled: boolean = false;
 
+  constructor() {
+    super({ entityName: 'cloud-devices' });
+  }
+
   getOne(particleId: string) {
     return this.__getOne(`api/v2/cloud-devices/${particleId}/`, particleId, {
       reformatError: error => error.error,

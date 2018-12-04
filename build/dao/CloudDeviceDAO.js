@@ -41,17 +41,13 @@ function (_RestDAO) {
   _inherits(CloudDeviceDAO, _RestDAO);
 
   function CloudDeviceDAO() {
-    var _getPrototypeOf2;
-
     var _this;
 
     _classCallCheck(this, CloudDeviceDAO);
 
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(CloudDeviceDAO)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(CloudDeviceDAO).call(this, {
+      entityName: 'cloud-devices'
+    }));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_isOnlineStatusListenerToggled", false);
 

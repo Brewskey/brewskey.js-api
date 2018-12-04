@@ -35,7 +35,9 @@ function (_RestDAO) {
   function ProductFirmwareDAO() {
     _classCallCheck(this, ProductFirmwareDAO);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(ProductFirmwareDAO).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(ProductFirmwareDAO).call(this, {
+      entityName: 'product-firmwares'
+    }));
   }
 
   _createClass(ProductFirmwareDAO, [{

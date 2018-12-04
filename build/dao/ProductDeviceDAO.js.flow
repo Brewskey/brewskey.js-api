@@ -30,6 +30,10 @@ export type ProductDeviceMutator = {
 };
 
 class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
+  constructor() {
+    super({ entityName: 'product-devices' });
+  }
+
   count(productIdOrSlug: string) {
     return this.__count(`api/v2/products/${productIdOrSlug}/devices/count`);
   }

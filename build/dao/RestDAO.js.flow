@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID } from '../index';
+import type { EntityID, EntityName } from '../index';
 
 import nullthrows from 'nullthrows';
 import ClientID from './ClientID';
@@ -14,6 +14,17 @@ class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
   _entityLoaderById: Map<EntityID, LoadObject<TEntity>> = new Map();
 
   _entityIdsLoaderByQuery: Map<string, LoadObject<Array<EntityID>>> = new Map();
+
+  _entityName: EntityName;
+
+  constructor({ entityName }: { entityName: EntityName }) {
+    super();
+    this._entityName = entityName;
+  }
+
+  getEntityName(): EntityName {
+    return this._entityName;
+  }
 
   __count<TQueryParams: Object>(
     path: string,

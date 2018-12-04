@@ -29,6 +29,10 @@ class ProductFirmwareDAO extends RestDAO<
   ProductFirmware,
   ProductFirmwareMutator,
 > {
+  constructor() {
+    super({ entityName: 'product-firmwares' });
+  }
+
   count(productIdOrSlug: string) {
     return this.__count(`api/v2/products/${productIdOrSlug}/firmwares/count`);
   }

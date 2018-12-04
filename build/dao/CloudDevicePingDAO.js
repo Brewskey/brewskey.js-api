@@ -37,7 +37,9 @@ function (_RestDAO) {
   function CloudDevicePingDAO() {
     _classCallCheck(this, CloudDevicePingDAO);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(CloudDevicePingDAO).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(CloudDevicePingDAO).call(this, {
+      entityName: 'cloud-device-pings'
+    }));
   }
 
   _createClass(CloudDevicePingDAO, [{

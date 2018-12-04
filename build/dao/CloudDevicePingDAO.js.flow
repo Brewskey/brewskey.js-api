@@ -9,6 +9,10 @@ export type CloudDevicePing = {
 };
 
 class CloudDevicePingDAO extends RestDAO<CloudDevicePing, CloudDevicePing> {
+  constructor() {
+    super({ entityName: 'cloud-device-pings' });
+  }
+
   getPing(particleId: string) {
     return this.__getOne(
       `api/v2/cloud-devices/${particleId}/ping/`,

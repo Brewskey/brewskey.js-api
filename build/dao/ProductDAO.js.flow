@@ -45,6 +45,10 @@ export const PRODUCT_TYPES: Array<ProductType> = [
 ];
 
 class ProductDAO extends RestDAO<Product, *> {
+  constructor() {
+    super({ entityName: 'products' });
+  }
+
   count() {
     return this.__count('api/v2/products/count');
   }

@@ -44,18 +44,14 @@ var RestDAO =
 function (_Subscription) {
   _inherits(RestDAO, _Subscription);
 
-  function RestDAO() {
-    var _getPrototypeOf2;
-
+  function RestDAO(_ref) {
     var _this;
+
+    var entityName = _ref.entityName;
 
     _classCallCheck(this, RestDAO);
 
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(RestDAO)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(RestDAO).call(this));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_countLoaderByQuery", new Map());
 
@@ -63,10 +59,18 @@ function (_Subscription) {
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_entityIdsLoaderByQuery", new Map());
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_entityName", void 0);
+
+    _this._entityName = entityName;
     return _this;
   }
 
   _createClass(RestDAO, [{
+    key: "getEntityName",
+    value: function getEntityName() {
+      return this._entityName;
+    }
+  }, {
     key: "__count",
     value: function __count(path, queryParams) {
       var _this2 = this;
@@ -110,8 +114,8 @@ function (_Subscription) {
         (0, _fetch.default)(path, _objectSpread({
           method: 'GET'
         }, queryParams)).then(function (items) {
-          var ids = (0, _nullthrows.default)(items).map(function (_ref) {
-            var id = _ref.id;
+          var ids = (0, _nullthrows.default)(items).map(function (_ref2) {
+            var id = _ref2.id;
             return id;
           });
           (0, _nullthrows.default)(items).forEach(function (item) {

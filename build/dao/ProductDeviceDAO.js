@@ -35,7 +35,9 @@ function (_RestDAO) {
   function ProductDeviceDAO() {
     _classCallCheck(this, ProductDeviceDAO);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(ProductDeviceDAO).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(ProductDeviceDAO).call(this, {
+      entityName: 'product-devices'
+    }));
   }
 
   _createClass(ProductDeviceDAO, [{
