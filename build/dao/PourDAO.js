@@ -33,7 +33,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var POURS_ACCUMULATE_TIMEOUT = 500;
+var POURS_ACCUMULATE_TIMEOUT = 700;
 
 var PourDAO =
 /*#__PURE__*/
@@ -72,12 +72,14 @@ function (_ODataDAO) {
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isAutorefreshToggled", true);
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_idsToFlush", new Set());
+
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "startAutorefresh", function () {
       if (_this.isAutorefreshToggled) {
         return;
       }
 
-      _signalr.default.TapHub.registerListener('newPour', _this._onNewPourDebounced);
+      _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);
 
       _this.flushQueryCaches();
 
@@ -85,7 +87,7 @@ function (_ODataDAO) {
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "stopAutorefresh", function () {
-      _signalr.default.TapHub.unregisterListener('newPour', _this._onNewPourDebounced);
+      _signalr.default.TapHub.unregisterListener('newPour', _this._onNewPour);
 
       _this.isAutorefreshToggled = false;
     });
@@ -98,11 +100,23 @@ function (_ODataDAO) {
       }
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewPourDebounced", (0, _debounce.default)(function () {
-      return _this.flushQueryCaches();
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "refreshCacheDebounced", (0, _debounce.default)(function () {
+      _this._idsToFlush.forEach(function (id) {
+        return _this.flushCacheForEntity(id);
+      });
+
+      _this.flushQueryCaches();
+
+      _this._idsToFlush.clear();
     }, POURS_ACCUMULATE_TIMEOUT));
 
-    _signalr.default.TapHub.registerListener('newPour', _this._onNewPourDebounced);
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewPour", function (pourId) {
+      _this._idsToFlush.add(pourId);
+
+      _this.refreshCacheDebounced();
+    });
+
+    _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);
 
     return _this;
   }

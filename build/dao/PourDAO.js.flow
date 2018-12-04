@@ -9,7 +9,7 @@ import PourTranslator from '../translators/PourTranslator';
 import Signalr from '../signalr';
 import debounce from 'debounce';
 
-const POURS_ACCUMULATE_TIMEOUT = 500;
+const POURS_ACCUMULATE_TIMEOUT = 700;
 
 export type Pour = {
   beverage: ?ShortenedEntity,
@@ -28,6 +28,8 @@ export type Pour = {
 class PourDAO extends ODataDAO<Pour, Pour> {
   isAutorefreshToggled: boolean = true;
 
+  _idsToFlush: Set<EntityID> = new Set();
+
   constructor() {
     super({
       entityName: DAO_ENTITIES.POURS,
@@ -42,20 +44,20 @@ class PourDAO extends ODataDAO<Pour, Pour> {
       translator: new PourTranslator(),
     });
 
-    Signalr.TapHub.registerListener('newPour', this._onNewPourDebounced);
+    Signalr.TapHub.registerListener('newPour', this._onNewPour);
   }
 
   startAutorefresh = () => {
     if (this.isAutorefreshToggled) {
       return;
     }
-    Signalr.TapHub.registerListener('newPour', this._onNewPourDebounced);
+    Signalr.TapHub.registerListener('newPour', this._onNewPour);
     this.flushQueryCaches();
     this.isAutorefreshToggled = true;
   };
 
   stopAutorefresh = () => {
-    Signalr.TapHub.unregisterListener('newPour', this._onNewPourDebounced);
+    Signalr.TapHub.unregisterListener('newPour', this._onNewPour);
     this.isAutorefreshToggled = false;
   };
 
@@ -67,10 +69,16 @@ class PourDAO extends ODataDAO<Pour, Pour> {
     }
   };
 
-  _onNewPourDebounced = debounce(
-    () => this.flushQueryCaches(),
-    POURS_ACCUMULATE_TIMEOUT,
-  );
+  refreshCacheDebounced = debounce(() => {
+    this._idsToFlush.forEach(id => this.flushCacheForEntity(id));
+    this.flushQueryCaches();
+    this._idsToFlush.clear();
+  }, POURS_ACCUMULATE_TIMEOUT);
+
+  _onNewPour = (pourId: EntityID) => {
+    this._idsToFlush.add(pourId);
+    this.refreshCacheDebounced();
+  };
 }
 
 export default new PourDAO();
