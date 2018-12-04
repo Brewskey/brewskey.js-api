@@ -13,6 +13,8 @@ var _PourTranslator = _interopRequireDefault(require("../translators/PourTransla
 
 var _signalr = _interopRequireDefault(require("../signalr"));
 
+var _debounce = _interopRequireDefault(require("debounce"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -30,6 +32,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var POURS_ACCUMULATE_TIMEOUT = 500;
 
 var PourDAO =
 /*#__PURE__*/
@@ -73,7 +77,7 @@ function (_ODataDAO) {
         return;
       }
 
-      _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);
+      _signalr.default.TapHub.registerListener('newPour', _this._onNewPourDebounced);
 
       _this.flushQueryCaches();
 
@@ -81,7 +85,7 @@ function (_ODataDAO) {
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "stopAutorefresh", function () {
-      _signalr.default.TapHub.unregisterListener('newPour', _this._onNewPour);
+      _signalr.default.TapHub.unregisterListener('newPour', _this._onNewPourDebounced);
 
       _this.isAutorefreshToggled = false;
     });
@@ -94,13 +98,11 @@ function (_ODataDAO) {
       }
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewPour", function (pourId) {
-      _this.fetchByID(pourId);
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewPourDebounced", (0, _debounce.default)(function () {
+      return _this.flushQueryCaches();
+    }, POURS_ACCUMULATE_TIMEOUT));
 
-      _this.flushQueryCaches();
-    });
-
-    _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);
+    _signalr.default.TapHub.registerListener('newPour', _this._onNewPourDebounced);
 
     return _this;
   }
