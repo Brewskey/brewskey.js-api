@@ -66,15 +66,39 @@ function (_ODataDAO) {
       translator: new _PourTranslator.default()
     }));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewPour", function (_ref) {
-      var id = _ref.id;
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isAutorefreshToggled", true);
 
-      _this.fetchByID(id);
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "startAutorefresh", function () {
+      if (_this.isAutorefreshToggled) {
+        return;
+      }
+
+      _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);
+
+      _this.flushQueryCaches();
+
+      _this.isAutorefreshToggled = true;
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "stopAutorefresh", function () {
+      _signalr.default.TapHub.unregisterListener('newPour', _this._onNewPour);
+
+      _this.isAutorefreshToggled = false;
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleAutorefresh", function () {
+      if (_this.isAutorefreshToggled) {
+        _this.stopAutorefresh();
+      } else {
+        _this.startAutorefresh();
+      }
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewPour", function (pourId) {
+      _this.fetchByID(pourId);
 
       _this.flushQueryCaches();
     });
-
-    _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);
 
     return _this;
   }

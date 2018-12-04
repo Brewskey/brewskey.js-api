@@ -91,6 +91,10 @@ class Hub {
     this._proxy.on(name, listener);
   }
 
+  unregisterListener(name: string, listener: Function) {
+    this._proxy.off(name, listener);
+  }
+
   registerErrorHandler(handler: Function) {
     this._connection.error(handler);
   }

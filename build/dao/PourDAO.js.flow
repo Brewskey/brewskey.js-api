@@ -23,6 +23,8 @@ export type Pour = {
 };
 
 class PourDAO extends ODataDAO<Pour, Pour> {
+  isAutorefreshToggled: boolean = true;
+
   constructor() {
     super({
       entityName: DAO_ENTITIES.POURS,
@@ -36,12 +38,32 @@ class PourDAO extends ODataDAO<Pour, Pour> {
       },
       translator: new PourTranslator(),
     });
-
-    Signalr.TapHub.registerListener('newPour', this._onNewPour);
   }
 
-  _onNewPour = ({ id }) => {
-    this.fetchByID(id);
+  startAutorefresh = () => {
+    if (this.isAutorefreshToggled) {
+      return;
+    }
+    Signalr.TapHub.registerListener('newPour', this._onNewPour);
+    this.flushQueryCaches();
+    this.isAutorefreshToggled = true;
+  };
+
+  stopAutorefresh = () => {
+    Signalr.TapHub.unregisterListener('newPour', this._onNewPour);
+    this.isAutorefreshToggled = false;
+  };
+
+  toggleAutorefresh = () => {
+    if (this.isAutorefreshToggled) {
+      this.stopAutorefresh();
+    } else {
+      this.startAutorefresh();
+    }
+  };
+
+  _onNewPour = (pourId: EntityID) => {
+    this.fetchByID(pourId);
     this.flushQueryCaches();
   };
 }

@@ -121,6 +121,11 @@ function () {
       this._proxy.on(name, listener);
     }
   }, {
+    key: "unregisterListener",
+    value: function unregisterListener(name, listener) {
+      this._proxy.off(name, listener);
+    }
+  }, {
     key: "registerErrorHandler",
     value: function registerErrorHandler(handler) {
       this._connection.error(handler);
