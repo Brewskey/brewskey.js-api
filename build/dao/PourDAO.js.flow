@@ -38,6 +38,8 @@ class PourDAO extends ODataDAO<Pour, Pour> {
       },
       translator: new PourTranslator(),
     });
+
+    Signalr.TapHub.registerListener('newPour', this._onNewPour);
   }
 
   startAutorefresh = () => {

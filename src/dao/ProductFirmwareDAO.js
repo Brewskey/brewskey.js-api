@@ -30,24 +30,31 @@ class ProductFirmwareDAO extends RestDAO<
   ProductFirmwareMutator,
 > {
   count(productIdOrSlug: string) {
-    return this.__count(`products/${productIdOrSlug}/firmwares/count`);
+    return this.__count(`api/v2/products/${productIdOrSlug}/firmwares/count`);
   }
 
   getOne(productIdOrSlug: string, id: EntityID) {
-    return this.__getOne(`products/${productIdOrSlug}/firmwares/${id}/`, id);
+    return this.__getOne(
+      `api/v2/products/${productIdOrSlug}/firmwares/${id}/`,
+      id,
+    );
   }
 
   getMany(productIdOrSlug: string, queryOptions?: Object = {}) {
     const { skip, take } = queryOptions;
     return this.__getMany(
-      `products/${productIdOrSlug}/firmwares/?skip=${skip}&take=${take}`,
+      `api/v2/products/${productIdOrSlug}/firmwares/?skip=${skip}&take=${take}`,
     );
   }
 
   post(productIdOrSlug: string, mutator: any) {
-    return this.__post(`products/${productIdOrSlug}/firmwares/`, mutator, {
-      reformatError: error => error.error,
-    });
+    return this.__post(
+      `api/v2/products/${productIdOrSlug}/firmwares/`,
+      mutator,
+      {
+        reformatError: error => error.error,
+      },
+    );
   }
 
   updateProductFirmware(
@@ -57,7 +64,7 @@ class ProductFirmwareDAO extends RestDAO<
     mutator: ProductFirmwareMutator,
   ) {
     return this.__put(
-      `products/${productIdOrSlug}/firmwares/${firmwareVersion}`,
+      `api/v2/products/${productIdOrSlug}/firmwares/${firmwareVersion}`,
       firmwareId,
       mutator,
     );
@@ -69,7 +76,7 @@ class ProductFirmwareDAO extends RestDAO<
     firmwareVersion: number,
   ) {
     return this.__delete(
-      `products/${productIdOrSlug}/firmwares/${firmwareVersion}/`,
+      `api/v2/products/${productIdOrSlug}/firmwares/${firmwareVersion}/`,
       firmwareId,
     );
   }

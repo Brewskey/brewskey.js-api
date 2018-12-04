@@ -1,23 +1,25 @@
 // @flow
 
-import oHandler from 'odata';
+import nullthrows from 'nullthrows';
+import Config from './Config';
 
 export default async (path: string, options?: Object = {}): Promise<*> => {
   const { reformatError, ...fetchOptions } = options;
-  const { endpoint, headers: oheaders = [] } = oHandler().oConfig;
 
-  if (!endpoint) {
-    throw new Error('no-ohandler-endpoint');
+  if (!Config.host) {
+    throw new Error('DAOApi: no host set');
   }
 
   const headers = new Headers();
-  oheaders.forEach(({ name, value }) => headers.append(name, value));
+  if (Config.token) {
+    headers.append('Authorization', `Bearer ${Config.token}`);
+  }
 
   (options.headers || []).forEach(({ name, value }) =>
     headers.append(name, value),
   );
 
-  const response = await fetch(`${endpoint}${path}`, {
+  const response = await fetch(`${nullthrows(Config.host)}${path}`, {
     ...fetchOptions,
     headers,
   });

@@ -5,17 +5,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _odata = _interopRequireDefault(require("odata"));
-
 var _eventSourcePolyfill = require("event-source-polyfill");
 
 var _Subscription2 = _interopRequireDefault(require("./dao/Subscription"));
 
+var _nullthrows = _interopRequireDefault(require("nullthrows"));
+
+var _Config = _interopRequireDefault(require("./Config"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -52,7 +52,9 @@ function (_Subscription) {
       var onError = subscribeOptions.onError,
           onOpen = subscribeOptions.onOpen;
       var session = new _eventSourcePolyfill.EventSourcePolyfill(CloudSSEManager._getUrl(subscribeOptions), {
-        headers: CloudSSEManager._getHeaders()
+        headers: {
+          Authorization: "Bearer ".concat((0, _nullthrows.default)(_Config.default.token))
+        }
       });
       session.addEventListener('message', function (sseEvent) {
         try {
@@ -108,20 +110,8 @@ function (_Subscription) {
       var _ref$eventNamePrefix = _ref.eventNamePrefix,
           eventNamePrefix = _ref$eventNamePrefix === void 0 ? '' : _ref$eventNamePrefix,
           particleId = _ref.particleId;
-      var endpoint = (0, _odata.default)().oConfig.endpoint;
       var devicesUrl = particleId ? "devices/".concat(particleId, "/events/") : 'events/';
-      return "".concat(endpoint).concat(devicesUrl).concat(eventNamePrefix);
-    }
-  }, {
-    key: "_getHeaders",
-    value: function _getHeaders() {
-      var _oHandler$oConfig$hea = (0, _odata.default)().oConfig.headers,
-          oHeaders = _oHandler$oConfig$hea === void 0 ? [] : _oHandler$oConfig$hea;
-      return oHeaders.reduce(function (acc, _ref2) {
-        var name = _ref2.name,
-            value = _ref2.value;
-        return _objectSpread({}, acc, _defineProperty({}, name, value));
-      }, {});
+      return "".concat((0, _nullthrows.default)(_Config.default.host), "api/v2/").concat(devicesUrl).concat(eventNamePrefix);
     }
   }]);
 

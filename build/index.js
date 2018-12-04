@@ -350,6 +350,8 @@ Object.keys(_TapDAO).forEach(function (key) {
 
 var _signalr = _interopRequireDefault(require("./signalr"));
 
+var _Config = _interopRequireDefault(require("./Config"));
+
 var _CloudSSEManager = _interopRequireWildcard(require("./CloudSSEManager"));
 
 Object.keys(_CloudSSEManager).forEach(function (key) {
@@ -410,33 +412,26 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-var initializeDAOApi = function initializeDAOApi(_ref) {
-  var endpoint = _ref.endpoint,
-      headers = _ref.headers;
+var initialize = function initialize(host) {
+  _Config.default.host = host;
   (0, _odata.default)().config({
-    endpoint: endpoint,
-    headers: [{
-      name: 'Prefer',
-      value: 'return=representation'
-    }].concat(_toConsumableArray(headers || []))
+    endpoint: "".concat(host, "api/v2/")
   });
 };
 
-var getHeaders = function getHeaders() {
-  return (0, _odata.default)().oConfig.headers || [];
-};
-
-var setHeaders = function setHeaders(headers) {
+var setToken = function setToken(token) {
+  _Config.default.token = token;
   (0, _odata.default)().config({
-    headers: headers
+    headers: [{
+      name: 'timezoneOffset',
+      value: new Date().getTimezoneOffset().toString()
+    }, {
+      name: 'Authorization',
+      value: "Bearer ".concat(token)
+    }, {
+      name: 'Prefer',
+      value: 'return=representation'
+    }]
   });
 };
 
@@ -507,10 +502,9 @@ var _default = {
   doesSatisfyQueryFilters: _filters.doesSatisfyQueryFilters,
   fetch: _fetch.default,
   flushCache: flushCache,
-  getHeaders: getHeaders,
-  initializeDAOApi: initializeDAOApi,
+  initialize: initialize,
   onError: _Subscription.default.onError,
-  setHeaders: setHeaders,
-  setOrganizationID: setOrganizationID
+  setOrganizationID: setOrganizationID,
+  setToken: setToken
 };
 exports.default = _default;

@@ -1,8 +1,9 @@
 // @flow
 
-import oHandler from 'odata';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import Subscription from './dao/Subscription';
+import nullthrows from 'nullthrows';
+import Config from './Config';
 
 export type SSESubscriptionOptions = {|
   eventNamePrefix?: string,
@@ -32,7 +33,9 @@ class CloudSSEManager extends Subscription {
     const session = new EventSourcePolyfill(
       CloudSSEManager._getUrl(subscribeOptions),
       {
-        headers: CloudSSEManager._getHeaders(),
+        headers: {
+          Authorization: `Bearer ${nullthrows(Config.token)}`,
+        },
       },
     );
 
@@ -80,20 +83,9 @@ class CloudSSEManager extends Subscription {
   }
 
   static _getUrl({ eventNamePrefix = '', particleId }: SSESubscriptionOptions) {
-    const { endpoint }: any = oHandler().oConfig;
-
     const devicesUrl = particleId ? `devices/${particleId}/events/` : 'events/';
 
-    return `${endpoint}${devicesUrl}${eventNamePrefix}`;
-  }
-
-  static _getHeaders() {
-    const { headers: oHeaders = [] } = oHandler().oConfig;
-
-    return oHeaders.reduce(
-      (acc, { name, value }) => ({ ...acc, [name]: value }),
-      {},
-    );
+    return `${nullthrows(Config.host)}api/v2/${devicesUrl}${eventNamePrefix}`;
   }
 }
 

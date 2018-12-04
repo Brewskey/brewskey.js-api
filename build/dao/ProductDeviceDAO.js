@@ -41,7 +41,7 @@ function (_RestDAO) {
   _createClass(ProductDeviceDAO, [{
     key: "count",
     value: function count(productIdOrSlug) {
-      return this.__count("products/".concat(productIdOrSlug, "/devices/count"));
+      return this.__count("api/v2/products/".concat(productIdOrSlug, "/devices/count"));
     }
   }, {
     key: "getMany",
@@ -49,19 +49,19 @@ function (_RestDAO) {
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var skip = queryOptions.skip,
           take = queryOptions.take;
-      return this.__getMany("products/".concat(productIdOrSlug, "/devices/?skip=").concat(skip, "&take=").concat(take));
+      return this.__getMany("api/v2/products/".concat(productIdOrSlug, "/devices/?skip=").concat(skip, "&take=").concat(take));
     }
   }, {
     key: "getOne",
     value: function getOne(productIdOrSlug, particleId) {
-      return this.__getOne("products/".concat(productIdOrSlug, "/devices/").concat(particleId, "/"), particleId);
+      return this.__getOne("api/v2/products/".concat(productIdOrSlug, "/devices/").concat(particleId, "/"), particleId);
     }
   }, {
     key: "addToProduct",
     value: function addToProduct(productIdOrSlug, payload) {
       var file = payload.file,
           particleId = payload.particleId;
-      return this.__fetchOne("products/".concat(productIdOrSlug, "/devices/"), {
+      return this.__fetchOne("api/v2/products/".concat(productIdOrSlug, "/devices/"), {
         body: JSON.stringify({
           file: file,
           importMethod: file ? 'many' : 'one',
@@ -83,12 +83,12 @@ function (_RestDAO) {
   }, {
     key: "put",
     value: function put(productIdOrSlug, particleId, deviceMutator) {
-      return this.__put("products/".concat(productIdOrSlug, "/devices/").concat(particleId, "/"), particleId, deviceMutator);
+      return this.__put("api/v2/products/".concat(productIdOrSlug, "/devices/").concat(particleId, "/"), particleId, deviceMutator);
     }
   }, {
     key: "delete",
     value: function _delete(productIdOrSlug, particleId) {
-      return this.__delete("products/".concat(productIdOrSlug, "/devices/").concat(particleId), particleId);
+      return this.__delete("api/v2/products/".concat(productIdOrSlug, "/devices/").concat(particleId), particleId);
     }
   }]);
 

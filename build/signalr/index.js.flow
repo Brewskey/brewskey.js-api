@@ -2,9 +2,9 @@
 
 import TapHub from './hubs/TapHub';
 
-const startAll = async (queryParams?: Object): Promise<void> => {
+const startAll = async (): Promise<void> => {
   try {
-    await TapHub.connect(queryParams);
+    await TapHub.connect();
     await TapHub.subscribe('*');
   } catch (error) {
     // todo add some error handling logic..

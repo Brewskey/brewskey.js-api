@@ -31,26 +31,26 @@ export type ProductDeviceMutator = {
 
 class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
   count(productIdOrSlug: string) {
-    return this.__count(`products/${productIdOrSlug}/devices/count`);
+    return this.__count(`api/v2/products/${productIdOrSlug}/devices/count`);
   }
 
   getMany(productIdOrSlug: string, queryOptions?: Object = {}) {
     const { skip, take } = queryOptions;
     return this.__getMany(
-      `products/${productIdOrSlug}/devices/?skip=${skip}&take=${take}`,
+      `api/v2/products/${productIdOrSlug}/devices/?skip=${skip}&take=${take}`,
     );
   }
 
   getOne(productIdOrSlug: string, particleId: string) {
     return this.__getOne(
-      `products/${productIdOrSlug}/devices/${particleId}/`,
+      `api/v2/products/${productIdOrSlug}/devices/${particleId}/`,
       particleId,
     );
   }
 
   addToProduct(productIdOrSlug: string, payload: any) {
     const { file, particleId } = payload;
-    return this.__fetchOne(`products/${productIdOrSlug}/devices/`, {
+    return this.__fetchOne(`api/v2/products/${productIdOrSlug}/devices/`, {
       body: JSON.stringify({
         file,
         importMethod: file ? 'many' : 'one',
@@ -68,7 +68,7 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
 
   put(productIdOrSlug: string, particleId: string, deviceMutator: any) {
     return this.__put(
-      `products/${productIdOrSlug}/devices/${particleId}/`,
+      `api/v2/products/${productIdOrSlug}/devices/${particleId}/`,
       particleId,
       deviceMutator,
     );
@@ -76,7 +76,7 @@ class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
 
   delete(productIdOrSlug: string, particleId: string) {
     return this.__delete(
-      `products/${productIdOrSlug}/devices/${particleId}`,
+      `api/v2/products/${productIdOrSlug}/devices/${particleId}`,
       particleId,
     );
   }

@@ -73,11 +73,6 @@ export type ODataNavigationProperties = {
 
 export type RequestMethod = 'delete' | 'get' | 'patch' | 'post' | 'put';
 
-export type ODataConfig = {
-  endpoint: string,
-  headers?: Headers,
-};
-
 export type ODataDAOConfig<TEntity, TEntityMutator> = {|
   entityName: EntityName,
   navigationProperties?: ODataNavigationProperties,

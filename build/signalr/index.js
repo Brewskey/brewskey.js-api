@@ -18,14 +18,14 @@ var startAll =
 function () {
   var _ref = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(queryParams) {
+  regeneratorRuntime.mark(function _callee() {
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return _TapHub.default.connect(queryParams);
+            return _TapHub.default.connect();
 
           case 3:
             _context.next = 5;
@@ -47,7 +47,7 @@ function () {
     }, _callee, this, [[0, 7]]);
   }));
 
-  return function startAll(_x) {
+  return function startAll() {
     return _ref.apply(this, arguments);
   };
 }();

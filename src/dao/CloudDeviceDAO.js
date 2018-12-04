@@ -31,13 +31,13 @@ class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
   _isOnlineStatusListenerToggled: boolean = false;
 
   getOne(particleId: string) {
-    return this.__getOne(`cloud-devices/${particleId}/`, particleId, {
+    return this.__getOne(`api/v2/cloud-devices/${particleId}/`, particleId, {
       reformatError: error => error.error,
     });
   }
 
   flash(particleId: string, file: any) {
-    return this.__fetchOne(`cloud-devices/${particleId}/flash/`, {
+    return this.__fetchOne(`api/v2/cloud-devices/${particleId}/flash/`, {
       body: JSON.stringify({ file, particleId }),
       headers: [
         { name: 'Accept', value: 'application/json' },

@@ -100,6 +100,8 @@ function (_ODataDAO) {
       _this.flushQueryCaches();
     });
 
+    _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);
+
     return _this;
   }
 

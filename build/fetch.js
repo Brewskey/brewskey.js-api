@@ -5,7 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _odata = _interopRequireDefault(require("odata"));
+var _nullthrows = _interopRequireDefault(require("nullthrows"));
+
+var _Config = _interopRequireDefault(require("./Config"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30,88 +32,82 @@ function () {
     var options,
         reformatError,
         fetchOptions,
-        _oHandler$oConfig,
-        endpoint,
-        _oHandler$oConfig$hea,
-        oheaders,
         headers,
         response,
         responseJson,
         _args = arguments;
-
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             options = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
             reformatError = options.reformatError, fetchOptions = _objectWithoutProperties(options, ["reformatError"]);
-            _oHandler$oConfig = (0, _odata.default)().oConfig, endpoint = _oHandler$oConfig.endpoint, _oHandler$oConfig$hea = _oHandler$oConfig.headers, oheaders = _oHandler$oConfig$hea === void 0 ? [] : _oHandler$oConfig$hea;
 
-            if (endpoint) {
-              _context.next = 5;
+            if (_Config.default.host) {
+              _context.next = 4;
               break;
             }
 
-            throw new Error('no-ohandler-endpoint');
+            throw new Error('DAOApi: no host set');
 
-          case 5:
+          case 4:
             headers = new Headers();
-            oheaders.forEach(function (_ref2) {
+
+            if (_Config.default.token) {
+              headers.append('Authorization', "Bearer ".concat(_Config.default.token));
+            }
+
+            (options.headers || []).forEach(function (_ref2) {
               var name = _ref2.name,
                   value = _ref2.value;
               return headers.append(name, value);
             });
-            (options.headers || []).forEach(function (_ref3) {
-              var name = _ref3.name,
-                  value = _ref3.value;
-              return headers.append(name, value);
-            });
-            _context.next = 10;
-            return fetch("".concat(endpoint).concat(path), _objectSpread({}, fetchOptions, {
+            _context.next = 9;
+            return fetch("".concat((0, _nullthrows.default)(_Config.default.host)).concat(path), _objectSpread({}, fetchOptions, {
               headers: headers
             }));
 
-          case 10:
+          case 9:
             response = _context.sent;
-            _context.prev = 11;
-            _context.next = 14;
+            _context.prev = 10;
+            _context.next = 13;
             return response.json();
 
-          case 14:
+          case 13:
             responseJson = _context.sent;
-            _context.next = 20;
+            _context.next = 19;
             break;
 
-          case 17:
-            _context.prev = 17;
-            _context.t0 = _context["catch"](11);
+          case 16:
+            _context.prev = 16;
+            _context.t0 = _context["catch"](10);
             responseJson = null;
 
-          case 20:
+          case 19:
             if (response.ok) {
-              _context.next = 24;
+              _context.next = 23;
               break;
             }
 
             if (!(responseJson && reformatError)) {
-              _context.next = 23;
+              _context.next = 22;
               break;
             }
 
             throw new Error(reformatError(responseJson));
 
-          case 23:
+          case 22:
             throw new Error(responseJson && responseJson.error && responseJson.error.message || 'Whoops! Error!');
 
-          case 24:
+          case 23:
             return _context.abrupt("return", responseJson);
 
-          case 25:
+          case 24:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, this, [[11, 17]]);
+    }, _callee, this, [[10, 16]]);
   }));
 
   return function (_x) {

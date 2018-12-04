@@ -1,6 +1,7 @@
 // @flow
 
 import signalr from 'react-native-signalr';
+import Config from '../../Config';
 
 const PING_INTERVAL = 60000;
 
@@ -47,6 +48,7 @@ class Hub {
     {
       logging = false,
       queryParams,
+      // todo fix with Config.host
       rootPath = 'https://brewskey.com',
       shareConnection = true,
       transport,
@@ -59,11 +61,14 @@ class Hub {
     this._transport = transport;
   }
 
-  connect(queryParams?: Object): Promise<void> {
+  connect(): Promise<void> {
     const { _connection, _transport } = this;
-    if (queryParams) {
-      _connection.qs = { ...(_connection.qs || {}), ...queryParams };
-    }
+    _connection.qs = {
+      ...(_connection.qs || {}),
+      ...{
+        access_token: Config.token,
+      },
+    };
 
     this._connectionPromise = _transport
       ? _connection.start({

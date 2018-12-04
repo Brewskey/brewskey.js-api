@@ -46,28 +46,28 @@ export const PRODUCT_TYPES: Array<ProductType> = [
 
 class ProductDAO extends RestDAO<Product, *> {
   count() {
-    return this.__count('products/count');
+    return this.__count('api/v2/products/count');
   }
 
   getMany(queryOptions?: Object = {}) {
     const { skip, take } = queryOptions;
-    return this.__getMany(`products/?skip=${skip}&take=${take}`);
+    return this.__getMany(`api/v2/products/?skip=${skip}&take=${take}`);
   }
 
   getOne(idOrSlug: string) {
-    return this.__getOne(`products/${idOrSlug}/`, idOrSlug);
+    return this.__getOne(`api/v2/products/${idOrSlug}/`, idOrSlug);
   }
 
   post(mutator: any) {
-    return this.__post('products/', mutator);
+    return this.__post('api/v2/products/', mutator);
   }
 
   put(id: string, mutator: any) {
-    return this.__put(`products/${id}/`, id, mutator);
+    return this.__put(`api/v2/products/${id}/`, id, mutator);
   }
 
   delete(idOrSlug: string) {
-    return this.__delete(`products/${idOrSlug}`, idOrSlug);
+    return this.__delete(`api/v2/products/${idOrSlug}`, idOrSlug);
   }
 }
 

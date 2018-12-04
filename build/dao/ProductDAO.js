@@ -52,7 +52,7 @@ function (_RestDAO) {
   _createClass(ProductDAO, [{
     key: "count",
     value: function count() {
-      return this.__count('products/count');
+      return this.__count('api/v2/products/count');
     }
   }, {
     key: "getMany",
@@ -60,27 +60,27 @@ function (_RestDAO) {
       var queryOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var skip = queryOptions.skip,
           take = queryOptions.take;
-      return this.__getMany("products/?skip=".concat(skip, "&take=").concat(take));
+      return this.__getMany("api/v2/products/?skip=".concat(skip, "&take=").concat(take));
     }
   }, {
     key: "getOne",
     value: function getOne(idOrSlug) {
-      return this.__getOne("products/".concat(idOrSlug, "/"), idOrSlug);
+      return this.__getOne("api/v2/products/".concat(idOrSlug, "/"), idOrSlug);
     }
   }, {
     key: "post",
     value: function post(mutator) {
-      return this.__post('products/', mutator);
+      return this.__post('api/v2/products/', mutator);
     }
   }, {
     key: "put",
     value: function put(id, mutator) {
-      return this.__put("products/".concat(id, "/"), id, mutator);
+      return this.__put("api/v2/products/".concat(id, "/"), id, mutator);
     }
   }, {
     key: "delete",
     value: function _delete(idOrSlug) {
-      return this.__delete("products/".concat(idOrSlug), idOrSlug);
+      return this.__delete("api/v2/products/".concat(idOrSlug), idOrSlug);
     }
   }]);
 

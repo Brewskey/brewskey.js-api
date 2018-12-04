@@ -41,12 +41,12 @@ function (_RestDAO) {
   _createClass(ProductFirmwareDAO, [{
     key: "count",
     value: function count(productIdOrSlug) {
-      return this.__count("products/".concat(productIdOrSlug, "/firmwares/count"));
+      return this.__count("api/v2/products/".concat(productIdOrSlug, "/firmwares/count"));
     }
   }, {
     key: "getOne",
     value: function getOne(productIdOrSlug, id) {
-      return this.__getOne("products/".concat(productIdOrSlug, "/firmwares/").concat(id, "/"), id);
+      return this.__getOne("api/v2/products/".concat(productIdOrSlug, "/firmwares/").concat(id, "/"), id);
     }
   }, {
     key: "getMany",
@@ -54,12 +54,12 @@ function (_RestDAO) {
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var skip = queryOptions.skip,
           take = queryOptions.take;
-      return this.__getMany("products/".concat(productIdOrSlug, "/firmwares/?skip=").concat(skip, "&take=").concat(take));
+      return this.__getMany("api/v2/products/".concat(productIdOrSlug, "/firmwares/?skip=").concat(skip, "&take=").concat(take));
     }
   }, {
     key: "post",
     value: function post(productIdOrSlug, mutator) {
-      return this.__post("products/".concat(productIdOrSlug, "/firmwares/"), mutator, {
+      return this.__post("api/v2/products/".concat(productIdOrSlug, "/firmwares/"), mutator, {
         reformatError: function reformatError(error) {
           return error.error;
         }
@@ -68,12 +68,12 @@ function (_RestDAO) {
   }, {
     key: "updateProductFirmware",
     value: function updateProductFirmware(productIdOrSlug, firmwareId, firmwareVersion, mutator) {
-      return this.__put("products/".concat(productIdOrSlug, "/firmwares/").concat(firmwareVersion), firmwareId, mutator);
+      return this.__put("api/v2/products/".concat(productIdOrSlug, "/firmwares/").concat(firmwareVersion), firmwareId, mutator);
     }
   }, {
     key: "delete",
     value: function _delete(productIdOrSlug, firmwareId, firmwareVersion) {
-      return this.__delete("products/".concat(productIdOrSlug, "/firmwares/").concat(firmwareVersion, "/"), firmwareId);
+      return this.__delete("api/v2/products/".concat(productIdOrSlug, "/firmwares/").concat(firmwareVersion, "/"), firmwareId);
     }
   }]);
 

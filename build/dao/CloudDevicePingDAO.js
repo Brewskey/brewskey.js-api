@@ -43,7 +43,7 @@ function (_RestDAO) {
   _createClass(CloudDevicePingDAO, [{
     key: "getPing",
     value: function getPing(particleId) {
-      return this.__getOne("cloud-devices/".concat(particleId, "/ping/"), particleId, {
+      return this.__getOne("api/v2/cloud-devices/".concat(particleId, "/ping/"), particleId, {
         method: 'PUT'
       });
     }

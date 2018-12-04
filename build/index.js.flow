@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID, Headers, ODataConfig } from './types';
+import type { EntityID } from './types';
 
 import oHandler from 'odata';
 import BaseODataDAO from './dao/BaseODataDAO';
@@ -35,24 +35,33 @@ import SrmDAO from './dao/SrmDAO';
 import StyleDAO from './dao/StyleDAO';
 import TapDAO from './dao/TapDAO';
 import Signalr from './signalr';
+import Config from './Config';
 
 import CloudSSEManager from './CloudSSEManager';
 
-const initializeDAOApi = ({ endpoint, headers }: ODataConfig) => {
+const initialize = (host: string) => {
+  Config.host = host;
+
   oHandler().config({
-    endpoint,
-    headers: [
-      { name: 'Prefer', value: 'return=representation' },
-      ...(headers || []),
-    ],
+    endpoint: `${host}api/v2/`,
   });
 };
 
-const getHeaders = (): Headers => oHandler().oConfig.headers || [];
+const setToken = (token: string) => {
+  Config.token = token;
 
-const setHeaders = (headers: Headers) => {
   oHandler().config({
-    headers,
+    headers: [
+      {
+        name: 'timezoneOffset',
+        value: new Date().getTimezoneOffset().toString(),
+      },
+      {
+        name: 'Authorization',
+        value: `Bearer ${token}`,
+      },
+      { name: 'Prefer', value: 'return=representation' },
+    ],
   });
 };
 
@@ -173,9 +182,8 @@ export default {
   doesSatisfyQueryFilters,
   fetch,
   flushCache,
-  getHeaders,
-  initializeDAOApi,
+  initialize,
   onError: Subscription.onError,
-  setHeaders,
   setOrganizationID,
+  setToken,
 };
