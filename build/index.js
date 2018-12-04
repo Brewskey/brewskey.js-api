@@ -99,7 +99,18 @@ Object.keys(_BeverageDAO).forEach(function (key) {
   });
 });
 
-var _CloudDeviceDAO = _interopRequireDefault(require("./dao/CloudDeviceDAO"));
+var _CloudDeviceDAO = _interopRequireWildcard(require("./dao/CloudDeviceDAO"));
+
+Object.keys(_CloudDeviceDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _CloudDeviceDAO[key];
+    }
+  });
+});
 
 var _CloudDevicePingDAO = _interopRequireWildcard(require("./dao/CloudDevicePingDAO"));
 

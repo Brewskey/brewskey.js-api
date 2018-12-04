@@ -118,8 +118,7 @@ export * from './dao/AccountDAO';
 export * from './dao/AchievementDAO';
 export * from './dao/AvailabilityDAO';
 export * from './dao/BeverageDAO';
-// todo uncomment when add types
-// export * from './dao/CloudDeviceDAO';
+export * from './dao/CloudDeviceDAO';
 export * from './dao/CloudDevicePingDAO';
 export * from './dao/DeviceDAO';
 export * from './dao/FlowSensorDAO';
