@@ -89,14 +89,28 @@ function (_RestDAO) {
       });
     }
   }, {
+    key: "startOnlineStatusListener",
+    value: function startOnlineStatusListener() {
+      if (this._isOnlineStatusListenerToggled) {
+        return;
+      }
+
+      _CloudSSEManager.default.subscribe(this._onNewCloudSystemEvent, {
+        eventNamePrefix: 'spark'
+      });
+    }
+  }, {
+    key: "stopOnlineStatusListener",
+    value: function stopOnlineStatusListener() {
+      _CloudSSEManager.default.unsubscribe(this._onNewCloudSystemEvent);
+    }
+  }, {
     key: "toggleOnlineStatusListener",
     value: function toggleOnlineStatusListener() {
       if (!this._isOnlineStatusListenerToggled) {
-        _CloudSSEManager.default.subscribe(this._onNewCloudSystemEvent, {
-          eventNamePrefix: 'spark'
-        });
+        this.startOnlineStatusListener();
       } else {
-        _CloudSSEManager.default.unsubscribe(this._onNewCloudSystemEvent);
+        this.stopOnlineStatusListener();
       }
     }
   }, {

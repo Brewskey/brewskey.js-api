@@ -48,13 +48,25 @@ class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
     });
   }
 
+  startOnlineStatusListener() {
+    if (this._isOnlineStatusListenerToggled) {
+      return;
+    }
+
+    CloudSSEManager.subscribe(this._onNewCloudSystemEvent, {
+      eventNamePrefix: 'spark',
+    });
+  }
+
+  stopOnlineStatusListener() {
+    CloudSSEManager.unsubscribe(this._onNewCloudSystemEvent);
+  }
+
   toggleOnlineStatusListener() {
     if (!this._isOnlineStatusListenerToggled) {
-      CloudSSEManager.subscribe(this._onNewCloudSystemEvent, {
-        eventNamePrefix: 'spark',
-      });
+      this.startOnlineStatusListener();
     } else {
-      CloudSSEManager.unsubscribe(this._onNewCloudSystemEvent);
+      this.stopOnlineStatusListener();
     }
   }
 
