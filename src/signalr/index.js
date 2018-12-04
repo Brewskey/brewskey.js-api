@@ -3,23 +3,13 @@
 import TapHub from './hubs/TapHub';
 
 const startAll = async (): Promise<void> => {
-  try {
-    await TapHub.connect();
-    await TapHub.subscribe('*');
-  } catch (error) {
-    // todo add some error handling logic..
-    // maybe message in snackbar..or maybe just swallow it
-  }
+  await TapHub.connect();
+  await TapHub.subscribe('*');
 };
 
 const stopAll = async (): Promise<void> => {
-  try {
-    await TapHub.unsubscribe('*');
-    TapHub.disconnect();
-  } catch (error) {
-    // todo add some error handling logic..
-    // maybe message in snackbar..or maybe just swallow it
-  }
+  await TapHub.unsubscribe('*');
+  TapHub.disconnect();
 };
 
 export default {

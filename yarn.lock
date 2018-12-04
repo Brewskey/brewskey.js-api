@@ -4107,7 +4107,7 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
 
 "react-native-signalr@git+https://github.com/Brewskey/react-native-signalr.git":
   version "1.0.6"
-  resolved "git+https://github.com/Brewskey/react-native-signalr.git#0087954c64de90e9c03f83e7a4155235441d8b1d"
+  resolved "git+https://github.com/Brewskey/react-native-signalr.git#704d08c759280c6966be895b52e0753187480574"
   dependencies:
     jquery-deferred "^0.3.1"
     ms-signalr-client "^2.2.7"
