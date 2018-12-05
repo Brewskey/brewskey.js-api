@@ -29,6 +29,10 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -223,8 +227,10 @@ function (_BaseODataDAO) {
     }
   }, {
     key: "fetchMany",
-    value: function fetchMany(queryOptions) {
+    value: function fetchMany() {
       var _this6 = this;
+
+      var queryOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       var cacheKey = this._getCacheKey(queryOptions);
 
@@ -232,13 +238,32 @@ function (_BaseODataDAO) {
 
       if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
         this._hydrateMany(queryOptions);
-      }
+      } // eslint-disable-next-line no-unused-vars
 
-      return (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
-        var resultMap = _this6.fetchByIDs(ids);
 
-        return ids.map(function (id) {
-          return (0, _nullthrows.default)(resultMap.get(id.toString()));
+      var skip = queryOptions.skip,
+          take = queryOptions.take,
+          baseQueryOptions = _objectWithoutProperties(queryOptions, ["skip", "take"]);
+
+      return this.count(baseQueryOptions).map(function (count) {
+        return (0, _nullthrows.default)(_this6._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
+          var resultMap = _this6.fetchByIDs(ids);
+
+          return ids.map(function (id) {
+            return (0, _nullthrows.default)(resultMap.get(id.toString()));
+          });
+        }).map(function (loaders) {
+          if (loaders.length >= count) {
+            return loaders;
+          }
+
+          var missedLoadersCount = count - loaders.length;
+
+          var missedLoaders = _toConsumableArray(Array(missedLoadersCount)).map(function () {
+            return _LoadObject.default.loading();
+          });
+
+          return _toConsumableArray(loaders).concat(_toConsumableArray(missedLoaders));
         });
       });
     }
@@ -685,7 +710,7 @@ function (_BaseODataDAO) {
     key: "_setLoadersToUpdating",
     value: function _setLoadersToUpdating(map) {
       map.forEach(function (value, key) {
-        return map.set(key, value.loading());
+        return map.set(key, value.updating());
       });
     }
   }, {
@@ -705,7 +730,7 @@ function (_BaseODataDAO) {
 
       var cacheKey = this._getCacheKey(queryOptions);
 
-      var initialLoader = this._entityIDsLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).loading() : _LoadObject.default.loading();
+      var initialLoader = this._entityIDsLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).updating() : _LoadObject.default.loading();
 
       this._entityIDsLoaderByQuery.set(cacheKey, initialLoader);
 
@@ -744,7 +769,7 @@ function (_BaseODataDAO) {
         __custom_key__: key
       }));
 
-      var initialLoader = this._countLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._countLoaderByQuery.get(cacheKey)).loading() : _LoadObject.default.loading();
+      var initialLoader = this._countLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._countLoaderByQuery.get(cacheKey)).updating() : _LoadObject.default.loading();
 
       this._countLoaderByQuery.set(cacheKey, initialLoader);
 
