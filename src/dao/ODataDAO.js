@@ -169,7 +169,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   fetchMany(
-    queryOptions?: QueryOptions,
+    queryOptions?: QueryOptions = {},
   ): LoadObject<Array<LoadObject<TEntity>>> {
     const cacheKey = this._getCacheKey(queryOptions);
     this._currentEntityIDsQueries.add(cacheKey);
@@ -178,14 +178,32 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this._hydrateMany(queryOptions);
     }
 
-    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).map(
-      (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
-        const resultMap = this.fetchByIDs(ids);
-        return ids.map(
-          (id: EntityID): LoadObject<TEntity> =>
-            nullthrows(resultMap.get(id.toString())),
-        );
-      },
+    // eslint-disable-next-line no-unused-vars
+    const { skip, take, ...baseQueryOptions } = queryOptions;
+
+    return this.count(baseQueryOptions).map(count =>
+      nullthrows(this._entityIDsLoaderByQuery.get(cacheKey))
+        .map(
+          (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
+            const resultMap = this.fetchByIDs(ids);
+
+            return ids.map(
+              (id: EntityID): LoadObject<TEntity> =>
+                nullthrows(resultMap.get(id.toString())),
+            );
+          },
+        )
+        .map(loaders => {
+          if (loaders.length >= count) {
+            return loaders;
+          }
+          const missedLoadersCount = count - loaders.length;
+          const missedLoaders = [...Array(missedLoadersCount)].map(() =>
+            LoadObject.loading(),
+          );
+
+          return [...loaders, ...missedLoaders];
+        }),
     );
   }
 
@@ -633,7 +651,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   _setLoadersToUpdating(map: Map<string, LoadObject<any>>) {
-    map.forEach((value, key) => map.set(key, value.loading()));
+    map.forEach((value, key) => map.set(key, value.updating()));
   }
 
   _rebuildMap(
@@ -655,8 +673,9 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     const cacheKey = this._getCacheKey(queryOptions);
 
     const initialLoader = this._entityIDsLoaderByQuery.has(cacheKey)
-      ? nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).loading()
+      ? nullthrows(this._entityIDsLoaderByQuery.get(cacheKey)).updating()
       : LoadObject.loading();
+
     this._entityIDsLoaderByQuery.set(cacheKey, initialLoader);
     this.__emitChanges();
 
@@ -695,7 +714,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     });
 
     const initialLoader = this._countLoaderByQuery.has(cacheKey)
-      ? nullthrows(this._countLoaderByQuery.get(cacheKey)).loading()
+      ? nullthrows(this._countLoaderByQuery.get(cacheKey)).updating()
       : LoadObject.loading();
 
     this._countLoaderByQuery.set(cacheKey, initialLoader);
