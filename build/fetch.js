@@ -63,7 +63,7 @@ function () {
               return headers.append(name, value);
             });
             _context.next = 9;
-            return fetch("".concat((0, _nullthrows.default)(_Config.default.host)).concat(path), _objectSpread({}, fetchOptions, {
+            return fetch("".concat((0, _nullthrows.default)(_Config.default.host), "/").concat(path), _objectSpread({}, fetchOptions, {
               headers: headers
             }));
 

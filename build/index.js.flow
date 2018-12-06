@@ -43,7 +43,7 @@ const initialize = (host: string) => {
   Config.host = host;
 
   oHandler().config({
-    endpoint: `${host}api/v2/`,
+    endpoint: `${host}/api/v2/`,
   });
 };
 

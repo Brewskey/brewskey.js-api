@@ -426,7 +426,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var initialize = function initialize(host) {
   _Config.default.host = host;
   (0, _odata.default)().config({
-    endpoint: "".concat(host, "api/v2/")
+    endpoint: "".concat(host, "/api/v2/")
   });
 };
 

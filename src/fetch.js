@@ -19,7 +19,7 @@ export default async (path: string, options?: Object = {}): Promise<*> => {
     headers.append(name, value),
   );
 
-  const response = await fetch(`${nullthrows(Config.host)}${path}`, {
+  const response = await fetch(`${nullthrows(Config.host)}/${path}`, {
     ...fetchOptions,
     headers,
   });
