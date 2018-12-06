@@ -10,6 +10,8 @@ import LoadObject from '../LoadObject';
 import Subscription from './Subscription';
 import arrayFlatten from 'array-flatten';
 
+const DEFAULT_CHUNK_SIZE = 40;
+
 class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   TEntity,
   TEntityMutator,
@@ -178,50 +180,46 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this._hydrateMany(queryOptions);
     }
 
-    // eslint-disable-next-line no-unused-vars
-    const { skip, take, ...baseQueryOptions } = queryOptions;
+    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey))
+      .map(
+        (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
+          const resultMap = this.fetchByIDs(ids);
 
-    return this.count(baseQueryOptions).map(count =>
-      nullthrows(this._entityIDsLoaderByQuery.get(cacheKey))
-        .map(
-          (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
-            const resultMap = this.fetchByIDs(ids);
-
-            return ids.map(
-              (id: EntityID): LoadObject<TEntity> =>
-                nullthrows(resultMap.get(id.toString())),
-            );
-          },
-        )
-        .map(loaders => {
-          if (loaders.length >= count) {
-            return loaders;
-          }
-          const missedLoadersCount = count - loaders.length;
-          const missedLoaders = [...Array(missedLoadersCount)].map(() =>
-            LoadObject.loading(),
+          return ids.map(
+            (id: EntityID): LoadObject<TEntity> =>
+              nullthrows(resultMap.get(id.toString())),
           );
+        },
+      )
+      .map(loaders => {
+        const { take = DEFAULT_CHUNK_SIZE } = queryOptions;
+        if (loaders.length >= take) {
+          return loaders;
+        }
+        const missedLoadersCount = take - loaders.length;
 
-          return [...loaders, ...missedLoaders];
-        }),
-    );
+        const missedLoaders = [...Array(missedLoadersCount)].map(() =>
+          LoadObject.loading(),
+        );
+
+        return [...loaders, ...missedLoaders];
+      });
   }
 
   fetchAll(queryOptions?: QueryOptions) {
-    const CHUNK_SIZE = 40;
     return this.count(queryOptions).map(count =>
       arrayFlatten(
-        [...Array(Math.ceil(count / CHUNK_SIZE))].map((_, index) => {
-          const skip = CHUNK_SIZE * index;
+        [...Array(Math.ceil(count / DEFAULT_CHUNK_SIZE))].map((_, index) => {
+          const skip = DEFAULT_CHUNK_SIZE * index;
           const loader = this.fetchMany({
             ...queryOptions,
             skip,
-            take: CHUNK_SIZE,
+            take: DEFAULT_CHUNK_SIZE,
           });
 
           if (loader.isLoading()) {
-            return [...Array(Math.min(CHUNK_SIZE, count - skip))].map(() =>
-              LoadObject.loading(),
+            return [...Array(Math.min(DEFAULT_CHUNK_SIZE, count - skip))].map(
+              () => LoadObject.loading(),
             );
           }
 

@@ -29,10 +29,6 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -52,6 +48,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var DEFAULT_CHUNK_SIZE = 40;
 
 var ODataDAO =
 /*#__PURE__*/
@@ -238,33 +236,29 @@ function (_BaseODataDAO) {
 
       if (!this._entityIDsLoaderByQuery.has(cacheKey)) {
         this._hydrateMany(queryOptions);
-      } // eslint-disable-next-line no-unused-vars
+      }
 
+      return (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
+        var resultMap = _this6.fetchByIDs(ids);
 
-      var skip = queryOptions.skip,
-          take = queryOptions.take,
-          baseQueryOptions = _objectWithoutProperties(queryOptions, ["skip", "take"]);
-
-      return this.count(baseQueryOptions).map(function (count) {
-        return (0, _nullthrows.default)(_this6._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
-          var resultMap = _this6.fetchByIDs(ids);
-
-          return ids.map(function (id) {
-            return (0, _nullthrows.default)(resultMap.get(id.toString()));
-          });
-        }).map(function (loaders) {
-          if (loaders.length >= count) {
-            return loaders;
-          }
-
-          var missedLoadersCount = count - loaders.length;
-
-          var missedLoaders = _toConsumableArray(Array(missedLoadersCount)).map(function () {
-            return _LoadObject.default.loading();
-          });
-
-          return _toConsumableArray(loaders).concat(_toConsumableArray(missedLoaders));
+        return ids.map(function (id) {
+          return (0, _nullthrows.default)(resultMap.get(id.toString()));
         });
+      }).map(function (loaders) {
+        var _queryOptions$take = queryOptions.take,
+            take = _queryOptions$take === void 0 ? DEFAULT_CHUNK_SIZE : _queryOptions$take;
+
+        if (loaders.length >= take) {
+          return loaders;
+        }
+
+        var missedLoadersCount = take - loaders.length;
+
+        var missedLoaders = _toConsumableArray(Array(missedLoadersCount)).map(function () {
+          return _LoadObject.default.loading();
+        });
+
+        return _toConsumableArray(loaders).concat(_toConsumableArray(missedLoaders));
       });
     }
   }, {
@@ -272,18 +266,17 @@ function (_BaseODataDAO) {
     value: function fetchAll(queryOptions) {
       var _this7 = this;
 
-      var CHUNK_SIZE = 40;
       return this.count(queryOptions).map(function (count) {
-        return (0, _arrayFlatten.default)(_toConsumableArray(Array(Math.ceil(count / CHUNK_SIZE))).map(function (_, index) {
-          var skip = CHUNK_SIZE * index;
+        return (0, _arrayFlatten.default)(_toConsumableArray(Array(Math.ceil(count / DEFAULT_CHUNK_SIZE))).map(function (_, index) {
+          var skip = DEFAULT_CHUNK_SIZE * index;
 
           var loader = _this7.fetchMany(_objectSpread({}, queryOptions, {
             skip: skip,
-            take: CHUNK_SIZE
+            take: DEFAULT_CHUNK_SIZE
           }));
 
           if (loader.isLoading()) {
-            return _toConsumableArray(Array(Math.min(CHUNK_SIZE, count - skip))).map(function () {
+            return _toConsumableArray(Array(Math.min(DEFAULT_CHUNK_SIZE, count - skip))).map(function () {
               return _LoadObject.default.loading();
             });
           } // Do some error stuff
