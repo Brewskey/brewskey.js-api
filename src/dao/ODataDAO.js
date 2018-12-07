@@ -10,7 +10,7 @@ import LoadObject from '../LoadObject';
 import Subscription from './Subscription';
 import arrayFlatten from 'array-flatten';
 
-const DEFAULT_CHUNK_SIZE = 40;
+const STANDARD_PAGE_SIZE = 40;
 
 class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   TEntity,
@@ -69,25 +69,27 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   count(queryOptions?: QueryOptions): LoadObject<number> {
     return this.__countCustom(
       (countQueryOptions: QueryOptions): OHandler<TEntity> =>
-        this.__buildHandler({ ...queryOptions, ...countQueryOptions }),
+        this.__buildHandler({ ...countQueryOptions }),
       queryOptions,
     );
   }
 
   __countCustom(
     getOHandler: (baseQueryOptions: QueryOptions) => OHandler<*>,
-    queryOptions?: QueryOptions,
+    queryOptions?: QueryOptions = {},
     key?: string = '',
   ): LoadObject<number> {
+    const baseQueryOptions = this._getCountQueryOptions(queryOptions);
+
     const cacheKey = this._getCacheKey({
-      ...queryOptions,
+      ...baseQueryOptions,
       __custom_key__: key,
     });
 
     this._currentCountQueries.add(cacheKey);
 
     if (!this._countLoaderByQuery.has(cacheKey)) {
-      this._hydrateCount(getOHandler, queryOptions, key);
+      this._hydrateCount(getOHandler, baseQueryOptions, key);
     }
 
     return nullthrows(this._countLoaderByQuery.get(cacheKey));
@@ -180,45 +182,55 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this._hydrateMany(queryOptions);
     }
 
-    return nullthrows(this._entityIDsLoaderByQuery.get(cacheKey))
-      .map(
-        (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
-          const resultMap = this.fetchByIDs(ids);
+    const countQueryKey = this._getCacheKey({
+      ...this._getCountQueryOptions(queryOptions),
+      __custom_key__: '',
+    });
+    const loader =
+      this._countLoaderByQuery.get(countQueryKey) || LoadObject.withValue(-1);
 
-          return ids.map(
-            (id: EntityID): LoadObject<TEntity> =>
-              nullthrows(resultMap.get(id.toString())),
+    return loader.map(count =>
+      nullthrows(this._entityIDsLoaderByQuery.get(cacheKey))
+        .map(
+          (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
+            const resultMap = this.fetchByIDs(ids);
+
+            return ids.map(
+              (id: EntityID): LoadObject<TEntity> =>
+                nullthrows(resultMap.get(id.toString())),
+            );
+          },
+        )
+        .map(loaders => {
+          const { take = 100 } = queryOptions;
+
+          const delta = (count % take) - loaders.length;
+          if (count === -1 || loaders.length === take || delta <= 0) {
+            return loaders;
+          }
+
+          const missedLoaders = [...Array(delta)].map(() =>
+            LoadObject.loading(),
           );
-        },
-      )
-      .map(loaders => {
-        const { take = DEFAULT_CHUNK_SIZE } = queryOptions;
-        if (loaders.length >= take) {
-          return loaders;
-        }
-        const missedLoadersCount = take - loaders.length;
 
-        const missedLoaders = [...Array(missedLoadersCount)].map(() =>
-          LoadObject.loading(),
-        );
-
-        return [...loaders, ...missedLoaders];
-      });
+          return [...loaders, ...missedLoaders];
+        }),
+    );
   }
 
   fetchAll(queryOptions?: QueryOptions) {
     return this.count(queryOptions).map(count =>
       arrayFlatten(
-        [...Array(Math.ceil(count / DEFAULT_CHUNK_SIZE))].map((_, index) => {
-          const skip = DEFAULT_CHUNK_SIZE * index;
+        [...Array(Math.ceil(count / STANDARD_PAGE_SIZE))].map((_, index) => {
+          const skip = STANDARD_PAGE_SIZE * index;
           const loader = this.fetchMany({
             ...queryOptions,
             skip,
-            take: DEFAULT_CHUNK_SIZE,
+            take: STANDARD_PAGE_SIZE,
           });
 
           if (loader.isLoading()) {
-            return [...Array(Math.min(DEFAULT_CHUNK_SIZE, count - skip))].map(
+            return [...Array(Math.min(STANDARD_PAGE_SIZE, count - skip))].map(
               () => LoadObject.loading(),
             );
           }
@@ -632,8 +644,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     queryOptions: ?QueryOptions,
     key?: string = '',
   ): void {
+    const baseQueryOptions = this._getCountQueryOptions(queryOptions);
+
     const cacheKey = this._getCacheKey({
-      ...queryOptions,
+      ...baseQueryOptions,
       __custom_key__: key,
     });
 
@@ -646,6 +660,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
     this.__resolve(
       getOHandler({
+        ...baseQueryOptions,
         shouldCount: true,
         take: 0,
       }),
@@ -670,6 +685,15 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   _getCacheKey(queryOptions?: QueryOptions): string {
     return JSON.stringify(queryOptions || '_');
+  }
+
+  _getCountQueryOptions(queryOptions?: QueryOptions): string {
+    const output = { ...queryOptions };
+    delete output.orderBy;
+    delete output.skip;
+    delete output.take;
+
+    return output;
   }
 
   _updateCacheForEntity(entity: TEntity, shouldEmitChanges: boolean = true) {

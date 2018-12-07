@@ -49,7 +49,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var DEFAULT_CHUNK_SIZE = 40;
+var STANDARD_PAGE_SIZE = 40;
 
 var ODataDAO =
 /*#__PURE__*/
@@ -131,22 +131,25 @@ function (_BaseODataDAO) {
       var _this3 = this;
 
       return this.__countCustom(function (countQueryOptions) {
-        return _this3.__buildHandler(_objectSpread({}, queryOptions, countQueryOptions));
+        return _this3.__buildHandler(_objectSpread({}, countQueryOptions));
       }, queryOptions);
     }
   }, {
     key: "__countCustom",
-    value: function __countCustom(getOHandler, queryOptions) {
+    value: function __countCustom(getOHandler) {
+      var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
 
-      var cacheKey = this._getCacheKey(_objectSpread({}, queryOptions, {
+      var baseQueryOptions = this._getCountQueryOptions(queryOptions);
+
+      var cacheKey = this._getCacheKey(_objectSpread({}, baseQueryOptions, {
         __custom_key__: key
       }));
 
       this._currentCountQueries.add(cacheKey);
 
       if (!this._countLoaderByQuery.has(cacheKey)) {
-        this._hydrateCount(getOHandler, queryOptions, key);
+        this._hydrateCount(getOHandler, baseQueryOptions, key);
       }
 
       return (0, _nullthrows.default)(this._countLoaderByQuery.get(cacheKey));
@@ -238,27 +241,34 @@ function (_BaseODataDAO) {
         this._hydrateMany(queryOptions);
       }
 
-      return (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
-        var resultMap = _this6.fetchByIDs(ids);
+      var countQueryKey = this._getCacheKey(_objectSpread({}, this._getCountQueryOptions(queryOptions), {
+        __custom_key__: ''
+      }));
 
-        return ids.map(function (id) {
-          return (0, _nullthrows.default)(resultMap.get(id.toString()));
+      var loader = this._countLoaderByQuery.get(countQueryKey) || _LoadObject.default.withValue(-1);
+
+      return loader.map(function (count) {
+        return (0, _nullthrows.default)(_this6._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
+          var resultMap = _this6.fetchByIDs(ids);
+
+          return ids.map(function (id) {
+            return (0, _nullthrows.default)(resultMap.get(id.toString()));
+          });
+        }).map(function (loaders) {
+          var _queryOptions$take = queryOptions.take,
+              take = _queryOptions$take === void 0 ? 100 : _queryOptions$take;
+          var delta = count % take - loaders.length;
+
+          if (count === -1 || loaders.length === take || delta <= 0) {
+            return loaders;
+          }
+
+          var missedLoaders = _toConsumableArray(Array(delta)).map(function () {
+            return _LoadObject.default.loading();
+          });
+
+          return _toConsumableArray(loaders).concat(_toConsumableArray(missedLoaders));
         });
-      }).map(function (loaders) {
-        var _queryOptions$take = queryOptions.take,
-            take = _queryOptions$take === void 0 ? DEFAULT_CHUNK_SIZE : _queryOptions$take;
-
-        if (loaders.length >= take) {
-          return loaders;
-        }
-
-        var missedLoadersCount = take - loaders.length;
-
-        var missedLoaders = _toConsumableArray(Array(missedLoadersCount)).map(function () {
-          return _LoadObject.default.loading();
-        });
-
-        return _toConsumableArray(loaders).concat(_toConsumableArray(missedLoaders));
       });
     }
   }, {
@@ -267,16 +277,16 @@ function (_BaseODataDAO) {
       var _this7 = this;
 
       return this.count(queryOptions).map(function (count) {
-        return (0, _arrayFlatten.default)(_toConsumableArray(Array(Math.ceil(count / DEFAULT_CHUNK_SIZE))).map(function (_, index) {
-          var skip = DEFAULT_CHUNK_SIZE * index;
+        return (0, _arrayFlatten.default)(_toConsumableArray(Array(Math.ceil(count / STANDARD_PAGE_SIZE))).map(function (_, index) {
+          var skip = STANDARD_PAGE_SIZE * index;
 
           var loader = _this7.fetchMany(_objectSpread({}, queryOptions, {
             skip: skip,
-            take: DEFAULT_CHUNK_SIZE
+            take: STANDARD_PAGE_SIZE
           }));
 
           if (loader.isLoading()) {
-            return _toConsumableArray(Array(Math.min(DEFAULT_CHUNK_SIZE, count - skip))).map(function () {
+            return _toConsumableArray(Array(Math.min(STANDARD_PAGE_SIZE, count - skip))).map(function () {
               return _LoadObject.default.loading();
             });
           } // Do some error stuff
@@ -694,7 +704,9 @@ function (_BaseODataDAO) {
 
       var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
 
-      var cacheKey = this._getCacheKey(_objectSpread({}, queryOptions, {
+      var baseQueryOptions = this._getCountQueryOptions(queryOptions);
+
+      var cacheKey = this._getCacheKey(_objectSpread({}, baseQueryOptions, {
         __custom_key__: key
       }));
 
@@ -704,10 +716,10 @@ function (_BaseODataDAO) {
 
       this.__emitChanges();
 
-      this.__resolve(getOHandler({
+      this.__resolve(getOHandler(_objectSpread({}, baseQueryOptions, {
         shouldCount: true,
         take: 0
-      })).then(function (result) {
+      }))).then(function (result) {
         _this17._countLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(result.inlinecount));
 
         _this17.__emitChanges();
@@ -725,6 +737,16 @@ function (_BaseODataDAO) {
     key: "_getCacheKey",
     value: function _getCacheKey(queryOptions) {
       return JSON.stringify(queryOptions || '_');
+    }
+  }, {
+    key: "_getCountQueryOptions",
+    value: function _getCountQueryOptions(queryOptions) {
+      var output = _objectSpread({}, queryOptions);
+
+      delete output.orderBy;
+      delete output.skip;
+      delete output.take;
+      return output;
     }
   }, {
     key: "_updateCacheForEntity",
