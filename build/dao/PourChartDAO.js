@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _BaseODataDAO2 = _interopRequireDefault(require("./BaseODataDAO"));
+var _ODataDAO2 = _interopRequireDefault(require("./ODataDAO"));
 
 var _constants = require("../constants");
 
@@ -31,8 +31,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var PourChartDAO =
 /*#__PURE__*/
-function (_BaseODataDAO) {
-  _inherits(PourChartDAO, _BaseODataDAO);
+function (_ODataDAO) {
+  _inherits(PourChartDAO, _ODataDAO);
 
   function PourChartDAO() {
     var _this;
@@ -45,14 +45,20 @@ function (_BaseODataDAO) {
     }));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "fetchChartData", function (params) {
-      return _this.__resolveSingle(_this.__buildHandler(), params, 'post');
+      return _this.__fetchCustom({
+        handler: _this.__buildHandler(),
+        method: 'post',
+        params: params
+      }, {}
+      /* queryOptions */
+      , JSON.stringify(params));
     });
 
     return _this;
   }
 
   return PourChartDAO;
-}(_BaseODataDAO2.default);
+}(_ODataDAO2.default);
 
 var _default = new PourChartDAO();
 

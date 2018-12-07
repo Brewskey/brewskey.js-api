@@ -543,9 +543,12 @@ function (_BaseODataDAO) {
     }
   }, {
     key: "__fetchCustom",
-    value: function __fetchCustom(handler, queryOptions) {
+    value: function __fetchCustom(_ref, queryOptions) {
       var _this13 = this;
 
+      var handler = _ref.handler,
+          method = _ref.method,
+          params = _ref.params;
       var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
 
       var cacheKey = this._getCacheKey(_objectSpread({}, queryOptions, {
@@ -559,7 +562,7 @@ function (_BaseODataDAO) {
 
         this.__emitChanges();
 
-        this.__resolve(handler).then(function (result) {
+        this.__resolve(handler, params, method).then(function (result) {
           _this13._customLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(result.data));
 
           _this13.__emitChanges();

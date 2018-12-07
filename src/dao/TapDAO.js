@@ -109,7 +109,7 @@ class TapDAO extends ODataDAO<Tap, TapMutator> {
     );
     handler.func(funcString);
 
-    return this.__fetchCustom(handler, queryOptions, funcString);
+    return this.__fetchCustom({ handler }, queryOptions, funcString);
   }
 }
 

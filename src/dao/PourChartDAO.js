@@ -1,6 +1,8 @@
 // @flow
 
-import BaseODataDAO from './BaseODataDAO';
+import type LoadObject from '../LoadObject';
+
+import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
@@ -28,7 +30,7 @@ export type PourChartDataSet = {
   key: string,
 };
 
-class PourChartDAO extends BaseODataDAO<PourChartDataSet, PourChartDataSet> {
+class PourChartDAO extends ODataDAO<PourChartDataSet, PourChartDataSet> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.POUR_CHART,
@@ -36,8 +38,12 @@ class PourChartDAO extends BaseODataDAO<PourChartDataSet, PourChartDataSet> {
     });
   }
 
-  fetchChartData = (params: PourChartParams): Promise<PourChartDataSet> =>
-    this.__resolveSingle(this.__buildHandler(), params, 'post');
+  fetchChartData = (params: PourChartParams): LoadObject<PourChartDataSet> =>
+    this.__fetchCustom(
+      { handler: this.__buildHandler(), method: 'post', params },
+      {} /* queryOptions */,
+      JSON.stringify(params),
+    );
 }
 
 export default new PourChartDAO();

@@ -1,7 +1,7 @@
 // @flow
 
 import type OHandler from 'odata';
-import type { EntityID, QueryOptions } from '../index';
+import type { EntityID, QueryOptions, RequestMethod } from '../index';
 
 import nullthrows from 'nullthrows';
 import debounce from 'debounce';
@@ -488,7 +488,11 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   __fetchCustom<TResult>(
-    handler: OHandler<TEntity>,
+    {
+      handler,
+      method,
+      params,
+    }: { handler: OHandler<TEntity>, method?: RequestMethod, params?: Object },
     queryOptions?: QueryOptions,
     key?: string = '',
   ): LoadObject<TResult> {
@@ -502,7 +506,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this._customLoaderByQuery.set(cacheKey, LoadObject.loading());
       this.__emitChanges();
 
-      this.__resolve(handler)
+      this.__resolve(handler, params, method)
         .then((result: Object) => {
           this._customLoaderByQuery.set(
             cacheKey,

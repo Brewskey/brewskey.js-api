@@ -91,7 +91,9 @@ function (_ODataDAO) {
       var handler = this.__buildHandler(queryOptions, false).find(this.__reformatIDValue(stringifiedID));
 
       handler.func(funcString);
-      return this.__fetchCustom(handler, queryOptions, funcString);
+      return this.__fetchCustom({
+        handler: handler
+      }, queryOptions, funcString);
     }
   }]);
 

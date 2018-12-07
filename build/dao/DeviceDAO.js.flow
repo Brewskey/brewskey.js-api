@@ -81,7 +81,7 @@ class DeviceDAO extends ODataDAO<Device, DeviceMutator> {
     );
     handler.func(funcString);
 
-    return this.__fetchCustom(handler, {}, `${funcString}${deviceID}`);
+    return this.__fetchCustom({ handler }, {}, `${funcString}${deviceID}`);
   }
 }
 

@@ -68,7 +68,9 @@ function (_ODataDAO) {
       var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID));
 
       handler.func(funcString);
-      return this.__fetchCustom(handler, {}, "".concat(funcString).concat(deviceID));
+      return this.__fetchCustom({
+        handler: handler
+      }, {}, "".concat(funcString).concat(deviceID));
     }
   }]);
 
