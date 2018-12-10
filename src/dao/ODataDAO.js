@@ -95,6 +95,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return nullthrows(this._countLoaderByQuery.get(cacheKey));
   }
 
+  getEntitiesCache(): Array<LoadObject<TEntity>> {
+    return Array.from(this._entityLoaderByID.values());
+  }
+
   fetchByID(id: EntityID): LoadObject<TEntity> {
     const stringifiedID = id.toString();
     if (!this._entityLoaderByID.has(stringifiedID)) {

@@ -155,6 +155,11 @@ function (_BaseODataDAO) {
       return (0, _nullthrows.default)(this._countLoaderByQuery.get(cacheKey));
     }
   }, {
+    key: "getEntitiesCache",
+    value: function getEntitiesCache() {
+      return Array.from(this._entityLoaderByID.values());
+    }
+  }, {
     key: "fetchByID",
     value: function fetchByID(id) {
       var _this4 = this;
