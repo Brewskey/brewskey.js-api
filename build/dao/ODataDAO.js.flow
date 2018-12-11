@@ -222,7 +222,9 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     );
   }
 
-  fetchAll(queryOptions?: QueryOptions) {
+  fetchAll(
+    queryOptions?: QueryOptions,
+  ): LoadObject<Array<LoadObject<TEntity>>> {
     return this.count(queryOptions).map(count =>
       arrayFlatten(
         [...Array(Math.ceil(count / STANDARD_PAGE_SIZE))].map((_, index) => {
@@ -597,7 +599,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   _rebuildMap(
     map: Map<string, LoadObject<any>>,
     set: Set<string>,
-    onUpdate: (queryOptions: ?QueryOptions) => void,
+    onUpdate: (queryOptions?: QueryOptions) => void,
   ): Map<string, LoadObject<any>> {
     const savedItems = Array.from(set).map(queryOptionString => {
       onUpdate(JSON.parse(queryOptionString));
@@ -609,7 +611,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return new Map(savedItems);
   }
 
-  _hydrateMany(queryOptions: ?QueryOptions): void {
+  _hydrateMany(queryOptions?: QueryOptions): void {
     const cacheKey = this._getCacheKey(queryOptions);
 
     const initialLoader = this._entityIDsLoaderByQuery.has(cacheKey)
@@ -645,7 +647,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   _hydrateCount(
     getOHandler: (baseQueryOptions: QueryOptions) => OHandler<*>,
-    queryOptions: ?QueryOptions,
+    queryOptions?: QueryOptions,
     key?: string = '',
   ): void {
     const baseQueryOptions = this._getCountQueryOptions(queryOptions);
@@ -691,13 +693,9 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return JSON.stringify(queryOptions || '_');
   }
 
-  _getCountQueryOptions(queryOptions?: QueryOptions): string {
-    const output = { ...queryOptions };
-    delete output.orderBy;
-    delete output.skip;
-    delete output.take;
-
-    return output;
+  _getCountQueryOptions(queryOptions?: QueryOptions = {}): QueryOptions {
+    const { orderBy, skip, take, ...countQueryOptions } = queryOptions;
+    return (countQueryOptions: any);
   }
 
   _updateCacheForEntity(entity: TEntity, shouldEmitChanges: boolean = true) {

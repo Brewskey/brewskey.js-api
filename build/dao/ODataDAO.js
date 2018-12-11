@@ -21,6 +21,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -745,13 +749,15 @@ function (_BaseODataDAO) {
     }
   }, {
     key: "_getCountQueryOptions",
-    value: function _getCountQueryOptions(queryOptions) {
-      var output = _objectSpread({}, queryOptions);
+    value: function _getCountQueryOptions() {
+      var queryOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      delete output.orderBy;
-      delete output.skip;
-      delete output.take;
-      return output;
+      var orderBy = queryOptions.orderBy,
+          skip = queryOptions.skip,
+          take = queryOptions.take,
+          countQueryOptions = _objectWithoutProperties(queryOptions, ["orderBy", "skip", "take"]);
+
+      return countQueryOptions;
     }
   }, {
     key: "_updateCacheForEntity",

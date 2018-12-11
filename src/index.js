@@ -15,7 +15,6 @@ import AchievementDAO from './dao/AchievementDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
 import BeverageDAO from './dao/BeverageDAO';
 import CloudDeviceDAO from './dao/CloudDeviceDAO';
-import CloudDevicePingDAO from './dao/CloudDevicePingDAO';
 import DeviceDAO from './dao/DeviceDAO';
 import FlowSensorDAO from './dao/FlowSensorDAO';
 import FriendDAO from './dao/FriendDAO';
@@ -71,7 +70,6 @@ const DAOArray = [
   AvailabilityDAO,
   BeverageDAO,
   CloudDeviceDAO,
-  CloudDevicePingDAO,
   DeviceDAO,
   FlowSensorDAO,
   FriendDAO,
@@ -119,7 +117,6 @@ export * from './dao/AchievementDAO';
 export * from './dao/AvailabilityDAO';
 export * from './dao/BeverageDAO';
 export * from './dao/CloudDeviceDAO';
-export * from './dao/CloudDevicePingDAO';
 export * from './dao/DeviceDAO';
 export * from './dao/FlowSensorDAO';
 export * from './dao/FriendDAO';
@@ -156,7 +153,6 @@ export default {
   AvailabilityDAO,
   BeverageDAO,
   CloudDeviceDAO,
-  CloudDevicePingDAO,
   CloudSSEManager,
   DeviceDAO,
   FlowSensorDAO,
