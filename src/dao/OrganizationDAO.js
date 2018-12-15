@@ -6,6 +6,7 @@ import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
 export type Organization = {
+  canEnablePayments: boolean,
   createdDate: Date,
   id: EntityID,
   isDeleted: boolean,

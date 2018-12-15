@@ -35,6 +35,7 @@ class PourDAO extends ODataDAO<Pour, Pour> {
       entityName: DAO_ENTITIES.POURS,
       navigationProperties: {
         beverage: { select: ['id', 'isDeleted', 'name'] },
+        device: { select: ['id', 'isDeleted', 'name'] },
         keg: { select: ['id'] },
         location: { select: ['id', 'isDeleted', 'name'] },
         organization: { select: ['id', 'isDeleted', 'name'] },
