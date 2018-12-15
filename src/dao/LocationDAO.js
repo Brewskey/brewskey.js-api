@@ -31,7 +31,6 @@ export type Location = {
   state: ?string,
   street: string,
   suite: string,
-  summary: string,
   timeZone: string,
   zipCode: number,
 };
@@ -40,15 +39,12 @@ export type LocationMutator = {
   city: string,
   description: ?string,
   id: ?EntityID,
-  isDeleted: boolean,
   locationType: string,
   name: string,
-  organizationId: ?EntityID,
+  organizationId?: EntityID,
   state: ?string,
   street: string,
   suite: string,
-  summary: string,
-  timeZone: string,
   zipCode: number,
 };
 

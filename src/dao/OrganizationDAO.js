@@ -13,7 +13,12 @@ export type Organization = {
   name: string,
 };
 
-class OrganizationDAO extends ODataDAO<Organization, Organization> {
+export type OrganizationMutator = {
+  id?: EntityID,
+  name: string,
+};
+
+class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.ORGANIZATIONS,

@@ -26,8 +26,9 @@ export type Account = {
 
 export type AccountMutator = {
   email: string,
-  fullName: ?string,
-  phoneNumber: ?string,
+  fullName?: string,
+  id?: EntityID,
+  phoneNumber: string,
   userName: string,
 };
 
