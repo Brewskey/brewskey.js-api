@@ -51,6 +51,9 @@ function (_ODataDAO) {
         beverage: {
           select: ['id', 'isDeleted', 'name']
         },
+        device: {
+          select: ['id', 'isDeleted', 'name']
+        },
         keg: {
           select: ['id']
         },

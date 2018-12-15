@@ -46,16 +46,14 @@ function (_ODataDAO) {
   }
 
   _createClass(OrganizationDAO, [{
-    key: "addStripeAccount",
-    value: function addStripeAccount(organizationID, code) {
-      var funcString = 'Default.addStripeAccount()';
+    key: "deauthorizeStripeAccount",
+    value: function deauthorizeStripeAccount(organizationID) {
+      var funcString = 'Default.deauthorizeStripeAccount()';
       var stringifiedID = organizationID.toString();
 
       var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID)).func(funcString);
 
-      return this.__mutateCustom(handler, 'post', stringifiedID, {
-        code: code
-      });
+      return this.__mutateCustom(handler, 'post', stringifiedID);
     }
   }]);
 
