@@ -51,7 +51,9 @@ function (_RestDAO) {
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "fetchChartData", function (params) {
       var queryString = _qs.default.stringify(_objectSpread({}, params, {
         ids: params.ids ? params.ids.join(',') : null
-      }));
+      }), {
+        skipNulls: true
+      });
 
       return _this.__getOne("api/v2/chart/GetChart/?".concat(queryString), queryString);
     });

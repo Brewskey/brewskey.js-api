@@ -36,10 +36,13 @@ class PourChartDAO extends RestDAO<PourChartResult, null> {
   }
 
   fetchChartData = (params: PourChartParams): LoadObject<PourChartResult> => {
-    const queryString = qs.stringify({
-      ...params,
-      ids: params.ids ? params.ids.join(',') : null,
-    });
+    const queryString = qs.stringify(
+      {
+        ...params,
+        ids: params.ids ? params.ids.join(',') : null,
+      },
+      { skipNulls: true },
+    );
     return this.__getOne(`api/v2/chart/GetChart/?${queryString}`, queryString);
   };
 }
