@@ -1,34 +1,33 @@
 // @flow
 
-import BaseODataDAO from './BaseODataDAO';
+import type LoadObject from '../LoadObject';
+
+import RestDAO from './RestDAO';
+import qs from 'qs';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-export type PourChartDataType =
-  | 'all-with-tap-id'
-  | 'by-location'
-  | 'by-tap'
-  | 'hourly-by-location'
-  | 'hourly-by-tap';
+export type PourChartByEntity = 'device' | 'location' | 'organization' | 'tap';
+
+export type PourChartType = 'hourly' | 'timeline';
 
 export type PourChartParams = {
   beginDate?: ?Date,
-  chartType: PourChartDataType,
+  byEntity: PourChartByEntity,
+  chartType: PourChartType,
   endDate?: ?Date,
   ids?: Array<string>,
 };
 
-export type PourChartDataEntry = {
-  keys: Array<string>,
-  value: number,
-};
+export type PourChartResult = {|
+  entityResults: Array<{ key: string, name: string }>,
+  resultSegments: Array<{
+    dataSets: Array<{ key: string, value: number }>,
+    key: string,
+  }>,
+|};
 
-export type PourChartDataSet = {
-  dataSet: Array<PourChartDataEntry>,
-  key: string,
-};
-
-class PourChartDAO extends BaseODataDAO<PourChartDataSet, PourChartDataSet> {
+class PourChartDAO extends RestDAO<PourChartResult, null> {
   constructor() {
     super({
       entityName: DAO_ENTITIES.POUR_CHART,
@@ -36,8 +35,13 @@ class PourChartDAO extends BaseODataDAO<PourChartDataSet, PourChartDataSet> {
     });
   }
 
-  fetchChartData = (params: PourChartParams): Promise<PourChartDataSet> =>
-    this.__resolveSingle(this.__buildHandler(), params, 'post');
+  fetchChartData = (params: PourChartParams): LoadObject<PourChartResult> => {
+    const queryString = qs.stringify({
+      ...params,
+      ids: params.ids ? params.ids.join(',') : null,
+    });
+    return this.__getOne(`api/v2/chart/GetChart/?${queryString}`, queryString);
+  };
 }
 
 export default new PourChartDAO();

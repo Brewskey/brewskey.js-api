@@ -5,7 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _BaseODataDAO2 = _interopRequireDefault(require("./BaseODataDAO"));
+var _RestDAO2 = _interopRequireDefault(require("./RestDAO"));
+
+var _qs = _interopRequireDefault(require("qs"));
 
 var _constants = require("../constants");
 
@@ -14,6 +16,8 @@ var _DefaultTranslator = _interopRequireDefault(require("../translators/DefaultT
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -31,8 +35,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var PourChartDAO =
 /*#__PURE__*/
-function (_BaseODataDAO) {
-  _inherits(PourChartDAO, _BaseODataDAO);
+function (_RestDAO) {
+  _inherits(PourChartDAO, _RestDAO);
 
   function PourChartDAO() {
     var _this;
@@ -45,14 +49,18 @@ function (_BaseODataDAO) {
     }));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "fetchChartData", function (params) {
-      return _this.__resolveSingle(_this.__buildHandler(), params, 'post');
+      var queryString = _qs.default.stringify(_objectSpread({}, params, {
+        ids: params.ids ? params.ids.join(',') : null
+      }));
+
+      return _this.__getOne("api/v2/chart/GetChart/?".concat(queryString), queryString);
     });
 
     return _this;
   }
 
   return PourChartDAO;
-}(_BaseODataDAO2.default);
+}(_RestDAO2.default);
 
 var _default = new PourChartDAO();
 

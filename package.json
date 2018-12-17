@@ -48,6 +48,7 @@
     "event-source-polyfill": "^1.0.4",
     "nullthrows": "^1.1.0",
     "odata": "git+https://github.com/Brewskey/o.js.git",
+    "qs": "^6.6.0",
     "react-native-signalr": "git+https://github.com/Brewskey/react-native-signalr.git"
   },
   "ava": {

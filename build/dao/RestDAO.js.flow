@@ -8,7 +8,7 @@ import Subscription from './Subscription';
 import LoadObject from '../LoadObject';
 import fetch from '../fetch';
 
-class RestDAO<TEntity: { id: EntityID }, TEntityMutator> extends Subscription {
+class RestDAO<TEntity, TEntityMutator> extends Subscription {
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
 
   _entityLoaderById: Map<EntityID, LoadObject<TEntity>> = new Map();
