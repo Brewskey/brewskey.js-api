@@ -47,6 +47,19 @@ var _fetch = _interopRequireDefault(require("./fetch"));
 
 var _filters = require("./filters");
 
+var _Auth = _interopRequireWildcard(require("./Auth"));
+
+Object.keys(_Auth).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _Auth[key];
+    }
+  });
+});
+
 var _AccountDAO = _interopRequireWildcard(require("./dao/AccountDAO"));
 
 Object.keys(_AccountDAO).forEach(function (key) {
@@ -472,6 +485,7 @@ var setOrganizationID = function setOrganizationID(organizationID) {
 var _default = {
   AccountDAO: _AccountDAO.default,
   AchievementDAO: _AchievementDAO.default,
+  Auth: _Auth.default,
   AvailabilityDAO: _AvailabilityDAO.default,
   BeverageDAO: _BeverageDAO.default,
   CloudDeviceDAO: _CloudDeviceDAO.default,

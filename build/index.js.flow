@@ -10,6 +10,8 @@ import Subscription from './dao/Subscription';
 import fetch from './fetch';
 import { createFilter, doesSatisfyQueryFilters } from './filters';
 
+import Auth from './Auth';
+
 import AccountDAO from './dao/AccountDAO';
 import AchievementDAO from './dao/AchievementDAO';
 import AvailabilityDAO from './dao/AvailabilityDAO';
@@ -112,6 +114,7 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   TapDAO.flushCache();
 };
 
+export * from './Auth';
 export * from './dao/AccountDAO';
 export * from './dao/AchievementDAO';
 export * from './dao/AvailabilityDAO';
@@ -150,6 +153,7 @@ export { CADENCE_MAP };
 export default {
   AccountDAO,
   AchievementDAO,
+  Auth,
   AvailabilityDAO,
   BeverageDAO,
   CloudDeviceDAO,

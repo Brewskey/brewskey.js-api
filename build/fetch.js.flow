@@ -3,7 +3,7 @@
 import nullthrows from 'nullthrows';
 import Config from './Config';
 
-export default async (path: string, options?: Object = {}): Promise<*> => {
+export default async (path: string, options?: Object = {}): Promise<any> => {
   const { reformatError, ...fetchOptions } = options;
 
   if (!Config.host) {
