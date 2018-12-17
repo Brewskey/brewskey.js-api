@@ -11,7 +11,7 @@ export type UserCredentials = {|
 
 export type UserRole = 'Administrator' | 'Super Administator';
 
-export type AuthResopnse = {|
+export type AuthResponse = {|
   accessToken: string,
   email: string,
   expiresAt: Date,
@@ -26,7 +26,18 @@ export type AuthResopnse = {|
   userName: string,
 |};
 
-const reformatLoginResponse = (response: any): AuthResopnse => ({
+export type ChangePasswordArgs = {|
+  newPassword: string,
+  oldPassword: string,
+|};
+
+export type RegisterArgs = {|
+  email: string,
+  password: string,
+  userName: string,
+|};
+
+const reformatLoginResponse = (response: any): AuthResponse => ({
   ...response,
   accessToken: response.access_token,
   expiresAt: response['.expires'],
@@ -37,30 +48,55 @@ const reformatLoginResponse = (response: any): AuthResopnse => ({
 });
 
 class Auth {
+  changePassword(changePasswordArgs: ChangePasswordArgs): Promise<Object> {
+    return fetch('api/account/change-password/', {
+      body: JSON.stringify({
+        ...changePasswordArgs,
+        confirmPassword: changePasswordArgs.newPassword,
+      }),
+      headers: [{ name: 'Content-type', value: 'application/json' }],
+      method: 'POST',
+    });
+  }
+
   fetchRoles(): Promise<Array<UserRole>> {
     return fetch('api/v2/roles/');
   }
 
-  login({ password, userName }: UserCredentials): Promise<AuthResopnse> {
+  login({ password, userName }: UserCredentials): Promise<AuthResponse> {
     return fetch(`token/`, {
       body: `grant_type=password&userName=${userName}&password=${password}`,
       headers: [
         { name: 'Content-type', value: 'application/x-www-form-urlencoded' },
       ],
       method: 'POST',
-      reformatError: error => error.error_description,
     }).then(reformatLoginResponse);
   }
 
-  refreshToken(refreshToken: string): Promise<any> {
+  refreshToken(refreshToken: string): Promise<AuthResponse> {
     return fetch(`token/`, {
       body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
       headers: [
         { name: 'Content-type', value: 'application/x-www-form-urlencoded' },
       ],
       method: 'POST',
-      reformatError: error => error.error_description,
     }).then(reformatLoginResponse);
+  }
+
+  register(registerArgs: RegisterArgs): Promise<void> {
+    return fetch('api/account/register/', {
+      body: JSON.stringify(registerArgs),
+      headers: [{ name: 'Content-type', value: 'application/json' }],
+      method: 'POST',
+    });
+  }
+
+  resetPassword(email: string): Promise<void> {
+    return fetch('api/account/reset-password/', {
+      body: JSON.stringify({ email }),
+      headers: [{ name: 'Content-type', value: 'application/json' }],
+      method: 'POST',
+    });
   }
 }
 

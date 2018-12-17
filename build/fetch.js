@@ -23,6 +23,30 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+var parseError = function parseError(error) {
+  if (error.ModelState) {
+    var resultErrorMessage = '';
+    Array.from(Object.values(error.ModelState)).forEach(function (fieldErrorArray) {
+      var castedFieldErrorArray = fieldErrorArray;
+      new Set(castedFieldErrorArray).forEach( // eslint-disable-next-line no-return-assign
+      function (fieldError) {
+        return resultErrorMessage = "".concat(resultErrorMessage, "\n").concat(fieldError);
+      });
+    });
+    return resultErrorMessage;
+  }
+
+  if (error.error_description) {
+    return error.error_description;
+  }
+
+  if (error.Message) {
+    return error.Message;
+  }
+
+  return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
+};
+
 var _default =
 /*#__PURE__*/
 function () {
@@ -97,7 +121,7 @@ function () {
             throw new Error(reformatError(responseJson));
 
           case 22:
-            throw new Error(responseJson && responseJson.error && responseJson.error.message || 'Whoops! Error!');
+            throw new Error(responseJson ? parseError(responseJson) : 'Whoops! Error!');
 
           case 23:
             return _context.abrupt("return", responseJson);

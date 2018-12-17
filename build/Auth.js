@@ -38,6 +38,20 @@ function () {
   }
 
   _createClass(Auth, [{
+    key: "changePassword",
+    value: function changePassword(changePasswordArgs) {
+      return (0, _fetch.default)('api/account/change-password/', {
+        body: JSON.stringify(_objectSpread({}, changePasswordArgs, {
+          confirmPassword: changePasswordArgs.newPassword
+        })),
+        headers: [{
+          name: 'Content-type',
+          value: 'application/json'
+        }],
+        method: 'POST'
+      });
+    }
+  }, {
     key: "fetchRoles",
     value: function fetchRoles() {
       return (0, _fetch.default)('api/v2/roles/');
@@ -53,10 +67,7 @@ function () {
           name: 'Content-type',
           value: 'application/x-www-form-urlencoded'
         }],
-        method: 'POST',
-        reformatError: function reformatError(error) {
-          return error.error_description;
-        }
+        method: 'POST'
       }).then(reformatLoginResponse);
     }
   }, {
@@ -68,11 +79,34 @@ function () {
           name: 'Content-type',
           value: 'application/x-www-form-urlencoded'
         }],
-        method: 'POST',
-        reformatError: function reformatError(error) {
-          return error.error_description;
-        }
+        method: 'POST'
       }).then(reformatLoginResponse);
+    }
+  }, {
+    key: "register",
+    value: function register(registerArgs) {
+      return (0, _fetch.default)('api/account/register/', {
+        body: JSON.stringify(registerArgs),
+        headers: [{
+          name: 'Content-type',
+          value: 'application/json'
+        }],
+        method: 'POST'
+      });
+    }
+  }, {
+    key: "resetPassword",
+    value: function resetPassword(email) {
+      return (0, _fetch.default)('api/account/reset-password/', {
+        body: JSON.stringify({
+          email: email
+        }),
+        headers: [{
+          name: 'Content-type',
+          value: 'application/json'
+        }],
+        method: 'POST'
+      });
     }
   }]);
 
