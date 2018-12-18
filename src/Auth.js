@@ -44,7 +44,9 @@ const reformatLoginResponse = (response: any): AuthResponse => ({
   expiresIn: response.expires_in,
   issuedAt: response['.issued'],
   refreshToken: response.refresh_token,
+  roles: JSON.parse(response.roles),
   tokenType: response.token_type,
+  userLogins: JSON.parse(response.userLogins),
 });
 
 class Auth {

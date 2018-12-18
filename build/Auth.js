@@ -26,7 +26,9 @@ var reformatLoginResponse = function reformatLoginResponse(response) {
     expiresIn: response.expires_in,
     issuedAt: response['.issued'],
     refreshToken: response.refresh_token,
-    tokenType: response.token_type
+    roles: JSON.parse(response.roles),
+    tokenType: response.token_type,
+    userLogins: JSON.parse(response.userLogins)
   });
 };
 
