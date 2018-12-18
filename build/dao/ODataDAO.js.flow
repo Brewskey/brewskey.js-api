@@ -235,13 +235,19 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
             take: STANDARD_PAGE_SIZE,
           });
 
+          const itemLoaders = [
+            ...Array(Math.min(STANDARD_PAGE_SIZE, count - skip)),
+          ];
+
           if (loader.isLoading()) {
-            return [...Array(Math.min(STANDARD_PAGE_SIZE, count - skip))].map(
-              () => LoadObject.loading(),
-            );
+            return itemLoaders.map(() => LoadObject.loading());
           }
 
-          // Do some error stuff
+          if (loader.hasError()) {
+            return itemLoaders.map(() =>
+              LoadObject.withError(loader.getErrorEnforcing()),
+            );
+          }
 
           return loader.getValueEnforcing();
         }),

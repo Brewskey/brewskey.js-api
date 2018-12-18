@@ -294,12 +294,19 @@ function (_BaseODataDAO) {
             take: STANDARD_PAGE_SIZE
           }));
 
+          var itemLoaders = _toConsumableArray(Array(Math.min(STANDARD_PAGE_SIZE, count - skip)));
+
           if (loader.isLoading()) {
-            return _toConsumableArray(Array(Math.min(STANDARD_PAGE_SIZE, count - skip))).map(function () {
+            return itemLoaders.map(function () {
               return _LoadObject.default.loading();
             });
-          } // Do some error stuff
+          }
 
+          if (loader.hasError()) {
+            return itemLoaders.map(function () {
+              return _LoadObject.default.withError(loader.getErrorEnforcing());
+            });
+          }
 
           return loader.getValueEnforcing();
         }));
