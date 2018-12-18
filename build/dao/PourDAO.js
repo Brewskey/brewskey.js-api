@@ -73,50 +73,50 @@ function (_ODataDAO) {
       translator: new _PourTranslator.default()
     }));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isAutorefreshToggled", true);
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isAutoflushToggled", true);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_idsToFlush", new Set());
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_accumulatedIds", new Set());
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "startAutorefresh", function () {
-      if (_this.isAutorefreshToggled) {
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "startAutoflush", function () {
+      if (_this.isAutoflushToggled) {
         return;
       }
 
-      _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);
-
       _this.flushQueryCaches();
 
-      _this.isAutorefreshToggled = true;
+      _this.isAutoflushToggled = true;
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "stopAutorefresh", function () {
-      _signalr.default.TapHub.unregisterListener('newPour', _this._onNewPour);
-
-      _this.isAutorefreshToggled = false;
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "stopAutoflush", function () {
+      _this.isAutoflushToggled = false;
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleAutorefresh", function () {
-      if (_this.isAutorefreshToggled) {
-        _this.stopAutorefresh();
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleAutoflush", function () {
+      if (_this.isAutoflushToggled) {
+        _this.stopAutoflush();
       } else {
-        _this.startAutorefresh();
+        _this.startAutoflush();
       }
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "refreshCacheDebounced", (0, _debounce.default)(function () {
-      _this._idsToFlush.forEach(function (id) {
-        return _this.flushCacheForEntity(id);
-      });
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewPourDebounced", (0, _debounce.default)(function () {
+      _this.fetchByIDs(Array.from(_this._accumulatedIds));
 
-      _this.flushQueryCaches();
+      if (_this.isAutoflushToggled) {
+        _this._accumulatedIds.forEach(function (id) {
+          return _this.flushCacheForEntity(id);
+        });
 
-      _this._idsToFlush.clear();
+        _this.flushQueryCaches();
+      }
+
+      _this._accumulatedIds.clear();
     }, POURS_ACCUMULATE_TIMEOUT));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewPour", function (pourId) {
-      _this._idsToFlush.add(pourId);
+      _this._accumulatedIds.add(pourId);
 
-      _this.refreshCacheDebounced();
+      _this._onNewPourDebounced();
     });
 
     _signalr.default.TapHub.registerListener('newPour', _this._onNewPour);

@@ -26,9 +26,9 @@ export type Pour = {
 };
 
 class PourDAO extends ODataDAO<Pour, Pour> {
-  isAutorefreshToggled: boolean = true;
+  isAutoflushToggled: boolean = true;
 
-  _idsToFlush: Set<EntityID> = new Set();
+  _accumulatedIds: Set<EntityID> = new Set();
 
   constructor() {
     super({
@@ -48,37 +48,40 @@ class PourDAO extends ODataDAO<Pour, Pour> {
     Signalr.TapHub.registerListener('newPour', this._onNewPour);
   }
 
-  startAutorefresh = () => {
-    if (this.isAutorefreshToggled) {
+  startAutoflush = () => {
+    if (this.isAutoflushToggled) {
       return;
     }
-    Signalr.TapHub.registerListener('newPour', this._onNewPour);
     this.flushQueryCaches();
-    this.isAutorefreshToggled = true;
+    this.isAutoflushToggled = true;
   };
 
-  stopAutorefresh = () => {
-    Signalr.TapHub.unregisterListener('newPour', this._onNewPour);
-    this.isAutorefreshToggled = false;
+  stopAutoflush = () => {
+    this.isAutoflushToggled = false;
   };
 
-  toggleAutorefresh = () => {
-    if (this.isAutorefreshToggled) {
-      this.stopAutorefresh();
+  toggleAutoflush = () => {
+    if (this.isAutoflushToggled) {
+      this.stopAutoflush();
     } else {
-      this.startAutorefresh();
+      this.startAutoflush();
     }
   };
 
-  refreshCacheDebounced = debounce(() => {
-    this._idsToFlush.forEach(id => this.flushCacheForEntity(id));
-    this.flushQueryCaches();
-    this._idsToFlush.clear();
+  _onNewPourDebounced = debounce(() => {
+    this.fetchByIDs(Array.from(this._accumulatedIds));
+
+    if (this.isAutoflushToggled) {
+      this._accumulatedIds.forEach(id => this.flushCacheForEntity(id));
+      this.flushQueryCaches();
+    }
+
+    this._accumulatedIds.clear();
   }, POURS_ACCUMULATE_TIMEOUT);
 
   _onNewPour = (pourId: EntityID) => {
-    this._idsToFlush.add(pourId);
-    this.refreshCacheDebounced();
+    this._accumulatedIds.add(pourId);
+    this._onNewPourDebounced();
   };
 }
 
