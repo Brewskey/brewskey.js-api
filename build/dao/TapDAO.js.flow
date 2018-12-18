@@ -13,8 +13,8 @@ export type LeaderboardItem = {
   lastPourDate: Date,
   totalOunces: number,
   totalPours: number,
-  userID: EntityID,
-  userName: string,
+  userID: ?EntityID,
+  userName: ?string,
 };
 
 export type CurrentKeg = {
