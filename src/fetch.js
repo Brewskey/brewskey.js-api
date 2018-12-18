@@ -48,10 +48,21 @@ export default async (path: string, options?: Object = {}): Promise<any> => {
     headers.append(name, value),
   );
 
-  const response = await fetch(`${nullthrows(Config.host)}/${path}`, {
-    ...fetchOptions,
-    headers,
-  });
+  const { organizationId } = Config;
+  let pathWithOrganization = path;
+  if (organizationId) {
+    pathWithOrganization = `${path}${
+      path.includes('?') ? '&' : '?'
+    }organizationID=${organizationId}`;
+  }
+
+  const response = await fetch(
+    `${nullthrows(Config.host)}/${pathWithOrganization}`,
+    {
+      ...fetchOptions,
+      headers,
+    },
+  );
 
   let responseJson;
   try {

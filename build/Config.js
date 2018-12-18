@@ -15,6 +15,8 @@ var Config = function Config() {
 
 _defineProperty(Config, "host", null);
 
+_defineProperty(Config, "organizationId", null);
+
 _defineProperty(Config, "token", null);
 
 var _default = Config;

@@ -15,6 +15,7 @@ import type { QueryFilter } from '../filters';
 import oHandler from 'odata';
 import Subscription from './Subscription';
 import { FILTER_FUNCTION_OPERATORS } from '../constants';
+import Config from '../Config';
 
 const ID_REG_EXP = /\bid\b/;
 
@@ -33,12 +34,6 @@ const parseNavProp = ([name, navProp]: [string, mixed]): string => {
 };
 
 class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
-  static _organizationID: ?EntityID = null;
-
-  static setOrganizationID(organizationID: ?EntityID) {
-    BaseODataDAO._organizationID = organizationID;
-  }
-
   __config: ODataDAOConfig<TEntity, TEntityMutator>;
 
   constructor(config: ODataDAOConfig<TEntity, TEntityMutator>) {
@@ -114,11 +109,8 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       handler.customParam('$apply', apply);
     }
 
-    if (BaseODataDAO._organizationID) {
-      handler.customParam(
-        'organizationID',
-        BaseODataDAO._organizationID.toString(),
-      );
+    if (Config.organizationId) {
+      handler.customParam('organizationID', Config.organizationId.toString());
     }
 
     return handler;

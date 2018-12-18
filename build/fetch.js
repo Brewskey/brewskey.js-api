@@ -57,6 +57,8 @@ function () {
         reformatError,
         fetchOptions,
         headers,
+        organizationId,
+        pathWithOrganization,
         response,
         responseJson,
         _args = arguments;
@@ -86,52 +88,59 @@ function () {
                   value = _ref2.value;
               return headers.append(name, value);
             });
-            _context.next = 9;
-            return fetch("".concat((0, _nullthrows.default)(_Config.default.host), "/").concat(path), _objectSpread({}, fetchOptions, {
+            organizationId = _Config.default.organizationId;
+            pathWithOrganization = path;
+
+            if (organizationId) {
+              pathWithOrganization = "".concat(path).concat(path.includes('?') ? '&' : '?', "organizationID=").concat(organizationId);
+            }
+
+            _context.next = 12;
+            return fetch("".concat((0, _nullthrows.default)(_Config.default.host), "/").concat(pathWithOrganization), _objectSpread({}, fetchOptions, {
               headers: headers
             }));
 
-          case 9:
+          case 12:
             response = _context.sent;
-            _context.prev = 10;
-            _context.next = 13;
+            _context.prev = 13;
+            _context.next = 16;
             return response.json();
 
-          case 13:
+          case 16:
             responseJson = _context.sent;
-            _context.next = 19;
+            _context.next = 22;
             break;
 
-          case 16:
-            _context.prev = 16;
-            _context.t0 = _context["catch"](10);
+          case 19:
+            _context.prev = 19;
+            _context.t0 = _context["catch"](13);
             responseJson = null;
 
-          case 19:
+          case 22:
             if (response.ok) {
-              _context.next = 23;
+              _context.next = 26;
               break;
             }
 
             if (!(responseJson && reformatError)) {
-              _context.next = 22;
+              _context.next = 25;
               break;
             }
 
             throw new Error(reformatError(responseJson));
 
-          case 22:
+          case 25:
             throw new Error(responseJson ? parseError(responseJson) : 'Whoops! Error!');
 
-          case 23:
+          case 26:
             return _context.abrupt("return", responseJson);
 
-          case 24:
+          case 27:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, this, [[10, 16]]);
+    }, _callee, this, [[13, 19]]);
   }));
 
   return function (_x) {

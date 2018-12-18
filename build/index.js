@@ -37,8 +37,6 @@ exports.default = void 0;
 
 var _odata = _interopRequireDefault(require("odata"));
 
-var _BaseODataDAO = _interopRequireDefault(require("./dao/BaseODataDAO"));
-
 var _ReportTranslator = require("./translators/ReportTranslator");
 
 var _Subscription = _interopRequireDefault(require("./dao/Subscription"));
@@ -456,7 +454,7 @@ var flushCache = function flushCache() {
 };
 
 var setOrganizationID = function setOrganizationID(organizationID) {
-  _BaseODataDAO.default.setOrganizationID(organizationID);
+  _Config.default.organizationId = organizationID;
 
   _AccountDAO.default.flushCache();
 
@@ -471,6 +469,8 @@ var setOrganizationID = function setOrganizationID(organizationID) {
   _KegDAO.default.flushCache();
 
   _LocationDAO.default.flushCache();
+
+  _PourChartDAO.default.flushCache();
 
   _PourDAO.default.flushCache();
 

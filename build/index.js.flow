@@ -3,7 +3,6 @@
 import type { EntityID } from './types';
 
 import oHandler from 'odata';
-import BaseODataDAO from './dao/BaseODataDAO';
 import { CADENCE_MAP } from './translators/ReportTranslator';
 import Subscription from './dao/Subscription';
 
@@ -99,7 +98,7 @@ const flushCache = () => {
 };
 
 const setOrganizationID = (organizationID: ?EntityID) => {
-  BaseODataDAO.setOrganizationID(organizationID);
+  Config.organizationId = organizationID;
 
   AccountDAO.flushCache();
   AchievementDAO.flushCache();
@@ -108,6 +107,7 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   FriendDAO.flushCache();
   KegDAO.flushCache();
   LocationDAO.flushCache();
+  PourChartDAO.flushCache();
   PourDAO.flushCache();
   ReportDAO.flushCache();
   ScheduleDAO.flushCache();
