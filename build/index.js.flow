@@ -1,555 +1,188 @@
 // @flow
 
-/* Entities */
+import type { EntityID } from './types';
 
-export type EntityName =
-  | 'accounts'
-  | 'beverage-availabilities'
-  | 'beverage-glasses'
-  | 'beverage-srms'
-  | 'beverage-styles'
-  | 'beverages'
-  | 'chart'
-  | 'devices'
-  | 'kegs'
-  | 'locations'
-  | 'organizations'
-  | 'permissions'
-  | 'pours'
-  | 'reports'
-  | 'schedule-groups'
-  | 'schedules'
-  | 'taps';
+import oHandler from 'odata';
+import { CADENCE_MAP } from './translators/ReportTranslator';
+import Subscription from './dao/Subscription';
 
-export type ShortenedEntity = { id: string, isDeleted: boolean, name: string };
+import fetch from './fetch';
+import { createFilter, doesSatisfyQueryFilters } from './filters';
 
-export type ShortenedTap = { id: string, isDeleted: boolean };
+import Auth from './Auth';
 
-export type Account = {
-  accessFailedCount: ?number,
-  banned: ?boolean,
-  createdDate: Date,
-  email: ?string,
-  emailConfirmed: ?boolean,
-  fullName: ?string,
-  id: string,
-  lockoutEnabled: ?boolean,
-  lockoutEndDateUtc: ?string,
-  logins: ?Object,
-  phoneNumber: ?string,
-  phoneNumberConfirmed: ?boolean,
-  roles: ?Object,
-  twoFactorEnabled: ?boolean,
-  userName: string,
+import AccountDAO from './dao/AccountDAO';
+import AchievementDAO from './dao/AchievementDAO';
+import AvailabilityDAO from './dao/AvailabilityDAO';
+import BeverageDAO from './dao/BeverageDAO';
+import CloudDeviceDAO from './dao/CloudDeviceDAO';
+import DeviceDAO from './dao/DeviceDAO';
+import FlowSensorDAO from './dao/FlowSensorDAO';
+import FriendDAO from './dao/FriendDAO';
+import GlassDAO from './dao/GlassDAO';
+import KegDAO from './dao/KegDAO';
+import LocationDAO from './dao/LocationDAO';
+import OrganizationDAO from './dao/OrganizationDAO';
+import PermissionDAO from './dao/PermissionDAO';
+import PourChartDAO from './dao/PourChartDAO';
+import PourDAO from './dao/PourDAO';
+import ProductDAO from './dao/ProductDAO';
+import ProductDeviceDAO from './dao/ProductDeviceDAO';
+import ProductFirmwareDAO from './dao/ProductFirmwareDAO';
+import ReportDAO from './dao/ReportDAO';
+import ScheduleDAO from './dao/ScheduleDAO';
+import SrmDAO from './dao/SrmDAO';
+import StyleDAO from './dao/StyleDAO';
+import TapDAO from './dao/TapDAO';
+import Signalr from './signalr';
+import Config from './Config';
+
+import CloudSSEManager from './CloudSSEManager';
+
+const initialize = (host: string) => {
+  Config.host = host;
+
+  oHandler().config({
+    endpoint: `${host}/api/v2/`,
+  });
 };
 
-export type AccountMutator = {
-  email: string,
-  fullName: ?string,
-  phoneNumber: ?string,
-  userName: string,
+const setToken = (token: string) => {
+  Config.token = token;
+
+  oHandler().config({
+    headers: [
+      {
+        name: 'timezoneOffset',
+        value: new Date().getTimezoneOffset().toString(),
+      },
+      {
+        name: 'Authorization',
+        value: `Bearer ${token}`,
+      },
+      { name: 'Prefer', value: 'return=representation' },
+    ],
+  });
 };
 
-export type Availability = {
-  description: ?string,
-  id: string,
-  name: string,
+const DAOArray = [
+  AccountDAO,
+  AchievementDAO,
+  AvailabilityDAO,
+  BeverageDAO,
+  CloudDeviceDAO,
+  DeviceDAO,
+  FlowSensorDAO,
+  FriendDAO,
+  GlassDAO,
+  KegDAO,
+  LocationDAO,
+  OrganizationDAO,
+  PermissionDAO,
+  PourDAO,
+  ProductDAO,
+  ProductDeviceDAO,
+  ProductFirmwareDAO,
+  ReportDAO,
+  ScheduleDAO,
+  SrmDAO,
+  StyleDAO,
+  TapDAO,
+];
+
+const flushCache = () => {
+  DAOArray.forEach((dao: *) => {
+    dao.flushCache();
+    dao.flushCustomCache();
+  });
 };
 
-export type BeverageType = 'Beer' | 'Cider' | 'Coffee' | 'Soda';
+const setOrganizationID = (organizationID: ?EntityID) => {
+  Config.organizationId = organizationID;
 
-export type ServingTemperature =
-  | 'cellar'
-  | 'cold'
-  | 'cool'
-  | 'hot'
-  | 'very_cold'
-  | 'warm';
-
-export type Coordinates = {
-  latitude: number,
-  longitude: number,
+  AccountDAO.flushCache();
+  AchievementDAO.flushCache();
+  BeverageDAO.flushCache();
+  DeviceDAO.flushCache();
+  FriendDAO.flushCache();
+  KegDAO.flushCache();
+  LocationDAO.flushCache();
+  PourChartDAO.flushCache();
+  PourDAO.flushCache();
+  ReportDAO.flushCache();
+  ScheduleDAO.flushCache();
+  TapDAO.flushCache();
 };
 
-export type Beverage = {
-  abv: number,
-  availability: ?Availability,
-  beerVariationId: ?string,
-  beverageType: BeverageType,
-  createDate: Date,
-  createdBy: {
-    id: string,
-    userName: string,
-  },
-  description: ?string,
-  externalId: ?string,
-  foodPairings: ?string,
-  glassware: ?Glass,
-  ibu: number,
-  id: string,
-  isDeleted: boolean,
-  isOrganic: ?string,
-  labels: {
-    icon: string,
-    large: string,
-    medium: string,
-  },
-  name: string,
-  originalGravity: ?number,
-  servingTemperature: ?ServingTemperature,
-  servingTemperatureDisplay: ?string,
-  srm: ?Srm,
-  style: ?Object,
-  updateDate: Date,
-  year: ?number,
+export * from './Auth';
+export * from './dao/AccountDAO';
+export * from './dao/AchievementDAO';
+export * from './dao/AvailabilityDAO';
+export * from './dao/BeverageDAO';
+export * from './dao/CloudDeviceDAO';
+export * from './dao/DeviceDAO';
+export * from './dao/FlowSensorDAO';
+export * from './dao/FriendDAO';
+export * from './dao/GlassDAO';
+export * from './dao/KegDAO';
+export * from './dao/LocationDAO';
+export * from './dao/OrganizationDAO';
+export * from './dao/PermissionDAO';
+export * from './dao/PourChartDAO';
+export * from './dao/PourDAO';
+export * from './dao/ProductDAO';
+export * from './dao/ProductDeviceDAO';
+export * from './dao/ProductFirmwareDAO';
+export * from './dao/ReportDAO';
+export * from './dao/ScheduleDAO';
+export * from './dao/SrmDAO';
+export * from './dao/StyleDAO';
+export * from './dao/TapDAO';
+
+export * from './constants';
+export * from './types';
+export * from './CloudSSEManager';
+export * from './LoadObject';
+export { default as LoadObject } from './LoadObject';
+export { default as RestDAO } from './dao/RestDAO';
+export { default as ODataDAO } from './dao/ODataDAO';
+
+export { CADENCE_MAP };
+
+/* eslint-disable sorting/sort-object-props */
+export default {
+  AccountDAO,
+  AchievementDAO,
+  Auth,
+  AvailabilityDAO,
+  BeverageDAO,
+  CloudDeviceDAO,
+  CloudSSEManager,
+  DeviceDAO,
+  FlowSensorDAO,
+  FriendDAO,
+  GlassDAO,
+  KegDAO,
+  LocationDAO,
+  OrganizationDAO,
+  PermissionDAO,
+  PourChartDAO,
+  PourDAO,
+  ProductDAO,
+  ProductDeviceDAO,
+  ProductFirmwareDAO,
+  ReportDAO,
+  ScheduleDAO,
+  Signalr,
+  SrmDAO,
+  StyleDAO,
+  TapDAO,
+  createFilter,
+  doesSatisfyQueryFilters,
+  fetch,
+  flushCache,
+  initialize,
+  onError: Subscription.onError,
+  setOrganizationID,
+  setToken,
 };
-
-export type PourChartDataType =
-  | 'all-with-tap-id'
-  | 'by-location'
-  | 'by-tap'
-  | 'hourly-by-location'
-  | 'hourly-by-tap';
-
-export type PourChartParams = {
-  beginDate?: ?Date,
-  chartType: PourChartDataType,
-  endDate?: ?Date,
-  ids?: Array<string>,
-};
-
-export type PourChartDataEntry = {
-  keys: Array<string>,
-  value: number,
-};
-
-export type PourChartDataSet = {
-  dataSet: Array<PourChartDataEntry>,
-  key: string,
-};
-
-export type DeviceStatus = 'Active' | 'Cleaning' | 'Inactive' | 'Unlocked';
-
-export type DeviceType = 'BrewskeyBox' | 'Onsite';
-
-export type Device = {
-  createdBy: { id: string, userName: string },
-  deviceStatus: DeviceStatus,
-  deviceType: DeviceType,
-  id: string,
-  isDeleted: boolean,
-  lastEdited: Date,
-  lastEditedBy: { id: string, userName: string },
-  location?: ShortenedEntity,
-  name: string,
-  organization: ShortenedEntity,
-  particleId: string,
-  temperature: number,
-};
-
-export type DeviceMutator = {
-  deviceStatus: DeviceStatus,
-  id?: string,
-  isMultiTap: boolean,
-  location: ?Location,
-  name: string,
-  particleId: string,
-};
-
-export type Glass = {
-  createDate: Date,
-  description: ?string,
-  id: string,
-  name: string,
-  updateDate: Date,
-};
-
-export type Keg = {
-  beverage: ShortenedEntity,
-  floatedDate: Date,
-  id: string,
-  isDeleted: boolean,
-  kegType: string,
-  location: ?ShortenedEntity,
-  maxOunces: number,
-  organization: ShortenedEntity,
-  ounces: number,
-  pulses: number,
-  tap: ?ShortenedTap,
-  tapDate: Date,
-};
-
-export type Location = {
-  city: string,
-  createdDate: Date,
-  description: ?string,
-  geolocation?: {
-    coordinates: Coordinates,
-    geography: {
-      coordinateSystemId: number,
-      wellKnownText: string,
-      wellKnownBinary: ?Object,
-    },
-  },
-  id: string,
-  isDeleted: boolean,
-  locationType: string,
-  name: string,
-  organization: ShortenedEntity,
-  state: ?string,
-  street: string,
-  suite: string,
-  summary: string,
-  timeZone: string,
-  zipCode: number,
-};
-
-export type Organization = {
-  createdDate: Date,
-  id: string,
-  isDeleted: boolean,
-  name: string,
-};
-
-export type PermissionEntityType =
-  | 'devices'
-  | 'locations'
-  | 'organizations'
-  | 'taps';
-
-export type PermissionType =
-  | 'Administrator'
-  | 'Edit'
-  | 'Read'
-  | 'BannedFromTap';
-
-export type Permission = {
-  createdBy: {
-    id: string,
-    userName: string,
-  },
-  createdDate: Date,
-  device: ?ShortenedEntity,
-  expiresDate: ?Date,
-  forUser: {
-    id: string,
-    userName: string,
-  },
-  id: string,
-  isDeleted: boolean,
-  invalid: boolean,
-  location: ?ShortenedEntity,
-  organization: ?ShortenedEntity,
-  permissionType: PermissionType,
-  startDate: ?Date,
-  tap: ?ShortenedTap,
-};
-
-export type PermissionMutator<TEntity> = {
-  entity: TEntity,
-  entityType: PermissionEntityType,
-  expiresDate: ?Date,
-  id: ?string,
-  permissionType: PermissionType,
-  startDate: ?Date,
-  user: { id: string, userName: string },
-};
-
-export type Pour = {
-  beverage: ?ShortenedEntity,
-  id: string,
-  isDeleted: boolean,
-  location: ?ShortenedEntity,
-  organization: ShortenedEntity,
-  ounces: number,
-  owner: { id: string, userName: string },
-  pourDate: string,
-  pulses: number,
-  tap: ?ShortenedTap,
-};
-
-export type Report = {
-  createdDate: Date,
-  devices: Array<ShortenedEntity>,
-  id: string,
-  isDeleted: boolean,
-  lastEdited: Date,
-  locations: Array<ShortenedEntity>,
-  name: string,
-  reportCadence: ReportCadence,
-  reportCadenceTimeStamp: Date,
-  sendToEmails: Array<string>,
-  taps: Array<ShortenedTap>,
-};
-
-export type ReportMutator = {
-  devices?: Array<ShortenedEntity>,
-  id?: string,
-  locations?: Array<ShortenedEntity>,
-  name: string,
-  reportCadence: ReportCadence,
-  reportCadenceTimeStamp: Date,
-  sendToEmails: Array<{ email: string }>,
-  taps?: Array<ShortenedTap>,
-};
-
-export type ReportCadence =
-  | 'OneTime'
-  | 'Daily'
-  | 'Weekly'
-  | 'Biweekly'
-  | 'Monthly';
-
-export type Schedule = {
-  accounts: Array<{
-    id: string,
-    userName: string,
-  }>,
-  createdDate: Date,
-  days: number,
-  editDate: Date,
-  endTime: Date,
-  id: string,
-  isDeleted: boolean,
-  location: ?ShortenedEntity,
-  name: string,
-  startTime: Date,
-};
-
-export type ScheduleMutator = {
-  accounts: Array<{
-    id: string,
-    userName: string,
-  }>,
-  days: number,
-  endTime: Date,
-  id: ?string,
-  locationId: ?string,
-  name: string,
-  startTime: Date,
-};
-
-export type Srm = {
-  hex: string,
-  id: string,
-  name: string,
-};
-
-export type Style = {
-  abvMax: number,
-  abvMin: number,
-  createDate: Date,
-  description: ?string,
-  fgMax: number,
-  fgMin: number,
-  ibuMax: number,
-  ibuMin: number,
-  id: string,
-  name: string,
-  ogMax: number,
-  ogMin: number,
-  srmMax: number,
-  srmMin: number,
-  updateDate: Date,
-};
-
-export type Tap = {
-  createdDate: Date,
-  currentKeg: {
-    beverage: { id: string, name: string },
-    id: string,
-    kegType: string,
-    maxOunces: number,
-    ounces: number,
-  },
-  description: ?string,
-  device: ShortenedEntity,
-  disableBadges: boolean,
-  hideLeaderboard: boolean,
-  hideStats: boolean,
-  id: string,
-  location: ?ShortenedEntity,
-  organization: ShortenedEntity,
-  requiresPourPrivilege: boolean,
-  tapNumber: number,
-};
-
-export type TapMutator = {
-  createdDate: ?string,
-  description: ?string,
-  device: Device,
-  disableBadges: boolean,
-  hideLeaderboard: boolean,
-  hideStats: boolean,
-  id: ?string,
-  name: string,
-  requiresPourPrivilege: boolean,
-};
-
-/* DAO */
-
-export type FilterOperator =
-  | 'contains'
-  | 'endswith'
-  | 'eq'
-  | 'gt'
-  | 'ge'
-  | 'lt'
-  | 'le'
-  | 'not endswith'
-  | 'ne'
-  | 'not startswith'
-  | 'startswith';
-
-export type QueryFilter = {
-  operator: FilterOperator,
-  params: Array<string>,
-  values: Array<string>,
-};
-
-export type QueryOrderBy = {
-  column: string,
-  direction: 'asc' | 'desc',
-};
-
-export type QueryOptions = {
-  count?: boolean,
-  filters?: Array<QueryFilter>,
-  orderBy?: Array<QueryOrderBy>,
-  skip?: number,
-  take?: number,
-};
-
-export type NavigationProperties = {
-  [key: string]: {
-    expand?: NavigationProperties,
-    select?: Array<string>,
-  },
-};
-
-export type DAOConfig<TEntity, TEntityMutator> = {
-  entityName: EntityName,
-  navigationProperties?: NavigationProperties,
-  translator: DAOTranslator<TEntity, TEntityMutator>,
-};
-
-declare export class DAOResult<TEntity> {
-  _count: ?number;
-  _data: ?TEntity | ?Array<TEntity>;
-  _error: ?Error;
-  constructor(
-    data: ?TEntity | ?Array<TEntity>,
-    count: ?number,
-    error?: Error,
-  ): void;
-  count(): ?number;
-  getData(): ?TEntity | ?Array<TEntity>;
-  getError(): ?Error;
-}
-
-export type DAOTranslator<TEntity, TEntityMutator> = {
-  +fromApi: (apiValue: Object) => TEntity,
-  +toApi: (model: TEntityMutator) => Object,
-  +toForm: (model: TEntity) => TEntityMutator,
-};
-
-declare export class DAO<TEntity, TEntityMutator> {
-  count(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>>;
-  deleteByID(id: string): Promise<DAOResult<TEntity>>;
-  fetchByID(id: string): Promise<DAOResult<TEntity>>;
-  fetchByIDs(ids: Array<string>, meta?: Object): Promise<DAOResult<TEntity>>;
-  fetchMany(queryOptions?: QueryOptions): Promise<DAOResult<TEntity>>;
-  getEntityName(): EntityName;
-  getTranslator(): DAOTranslator<TEntity, TEntityMutator>;
-  patch(id: string, params: TEntityMutator): Promise<DAOResult<TEntity>>;
-  post(params: TEntityMutator): Promise<DAOResult<TEntity>>;
-  put(id: string, params: TEntityMutator): Promise<DAOResult<TEntity>>;
-}
-
-declare class brewskey$AccountDAO extends DAO<Account, AccountMutator> {}
-declare class brewskey$AvailabilityDAO extends DAO<
-  Availability,
-  Availability,
-> {}
-declare class brewskey$BeverageDAO extends DAO<Beverage, Beverage> {}
-declare class brewskey$DeviceDAO extends DAO<Device, DeviceMutator> {}
-declare class brewskey$GlassDAO extends DAO<Glass, Glass> {}
-declare class brewskey$KegDAO extends DAO<Keg, Keg> {
-  fetchKegByTapID(tapId: string): Promise<DAOResult<Keg>>;
-}
-declare class brewskey$LocationDAO extends DAO<Location, Location> {}
-declare class brewskey$OrganizationDAO extends DAO<
-  Organization,
-  Organization,
-> {}
-declare class brewskey$PermissionDAO extends DAO<
-  Permission,
-  PermissionMutator<*>,
-> {}
-declare class brewskey$PourDAO extends DAO<Pour, Pour> {}
-declare class brewkey$PourChartDAO extends DAO<
-  PourChartDataSet,
-  PourChartDataSet,
-> {
-  fetchChartData(params: PourChartParams): Promise<DAOResult<PourChartDataSet>>;
-}
-declare class brewskey$ReportDAO extends DAO<Report, ReportMutator> {}
-declare class brewskey$ScheduleDAO extends DAO<Schedule, ScheduleMutator> {}
-declare class brewskey$SrmDAO extends DAO<Srm, Srm> {}
-declare class brewskey$StyleDAO extends DAO<Style, Style> {}
-declare class brewskey$TapDAO extends DAO<Tap, TapMutator> {}
-
-/* Utilities */
-export type Header = {
-  name: string,
-  value: string,
-};
-
-export type Headers = Array<Header>;
-
-export type FilterCreator = (params: any) => QueryFilter;
-export type FilterCreators = { [string]: FilterCreator };
-
-export type RequestMethod = 'delete' | 'get' | 'patch' | 'post' | 'put';
-
-/* exports */
-
-export type OConfig = {
-  endpoint: string,
-  headers?: Headers,
-};
-
-type DAOApi = {
-  AccountDAO: brewskey$AccountDAO,
-  AvailabilityDAO: brewskey$AvailabilityDAO,
-  BeverageDAO: brewskey$BeverageDAO,
-  DeviceDAO: brewskey$DeviceDAO,
-  GlassDAO: brewskey$GlassDAO,
-  KegDAO: brewskey$KegDAO,
-  LocationDAO: brewskey$LocationDAO,
-  OrganizationDAO: brewskey$OrganizationDAO,
-  PermissionDAO: brewskey$PermissionDAO,
-  PourChartDAO: brewkey$PourChartDAO,
-  PourDAO: brewskey$PourDAO,
-  ReportDAO: brewskey$ReportDAO,
-  ScheduleDAO: brewskey$ScheduleDAO,
-  SrmDAO: brewskey$SrmDAO,
-  StyleDAO: brewskey$StyleDAO,
-  TapDAO: brewskey$TapDAO,
-  createFilter(params: string): FilterCreators,
-  doesSatisfyToQueryFilters(
-    item: Object,
-    queryFilters: Array<QueryFilter>,
-  ): boolean,
-  fetch(path: string, init: ?Object): Promise<*>,
-  getHeaders(): Headers,
-  initializeDAOApi(config: OConfig): void,
-  setHeaders(headers: Headers): void,
-  setOrganizationID(organizationID: ?string): void,
-};
-
-declare export var CADENCE_MAP: { [ReportCadence]: number };
-declare export var DAO_ENTITIES: { [string]: EntityName };
-declare export var PERMISSIONS_MAP: { [PermissionType]: number };
-
-declare export default DAOApi;

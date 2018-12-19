@@ -1,151 +1,521 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PERMISSIONS_MAP = exports.DAOResult = exports.DAO_ENTITIES = exports.CADENCE_MAP = undefined;
+var _exportNames = {
+  CADENCE_MAP: true,
+  LoadObject: true,
+  RestDAO: true,
+  ODataDAO: true
+};
+Object.defineProperty(exports, "CADENCE_MAP", {
+  enumerable: true,
+  get: function get() {
+    return _ReportTranslator.CADENCE_MAP;
+  }
+});
+Object.defineProperty(exports, "LoadObject", {
+  enumerable: true,
+  get: function get() {
+    return _LoadObject.default;
+  }
+});
+Object.defineProperty(exports, "RestDAO", {
+  enumerable: true,
+  get: function get() {
+    return _RestDAO.default;
+  }
+});
+Object.defineProperty(exports, "ODataDAO", {
+  enumerable: true,
+  get: function get() {
+    return _ODataDAO.default;
+  }
+});
+exports.default = void 0;
 
-var _odata = require('odata');
+var _odata = _interopRequireDefault(require("odata"));
 
-var _odata2 = _interopRequireDefault(_odata);
+var _ReportTranslator = require("./translators/ReportTranslator");
 
-var _constants = require('./constants');
+var _Subscription = _interopRequireDefault(require("./dao/Subscription"));
 
-var _DAOResult = require('./dao/DAOResult');
+var _fetch = _interopRequireDefault(require("./fetch"));
 
-var _DAOResult2 = _interopRequireDefault(_DAOResult);
+var _filters = require("./filters");
 
-var _DAO = require('./dao/DAO');
+var _Auth = _interopRequireWildcard(require("./Auth"));
 
-var _DAO2 = _interopRequireDefault(_DAO);
+Object.keys(_Auth).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _Auth[key];
+    }
+  });
+});
 
-var _ReportTranslator = require('./translators/ReportTranslator');
+var _AccountDAO = _interopRequireWildcard(require("./dao/AccountDAO"));
 
-var _fetch = require('./fetch');
+Object.keys(_AccountDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _AccountDAO[key];
+    }
+  });
+});
 
-var _fetch2 = _interopRequireDefault(_fetch);
+var _AchievementDAO = _interopRequireWildcard(require("./dao/AchievementDAO"));
 
-var _filters = require('./filters');
+Object.keys(_AchievementDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _AchievementDAO[key];
+    }
+  });
+});
 
-var _AccountDAO = require('./dao/AccountDAO');
+var _AvailabilityDAO = _interopRequireWildcard(require("./dao/AvailabilityDAO"));
 
-var _AccountDAO2 = _interopRequireDefault(_AccountDAO);
+Object.keys(_AvailabilityDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _AvailabilityDAO[key];
+    }
+  });
+});
 
-var _AvailabilityDAO = require('./dao/AvailabilityDAO');
+var _BeverageDAO = _interopRequireWildcard(require("./dao/BeverageDAO"));
 
-var _AvailabilityDAO2 = _interopRequireDefault(_AvailabilityDAO);
+Object.keys(_BeverageDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _BeverageDAO[key];
+    }
+  });
+});
 
-var _BeverageDAO = require('./dao/BeverageDAO');
+var _CloudDeviceDAO = _interopRequireWildcard(require("./dao/CloudDeviceDAO"));
 
-var _BeverageDAO2 = _interopRequireDefault(_BeverageDAO);
+Object.keys(_CloudDeviceDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _CloudDeviceDAO[key];
+    }
+  });
+});
 
-var _DeviceDAO = require('./dao/DeviceDAO');
+var _DeviceDAO = _interopRequireWildcard(require("./dao/DeviceDAO"));
 
-var _DeviceDAO2 = _interopRequireDefault(_DeviceDAO);
+Object.keys(_DeviceDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _DeviceDAO[key];
+    }
+  });
+});
 
-var _GlassDAO = require('./dao/GlassDAO');
+var _FlowSensorDAO = _interopRequireWildcard(require("./dao/FlowSensorDAO"));
 
-var _GlassDAO2 = _interopRequireDefault(_GlassDAO);
+Object.keys(_FlowSensorDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _FlowSensorDAO[key];
+    }
+  });
+});
 
-var _KegDAO = require('./dao/KegDAO');
+var _FriendDAO = _interopRequireWildcard(require("./dao/FriendDAO"));
 
-var _KegDAO2 = _interopRequireDefault(_KegDAO);
+Object.keys(_FriendDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _FriendDAO[key];
+    }
+  });
+});
 
-var _LocationDAO = require('./dao/LocationDAO');
+var _GlassDAO = _interopRequireWildcard(require("./dao/GlassDAO"));
 
-var _LocationDAO2 = _interopRequireDefault(_LocationDAO);
+Object.keys(_GlassDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _GlassDAO[key];
+    }
+  });
+});
 
-var _OrganizationDAO = require('./dao/OrganizationDAO');
+var _KegDAO = _interopRequireWildcard(require("./dao/KegDAO"));
 
-var _OrganizationDAO2 = _interopRequireDefault(_OrganizationDAO);
+Object.keys(_KegDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _KegDAO[key];
+    }
+  });
+});
 
-var _PermissionDAO = require('./dao/PermissionDAO');
+var _LocationDAO = _interopRequireWildcard(require("./dao/LocationDAO"));
 
-var _PermissionDAO2 = _interopRequireDefault(_PermissionDAO);
+Object.keys(_LocationDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _LocationDAO[key];
+    }
+  });
+});
 
-var _PourChartDAO = require('./dao/PourChartDAO');
+var _OrganizationDAO = _interopRequireWildcard(require("./dao/OrganizationDAO"));
 
-var _PourChartDAO2 = _interopRequireDefault(_PourChartDAO);
+Object.keys(_OrganizationDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _OrganizationDAO[key];
+    }
+  });
+});
 
-var _PourDAO = require('./dao/PourDAO');
+var _PermissionDAO = _interopRequireWildcard(require("./dao/PermissionDAO"));
 
-var _PourDAO2 = _interopRequireDefault(_PourDAO);
+Object.keys(_PermissionDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _PermissionDAO[key];
+    }
+  });
+});
 
-var _ReportDAO = require('./dao/ReportDAO');
+var _PourChartDAO = _interopRequireWildcard(require("./dao/PourChartDAO"));
 
-var _ReportDAO2 = _interopRequireDefault(_ReportDAO);
+Object.keys(_PourChartDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _PourChartDAO[key];
+    }
+  });
+});
 
-var _ScheduleDAO = require('./dao/ScheduleDAO');
+var _PourDAO = _interopRequireWildcard(require("./dao/PourDAO"));
 
-var _ScheduleDAO2 = _interopRequireDefault(_ScheduleDAO);
+Object.keys(_PourDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _PourDAO[key];
+    }
+  });
+});
 
-var _SrmDAO = require('./dao/SrmDAO');
+var _ProductDAO = _interopRequireWildcard(require("./dao/ProductDAO"));
 
-var _SrmDAO2 = _interopRequireDefault(_SrmDAO);
+Object.keys(_ProductDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ProductDAO[key];
+    }
+  });
+});
 
-var _StyleDAO = require('./dao/StyleDAO');
+var _ProductDeviceDAO = _interopRequireWildcard(require("./dao/ProductDeviceDAO"));
 
-var _StyleDAO2 = _interopRequireDefault(_StyleDAO);
+Object.keys(_ProductDeviceDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ProductDeviceDAO[key];
+    }
+  });
+});
 
-var _TapDAO = require('./dao/TapDAO');
+var _ProductFirmwareDAO = _interopRequireWildcard(require("./dao/ProductFirmwareDAO"));
 
-var _TapDAO2 = _interopRequireDefault(_TapDAO);
+Object.keys(_ProductFirmwareDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ProductFirmwareDAO[key];
+    }
+  });
+});
+
+var _ReportDAO = _interopRequireWildcard(require("./dao/ReportDAO"));
+
+Object.keys(_ReportDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ReportDAO[key];
+    }
+  });
+});
+
+var _ScheduleDAO = _interopRequireWildcard(require("./dao/ScheduleDAO"));
+
+Object.keys(_ScheduleDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ScheduleDAO[key];
+    }
+  });
+});
+
+var _SrmDAO = _interopRequireWildcard(require("./dao/SrmDAO"));
+
+Object.keys(_SrmDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _SrmDAO[key];
+    }
+  });
+});
+
+var _StyleDAO = _interopRequireWildcard(require("./dao/StyleDAO"));
+
+Object.keys(_StyleDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _StyleDAO[key];
+    }
+  });
+});
+
+var _TapDAO = _interopRequireWildcard(require("./dao/TapDAO"));
+
+Object.keys(_TapDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _TapDAO[key];
+    }
+  });
+});
+
+var _signalr = _interopRequireDefault(require("./signalr"));
+
+var _Config = _interopRequireDefault(require("./Config"));
+
+var _CloudSSEManager = _interopRequireWildcard(require("./CloudSSEManager"));
+
+Object.keys(_CloudSSEManager).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _CloudSSEManager[key];
+    }
+  });
+});
+
+var _constants = require("./constants");
+
+Object.keys(_constants).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _constants[key];
+    }
+  });
+});
+
+var _types = require("./types");
+
+Object.keys(_types).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _types[key];
+    }
+  });
+});
+
+var _LoadObject = _interopRequireWildcard(require("./LoadObject"));
+
+Object.keys(_LoadObject).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _LoadObject[key];
+    }
+  });
+});
+
+var _RestDAO = _interopRequireDefault(require("./dao/RestDAO"));
+
+var _ODataDAO = _interopRequireDefault(require("./dao/ODataDAO"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-var initializeDAOApi = function initializeDAOApi(_ref) {
-  var endpoint = _ref.endpoint,
-      headers = _ref.headers;
-
-  (0, _odata2.default)().config({
-    endpoint: endpoint,
-    headers: [{ name: 'Prefer', value: 'return=representation' }].concat(_toConsumableArray(headers || []))
+var initialize = function initialize(host) {
+  _Config.default.host = host;
+  (0, _odata.default)().config({
+    endpoint: "".concat(host, "/api/v2/")
   });
 };
 
-var getHeaders = function getHeaders() {
-  return (0, _odata2.default)().oConfig.headers || [];
-};
-
-var setHeaders = function setHeaders(headers) {
-  (0, _odata2.default)().config({
-    headers: headers
+var setToken = function setToken(token) {
+  _Config.default.token = token;
+  (0, _odata.default)().config({
+    headers: [{
+      name: 'timezoneOffset',
+      value: new Date().getTimezoneOffset().toString()
+    }, {
+      name: 'Authorization',
+      value: "Bearer ".concat(token)
+    }, {
+      name: 'Prefer',
+      value: 'return=representation'
+    }]
   });
 };
 
-var setOrganizationID = _DAO2.default.setOrganizationID;
+var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PermissionDAO.default, _PourDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
 
-exports.CADENCE_MAP = _ReportTranslator.CADENCE_MAP;
-exports.DAO_ENTITIES = _constants.DAO_ENTITIES;
-exports.DAOResult = _DAOResult2.default;
-exports.PERMISSIONS_MAP = _constants.PERMISSIONS_MAP;
+var flushCache = function flushCache() {
+  DAOArray.forEach(function (dao) {
+    dao.flushCache();
+    dao.flushCustomCache();
+  });
+};
+
+var setOrganizationID = function setOrganizationID(organizationID) {
+  _Config.default.organizationId = organizationID;
+
+  _AccountDAO.default.flushCache();
+
+  _AchievementDAO.default.flushCache();
+
+  _BeverageDAO.default.flushCache();
+
+  _DeviceDAO.default.flushCache();
+
+  _FriendDAO.default.flushCache();
+
+  _KegDAO.default.flushCache();
+
+  _LocationDAO.default.flushCache();
+
+  _PourChartDAO.default.flushCache();
+
+  _PourDAO.default.flushCache();
+
+  _ReportDAO.default.flushCache();
+
+  _ScheduleDAO.default.flushCache();
+
+  _TapDAO.default.flushCache();
+};
 
 /* eslint-disable sorting/sort-object-props */
-
-exports.default = {
-  AccountDAO: _AccountDAO2.default,
-  AvailabilityDAO: _AvailabilityDAO2.default,
-  BeverageDAO: _BeverageDAO2.default,
-  DeviceDAO: _DeviceDAO2.default,
-  GlassDAO: _GlassDAO2.default,
-  KegDAO: _KegDAO2.default,
-  LocationDAO: _LocationDAO2.default,
-  OrganizationDAO: _OrganizationDAO2.default,
-  PermissionDAO: _PermissionDAO2.default,
-  PourChartDAO: _PourChartDAO2.default,
-  PourDAO: _PourDAO2.default,
-  ReportDAO: _ReportDAO2.default,
-  ScheduleDAO: _ScheduleDAO2.default,
-  SrmDAO: _SrmDAO2.default,
-  StyleDAO: _StyleDAO2.default,
-  TapDAO: _TapDAO2.default,
+var _default = {
+  AccountDAO: _AccountDAO.default,
+  AchievementDAO: _AchievementDAO.default,
+  Auth: _Auth.default,
+  AvailabilityDAO: _AvailabilityDAO.default,
+  BeverageDAO: _BeverageDAO.default,
+  CloudDeviceDAO: _CloudDeviceDAO.default,
+  CloudSSEManager: _CloudSSEManager.default,
+  DeviceDAO: _DeviceDAO.default,
+  FlowSensorDAO: _FlowSensorDAO.default,
+  FriendDAO: _FriendDAO.default,
+  GlassDAO: _GlassDAO.default,
+  KegDAO: _KegDAO.default,
+  LocationDAO: _LocationDAO.default,
+  OrganizationDAO: _OrganizationDAO.default,
+  PermissionDAO: _PermissionDAO.default,
+  PourChartDAO: _PourChartDAO.default,
+  PourDAO: _PourDAO.default,
+  ProductDAO: _ProductDAO.default,
+  ProductDeviceDAO: _ProductDeviceDAO.default,
+  ProductFirmwareDAO: _ProductFirmwareDAO.default,
+  ReportDAO: _ReportDAO.default,
+  ScheduleDAO: _ScheduleDAO.default,
+  Signalr: _signalr.default,
+  SrmDAO: _SrmDAO.default,
+  StyleDAO: _StyleDAO.default,
+  TapDAO: _TapDAO.default,
   createFilter: _filters.createFilter,
-  doesSatisfyToQueryFilters: _filters.doesSatisfyToQueryFilters,
-  fetch: _fetch2.default,
-  getHeaders: getHeaders,
-  initializeDAOApi: initializeDAOApi,
-  setHeaders: setHeaders,
-  setOrganizationID: setOrganizationID
+  doesSatisfyQueryFilters: _filters.doesSatisfyQueryFilters,
+  fetch: _fetch.default,
+  flushCache: flushCache,
+  initialize: initialize,
+  onError: _Subscription.default.onError,
+  setOrganizationID: setOrganizationID,
+  setToken: setToken
 };
+exports.default = _default;

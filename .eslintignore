@@ -1,3 +1,2 @@
 build/*
-interfaces/*
-src/index.js.flow
+flow-typed/*

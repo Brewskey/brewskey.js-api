@@ -1,40 +1,49 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _DAO2 = require('./DAO');
+var _ODataDAO2 = _interopRequireDefault(require("./ODataDAO"));
 
-var _DAO3 = _interopRequireDefault(_DAO2);
+var _constants = require("../constants");
 
-var _constants = require('../constants');
-
-var _DefaultTranslator = require('../translators/DefaultTranslator');
-
-var _DefaultTranslator2 = _interopRequireDefault(_DefaultTranslator);
+var _DefaultTranslator = _interopRequireDefault(require("../translators/DefaultTranslator"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-var AvailabilityDAO = function (_DAO) {
-  _inherits(AvailabilityDAO, _DAO);
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var AvailabilityDAO =
+/*#__PURE__*/
+function (_ODataDAO) {
+  _inherits(AvailabilityDAO, _ODataDAO);
 
   function AvailabilityDAO() {
     _classCallCheck(this, AvailabilityDAO);
 
-    return _possibleConstructorReturn(this, (AvailabilityDAO.__proto__ || Object.getPrototypeOf(AvailabilityDAO)).call(this, {
+    return _possibleConstructorReturn(this, _getPrototypeOf(AvailabilityDAO).call(this, {
       entityName: _constants.DAO_ENTITIES.BEVERAGE_AVAILABILITIES,
-      translator: new _DefaultTranslator2.default()
+      translator: new _DefaultTranslator.default()
     }));
   }
 
   return AvailabilityDAO;
-}(_DAO3.default);
+}(_ODataDAO2.default);
 
-exports.default = new AvailabilityDAO();
+var _default = new AvailabilityDAO();
+
+exports.default = _default;
