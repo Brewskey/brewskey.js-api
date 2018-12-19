@@ -1,22 +1,27 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var PERMISSIONS_MAP = exports.PERMISSIONS_MAP = {
+exports.FILTER_FUNCTION_OPERATORS = exports.FILTER_OPERATORS = exports.DAO_ENTITIES = exports.PERMISSIONS_MAP = void 0;
+var PERMISSIONS_MAP = {
   Administrator: 4,
   BannedFromTap: 1,
   Edit: 3,
   Read: 2
 };
-var DAO_ENTITIES = exports.DAO_ENTITIES = {
+exports.PERMISSIONS_MAP = PERMISSIONS_MAP;
+var DAO_ENTITIES = {
   ACCOUNTS: 'accounts',
+  ACHIEVEMENTS: 'achievements',
   BEVERAGE_AVAILABILITIES: 'beverage-availabilities',
   BEVERAGE_GLASSES: 'beverage-glasses',
   BEVERAGE_SRMS: 'beverage-srms',
   BEVERAGE_STYLES: 'beverage-styles',
   BEVERAGES: 'beverages',
   DEVICES: 'devices',
+  FLOW_SENSORS: 'flow-sensors',
+  FRIENDS: 'friends',
   KEGS: 'kegs',
   LOCATIONS: 'locations',
   ORGANIZATIONS: 'organizations',
@@ -28,7 +33,7 @@ var DAO_ENTITIES = exports.DAO_ENTITIES = {
   SCHEDULES: 'schedules',
   TAPS: 'taps'
 };
-
+exports.DAO_ENTITIES = DAO_ENTITIES;
 var FILTER_OPERATORS = {
   CONTAINS: 'contains',
   ENDS_WITH: 'endswith',
@@ -42,8 +47,6 @@ var FILTER_OPERATORS = {
   NOT_STARTS_WITH: 'not startswith',
   STARTS_WITH: 'startswith'
 };
-
-var FILTER_FUNCTION_OPERATORS = [FILTER_OPERATORS.CONTAINS, FILTER_OPERATORS.ENDS_WITH, FILTER_OPERATORS.NOT_ENDS_WITH, FILTER_OPERATORS.NOT_STARTS_WITH, FILTER_OPERATORS.STARTS_WITH];
-
 exports.FILTER_OPERATORS = FILTER_OPERATORS;
+var FILTER_FUNCTION_OPERATORS = [FILTER_OPERATORS.CONTAINS, FILTER_OPERATORS.ENDS_WITH, FILTER_OPERATORS.NOT_ENDS_WITH, FILTER_OPERATORS.NOT_STARTS_WITH, FILTER_OPERATORS.STARTS_WITH];
 exports.FILTER_FUNCTION_OPERATORS = FILTER_FUNCTION_OPERATORS;

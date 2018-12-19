@@ -9,30 +9,68 @@
   ],
   "scripts": {
     "build": "babel src -d build --copy-files",
+    "build:flow": "flow-copy-source -v src build",
     "flow": "flow",
     "lint": "eslint src/ --fix --max-warnings 0",
-    "start": "babel ./src --out-dir ./build --watch --copy-files"
+    "start": "babel ./src --out-dir ./build --watch --copy-files",
+    "test": "ava",
+    "test:watch": "ava --watch",
+    "test:api": "babel-node ./test/index.js"
   },
-  "pre-commit": "lint",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^7.1.1",
-    "babel-plugin-autobind-class-methods": "^5.0.1",
-    "babel-plugin-syntax-flow": "^6.18.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-flow-strip-types": "^6.18.0",
-    "babel-plugin-transform-object-rest-spread": "^6.20.2",
-    "babel-preset-env": "^1.6.1",
-    "eslint": "^3.12.1",
-    "eslint-config-airbnb-base": "^11.0.0",
-    "eslint-plugin-flowtype": "^2.29.1",
-    "eslint-plugin-import": "^2.2.0",
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/preset-env": "^7.1.5",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "ava": "^0.25.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-flowtype": "^3.2.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-sorting": "^0.3.0",
-    "flow-bin": "^0.39.0"
+    "flow-bin": "^0.88.0",
+    "flow-copy-source": "^2.0.2",
+    "form-data": "^2.3.3",
+    "husky": "^1.2.0",
+    "lint-staged": "^8.0.4",
+    "minimist": "^1.2.0",
+    "node-fetch": "^2.2.1",
+    "prettier": "^1.15.2"
   },
   "dependencies": {
-    "babel-preset-react-hmre": "^1.1.1",
-    "odata": "git+https://github.com/Brewskey/o.js.git"
+    "array-flatten": "^2.1.1",
+    "debounce": "^1.2.0",
+    "event-source-polyfill": "^1.0.4",
+    "nullthrows": "^1.1.0",
+    "odata": "git+https://github.com/Brewskey/o.js.git",
+    "qs": "^6.6.0",
+    "react-native-signalr": "git+https://github.com/Brewskey/react-native-signalr.git"
+  },
+  "ava": {
+    "verbose": true,
+    "babel": "inherit",
+    "files": [
+      "test/*.test.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,json}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 0",
+      "git add"
+    ]
   }
 }

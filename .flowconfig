@@ -1,9 +1,12 @@
 [ignore]
-build
+.*/build/*
 
 [include]
 
 [libs]
-interfaces/
+flow-typed/
 
 [options]
+
+[version]
+^0.88.0
