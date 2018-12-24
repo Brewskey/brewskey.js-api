@@ -55,7 +55,9 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     isNaN(value) || value === '' ? `'${value}'` : value;
 
   __reformatQueryValue = (value: string | number): string | number =>
-    typeof value === 'string' ? `'${encodeURIComponent(value)}'` : value;
+    typeof value === 'string' && !Date.parse(value)
+      ? `'${encodeURIComponent(value)}'`
+      : value;
 
   __buildHandler(
     queryOptions?: QueryOptions = {},

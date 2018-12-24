@@ -91,7 +91,7 @@ function (_Subscription) {
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "__reformatQueryValue", function (value) {
-      return typeof value === 'string' ? "'".concat(encodeURIComponent(value), "'") : value;
+      return typeof value === 'string' && !Date.parse(value) ? "'".concat(encodeURIComponent(value), "'") : value;
     });
 
     _this.__config = config;
