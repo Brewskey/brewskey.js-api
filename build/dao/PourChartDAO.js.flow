@@ -1,5 +1,6 @@
 // @flow
 
+import type { EntityID } from '../types';
 import type LoadObject from '../LoadObject';
 
 import RestDAO from './RestDAO';
@@ -9,14 +10,14 @@ import DefaultTranslator from '../translators/DefaultTranslator';
 
 export type PourChartByEntity = 'device' | 'location' | 'organization' | 'tap';
 
-export type PourChartType = 'hourly' | 'timeline';
+export type PourChartType = 'daily' | 'hourly' | 'timeline';
 
 export type PourChartParams = {
   beginDate?: ?Date,
   byEntity: PourChartByEntity,
   chartType: PourChartType,
   endDate?: ?Date,
-  ids?: Array<string>,
+  ids?: Array<EntityID>,
 };
 
 export type PourChartResult = {|
