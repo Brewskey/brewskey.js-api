@@ -45,6 +45,8 @@ var _fetch = _interopRequireDefault(require("./fetch"));
 
 var _filters = require("./filters");
 
+var _Headers = _interopRequireDefault(require("./Headers"));
+
 var _Auth = _interopRequireWildcard(require("./Auth"));
 
 Object.keys(_Auth).forEach(function (key) {
@@ -421,6 +423,14 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 var initialize = function initialize(host) {
   _Config.default.host = host;
   (0, _odata.default)().config({
@@ -431,16 +441,10 @@ var initialize = function initialize(host) {
 var setToken = function setToken(token) {
   _Config.default.token = token;
   (0, _odata.default)().config({
-    headers: [{
-      name: 'timezoneOffset',
-      value: new Date().getTimezoneOffset().toString()
-    }, {
+    headers: [].concat(_toConsumableArray(_Headers.default), [{
       name: 'Authorization',
       value: "Bearer ".concat(token)
-    }, {
-      name: 'Prefer',
-      value: 'return=representation'
-    }]
+    }])
   });
 };
 

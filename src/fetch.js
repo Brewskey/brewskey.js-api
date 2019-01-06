@@ -2,6 +2,7 @@
 
 import nullthrows from 'nullthrows';
 import Config from './Config';
+import Headers from './Headers';
 
 const parseError = (error: Object): string => {
   if (error.ModelState) {
@@ -44,7 +45,7 @@ export default async (path: string, options?: Object = {}): Promise<any> => {
     headers.append('Authorization', `Bearer ${Config.token}`);
   }
 
-  (options.headers || []).forEach(({ name, value }) =>
+  [...Headers, ...options.headers].forEach(({ name, value }) =>
     headers.append(name, value),
   );
 
