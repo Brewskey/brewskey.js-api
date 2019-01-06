@@ -45,7 +45,7 @@ var _fetch = _interopRequireDefault(require("./fetch"));
 
 var _filters = require("./filters");
 
-var _Headers = _interopRequireDefault(require("./Headers"));
+var _StandardHeaders = _interopRequireDefault(require("./StandardHeaders"));
 
 var _Auth = _interopRequireWildcard(require("./Auth"));
 
@@ -441,7 +441,7 @@ var initialize = function initialize(host) {
 var setToken = function setToken(token) {
   _Config.default.token = token;
   (0, _odata.default)().config({
-    headers: [].concat(_toConsumableArray(_Headers.default), [{
+    headers: [].concat(_toConsumableArray(_StandardHeaders.default), [{
       name: 'Authorization',
       value: "Bearer ".concat(token)
     }])

@@ -9,7 +9,7 @@ var _nullthrows = _interopRequireDefault(require("nullthrows"));
 
 var _Config = _interopRequireDefault(require("./Config"));
 
-var _Headers = _interopRequireDefault(require("./Headers"));
+var _StandardHeaders = _interopRequireDefault(require("./StandardHeaders"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -87,13 +87,13 @@ function () {
             throw new Error('DAOApi: no host set');
 
           case 4:
-            headers = new _Headers.default();
+            headers = new Headers();
 
             if (_Config.default.token) {
               headers.append('Authorization', "Bearer ".concat(_Config.default.token));
             }
 
-            [].concat(_toConsumableArray(_Headers.default), _toConsumableArray(options.headers)).forEach(function (_ref2) {
+            [].concat(_toConsumableArray(_StandardHeaders.default), _toConsumableArray(options.headers)).forEach(function (_ref2) {
               var name = _ref2.name,
                   value = _ref2.value;
               return headers.append(name, value);

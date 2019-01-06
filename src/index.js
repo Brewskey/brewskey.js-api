@@ -8,7 +8,7 @@ import Subscription from './dao/Subscription';
 
 import fetch from './fetch';
 import { createFilter, doesSatisfyQueryFilters } from './filters';
-import Headers from './Headers';
+import StandardHeaders from './StandardHeaders';
 
 import Auth from './Auth';
 
@@ -53,7 +53,7 @@ const setToken = (token: string) => {
 
   oHandler().config({
     headers: [
-      ...Headers,
+      ...StandardHeaders,
       {
         name: 'Authorization',
         value: `Bearer ${token}`,
