@@ -36,9 +36,9 @@ const parseError = (error: Object): string => {
 };
 
 type FetchOptions = {
-  body: any,
+  body?: any,
   headers?: Array<{ name: string, value: string }>,
-  method: RequestMethod,
+  method?: RequestMethod,
   reformatError?: (error: Error) => string,
 };
 
