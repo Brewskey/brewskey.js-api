@@ -65,6 +65,8 @@ function () {
   regeneratorRuntime.mark(function _callee(path) {
     var options,
         reformatError,
+        _options$headers,
+        optionsHeaders,
         fetchOptions,
         headers,
         organizationId,
@@ -72,12 +74,13 @@ function () {
         response,
         responseJson,
         _args = arguments;
+
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             options = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
-            reformatError = options.reformatError, fetchOptions = _objectWithoutProperties(options, ["reformatError"]);
+            reformatError = options.reformatError, _options$headers = options.headers, optionsHeaders = _options$headers === void 0 ? [] : _options$headers, fetchOptions = _objectWithoutProperties(options, ["reformatError", "headers"]);
 
             if (_Config.default.host) {
               _context.next = 4;
@@ -93,7 +96,7 @@ function () {
               headers.append('Authorization', "Bearer ".concat(_Config.default.token));
             }
 
-            [].concat(_toConsumableArray(_StandardHeaders.default), _toConsumableArray(options.headers)).forEach(function (_ref2) {
+            [].concat(_toConsumableArray(_StandardHeaders.default), _toConsumableArray(optionsHeaders)).forEach(function (_ref2) {
               var name = _ref2.name,
                   value = _ref2.value;
               return headers.append(name, value);

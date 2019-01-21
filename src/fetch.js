@@ -1,5 +1,7 @@
 // @flow
 
+import type { RequestMethod } from './types';
+
 import nullthrows from 'nullthrows';
 import Config from './Config';
 import StandardHeaders from './StandardHeaders';
@@ -33,8 +35,22 @@ const parseError = (error: Object): string => {
   return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
 };
 
-export default async (path: string, options?: Object = {}): Promise<any> => {
-  const { reformatError, ...fetchOptions } = options;
+type FetchOptions = {
+  body?: any,
+  headers?: Array<{ name: string, value: string }>,
+  method?: RequestMethod,
+  reformatError?: (error: Error) => string,
+};
+
+export default async (
+  path: string,
+  options?: FetchOptions = {},
+): Promise<any> => {
+  const {
+    reformatError,
+    headers: optionsHeaders = [],
+    ...fetchOptions
+  } = options;
 
   if (!Config.host) {
     throw new Error('DAOApi: no host set');
@@ -45,7 +61,7 @@ export default async (path: string, options?: Object = {}): Promise<any> => {
     headers.append('Authorization', `Bearer ${Config.token}`);
   }
 
-  [...StandardHeaders, ...options.headers].forEach(({ name, value }) =>
+  [...StandardHeaders, ...optionsHeaders].forEach(({ name, value }) =>
     headers.append(name, value),
   );
 

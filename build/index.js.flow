@@ -8,6 +8,7 @@ import Subscription from './dao/Subscription';
 
 import fetch from './fetch';
 import { createFilter, doesSatisfyQueryFilters } from './filters';
+import StandardHeaders from './StandardHeaders';
 
 import Auth from './Auth';
 
@@ -52,15 +53,11 @@ const setToken = (token: string) => {
 
   oHandler().config({
     headers: [
-      {
-        name: 'timezoneOffset',
-        value: new Date().getTimezoneOffset().toString(),
-      },
+      ...StandardHeaders,
       {
         name: 'Authorization',
         value: `Bearer ${token}`,
       },
-      { name: 'Prefer', value: 'return=representation' },
     ],
   });
 };
