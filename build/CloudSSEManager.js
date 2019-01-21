@@ -111,7 +111,7 @@ function (_Subscription) {
           eventNamePrefix = _ref$eventNamePrefix === void 0 ? '' : _ref$eventNamePrefix,
           particleId = _ref.particleId;
       var devicesUrl = particleId ? "devices/".concat(particleId, "/events/") : 'events/';
-      return "".concat((0, _nullthrows.default)(_Config.default.host), "/api/v2/").concat(devicesUrl).concat(eventNamePrefix);
+      return "".concat((0, _nullthrows.default)(_Config.default.host), "/api/v2/").concat(devicesUrl).concat(eventNamePrefix, "/");
     }
   }]);
 

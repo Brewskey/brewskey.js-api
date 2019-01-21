@@ -85,7 +85,7 @@ class CloudSSEManager extends Subscription {
   static _getUrl({ eventNamePrefix = '', particleId }: SSESubscriptionOptions) {
     const devicesUrl = particleId ? `devices/${particleId}/events/` : 'events/';
 
-    return `${nullthrows(Config.host)}/api/v2/${devicesUrl}${eventNamePrefix}`;
+    return `${nullthrows(Config.host)}/api/v2/${devicesUrl}${eventNamePrefix}/`;
   }
 }
 
