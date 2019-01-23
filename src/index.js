@@ -24,6 +24,7 @@ import GlassDAO from './dao/GlassDAO';
 import KegDAO from './dao/KegDAO';
 import LocationDAO from './dao/LocationDAO';
 import OrganizationDAO from './dao/OrganizationDAO';
+import PaymentsDAO from './dao/PaymentsDAO';
 import PermissionDAO from './dao/PermissionDAO';
 import PourChartDAO from './dao/PourChartDAO';
 import PourDAO from './dao/PourDAO';
@@ -75,6 +76,7 @@ const DAOArray = [
   KegDAO,
   LocationDAO,
   OrganizationDAO,
+  PaymentsDAO,
   PermissionDAO,
   PourDAO,
   ProductDAO,
@@ -104,6 +106,7 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   FriendDAO.flushCache();
   KegDAO.flushCache();
   LocationDAO.flushCache();
+  PaymentsDAO.flushCache();
   PourChartDAO.flushCache();
   PourDAO.flushCache();
   ReportDAO.flushCache();
@@ -125,6 +128,7 @@ export * from './dao/KegDAO';
 export * from './dao/LocationDAO';
 export * from './dao/OrganizationDAO';
 export * from './dao/PermissionDAO';
+export * from './dao/PaymentsDAO';
 export * from './dao/PourChartDAO';
 export * from './dao/PourDAO';
 export * from './dao/ProductDAO';
@@ -162,6 +166,7 @@ export default {
   KegDAO,
   LocationDAO,
   OrganizationDAO,
+  PaymentsDAO,
   PermissionDAO,
   PourChartDAO,
   PourDAO,

@@ -76,7 +76,7 @@ export type ODataNavigationProperties = {
   },
 };
 
-export type RequestMethod = 'delete' | 'get' | 'patch' | 'post' | 'put';
+export type RequestMethod = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
 
 export type ODataDAOConfig<TEntity, TEntityMutator> = {|
   entityName: EntityName,

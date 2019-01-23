@@ -216,6 +216,19 @@ Object.keys(_OrganizationDAO).forEach(function (key) {
   });
 });
 
+var _PaymentsDAO = _interopRequireWildcard(require("./dao/PaymentsDAO"));
+
+Object.keys(_PaymentsDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _PaymentsDAO[key];
+    }
+  });
+});
+
 var _PermissionDAO = _interopRequireWildcard(require("./dao/PermissionDAO"));
 
 Object.keys(_PermissionDAO).forEach(function (key) {
@@ -448,7 +461,7 @@ var setToken = function setToken(token) {
   });
 };
 
-var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PermissionDAO.default, _PourDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
+var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PaymentsDAO.default, _PermissionDAO.default, _PourDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
 
 var flushCache = function flushCache() {
   DAOArray.forEach(function (dao) {
@@ -473,6 +486,8 @@ var setOrganizationID = function setOrganizationID(organizationID) {
   _KegDAO.default.flushCache();
 
   _LocationDAO.default.flushCache();
+
+  _PaymentsDAO.default.flushCache();
 
   _PourChartDAO.default.flushCache();
 
@@ -501,6 +516,7 @@ var _default = {
   KegDAO: _KegDAO.default,
   LocationDAO: _LocationDAO.default,
   OrganizationDAO: _OrganizationDAO.default,
+  PaymentsDAO: _PaymentsDAO.default,
   PermissionDAO: _PermissionDAO.default,
   PourChartDAO: _PourChartDAO.default,
   PourDAO: _PourDAO.default,

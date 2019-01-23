@@ -164,7 +164,7 @@ function (_Subscription) {
           }],
           method: 'GET'
         }, queryParams)).then(function (result) {
-          _this4._entityLoaderById.set(stringifiedId, _LoadObject.default.withValue((0, _nullthrows.default)(result)));
+          _this4._entityLoaderById.set(stringifiedId, _LoadObject.default.withValue(result));
 
           _this4.__emitChanges();
         }).catch(function (error) {
@@ -192,7 +192,7 @@ function (_Subscription) {
       (0, _fetch.default)(path, _objectSpread({
         method: 'GET'
       }, queryParams)).then(function (result) {
-        _this5._entityLoaderById.set(clientId, _LoadObject.default.withValue((0, _nullthrows.default)(result)));
+        _this5._entityLoaderById.set(clientId, _LoadObject.default.withValue(result));
 
         _this5.__emitChanges();
       }).catch(function (error) {
@@ -212,6 +212,8 @@ function (_Subscription) {
       var clientId = _ClientID.default.getClientId();
 
       this._entityLoaderById.set(clientId, _LoadObject.default.creating());
+
+      this.__emitChanges();
 
       (0, _fetch.default)(path, _objectSpread({
         body: JSON.stringify(mutator),
@@ -271,9 +273,9 @@ function (_Subscription) {
       })).then(function (item) {
         _this7._flushQueryCaches();
 
-        _this7._entityLoaderById.set((0, _nullthrows.default)(item).id, _LoadObject.default.withValue((0, _nullthrows.default)(item)));
+        _this7._entityLoaderById.set(stringifiedID, _LoadObject.default.withValue(item));
 
-        _this7._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this7._entityLoaderById.get((0, _nullthrows.default)(item).id)));
+        _this7._entityLoaderById.set(clientId, (0, _nullthrows.default)(_this7._entityLoaderById.get(stringifiedID)));
 
         _this7.__emitChanges();
       }).catch(function (error) {
@@ -308,8 +310,6 @@ function (_Subscription) {
         _this8._entityLoaderById.set(clientId, _LoadObject.default.empty());
 
         _this8._entityLoaderById.set(id, _LoadObject.default.empty());
-
-        _this8.__emitChanges();
 
         _this8._flushQueryCaches();
 
