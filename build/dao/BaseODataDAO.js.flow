@@ -176,7 +176,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
   __resolveSingle(
     handler: OHandler<TEntity>,
     params?: Object,
-    method?: RequestMethod = 'get',
+    method?: RequestMethod = 'GET',
   ): Promise<TEntity> {
     return this.__resolve(handler, params, method).then(
       (result: ODataDAOResult): TEntity =>
@@ -187,7 +187,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
   async __resolveMany(
     handler: OHandler<TEntity>,
     params?: Object,
-    method?: RequestMethod = 'get',
+    method?: RequestMethod = 'GET',
   ): Promise<Array<TEntity>> {
     const result = await this.__resolve(handler, params, method);
     return (result.data || []).map(
@@ -200,7 +200,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     params?: Object,
     idSelector?: (item: Object) => EntityID = (item: Object): EntityID =>
       item.id,
-    method?: RequestMethod = 'get',
+    method?: RequestMethod = 'GET',
   ): Promise<Array<EntityID>> {
     const result = await this.__resolve(handler, params, method);
     return (result.data || []).map(idSelector);
@@ -209,7 +209,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
   async __resolve(
     handler: OHandler<TEntity>,
     params?: ?Object = null,
-    method?: RequestMethod = 'get',
+    method?: RequestMethod = 'GET',
   ): Promise<ODataDAOResult> {
     let request;
     switch (method) {
