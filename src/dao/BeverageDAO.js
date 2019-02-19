@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID, ShortenedEntity } from '../types';
+import type { EntityID, QueryOptions, ShortenedEntity } from '../types';
 import type { Srm } from './SrmDAO';
 
 import ODataDAO from './ODataDAO';
@@ -81,6 +81,15 @@ class BeverageDAO extends ODataDAO<Beverage, BeverageMutator> {
       },
       translator: new BeverageTranslator(),
     });
+  }
+
+  search(queryOptions: QueryOptions): LoadObject<Array<LoadObject<Beverage>>> {
+    const funcString = `Default.search()`;
+
+    const handler = this.__buildHandler(queryOptions, false);
+    handler.func(funcString);
+
+    return this.__fetchCustom(handler, queryOptions, funcString);
   }
 
   // todo move to BeverageImageDAO extends RestDAO ?

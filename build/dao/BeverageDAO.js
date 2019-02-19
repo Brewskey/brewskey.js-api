@@ -62,10 +62,20 @@ function (_ODataDAO) {
       },
       translator: new _BeverageTranslator.default()
     }));
-  } // todo move to BeverageImageDAO extends RestDAO ?
-
+  }
 
   _createClass(BeverageDAO, [{
+    key: "search",
+    value: function search(queryOptions) {
+      var funcString = "Default.search()";
+
+      var handler = this.__buildHandler(queryOptions, false);
+
+      handler.func(funcString);
+      return this.__fetchCustom(handler, queryOptions, funcString);
+    } // todo move to BeverageImageDAO extends RestDAO ?
+
+  }, {
     key: "uploadImage",
     value: function uploadImage(beverageId, image) {
       return (0, _fetch.default)("beverages/".concat(beverageId, "/photo/"), {

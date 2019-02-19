@@ -224,7 +224,7 @@ function (_Subscription) {
     value: function __resolveSingle(handler, params) {
       var _this3 = this;
 
-      var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'get';
+      var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'GET';
       return this.__resolve(handler, params, method).then(function (result) {
         return _this3.getTranslator().fromApi(result.data);
       });
@@ -244,7 +244,7 @@ function (_Subscription) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                method = _args.length > 2 && _args[2] !== undefined ? _args[2] : 'get';
+                method = _args.length > 2 && _args[2] !== undefined ? _args[2] : 'GET';
                 _context.next = 3;
                 return this.__resolve(handler, params, method);
 
@@ -285,7 +285,7 @@ function (_Subscription) {
                 idSelector = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : function (item) {
                   return item.id;
                 };
-                method = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : 'get';
+                method = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : 'GET';
                 _context2.next = 4;
                 return this.__resolve(handler, params, method);
 
@@ -322,7 +322,7 @@ function (_Subscription) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 params = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : null;
-                method = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : 'get';
+                method = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : 'GET';
                 _context3.t0 = method;
                 _context3.next = _context3.t0 === 'delete' ? 5 : _context3.t0 === 'patch' ? 7 : _context3.t0 === 'post' ? 9 : _context3.t0 === 'put' ? 11 : 13;
                 break;
