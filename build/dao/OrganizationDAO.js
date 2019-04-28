@@ -46,14 +46,17 @@ function (_ODataDAO) {
   }
 
   _createClass(OrganizationDAO, [{
-    key: "deauthorizeStripeAccount",
-    value: function deauthorizeStripeAccount(organizationID) {
-      var funcString = 'Default.deauthorizeStripeAccount()';
+    key: "deauthorizeOAuthIntegration",
+    value: function deauthorizeOAuthIntegration(organizationID) {
+      var partner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Square';
+      var funcString = 'Default.deauthorizeOAuthIntegration()';
       var stringifiedID = organizationID.toString();
 
       var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID)).func(funcString);
 
-      return this.__mutateCustom(handler, 'post', stringifiedID);
+      return this.__mutateCustom(handler, 'post', stringifiedID, {
+        partner: partner
+      });
     }
   }]);
 

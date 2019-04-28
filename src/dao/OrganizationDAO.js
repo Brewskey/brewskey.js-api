@@ -26,15 +26,20 @@ class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
     });
   }
 
-  deauthorizeStripeAccount(organizationID: string): string {
-    const funcString = 'Default.deauthorizeStripeAccount()';
+  deauthorizeOAuthIntegration(
+    organizationID: string,
+    partner: string = 'Square',
+  ): string {
+    const funcString = 'Default.deauthorizeOAuthIntegration()';
     const stringifiedID = organizationID.toString();
 
     const handler = this.__buildHandler({}, false)
       .find(this.__reformatIDValue(stringifiedID))
       .func(funcString);
 
-    return this.__mutateCustom(handler, 'post', stringifiedID);
+    return this.__mutateCustom(handler, 'post', stringifiedID, {
+      partner,
+    });
   }
 }
 

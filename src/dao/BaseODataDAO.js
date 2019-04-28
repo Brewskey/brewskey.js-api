@@ -72,10 +72,10 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     queryOptions?: QueryOptions = {},
     shouldExpand: boolean = true,
   ): OHandler<TEntity> {
-    const { shouldCount, skip, take } = queryOptions;
+    const { apply, shouldCount, search, skip, take } = queryOptions;
 
     const navProps = this.__config.navigationProperties;
-    if (shouldExpand && navProps) {
+    if (!search && shouldExpand && navProps) {
       const navPropsString = Array.from(Object.entries(navProps))
         .map(parseNavProp)
         .join(',');
@@ -106,7 +106,10 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       }
     }
 
-    const { apply } = queryOptions;
+    if (search) {
+      handler.customParam('$search', search);
+    }
+
     if (apply) {
       handler.customParam('$apply', apply);
     }

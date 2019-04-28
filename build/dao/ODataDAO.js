@@ -693,7 +693,9 @@ function (_BaseODataDAO) {
 
       var handler = this.__buildHandler(queryOptions, false);
 
-      handler = handler.select('id');
+      if (!Object.prototype.hasOwnProperty.call(queryOptions, 'search')) {
+        handler = handler.select('id');
+      }
 
       this.__resolveManyIDs(handler).then(function (ids) {
         var stringifiedIds = ids.map(String);

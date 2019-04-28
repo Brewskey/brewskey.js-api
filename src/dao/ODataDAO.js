@@ -628,7 +628,9 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     this.__emitChanges();
 
     let handler = this.__buildHandler(queryOptions, false);
-    handler = handler.select('id');
+    if (!Object.prototype.hasOwnProperty.call(queryOptions, 'search')) {
+      handler = handler.select('id');
+    }
 
     this.__resolveManyIDs(handler)
       .then((ids: Array<EntityID>) => {

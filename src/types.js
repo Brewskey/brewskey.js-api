@@ -64,6 +64,7 @@ export type QueryOptions = {
   apply?: string,
   filters?: Array<QueryFilter>,
   orderBy?: Array<QueryOrderBy>,
+  search?: string,
   shouldCount?: boolean,
   skip?: number,
   take?: number,

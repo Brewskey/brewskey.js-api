@@ -122,12 +122,14 @@ function (_Subscription) {
     value: function __setupHandler(handler) {
       var queryOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var shouldExpand = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-      var shouldCount = queryOptions.shouldCount,
+      var apply = queryOptions.apply,
+          shouldCount = queryOptions.shouldCount,
+          search = queryOptions.search,
           skip = queryOptions.skip,
           take = queryOptions.take;
       var navProps = this.__config.navigationProperties;
 
-      if (shouldExpand && navProps) {
+      if (!search && shouldExpand && navProps) {
         var navPropsString = Array.from(Object.entries(navProps)).map(parseNavProp).join(',');
         handler.expand(navPropsString);
       }
@@ -158,7 +160,9 @@ function (_Subscription) {
         }
       }
 
-      var apply = queryOptions.apply;
+      if (search) {
+        handler.customParam('$search', search);
+      }
 
       if (apply) {
         handler.customParam('$apply', apply);
