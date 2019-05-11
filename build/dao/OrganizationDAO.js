@@ -46,6 +46,27 @@ function (_ODataDAO) {
   }
 
   _createClass(OrganizationDAO, [{
+    key: "fetchWithPayments",
+    value: function fetchWithPayments(queryOptions) {
+      var funcString = "Default.withPayments()";
+
+      var handler = this.__buildHandler(queryOptions, false);
+
+      handler.func(funcString);
+      return this.__fetchCustom(handler, queryOptions, funcString);
+    }
+  }, {
+    key: "fetchCatalogItems",
+    value: function fetchCatalogItems(organizationID, queryOptions) {
+      var funcString = "Default.getCatalogItems()";
+      var stringifiedID = organizationID.toString();
+
+      var handler = this.__buildHandler(queryOptions, false).find(this.__reformatIDValue(stringifiedID));
+
+      handler.func(funcString);
+      return this.__fetchCustom(handler, queryOptions, funcString);
+    }
+  }, {
     key: "deauthorizeOAuthIntegration",
     value: function deauthorizeOAuthIntegration(organizationID) {
       var partner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Square';

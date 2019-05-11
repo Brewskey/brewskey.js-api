@@ -21,6 +21,7 @@ import DeviceDAO from './dao/DeviceDAO';
 import FlowSensorDAO from './dao/FlowSensorDAO';
 import FriendDAO from './dao/FriendDAO';
 import GlassDAO from './dao/GlassDAO';
+import ItemBeverageDAO from './dao/ItemBeverageDAO';
 import KegDAO from './dao/KegDAO';
 import LocationDAO from './dao/LocationDAO';
 import OrganizationDAO from './dao/OrganizationDAO';
@@ -73,6 +74,7 @@ const DAOArray = [
   FlowSensorDAO,
   FriendDAO,
   GlassDAO,
+  ItemBeverageDAO,
   KegDAO,
   LocationDAO,
   OrganizationDAO,
@@ -124,6 +126,7 @@ export * from './dao/DeviceDAO';
 export * from './dao/FlowSensorDAO';
 export * from './dao/FriendDAO';
 export * from './dao/GlassDAO';
+export * from './dao/ItemBeverageDAO';
 export * from './dao/KegDAO';
 export * from './dao/LocationDAO';
 export * from './dao/OrganizationDAO';
@@ -163,6 +166,7 @@ export default {
   FlowSensorDAO,
   FriendDAO,
   GlassDAO,
+  ItemBeverageDAO,
   KegDAO,
   LocationDAO,
   OrganizationDAO,

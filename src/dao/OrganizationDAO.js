@@ -1,5 +1,5 @@
 // @flow
-import type { EntityID } from '../types';
+import type { EntityID, QueryOptions } from '../types';
 
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
@@ -24,6 +24,32 @@ class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
       entityName: DAO_ENTITIES.ORGANIZATIONS,
       translator: new DefaultTranslator(),
     });
+  }
+
+  fetchWithPayments(
+    queryOptions: QueryOptions,
+  ): LoadObject<Array<LoadObject<Organization>>> {
+    const funcString = `Default.withPayments()`;
+
+    const handler = this.__buildHandler(queryOptions, false);
+    handler.func(funcString);
+
+    return this.__fetchCustom(handler, queryOptions, funcString);
+  }
+
+  fetchCatalogItems(
+    organizationID: EntityID,
+    queryOptions?: QueryOptions,
+  ): LoadObject<Array<LeaderboardItem>> {
+    const funcString = `Default.getCatalogItems()`;
+    const stringifiedID = organizationID.toString();
+
+    const handler = this.__buildHandler(queryOptions, false).find(
+      this.__reformatIDValue(stringifiedID),
+    );
+    handler.func(funcString);
+
+    return this.__fetchCustom(handler, queryOptions, funcString);
   }
 
   deauthorizeOAuthIntegration(

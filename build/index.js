@@ -177,6 +177,19 @@ Object.keys(_GlassDAO).forEach(function (key) {
   });
 });
 
+var _ItemBeverageDAO = _interopRequireWildcard(require("./dao/ItemBeverageDAO"));
+
+Object.keys(_ItemBeverageDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ItemBeverageDAO[key];
+    }
+  });
+});
+
 var _KegDAO = _interopRequireWildcard(require("./dao/KegDAO"));
 
 Object.keys(_KegDAO).forEach(function (key) {
@@ -461,7 +474,7 @@ var setToken = function setToken(token) {
   });
 };
 
-var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PaymentsDAO.default, _PermissionDAO.default, _PourDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
+var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _ItemBeverageDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PaymentsDAO.default, _PermissionDAO.default, _PourDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
 
 var flushCache = function flushCache() {
   DAOArray.forEach(function (dao) {
@@ -513,6 +526,7 @@ var _default = {
   FlowSensorDAO: _FlowSensorDAO.default,
   FriendDAO: _FriendDAO.default,
   GlassDAO: _GlassDAO.default,
+  ItemBeverageDAO: _ItemBeverageDAO.default,
   KegDAO: _KegDAO.default,
   LocationDAO: _LocationDAO.default,
   OrganizationDAO: _OrganizationDAO.default,
