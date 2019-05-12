@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _eventSourcePolyfill = require("event-source-polyfill");
+var _eventsource = _interopRequireDefault(require("eventsource"));
 
 var _Subscription2 = _interopRequireDefault(require("./dao/Subscription"));
 
@@ -51,7 +51,7 @@ function (_Subscription) {
     value: function subscribe(handler, subscribeOptions) {
       var onError = subscribeOptions.onError,
           onOpen = subscribeOptions.onOpen;
-      var session = new _eventSourcePolyfill.EventSourcePolyfill(CloudSSEManager._getUrl(subscribeOptions), {
+      var session = new _eventsource.default(CloudSSEManager._getUrl(subscribeOptions), {
         headers: {
           Authorization: "Bearer ".concat((0, _nullthrows.default)(_Config.default.token))
         }

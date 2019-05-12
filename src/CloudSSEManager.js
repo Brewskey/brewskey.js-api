@@ -1,6 +1,6 @@
 // @flow
 
-import { EventSourcePolyfill } from 'event-source-polyfill';
+import EventSource from 'eventsource';
 import Subscription from './dao/Subscription';
 import nullthrows from 'nullthrows';
 import Config from './Config';
@@ -22,7 +22,7 @@ export type CloudEvent = {|
 type SSEHandler = (event: CloudEvent) => any;
 
 class CloudSSEManager extends Subscription {
-  static _sessionByHandler: Map<SSEHandler, EventSourcePolyfill> = new Map();
+  static _sessionByHandler: Map<SSEHandler, EventSource> = new Map();
 
   static subscribe(
     handler: SSEHandler,
@@ -30,14 +30,11 @@ class CloudSSEManager extends Subscription {
   ) {
     const { onError, onOpen } = subscribeOptions;
 
-    const session = new EventSourcePolyfill(
-      CloudSSEManager._getUrl(subscribeOptions),
-      {
-        headers: {
-          Authorization: `Bearer ${nullthrows(Config.token)}`,
-        },
+    const session = new EventSource(CloudSSEManager._getUrl(subscribeOptions), {
+      headers: {
+        Authorization: `Bearer ${nullthrows(Config.token)}`,
       },
-    );
+    });
 
     session.addEventListener('message', sseEvent => {
       try {

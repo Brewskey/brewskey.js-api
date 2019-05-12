@@ -45,7 +45,7 @@
   "dependencies": {
     "array-flatten": "^2.1.1",
     "debounce": "^1.2.0",
-    "event-source-polyfill": "^1.0.4",
+    "eventsource": "^1.0.7",
     "nullthrows": "^1.1.0",
     "odata": "git+https://github.com/Brewskey/o.js.git",
     "qs": "^6.6.0",
