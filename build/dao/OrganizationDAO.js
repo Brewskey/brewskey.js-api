@@ -57,8 +57,13 @@ function (_ODataDAO) {
     }
   }, {
     key: "fetchCatalogItems",
-    value: function fetchCatalogItems(organizationID, queryOptions) {
+    value: function fetchCatalogItems(organizationID, deviceID, queryOptions) {
       var funcString = "Default.getCatalogItems()";
+
+      if (deviceID != null) {
+        funcString = "".concat(funcString, "/?deviceID=").concat(deviceID);
+      }
+
       var stringifiedID = organizationID.toString();
 
       var handler = this.__buildHandler(queryOptions, false).find(this.__reformatIDValue(stringifiedID));
