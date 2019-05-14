@@ -42,11 +42,8 @@ class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
     deviceID: ?EntityID,
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LeaderboardItem>> {
-    let funcString = `Default.getCatalogItems()`;
-    if (deviceID != null) {
-      funcString = `${funcString}/?deviceID=${deviceID}`;
-    }
-
+    const funcString = `Default.getCatalogItems(deviceID=${deviceID ||
+      'null'})`;
     const stringifiedID = organizationID.toString();
 
     const handler = this.__buildHandler(queryOptions, false).find(
