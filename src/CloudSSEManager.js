@@ -29,11 +29,7 @@ class CloudSSEManager extends Subscription {
   ) {
     const { onError, onOpen } = subscribeOptions;
 
-    const session = new EventSource(CloudSSEManager._getUrl(subscribeOptions), {
-      headers: {
-        Authorization: `Bearer ${nullthrows(Config.token)}`,
-      },
-    });
+    const session = new EventSource(CloudSSEManager._getUrl(subscribeOptions));
 
     session.addEventListener('message', sseEvent => {
       try {
@@ -81,7 +77,9 @@ class CloudSSEManager extends Subscription {
   static _getUrl({ eventNamePrefix = '', particleId }: SSESubscriptionOptions) {
     const devicesUrl = particleId ? `devices/${particleId}/events/` : 'events/';
 
-    return `${nullthrows(Config.host)}/api/v2/${devicesUrl}${eventNamePrefix}/`;
+    return `${nullthrows(
+      Config.host,
+    )}/api/v2/${devicesUrl}${eventNamePrefix}/?access_token=${Config.token}`;
   }
 }
 

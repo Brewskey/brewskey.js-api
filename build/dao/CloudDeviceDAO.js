@@ -51,6 +51,30 @@ function (_RestDAO) {
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_isOnlineStatusListenerToggled", false);
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_onNewCloudSystemEvent", function (cloudEvent) {
+      var data = cloudEvent.data,
+          name = cloudEvent.name,
+          particleId = cloudEvent.particleId;
+
+      if (name !== DEVICE_ONLINE_STATUS_EVENT_NAME) {
+        return;
+      }
+
+      var loader = _this._entityLoaderById.get(particleId);
+
+      if (!loader) {
+        return;
+      }
+
+      _this._entityLoaderById.set(particleId, loader.map(function (cloudDevice) {
+        return _objectSpread({}, cloudDevice, {
+          connected: data === 'online'
+        });
+      }));
+
+      _this.__emitChanges();
+    });
+
     return _this;
   }
 
@@ -108,31 +132,6 @@ function (_RestDAO) {
       } else {
         this.stopOnlineStatusListener();
       }
-    }
-  }, {
-    key: "_onNewCloudSystemEvent",
-    value: function _onNewCloudSystemEvent(cloudEvent) {
-      var data = cloudEvent.data,
-          name = cloudEvent.name,
-          particleId = cloudEvent.particleId;
-
-      if (name !== DEVICE_ONLINE_STATUS_EVENT_NAME) {
-        return;
-      }
-
-      var loader = this._entityLoaderById.get(particleId);
-
-      if (!loader) {
-        return;
-      }
-
-      this._entityLoaderById.set(particleId, loader.map(function (cloudDevice) {
-        return _objectSpread({}, cloudDevice, {
-          connected: data === 'online'
-        });
-      }));
-
-      this.__emitChanges();
     }
   }]);
 

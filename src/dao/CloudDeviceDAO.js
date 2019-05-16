@@ -74,7 +74,7 @@ class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
     }
   }
 
-  _onNewCloudSystemEvent(cloudEvent: CloudEvent) {
+  _onNewCloudSystemEvent = (cloudEvent: CloudEvent) => {
     const { data, name, particleId } = cloudEvent;
     if (name !== DEVICE_ONLINE_STATUS_EVENT_NAME) {
       return;
@@ -93,7 +93,7 @@ class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
       })),
     );
     this.__emitChanges();
-  }
+  };
 }
 
 export default new CloudDeviceDAO();
