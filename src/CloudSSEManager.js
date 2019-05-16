@@ -1,6 +1,5 @@
 // @flow
 
-import EventSource from 'eventsource';
 import Subscription from './dao/Subscription';
 import nullthrows from 'nullthrows';
 import Config from './Config';
