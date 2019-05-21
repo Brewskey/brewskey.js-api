@@ -37,13 +37,11 @@ class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
     return this.__fetchCustom(handler, queryOptions, funcString);
   }
 
-  fetchCatalogItems(
+  fetchSquareLocations(
     organizationID: EntityID,
-    deviceID: ?EntityID,
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LeaderboardItem>> {
-    const paramString = deviceID != null ? `deviceID=${deviceID}` : '';
-    const funcString = `Default.getCatalogItems(${paramString})`;
+    const funcString = `Default.fetchSquareLocations()`;
     const stringifiedID = organizationID.toString();
 
     const handler = this.__buildHandler(queryOptions, false).find(

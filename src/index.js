@@ -28,6 +28,7 @@ import PaymentsDAO from './dao/PaymentsDAO';
 import PermissionDAO from './dao/PermissionDAO';
 import PourChartDAO from './dao/PourChartDAO';
 import PourDAO from './dao/PourDAO';
+import PriceVariantDAO from './dao/PriceVariantDAO';
 import ProductDAO from './dao/ProductDAO';
 import ProductDeviceDAO from './dao/ProductDeviceDAO';
 import ProductFirmwareDAO from './dao/ProductFirmwareDAO';
@@ -79,6 +80,7 @@ const DAOArray = [
   PaymentsDAO,
   PermissionDAO,
   PourDAO,
+  PriceVariantDAO,
   ProductDAO,
   ProductDeviceDAO,
   ProductFirmwareDAO,
@@ -109,6 +111,7 @@ const setOrganizationID = (organizationID: ?EntityID) => {
   PaymentsDAO.flushCache();
   PourChartDAO.flushCache();
   PourDAO.flushCache();
+  PriceVariantDAO.flushCache();
   ReportDAO.flushCache();
   ScheduleDAO.flushCache();
   TapDAO.flushCache();
@@ -131,6 +134,7 @@ export * from './dao/PermissionDAO';
 export * from './dao/PaymentsDAO';
 export * from './dao/PourChartDAO';
 export * from './dao/PourDAO';
+export * from './dao/PriceVariantDAO';
 export * from './dao/ProductDAO';
 export * from './dao/ProductDeviceDAO';
 export * from './dao/ProductFirmwareDAO';
@@ -170,6 +174,7 @@ export default {
   PermissionDAO,
   PourChartDAO,
   PourDAO,
+  PriceVariantDAO,
   ProductDAO,
   ProductDeviceDAO,
   ProductFirmwareDAO,

@@ -56,10 +56,9 @@ function (_ODataDAO) {
       return this.__fetchCustom(handler, queryOptions, funcString);
     }
   }, {
-    key: "fetchCatalogItems",
-    value: function fetchCatalogItems(organizationID, deviceID, queryOptions) {
-      var paramString = deviceID != null ? "deviceID=".concat(deviceID) : '';
-      var funcString = "Default.getCatalogItems(".concat(paramString, ")");
+    key: "fetchSquareLocations",
+    value: function fetchSquareLocations(organizationID, queryOptions) {
+      var funcString = "Default.fetchSquareLocations()";
       var stringifiedID = organizationID.toString();
 
       var handler = this.__buildHandler(queryOptions, false).find(this.__reformatIDValue(stringifiedID));

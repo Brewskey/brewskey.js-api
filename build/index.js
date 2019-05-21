@@ -268,6 +268,19 @@ Object.keys(_PourDAO).forEach(function (key) {
   });
 });
 
+var _PriceVariantDAO = _interopRequireWildcard(require("./dao/PriceVariantDAO"));
+
+Object.keys(_PriceVariantDAO).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _PriceVariantDAO[key];
+    }
+  });
+});
+
 var _ProductDAO = _interopRequireWildcard(require("./dao/ProductDAO"));
 
 Object.keys(_ProductDAO).forEach(function (key) {
@@ -461,7 +474,7 @@ var setToken = function setToken(token) {
   });
 };
 
-var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PaymentsDAO.default, _PermissionDAO.default, _PourDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
+var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PaymentsDAO.default, _PermissionDAO.default, _PourDAO.default, _PriceVariantDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
 
 var flushCache = function flushCache() {
   DAOArray.forEach(function (dao) {
@@ -493,6 +506,8 @@ var setOrganizationID = function setOrganizationID(organizationID) {
 
   _PourDAO.default.flushCache();
 
+  _PriceVariantDAO.default.flushCache();
+
   _ReportDAO.default.flushCache();
 
   _ScheduleDAO.default.flushCache();
@@ -520,6 +535,7 @@ var _default = {
   PermissionDAO: _PermissionDAO.default,
   PourChartDAO: _PourChartDAO.default,
   PourDAO: _PourDAO.default,
+  PriceVariantDAO: _PriceVariantDAO.default,
   ProductDAO: _ProductDAO.default,
   ProductDeviceDAO: _ProductDeviceDAO.default,
   ProductFirmwareDAO: _ProductFirmwareDAO.default,
