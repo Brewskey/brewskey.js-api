@@ -34,6 +34,7 @@ export type Tap = {
   hideLeaderboard: boolean,
   hideStats: boolean,
   id: EntityID,
+  isPaymentEnabled: boolean,
   location: ?ShortenedEntity,
   organization: ShortenedEntity,
   requiresPourPrivilege: boolean,
@@ -47,6 +48,7 @@ export type TapMutator = {
   hideLeaderboard: boolean,
   hideStats: boolean,
   id: ?EntityID,
+  isPaymentEnabled: boolean,
   locationId: ?EntityID,
   requiresPourPrivilege: boolean,
 };

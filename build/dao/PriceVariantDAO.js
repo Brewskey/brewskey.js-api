@@ -39,7 +39,7 @@ function (_ODataDAO) {
       entityName: _constants.DAO_ENTITIES.PRICE_VARIANTS,
       navigationProperties: {
         tap: {
-          select: ['id', 'isDeleted', 'name']
+          select: ['id', 'isDeleted']
         }
       },
       translator: new _DefaultTranslator.default()

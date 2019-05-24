@@ -1,5 +1,5 @@
 // @flow
-import type { EntityID } from '../types';
+import type { EntityID, QueryOptions } from '../types';
 
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
@@ -18,6 +18,11 @@ export type OrganizationMutator = {
   name: string,
 };
 
+export type SquareLocation = {|
+  locationID: string,
+  name: string,
+|};
+
 class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
   constructor() {
     super({
@@ -26,15 +31,46 @@ class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
     });
   }
 
-  deauthorizeStripeAccount(organizationID: string): string {
-    const funcString = 'Default.deauthorizeStripeAccount()';
+  fetchWithPayments(
+    queryOptions: QueryOptions,
+  ): LoadObject<Array<LoadObject<Organization>>> {
+    const funcString = `Default.withPayments()`;
+
+    const handler = this.__buildHandler(queryOptions, false);
+    handler.func(funcString);
+
+    return this.__fetchCustom(handler, queryOptions, funcString);
+  }
+
+  fetchSquareLocations(
+    organizationID: EntityID,
+    queryOptions?: QueryOptions,
+  ): LoadObject<Array<SquareLocation>> {
+    const funcString = `Default.fetchSquareLocations()`;
+    const stringifiedID = organizationID.toString();
+
+    const handler = this.__buildHandler(queryOptions, false).find(
+      this.__reformatIDValue(stringifiedID),
+    );
+    handler.func(funcString);
+
+    return this.__fetchCustom(handler, queryOptions, funcString);
+  }
+
+  deauthorizeOAuthIntegration(
+    organizationID: string,
+    partner: string = 'Square',
+  ): string {
+    const funcString = 'Default.deauthorizeOAuthIntegration()';
     const stringifiedID = organizationID.toString();
 
     const handler = this.__buildHandler({}, false)
       .find(this.__reformatIDValue(stringifiedID))
       .func(funcString);
 
-    return this.__mutateCustom(handler, 'post', stringifiedID);
+    return this.__mutateCustom(handler, 'post', stringifiedID, {
+      partner,
+    });
   }
 }
 

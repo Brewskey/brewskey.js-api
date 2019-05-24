@@ -18,6 +18,11 @@ export type OrganizationMutator = {
   name: string,
 };
 
+export type SquareLocation = {|
+  locationID: string,
+  name: string,
+|};
+
 class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
   constructor() {
     super({
@@ -40,7 +45,7 @@ class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
   fetchSquareLocations(
     organizationID: EntityID,
     queryOptions?: QueryOptions,
-  ): LoadObject<Array<LeaderboardItem>> {
+  ): LoadObject<Array<SquareLocation>> {
     const funcString = `Default.fetchSquareLocations()`;
     const stringifiedID = organizationID.toString();
 

@@ -120,7 +120,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
         .then(result => {
           this._entityLoaderById.set(
             stringifiedId,
-            LoadObject.withValue(nullthrows(result)),
+            LoadObject.withValue(result),
           );
           this.__emitChanges();
         })
@@ -148,10 +148,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
 
     fetch(path, { method: 'GET', ...queryParams })
       .then(result => {
-        this._entityLoaderById.set(
-          clientId,
-          LoadObject.withValue(nullthrows(result)),
-        );
+        this._entityLoaderById.set(clientId, LoadObject.withValue(result));
         this.__emitChanges();
       })
       .catch(error => {
@@ -170,6 +167,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
   ): string {
     const clientId = ClientID.getClientId();
     this._entityLoaderById.set(clientId, LoadObject.creating());
+    this.__emitChanges();
 
     fetch(path, {
       body: JSON.stringify(mutator),
@@ -228,15 +226,10 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     })
       .then(item => {
         this._flushQueryCaches();
-
-        this._entityLoaderById.set(
-          nullthrows(item).id,
-          LoadObject.withValue(nullthrows(item)),
-        );
-
+        this._entityLoaderById.set(stringifiedID, LoadObject.withValue(item));
         this._entityLoaderById.set(
           clientId,
-          nullthrows(this._entityLoaderById.get(nullthrows(item).id)),
+          nullthrows(this._entityLoaderById.get(stringifiedID)),
         );
         this.__emitChanges();
       })
@@ -268,7 +261,6 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
       .then(() => {
         this._entityLoaderById.set(clientId, LoadObject.empty());
         this._entityLoaderById.set(id, LoadObject.empty());
-        this.__emitChanges();
         this._flushQueryCaches();
         this.__emitChanges();
       })

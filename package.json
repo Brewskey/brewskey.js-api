@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "babel src -d build --copy-files",
+    "build:all": "yarn build && yarn build:flow",
     "build:flow": "flow-copy-source -v src build",
     "flow": "flow",
     "lint": "eslint src/ --fix --max-warnings 0",
