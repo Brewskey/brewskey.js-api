@@ -27,6 +27,7 @@ export type EntityName =
   | 'organizations'
   | 'permissions'
   | 'pours'
+  | 'price-variants'
   | 'product-devices'
   | 'product-firmwares'
   | 'products'

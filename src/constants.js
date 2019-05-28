@@ -22,7 +22,6 @@ export const DAO_ENTITIES: { [key: string]: EntityName } = {
   DEVICES: 'devices',
   FLOW_SENSORS: 'flow-sensors',
   FRIENDS: 'friends',
-  ITEM_BEVERAGES: 'item-beverages',
   KEGS: 'kegs',
   LOCATIONS: 'locations',
   ORGANIZATIONS: 'organizations',
