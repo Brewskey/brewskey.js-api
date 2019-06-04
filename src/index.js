@@ -7,7 +7,7 @@ import { CADENCE_MAP } from './translators/ReportTranslator';
 import Subscription from './dao/Subscription';
 
 import fetch from './fetch';
-import { createFilter, doesSatisfyQueryFilters } from './filters';
+import { addFilter, createFilter, doesSatisfyQueryFilters } from './filters';
 import StandardHeaders from './StandardHeaders';
 
 import Auth from './Auth';
@@ -184,6 +184,7 @@ export default {
   SrmDAO,
   StyleDAO,
   TapDAO,
+  addFilter,
   createFilter,
   doesSatisfyQueryFilters,
   fetch,

@@ -545,6 +545,7 @@ var _default = {
   SrmDAO: _SrmDAO.default,
   StyleDAO: _StyleDAO.default,
   TapDAO: _TapDAO.default,
+  addFilter: _filters.addFilter,
   createFilter: _filters.createFilter,
   doesSatisfyQueryFilters: _filters.doesSatisfyQueryFilters,
   fetch: _fetch.default,
