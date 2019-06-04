@@ -134,32 +134,38 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     }
     const renderedFilters = queryOptions.filters
       .map(
-        ({ operator, params, values }: QueryFilter): string => {
-          const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
-            (op: string): boolean => op === operator,
-          );
+        (queryFilter: QueryFilter): string => {
+          let filters = [];
+          if (typeof queryFilter === 'string') {
+            filters = [`(${queryFilter})`];
+          } else {
+            const { operator, params, values } = queryFilter;
+            const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
+              (op: string): boolean => op === operator,
+            );
 
-          const filters = values.map(
-            (value: string): Array<string> =>
-              params.map(
-                (param: string): string => {
-                  // we have to use two reformat functions because of the issue:
-                  // https://github.com/Brewskey/brewskey.admin/issues/371
-                  // this is not ideal though, because it doesn't resolve
-                  // situations when we get stringified value from front-end
-                  // which is stored as number on the server.
-                  const reformattedValue = ID_REG_EXP.test(param)
-                    ? this.__reformatIDValue(value)
-                    : this.__reformatQueryValue(value);
+            filters = values.map(
+              (value: string): Array<string> =>
+                params.map(
+                  (param: string): string => {
+                    // we have to use two reformat functions because of the issue:
+                    // https://github.com/Brewskey/brewskey.admin/issues/371
+                    // this is not ideal though, because it doesn't resolve
+                    // situations when we get stringified value from front-end
+                    // which is stored as number on the server.
+                    const reformattedValue = ID_REG_EXP.test(param)
+                      ? this.__reformatIDValue(value)
+                      : this.__reformatQueryValue(value);
 
-                  if (isValidOperator) {
-                    return `(${operator}(${param}, ${reformattedValue}))`;
-                  }
+                    if (isValidOperator) {
+                      return `(${operator}(${param}, ${reformattedValue}))`;
+                    }
 
-                  return `(${param} ${operator} ${reformattedValue})`;
-                },
-              ),
-          );
+                    return `(${param} ${operator} ${reformattedValue})`;
+                  },
+                ),
+            );
+          }
 
           return filters
             .reduce(

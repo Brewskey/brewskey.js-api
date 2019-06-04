@@ -22,7 +22,6 @@ var DAO_ENTITIES = {
   DEVICES: 'devices',
   FLOW_SENSORS: 'flow-sensors',
   FRIENDS: 'friends',
-  ITEM_BEVERAGES: 'item-beverages',
   KEGS: 'kegs',
   LOCATIONS: 'locations',
   ORGANIZATIONS: 'organizations',

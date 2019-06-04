@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.doesSatisfyQueryFilters = exports.createFilter = void 0;
+exports.doesSatisfyQueryFilters = exports.addFilter = exports.createFilter = void 0;
 
 var _constants = require("./constants");
 
@@ -45,10 +45,18 @@ var createFilter = function createFilter(params) {
   return Object.keys(FILTERS).reduce(function (filters, filter) {
     return _objectSpread({}, filters, _defineProperty({}, filter, makeFilter(FILTERS[filter], params)));
   }, {});
+};
+
+exports.createFilter = createFilter;
+
+var addFilter = function addFilter(filter) {
+  return _defineProperty({}, filter, function () {
+    return filter;
+  });
 }; // todo make unit tests
 
 
-exports.createFilter = createFilter;
+exports.addFilter = addFilter;
 
 var doesSatisfyQueryFilters = function doesSatisfyQueryFilters(item, queryFilters) {
   return queryFilters.every(function (queryFilter) {
