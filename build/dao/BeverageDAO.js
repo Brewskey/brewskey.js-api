@@ -78,7 +78,7 @@ function (_ODataDAO) {
   }, {
     key: "uploadImage",
     value: function uploadImage(beverageId, image) {
-      return (0, _fetch.default)("beverages/".concat(beverageId, "/photo/"), {
+      return (0, _fetch.default)("api/v2/beverages/".concat(beverageId, "/photo/"), {
         body: JSON.stringify({
           photo: image
         }),

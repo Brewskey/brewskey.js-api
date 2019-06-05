@@ -67,7 +67,7 @@ function (_ODataDAO) {
   _createClass(FriendDAO, [{
     key: "addFriend",
     value: function addFriend(userNameOrEmail) {
-      return (0, _fetch.default)('friends/Default.addByUserName()/', {
+      return (0, _fetch.default)('api/v2/friends/Default.addByUserName()/', {
         body: JSON.stringify({
           userName: userNameOrEmail
         }),

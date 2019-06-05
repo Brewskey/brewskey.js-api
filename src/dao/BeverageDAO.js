@@ -94,7 +94,7 @@ class BeverageDAO extends ODataDAO<Beverage, BeverageMutator> {
 
   // todo move to BeverageImageDAO extends RestDAO ?
   uploadImage(beverageId: EntityID, image: string): Promise<*> {
-    return fetch(`beverages/${beverageId}/photo/`, {
+    return fetch(`api/v2/beverages/${beverageId}/photo/`, {
       body: JSON.stringify({ photo: image }),
       headers: [
         { name: 'Accept', value: 'application/json' },
