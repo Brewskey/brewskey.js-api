@@ -49,7 +49,7 @@ class FriendDAO extends ODataDAO<Friend, Friend> {
   }
 
   addFriend(userNameOrEmail: string): Promise<*> {
-    return daoFetch('friends/Default.addByUserName()/', {
+    return daoFetch('api/v2/friends/Default.addByUserName()/', {
       body: JSON.stringify({ userName: userNameOrEmail }),
       headers: [
         { name: 'Accept', value: 'application/json' },

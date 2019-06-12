@@ -14,7 +14,7 @@ import type { QueryFilter } from '../filters';
 
 import oHandler from 'odata';
 import Subscription from './Subscription';
-import { FILTER_FUNCTION_OPERATORS } from '../constants';
+import { FILTER_FUNCTION_OPERATORS, FILTER_OPERATORS } from '../constants';
 import Config from '../Config';
 
 const ID_REG_EXP = /\bid\b/;
@@ -135,37 +135,36 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     const renderedFilters = queryOptions.filters
       .map(
         (queryFilter: QueryFilter): string => {
-          let filters = [];
-          if (typeof queryFilter === 'string') {
-            filters = [`(${queryFilter})`];
-          } else {
-            const { operator, params, values } = queryFilter;
-            const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
-              (op: string): boolean => op === operator,
-            );
+          const { operator, params, values } = queryFilter;
+          const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
+            (op: string): boolean => op === operator,
+          );
+          const isAnyOperator = operator === FILTER_OPERATORS.ANY;
 
-            filters = values.map(
-              (value: string): Array<string> =>
-                params.map(
-                  (param: string): string => {
-                    // we have to use two reformat functions because of the issue:
-                    // https://github.com/Brewskey/brewskey.admin/issues/371
-                    // this is not ideal though, because it doesn't resolve
-                    // situations when we get stringified value from front-end
-                    // which is stored as number on the server.
-                    const reformattedValue = ID_REG_EXP.test(param)
-                      ? this.__reformatIDValue(value)
-                      : this.__reformatQueryValue(value);
+          const filters = values.map(
+            (value: string): Array<string> =>
+              params.map(
+                (param: string): string => {
+                  // we have to use two reformat functions because of the issue:
+                  // https://github.com/Brewskey/brewskey.admin/issues/371
+                  // this is not ideal though, because it doesn't resolve
+                  // situations when we get stringified value from front-end
+                  // which is stored as number on the server.
+                  const reformattedValue = ID_REG_EXP.test(param)
+                    ? this.__reformatIDValue(value)
+                    : this.__reformatQueryValue(value);
 
-                    if (isValidOperator) {
-                      return `(${operator}(${param}, ${reformattedValue}))`;
-                    }
+                  if (isAnyOperator) {
+                    return `(${param}/any(${reformattedValue}))`;
+                  }
+                  if (isValidOperator) {
+                    return `(${operator}(${param}, ${reformattedValue}))`;
+                  }
 
-                    return `(${param} ${operator} ${reformattedValue})`;
-                  },
-                ),
-            );
-          }
+                  return `(${param} ${operator} ${reformattedValue})`;
+                },
+              ),
+          );
 
           return filters
             .reduce(
