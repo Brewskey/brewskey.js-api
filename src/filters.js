@@ -17,17 +17,16 @@ export type FilterCreator = (params: any) => QueryFilter;
 
 export type FilterCreators = { [string]: FilterCreator };
 
-export type QueryFilter =
-  | {
-      operator: FilterOperator,
-      params: Array<string>,
-      values: Array<string>,
-    }
-  | string;
+export type QueryFilter = {
+  operator: FilterOperator,
+  params: Array<string>,
+  values: Array<string>,
+};
 
 import { FILTER_OPERATORS } from './constants';
 
 const FILTERS: { [string]: FilterOperator } = {
+  any: FILTER_OPERATORS.ANY,
   contains: FILTER_OPERATORS.CONTAINS,
   endsWith: FILTER_OPERATORS.ENDS_WITH,
   equals: FILTER_OPERATORS.EQUALS,
@@ -67,10 +66,6 @@ export const createFilter = (params: any): FilterCreators =>
     }),
     {},
   );
-
-export const addFilter = (filter: string): FilterCreators => ({
-  [filter]: () => filter,
-});
 
 // todo make unit tests
 export const doesSatisfyQueryFilters = (

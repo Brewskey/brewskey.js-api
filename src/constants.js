@@ -36,6 +36,7 @@ export const DAO_ENTITIES: { [key: string]: EntityName } = {
 };
 
 const FILTER_OPERATORS: { [key: string]: FilterOperator } = {
+  ANY: 'contains',
   CONTAINS: 'contains',
   ENDS_WITH: 'endswith',
   EQUALS: 'eq',

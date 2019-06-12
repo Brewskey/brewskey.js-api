@@ -36,6 +36,7 @@ var DAO_ENTITIES = {
 };
 exports.DAO_ENTITIES = DAO_ENTITIES;
 var FILTER_OPERATORS = {
+  ANY: 'contains',
   CONTAINS: 'contains',
   ENDS_WITH: 'endswith',
   EQUALS: 'eq',

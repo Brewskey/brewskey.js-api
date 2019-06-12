@@ -191,37 +191,35 @@ function (_Subscription) {
       }
 
       var renderedFilters = queryOptions.filters.map(function (queryFilter) {
-        var filters = [];
+        var operator = queryFilter.operator,
+            params = queryFilter.params,
+            values = queryFilter.values;
 
-        if (typeof queryFilter === 'string') {
-          filters = ["(".concat(queryFilter, ")")];
-        } else {
-          var operator = queryFilter.operator,
-              params = queryFilter.params,
-              values = queryFilter.values;
+        var isValidOperator = _constants.FILTER_FUNCTION_OPERATORS.find(function (op) {
+          return op === operator;
+        });
 
-          var isValidOperator = _constants.FILTER_FUNCTION_OPERATORS.find(function (op) {
-            return op === operator;
+        var isAnyOperator = operator === _constants.FILTER_OPERATORS.ANY;
+        var filters = values.map(function (value) {
+          return params.map(function (param) {
+            // we have to use two reformat functions because of the issue:
+            // https://github.com/Brewskey/brewskey.admin/issues/371
+            // this is not ideal though, because it doesn't resolve
+            // situations when we get stringified value from front-end
+            // which is stored as number on the server.
+            var reformattedValue = ID_REG_EXP.test(param) ? _this2.__reformatIDValue(value) : _this2.__reformatQueryValue(value);
+
+            if (isAnyOperator) {
+              return "(".concat(param, "/any(").concat(reformattedValue, "))");
+            }
+
+            if (isValidOperator) {
+              return "(".concat(operator, "(").concat(param, ", ").concat(reformattedValue, "))");
+            }
+
+            return "(".concat(param, " ").concat(operator, " ").concat(reformattedValue, ")");
           });
-
-          filters = values.map(function (value) {
-            return params.map(function (param) {
-              // we have to use two reformat functions because of the issue:
-              // https://github.com/Brewskey/brewskey.admin/issues/371
-              // this is not ideal though, because it doesn't resolve
-              // situations when we get stringified value from front-end
-              // which is stored as number on the server.
-              var reformattedValue = ID_REG_EXP.test(param) ? _this2.__reformatIDValue(value) : _this2.__reformatQueryValue(value);
-
-              if (isValidOperator) {
-                return "(".concat(operator, "(").concat(param, ", ").concat(reformattedValue, "))");
-              }
-
-              return "(".concat(param, " ").concat(operator, " ").concat(reformattedValue, ")");
-            });
-          });
-        }
-
+        });
         return filters.reduce(function (previousFilter, currentFilters) {
           return [].concat(_toConsumableArray(previousFilter), _toConsumableArray(currentFilters));
         }).join(' or ');
