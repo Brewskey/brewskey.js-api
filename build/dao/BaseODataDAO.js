@@ -202,16 +202,17 @@ function (_Subscription) {
         var isAnyOperator = operator === _constants.FILTER_OPERATORS.ANY;
         var filters = values.map(function (value) {
           return params.map(function (param) {
-            // we have to use two reformat functions because of the issue:
+            // Any operator should have the value pre-formatted
+            if (isAnyOperator) {
+              return "(".concat(param, "/any(").concat(value, "))");
+            } // we have to use two reformat functions because of the issue:
             // https://github.com/Brewskey/brewskey.admin/issues/371
             // this is not ideal though, because it doesn't resolve
             // situations when we get stringified value from front-end
             // which is stored as number on the server.
-            var reformattedValue = ID_REG_EXP.test(param) ? _this2.__reformatIDValue(value) : _this2.__reformatQueryValue(value);
 
-            if (isAnyOperator) {
-              return "(".concat(param, "/any(").concat(reformattedValue, "))");
-            }
+
+            var reformattedValue = ID_REG_EXP.test(param) ? _this2.__reformatIDValue(value) : _this2.__reformatQueryValue(value);
 
             if (isValidOperator) {
               return "(".concat(operator, "(").concat(param, ", ").concat(reformattedValue, "))");
