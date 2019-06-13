@@ -351,7 +351,11 @@ class LoadObject<TValue> {
     return LoadObject._create('NONE', undefined, error, false);
   }
 
-  static withValue<V>(value: V): LoadObject<V> {
+  static withValue<V>(value: V | LoadObject<V>): LoadObject<V> {
+    if (value instanceof LoadObject) {
+      return value;
+    }
+
     return LoadObject._create('NONE', value, undefined, true);
   }
 

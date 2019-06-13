@@ -383,7 +383,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   waitForLoaded<TResponse>(
-    fn: this => LoadObject<TResponse>,
+    fn: this => LoadObject<TResponse> | Map<string, LoadObject<TEntity>>,
     timeout?: number,
   ): Promise<TResponse> {
     return this.waitForLoadedNullable(fn, timeout).then(result =>
@@ -416,7 +416,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
                 return result;
               }
 
-              const entries = isMap ? Array.from(result.values()) : result;
+              const entries = isMap ? Array.from(result.entries()) : result;
               if (
                 entries.some(
                   (item: $FlowFixMe): boolean =>

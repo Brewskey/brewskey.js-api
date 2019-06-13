@@ -320,6 +320,10 @@ function () {
   }, {
     key: "withValue",
     value: function withValue(value) {
+      if (value instanceof LoadObject) {
+        return value;
+      }
+
       return LoadObject._create('NONE', value, undefined, true);
     }
   }, {
