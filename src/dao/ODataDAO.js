@@ -392,7 +392,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   waitForLoadedNullable<TResponse>(
-    fn: this => LoadObject<TResponse>,
+    fn: this => LoadObject<TResponse> | Map<string, LoadObject<TEntity>>,
     timeout?: number = 10000,
   ): Promise<?TResponse> {
     return new Promise(
@@ -404,6 +404,11 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
         const fetchAndResolve = () => {
           let loader = fn(this);
+          const isMap = loader instanceof Map;
+          if (isMap) {
+            loader = LoadObject.withValue(loader.entries());
+          }
+
           if (loader.hasOperation()) {
             return;
           }
@@ -441,7 +446,13 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
             return;
           }
 
-          resolve(loader.getValue());
+          const value = loader.getValue();
+          if (isMap) {
+            resolve(new Map(value.map(item => [item.id, item])));
+            return;
+          }
+
+          resolve(value);
         };
 
         this.subscribe(fetchAndResolve);

@@ -471,6 +471,11 @@ function (_BaseODataDAO) {
 
         var fetchAndResolve = function fetchAndResolve() {
           var loader = fn(_this11);
+          var isMap = loader instanceof Map;
+
+          if (isMap) {
+            loader = _LoadObject.default.withValue(loader.entries());
+          }
 
           if (loader.hasOperation()) {
             return;
@@ -503,7 +508,16 @@ function (_BaseODataDAO) {
             return;
           }
 
-          resolve(loader.getValue());
+          var value = loader.getValue();
+
+          if (isMap) {
+            resolve(new Map(value.map(function (item) {
+              return [item.id, item];
+            })));
+            return;
+          }
+
+          resolve(value);
         };
 
         _this11.subscribe(fetchAndResolve);
