@@ -483,7 +483,7 @@ function (_BaseODataDAO) {
               return result;
             }
 
-            var entries = isMap ? result.entries() : result;
+            var entries = isMap ? Array.from(result.entries()) : result;
 
             if (entries.some(function (item) {
               return item instanceof _LoadObject.default ? item.hasOperation() : false;
