@@ -403,7 +403,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
         setTimeout((): void => reject(new Error('Timeout!')), timeout);
 
         const fetchAndResolve = () => {
-          let loader = fn(this);
+          let loader = LoadObject.withValue(fn(this));
 
           if (loader.hasOperation()) {
             return;

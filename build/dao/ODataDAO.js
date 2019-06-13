@@ -470,7 +470,7 @@ function (_BaseODataDAO) {
         }, timeout);
 
         var fetchAndResolve = function fetchAndResolve() {
-          var loader = fn(_this11);
+          var loader = _LoadObject.default.withValue(fn(_this11));
 
           if (loader.hasOperation()) {
             return;
