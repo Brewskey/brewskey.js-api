@@ -416,7 +416,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
                 return result;
               }
 
-              const entries = isMap ? Array.from(result.entries()) : result;
+              const entries = isMap ? Array.from(result.values()) : result;
               if (
                 entries.some(
                   (item: $FlowFixMe): boolean =>
@@ -427,7 +427,12 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
               }
 
               if (isMap) {
-                return result;
+                return new Map(
+                  Array.from(result.entries()).map(([key, value]) => [
+                    key,
+                    value.getValue(),
+                  ]),
+                );
               }
 
               return result.map(
