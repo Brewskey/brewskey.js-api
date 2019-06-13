@@ -471,25 +471,28 @@ function (_BaseODataDAO) {
 
         var fetchAndResolve = function fetchAndResolve() {
           var loader = fn(_this11);
-          var isMap = loader instanceof Map;
-
-          if (isMap) {
-            loader = _LoadObject.default.withValue(loader.entries());
-          }
 
           if (loader.hasOperation()) {
             return;
           }
 
           loader = loader.map(function (result) {
-            if (!Array.isArray(result)) {
+            var isMap = result instanceof Map;
+
+            if (!Array.isArray(result) && !isMap) {
               return result;
             }
 
-            if (result.some(function (item) {
+            var entries = isMap ? result.entries() : result;
+
+            if (entries.some(function (item) {
               return item instanceof _LoadObject.default ? item.hasOperation() : false;
             })) {
               return _LoadObject.default.loading();
+            }
+
+            if (isMap) {
+              return result;
             }
 
             return result.map(function (item) {
@@ -508,16 +511,7 @@ function (_BaseODataDAO) {
             return;
           }
 
-          var value = loader.getValue();
-
-          if (isMap) {
-            resolve(new Map(value.map(function (item) {
-              return [item.id, item];
-            })));
-            return;
-          }
-
-          resolve(value);
+          resolve(loader.getValue());
         };
 
         _this11.subscribe(fetchAndResolve);

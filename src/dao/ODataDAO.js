@@ -404,10 +404,6 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
         const fetchAndResolve = () => {
           let loader = fn(this);
-          const isMap = loader instanceof Map;
-          if (isMap) {
-            loader = LoadObject.withValue(loader.entries());
-          }
 
           if (loader.hasOperation()) {
             return;
@@ -415,17 +411,23 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
           loader = loader.map(
             (result: $FlowFixMe): $FlowFixMe => {
-              if (!Array.isArray(result)) {
+              const isMap = result instanceof Map;
+              if (!Array.isArray(result) && !isMap) {
                 return result;
               }
 
+              const entries = isMap ? result.entries() : result;
               if (
-                result.some(
+                entries.some(
                   (item: $FlowFixMe): boolean =>
                     item instanceof LoadObject ? item.hasOperation() : false,
                 )
               ) {
                 return LoadObject.loading();
+              }
+
+              if (isMap) {
+                return result;
               }
 
               return result.map(
@@ -446,13 +448,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
             return;
           }
 
-          const value = loader.getValue();
-          if (isMap) {
-            resolve(new Map(value.map(item => [item.id, item])));
-            return;
-          }
-
-          resolve(value);
+          resolve(loader.getValue());
         };
 
         this.subscribe(fetchAndResolve);
