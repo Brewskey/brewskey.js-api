@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -25,9 +25,7 @@ var deepIdCast = function deepIdCast(node) {
   return node;
 };
 
-var DefaultTranslator =
-/*#__PURE__*/
-function () {
+var DefaultTranslator = /*#__PURE__*/function () {
   function DefaultTranslator() {
     _classCallCheck(this, DefaultTranslator);
   }
@@ -53,4 +51,4 @@ function () {
 }();
 
 var _default = DefaultTranslator;
-exports.default = _default;
+exports["default"] = _default;

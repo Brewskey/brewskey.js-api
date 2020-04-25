@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _nullthrows = _interopRequireDefault(require("nullthrows"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -50,9 +50,7 @@ var CACHE = new Map(VALUES_TO_CACHE.map(function (value) {
  *
  */
 
-var LoadObject =
-/*#__PURE__*/
-function () {
+var LoadObject = /*#__PURE__*/function () {
   /**
    * Private construtor, never call this outside of this class.
    */
@@ -277,15 +275,15 @@ function () {
         return null;
       }
 
-      var operationMapByHasValue = (0, _nullthrows.default)(CACHE.get(value));
-      var loaderByOperation = (0, _nullthrows.default)(operationMapByHasValue.get(hasValue));
+      var operationMapByHasValue = (0, _nullthrows["default"])(CACHE.get(value));
+      var loaderByOperation = (0, _nullthrows["default"])(operationMapByHasValue.get(hasValue));
 
       if (!loaderByOperation.has(operation)) {
         var object = new LoadObject(SECRET, operation, value, error, hasValue);
         loaderByOperation.set(operation, object);
       }
 
-      return (0, _nullthrows.default)(loaderByOperation.get(operation));
+      return (0, _nullthrows["default"])(loaderByOperation.get(operation));
     }
   }, {
     key: "empty",
@@ -358,4 +356,4 @@ function () {
 }();
 
 var _default = LoadObject;
-exports.default = _default;
+exports["default"] = _default;

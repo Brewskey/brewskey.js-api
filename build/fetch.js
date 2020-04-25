@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _nullthrows = _interopRequireDefault(require("nullthrows"));
 
@@ -11,19 +11,25 @@ var _Config = _interopRequireDefault(require("./Config"));
 
 var _StandardHeaders = _interopRequireDefault(require("./StandardHeaders"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
@@ -57,12 +63,8 @@ var parseError = function parseError(error) {
   return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
 };
 
-var _default =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(path) {
+var _default = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(path) {
     var options,
         reformatError,
         _options$headers,
@@ -82,7 +84,7 @@ function () {
             options = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
             reformatError = options.reformatError, _options$headers = options.headers, optionsHeaders = _options$headers === void 0 ? [] : _options$headers, fetchOptions = _objectWithoutProperties(options, ["reformatError", "headers"]);
 
-            if (_Config.default.host) {
+            if (_Config["default"].host) {
               _context.next = 4;
               break;
             }
@@ -92,16 +94,16 @@ function () {
           case 4:
             headers = new Headers();
 
-            if (_Config.default.token) {
-              headers.append('Authorization', "Bearer ".concat(_Config.default.token));
+            if (_Config["default"].token) {
+              headers.append('Authorization', "Bearer ".concat(_Config["default"].token));
             }
 
-            [].concat(_toConsumableArray(_StandardHeaders.default), _toConsumableArray(optionsHeaders)).forEach(function (_ref2) {
+            [].concat(_toConsumableArray(_StandardHeaders["default"]), _toConsumableArray(optionsHeaders)).forEach(function (_ref2) {
               var name = _ref2.name,
                   value = _ref2.value;
               return headers.append(name, value);
             });
-            organizationId = _Config.default.organizationId;
+            organizationId = _Config["default"].organizationId;
             pathWithOrganization = path;
 
             if (organizationId) {
@@ -109,7 +111,7 @@ function () {
             }
 
             _context.next = 12;
-            return fetch("".concat((0, _nullthrows.default)(_Config.default.host), "/").concat(pathWithOrganization), _objectSpread({}, fetchOptions, {
+            return fetch("".concat((0, _nullthrows["default"])(_Config["default"].host), "/").concat(pathWithOrganization), _objectSpread({}, fetchOptions, {
               headers: headers
             }));
 
@@ -153,7 +155,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this, [[13, 19]]);
+    }, _callee, null, [[13, 19]]);
   }));
 
   return function (_x) {
@@ -161,4 +163,4 @@ function () {
   };
 }();
 
-exports.default = _default;
+exports["default"] = _default;

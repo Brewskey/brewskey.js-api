@@ -1,5 +1,7 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -18,22 +20,22 @@ Object.defineProperty(exports, "CADENCE_MAP", {
 Object.defineProperty(exports, "LoadObject", {
   enumerable: true,
   get: function get() {
-    return _LoadObject.default;
+    return _LoadObject["default"];
   }
 });
 Object.defineProperty(exports, "RestDAO", {
   enumerable: true,
   get: function get() {
-    return _RestDAO.default;
+    return _RestDAO["default"];
   }
 });
 Object.defineProperty(exports, "ODataDAO", {
   enumerable: true,
   get: function get() {
-    return _ODataDAO.default;
+    return _ODataDAO["default"];
   }
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _odata = _interopRequireDefault(require("odata"));
 
@@ -445,36 +447,42 @@ var _RestDAO = _interopRequireDefault(require("./dao/RestDAO"));
 
 var _ODataDAO = _interopRequireDefault(require("./dao/ODataDAO"));
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var initialize = function initialize(host) {
-  _Config.default.host = host;
-  (0, _odata.default)().config({
+  _Config["default"].host = host;
+  (0, _odata["default"])().config({
     endpoint: "".concat(host, "/api/v2/")
   });
 };
 
 var setToken = function setToken(token) {
-  _Config.default.token = token;
-  (0, _odata.default)().config({
-    headers: [].concat(_toConsumableArray(_StandardHeaders.default), [{
+  _Config["default"].token = token;
+  (0, _odata["default"])().config({
+    headers: [].concat(_toConsumableArray(_StandardHeaders["default"]), [{
       name: 'Authorization',
       value: "Bearer ".concat(token)
     }])
   });
 };
 
-var DAOArray = [_AccountDAO.default, _AchievementDAO.default, _AvailabilityDAO.default, _BeverageDAO.default, _CloudDeviceDAO.default, _DeviceDAO.default, _FlowSensorDAO.default, _FriendDAO.default, _GlassDAO.default, _KegDAO.default, _LocationDAO.default, _OrganizationDAO.default, _PaymentsDAO.default, _PermissionDAO.default, _PourDAO.default, _PriceVariantDAO.default, _ProductDAO.default, _ProductDeviceDAO.default, _ProductFirmwareDAO.default, _ReportDAO.default, _ScheduleDAO.default, _SrmDAO.default, _StyleDAO.default, _TapDAO.default];
+var DAOArray = [_AccountDAO["default"], _AchievementDAO["default"], _AvailabilityDAO["default"], _BeverageDAO["default"], _CloudDeviceDAO["default"], _DeviceDAO["default"], _FlowSensorDAO["default"], _FriendDAO["default"], _GlassDAO["default"], _KegDAO["default"], _LocationDAO["default"], _OrganizationDAO["default"], _PaymentsDAO["default"], _PermissionDAO["default"], _PourDAO["default"], _PriceVariantDAO["default"], _ProductDAO["default"], _ProductDeviceDAO["default"], _ProductFirmwareDAO["default"], _ReportDAO["default"], _ScheduleDAO["default"], _SrmDAO["default"], _StyleDAO["default"], _TapDAO["default"]];
 
 var flushCache = function flushCache() {
   DAOArray.forEach(function (dao) {
@@ -484,75 +492,75 @@ var flushCache = function flushCache() {
 };
 
 var setOrganizationID = function setOrganizationID(organizationID) {
-  _Config.default.organizationId = organizationID;
+  _Config["default"].organizationId = organizationID;
 
-  _AccountDAO.default.flushCache();
+  _AccountDAO["default"].flushCache();
 
-  _AchievementDAO.default.flushCache();
+  _AchievementDAO["default"].flushCache();
 
-  _BeverageDAO.default.flushCache();
+  _BeverageDAO["default"].flushCache();
 
-  _DeviceDAO.default.flushCache();
+  _DeviceDAO["default"].flushCache();
 
-  _FriendDAO.default.flushCache();
+  _FriendDAO["default"].flushCache();
 
-  _KegDAO.default.flushCache();
+  _KegDAO["default"].flushCache();
 
-  _LocationDAO.default.flushCache();
+  _LocationDAO["default"].flushCache();
 
-  _PaymentsDAO.default.flushCache();
+  _PaymentsDAO["default"].flushCache();
 
-  _PourChartDAO.default.flushCache();
+  _PourChartDAO["default"].flushCache();
 
-  _PourDAO.default.flushCache();
+  _PourDAO["default"].flushCache();
 
-  _PriceVariantDAO.default.flushCache();
+  _PriceVariantDAO["default"].flushCache();
 
-  _ReportDAO.default.flushCache();
+  _ReportDAO["default"].flushCache();
 
-  _ScheduleDAO.default.flushCache();
+  _ScheduleDAO["default"].flushCache();
 
-  _TapDAO.default.flushCache();
+  _TapDAO["default"].flushCache();
 };
 
 /* eslint-disable sorting/sort-object-props */
 var _default = {
-  AccountDAO: _AccountDAO.default,
-  AchievementDAO: _AchievementDAO.default,
-  Auth: _Auth.default,
-  AvailabilityDAO: _AvailabilityDAO.default,
-  BeverageDAO: _BeverageDAO.default,
-  CloudDeviceDAO: _CloudDeviceDAO.default,
-  CloudSSEManager: _CloudSSEManager.default,
-  DeviceDAO: _DeviceDAO.default,
-  FlowSensorDAO: _FlowSensorDAO.default,
-  FriendDAO: _FriendDAO.default,
-  GlassDAO: _GlassDAO.default,
-  KegDAO: _KegDAO.default,
-  LocationDAO: _LocationDAO.default,
-  OrganizationDAO: _OrganizationDAO.default,
-  PaymentsDAO: _PaymentsDAO.default,
-  PermissionDAO: _PermissionDAO.default,
-  PourChartDAO: _PourChartDAO.default,
-  PourDAO: _PourDAO.default,
-  PriceVariantDAO: _PriceVariantDAO.default,
-  ProductDAO: _ProductDAO.default,
-  ProductDeviceDAO: _ProductDeviceDAO.default,
-  ProductFirmwareDAO: _ProductFirmwareDAO.default,
-  ReportDAO: _ReportDAO.default,
-  ScheduleDAO: _ScheduleDAO.default,
-  Signalr: _signalr.default,
-  SrmDAO: _SrmDAO.default,
-  StyleDAO: _StyleDAO.default,
-  TapDAO: _TapDAO.default,
+  AccountDAO: _AccountDAO["default"],
+  AchievementDAO: _AchievementDAO["default"],
+  Auth: _Auth["default"],
+  AvailabilityDAO: _AvailabilityDAO["default"],
+  BeverageDAO: _BeverageDAO["default"],
+  CloudDeviceDAO: _CloudDeviceDAO["default"],
+  CloudSSEManager: _CloudSSEManager["default"],
+  DeviceDAO: _DeviceDAO["default"],
+  FlowSensorDAO: _FlowSensorDAO["default"],
+  FriendDAO: _FriendDAO["default"],
+  GlassDAO: _GlassDAO["default"],
+  KegDAO: _KegDAO["default"],
+  LocationDAO: _LocationDAO["default"],
+  OrganizationDAO: _OrganizationDAO["default"],
+  PaymentsDAO: _PaymentsDAO["default"],
+  PermissionDAO: _PermissionDAO["default"],
+  PourChartDAO: _PourChartDAO["default"],
+  PourDAO: _PourDAO["default"],
+  PriceVariantDAO: _PriceVariantDAO["default"],
+  ProductDAO: _ProductDAO["default"],
+  ProductDeviceDAO: _ProductDeviceDAO["default"],
+  ProductFirmwareDAO: _ProductFirmwareDAO["default"],
+  ReportDAO: _ReportDAO["default"],
+  ScheduleDAO: _ScheduleDAO["default"],
+  Signalr: _signalr["default"],
+  SrmDAO: _SrmDAO["default"],
+  StyleDAO: _StyleDAO["default"],
+  TapDAO: _TapDAO["default"],
   addFilter: _filters.addFilter,
   createFilter: _filters.createFilter,
   doesSatisfyQueryFilters: _filters.doesSatisfyQueryFilters,
-  fetch: _fetch.default,
+  fetch: _fetch["default"],
   flushCache: flushCache,
   initialize: initialize,
-  onError: _Subscription.default.onError,
+  onError: _Subscription["default"].onError,
   setOrganizationID: setOrganizationID,
   setToken: setToken
 };
-exports.default = _default;
+exports["default"] = _default;

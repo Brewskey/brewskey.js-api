@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _nullthrows = _interopRequireDefault(require("nullthrows"));
 
@@ -17,31 +17,37 @@ var _Subscription = _interopRequireDefault(require("./Subscription"));
 
 var _arrayFlatten = _interopRequireDefault(require("array-flatten"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -49,28 +55,30 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var STANDARD_PAGE_SIZE = 40;
 
-var ODataDAO =
-/*#__PURE__*/
-function (_BaseODataDAO) {
+var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
   _inherits(ODataDAO, _BaseODataDAO);
 
-  function ODataDAO() {
-    var _getPrototypeOf2;
+  var _super = _createSuper(ODataDAO);
 
+  function ODataDAO() {
     var _this;
 
     _classCallCheck(this, ODataDAO);
@@ -79,23 +87,23 @@ function (_BaseODataDAO) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(ODataDAO)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _super.call.apply(_super, [this].concat(args));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_countLoaderByQuery", new Map());
+    _defineProperty(_assertThisInitialized(_this), "_countLoaderByQuery", new Map());
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_entityIDsLoaderByQuery", new Map());
+    _defineProperty(_assertThisInitialized(_this), "_entityIDsLoaderByQuery", new Map());
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_customLoaderByQuery", new Map());
+    _defineProperty(_assertThisInitialized(_this), "_customLoaderByQuery", new Map());
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_entityLoaderByID", new Map());
+    _defineProperty(_assertThisInitialized(_this), "_entityLoaderByID", new Map());
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_runFlushCache", null);
+    _defineProperty(_assertThisInitialized(_this), "_runFlushCache", null);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_currentCountQueries", new Set());
+    _defineProperty(_assertThisInitialized(_this), "_currentCountQueries", new Set());
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_currentEntityIDsQueries", new Set());
+    _defineProperty(_assertThisInitialized(_this), "_currentEntityIDsQueries", new Set());
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_currentCustomQueries", new Set());
+    _defineProperty(_assertThisInitialized(_this), "_currentCustomQueries", new Set());
 
     return _this;
   }
@@ -107,30 +115,30 @@ function (_BaseODataDAO) {
 
       var stringifiedID = id.toString();
 
-      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject.default.empty();
+      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject["default"].empty();
 
       this._entityLoaderByID.set(stringifiedID, entity.deleting());
 
       var clientID = this._getClientID();
 
-      this._entityLoaderByID.set(clientID, _LoadObject.default.empty().deleting());
+      this._entityLoaderByID.set(clientID, _LoadObject["default"].empty().deleting());
 
       this.__emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       /* params */
       {}, 'delete').then(function () {
-        _this2._entityLoaderByID.set(clientID, _LoadObject.default.empty());
+        _this2._entityLoaderByID.set(clientID, _LoadObject["default"].empty());
 
-        _this2._entityLoaderByID.set(id, _LoadObject.default.empty());
+        _this2._entityLoaderByID.set(id, _LoadObject["default"].empty());
 
         _this2.__emitChanges();
 
         _this2._flushQueryCaches();
 
         _this2.__emitChanges();
-      }).catch(function (error) {
-        _Subscription.default.__emitError(error);
+      })["catch"](function (error) {
+        _Subscription["default"].__emitError(error);
 
         _this2._updateCacheForError(clientID, error);
       });
@@ -164,7 +172,7 @@ function (_BaseODataDAO) {
         this._hydrateCount(getOHandler, baseQueryOptions, key);
       }
 
-      return (0, _nullthrows.default)(this._countLoaderByQuery.get(cacheKey));
+      return (0, _nullthrows["default"])(this._countLoaderByQuery.get(cacheKey));
     }
   }, {
     key: "getEntitiesCache",
@@ -179,20 +187,20 @@ function (_BaseODataDAO) {
       var stringifiedID = id.toString();
 
       if (!this._entityLoaderByID.has(stringifiedID)) {
-        this._entityLoaderByID.set(stringifiedID, _LoadObject.default.loading());
+        this._entityLoaderByID.set(stringifiedID, _LoadObject["default"].loading());
 
         this.__emitChanges();
 
         this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID))).then(function (result) {
           return _this4._updateCacheForEntity(result);
-        }).catch(function (error) {
-          _Subscription.default.__emitError(error);
+        })["catch"](function (error) {
+          _Subscription["default"].__emitError(error);
 
           _this4._updateCacheForError(stringifiedID, error);
         });
       }
 
-      return (0, _nullthrows.default)(this._entityLoaderByID.get(stringifiedID));
+      return (0, _nullthrows["default"])(this._entityLoaderByID.get(stringifiedID));
     }
   }, {
     key: "fetchByIDs",
@@ -206,7 +214,7 @@ function (_BaseODataDAO) {
 
       if (idsToLoad.length) {
         idsToLoad.forEach(function (id) {
-          _this5._entityLoaderByID.set(id.toString(), _LoadObject.default.loading());
+          _this5._entityLoaderByID.set(id.toString(), _LoadObject["default"].loading());
         }); // This URI will look like `pours/Default.GetManyByIDs(ids=['58','59'])/`
 
         var handler = this.__buildHandler();
@@ -228,8 +236,8 @@ function (_BaseODataDAO) {
           });
 
           _this5.__emitChanges();
-        }).catch(function (error) {
-          _Subscription.default.__emitError(error);
+        })["catch"](function (error) {
+          _Subscription["default"].__emitError(error);
 
           stringifiedIds.forEach(function (id) {
             return _this5._updateCacheForError(id, error, false);
@@ -240,7 +248,7 @@ function (_BaseODataDAO) {
       }
 
       return new Map(stringifiedIds.map(function (id) {
-        return [id, (0, _nullthrows.default)(_this5._entityLoaderByID.get(id))];
+        return [id, (0, _nullthrows["default"])(_this5._entityLoaderByID.get(id))];
       }));
     }
   }, {
@@ -262,14 +270,14 @@ function (_BaseODataDAO) {
         __custom_key__: ''
       }));
 
-      var loader = this._countLoaderByQuery.get(countQueryKey) || _LoadObject.default.withValue(-1);
+      var loader = this._countLoaderByQuery.get(countQueryKey) || _LoadObject["default"].withValue(-1);
 
       return loader.map(function (count) {
-        return (0, _nullthrows.default)(_this6._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
+        return (0, _nullthrows["default"])(_this6._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
           var resultMap = _this6.fetchByIDs(ids);
 
           return ids.map(function (id) {
-            return (0, _nullthrows.default)(resultMap.get(id.toString()));
+            return (0, _nullthrows["default"])(resultMap.get(id.toString()));
           });
         }).map(function (loaders) {
           var _queryOptions$take = queryOptions.take,
@@ -281,7 +289,7 @@ function (_BaseODataDAO) {
           }
 
           var missedLoaders = _toConsumableArray(Array(delta)).map(function () {
-            return _LoadObject.default.loading();
+            return _LoadObject["default"].loading();
           });
 
           return [].concat(_toConsumableArray(loaders), _toConsumableArray(missedLoaders));
@@ -294,7 +302,7 @@ function (_BaseODataDAO) {
       var _this7 = this;
 
       return this.count(queryOptions).map(function (count) {
-        return (0, _arrayFlatten.default)(_toConsumableArray(Array(Math.ceil(count / STANDARD_PAGE_SIZE))).map(function (_, index) {
+        return (0, _arrayFlatten["default"])(_toConsumableArray(Array(Math.ceil(count / STANDARD_PAGE_SIZE))).map(function (_, index) {
           var skip = STANDARD_PAGE_SIZE * index;
 
           var loader = _this7.fetchMany(_objectSpread({}, queryOptions, {
@@ -306,13 +314,13 @@ function (_BaseODataDAO) {
 
           if (loader.isLoading()) {
             return itemLoaders.map(function () {
-              return _LoadObject.default.loading();
+              return _LoadObject["default"].loading();
             });
           }
 
           if (loader.hasError()) {
             return itemLoaders.map(function () {
-              return _LoadObject.default.withError(loader.getErrorEnforcing());
+              return _LoadObject["default"].withError(loader.getErrorEnforcing());
             });
           }
 
@@ -333,7 +341,7 @@ function (_BaseODataDAO) {
       });
 
       return this.fetchMany(combinedQueryOptions).map(function (items) {
-        return items[0] || _LoadObject.default.empty();
+        return items[0] || _LoadObject["default"].empty();
       });
     }
   }, {
@@ -348,7 +356,7 @@ function (_BaseODataDAO) {
   }, {
     key: "flushCacheForEntity",
     value: function flushCacheForEntity(entityID) {
-      this._entityLoaderByID.delete(entityID);
+      this._entityLoaderByID["delete"](entityID);
 
       this.__emitChanges();
     }
@@ -371,7 +379,7 @@ function (_BaseODataDAO) {
 
       var stringifiedID = id.toString();
 
-      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject.default.empty();
+      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject["default"].empty();
 
       this._entityLoaderByID.set(stringifiedID, entity.updating());
 
@@ -386,11 +394,11 @@ function (_BaseODataDAO) {
 
         _this8._updateCacheForEntity(result, false);
 
-        _this8._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this8._entityLoaderByID.get(result.id)));
+        _this8._entityLoaderByID.set(clientID, (0, _nullthrows["default"])(_this8._entityLoaderByID.get(result.id)));
 
         _this8.__emitChanges();
-      }).catch(function (error) {
-        _Subscription.default.__emitError(error);
+      })["catch"](function (error) {
+        _Subscription["default"].__emitError(error);
 
         _this8._updateCacheForError(clientID, error);
       });
@@ -404,7 +412,7 @@ function (_BaseODataDAO) {
 
       var clientID = this._getClientID();
 
-      this._entityLoaderByID.set(clientID, _LoadObject.default.creating());
+      this._entityLoaderByID.set(clientID, _LoadObject["default"].creating());
 
       this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'post').then(function (result) {
         _this9._flushQueryCaches();
@@ -412,13 +420,13 @@ function (_BaseODataDAO) {
         _this9._updateCacheForEntity(result, false); // The clientID has a reference to the load object
 
 
-        _this9._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this9._entityLoaderByID.get(result.id)));
+        _this9._entityLoaderByID.set(clientID, (0, _nullthrows["default"])(_this9._entityLoaderByID.get(result.id)));
 
         _this9.__emitChanges();
-      }).catch(function (error) {
-        _Subscription.default.__emitError(error);
+      })["catch"](function (error) {
+        _Subscription["default"].__emitError(error);
 
-        _this9._entityLoaderByID.set(clientID, _LoadObject.default.withError(error));
+        _this9._entityLoaderByID.set(clientID, _LoadObject["default"].withError(error));
 
         _this9.__emitChanges();
       });
@@ -432,7 +440,7 @@ function (_BaseODataDAO) {
 
       var stringifiedID = id.toString();
 
-      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject.default.empty();
+      var entity = this._entityLoaderByID.get(stringifiedID) || _LoadObject["default"].empty();
 
       this._entityLoaderByID.set(stringifiedID, entity.updating());
 
@@ -448,11 +456,11 @@ function (_BaseODataDAO) {
         _this10._updateCacheForEntity(result, false); // The clientID has a reference to the load object
 
 
-        _this10._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this10._entityLoaderByID.get(result.id)));
+        _this10._entityLoaderByID.set(clientID, (0, _nullthrows["default"])(_this10._entityLoaderByID.get(result.id)));
 
         _this10.__emitChanges();
-      }).catch(function (error) {
-        _Subscription.default.__emitError(error);
+      })["catch"](function (error) {
+        _Subscription["default"].__emitError(error);
 
         _this10._updateCacheForError(clientID, error);
       });
@@ -463,7 +471,7 @@ function (_BaseODataDAO) {
     key: "waitForLoaded",
     value: function waitForLoaded(fn, timeout) {
       return this.waitForLoadedNullable(fn, timeout).then(function (result) {
-        return (0, _nullthrows.default)(result);
+        return (0, _nullthrows["default"])(result);
       });
     }
   }, {
@@ -478,7 +486,7 @@ function (_BaseODataDAO) {
         }, timeout);
 
         var fetchAndResolve = function fetchAndResolve() {
-          var loader = _LoadObject.default.withValue(fn(_this11));
+          var loader = _LoadObject["default"].withValue(fn(_this11));
 
           if (loader.hasOperation()) {
             return;
@@ -494,9 +502,9 @@ function (_BaseODataDAO) {
             var entries = isMap ? Array.from(result.values()) : result;
 
             if (entries.some(function (item) {
-              return item instanceof _LoadObject.default ? item.hasOperation() : false;
+              return item instanceof _LoadObject["default"] ? item.hasOperation() : false;
             })) {
-              return _LoadObject.default.loading();
+              return _LoadObject["default"].loading();
             }
 
             if (isMap) {
@@ -510,7 +518,7 @@ function (_BaseODataDAO) {
             }
 
             return result.map(function (item) {
-              return item instanceof _LoadObject.default ? item.getValue() : item;
+              return item instanceof _LoadObject["default"] ? item.getValue() : item;
             });
           });
 
@@ -547,7 +555,7 @@ function (_BaseODataDAO) {
 
       var clientID = this._getClientID();
 
-      var entity = this._entityLoaderByID.get(stringifiedID || clientID) || _LoadObject.default.empty();
+      var entity = this._entityLoaderByID.get(stringifiedID || clientID) || _LoadObject["default"].empty();
 
       if (method === 'delete') {
         this._entityLoaderByID.set(stringifiedID || clientID, entity.deleting());
@@ -563,16 +571,16 @@ function (_BaseODataDAO) {
       .then(function (result) {
         if (stringifiedID) {
           // We want whatever uses this store to refetch the entity
-          _this12._entityLoaderByID.delete(stringifiedID);
+          _this12._entityLoaderByID["delete"](stringifiedID);
         } else {
           _this12._updateCacheForEntity(result, false);
 
-          _this12._entityLoaderByID.set(clientID, (0, _nullthrows.default)(_this12._entityLoaderByID.get(result.id)));
+          _this12._entityLoaderByID.set(clientID, (0, _nullthrows["default"])(_this12._entityLoaderByID.get(result.id)));
         }
 
         _this12.__emitChanges();
-      }).catch(function (error) {
-        _Subscription.default.__emitError(error);
+      })["catch"](function (error) {
+        _Subscription["default"].__emitError(error);
 
         _this12._updateCacheForError(stringifiedID || clientID, error);
       });
@@ -593,24 +601,24 @@ function (_BaseODataDAO) {
       this._currentCustomQueries.add(cacheKey);
 
       if (!this._customLoaderByQuery.has(cacheKey)) {
-        this._customLoaderByQuery.set(cacheKey, _LoadObject.default.loading());
+        this._customLoaderByQuery.set(cacheKey, _LoadObject["default"].loading());
 
         this.__emitChanges();
 
         this.__resolve(handler).then(function (result) {
-          _this13._customLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(result.data));
+          _this13._customLoaderByQuery.set(cacheKey, _LoadObject["default"].withValue(result.data));
 
           _this13.__emitChanges();
-        }).catch(function (error) {
-          _Subscription.default.__emitError(error);
+        })["catch"](function (error) {
+          _Subscription["default"].__emitError(error);
 
-          _this13._customLoaderByQuery.set(cacheKey, _LoadObject.default.withError(error));
+          _this13._customLoaderByQuery.set(cacheKey, _LoadObject["default"].withError(error));
 
           _this13.__emitChanges();
         });
       }
 
-      return (0, _nullthrows.default)(this._customLoaderByQuery.get(cacheKey));
+      return (0, _nullthrows["default"])(this._customLoaderByQuery.get(cacheKey));
     }
   }, {
     key: "_getClientID",
@@ -639,13 +647,13 @@ function (_BaseODataDAO) {
 
       this._setLoadersToUpdating(this._customLoaderByQuery);
 
-      this._runFlushCache = (0, _debounce.default)(function () {
+      this._runFlushCache = (0, _debounce["default"])(function () {
         _this14._entityIDsLoaderByQuery = _this14._rebuildMap(_this14._entityIDsLoaderByQuery, _this14._currentEntityIDsQueries, function (queryOptions) {
           return _this14._hydrateMany(queryOptions);
         });
         _this14._countLoaderByQuery = _this14._rebuildMap(_this14._countLoaderByQuery, _this14._currentCountQueries, function (queryOptions) {
           return _this14._hydrateCount(function (countQueryOptions) {
-            return _this14.__buildHandler(_objectSpread({}, queryOptions, countQueryOptions));
+            return _this14.__buildHandler(_objectSpread({}, queryOptions, {}, countQueryOptions));
           }, queryOptions);
         }); // TODO
 
@@ -674,7 +682,7 @@ function (_BaseODataDAO) {
 
       this._setLoadersToUpdating(this._customLoaderByQuery);
 
-      this._runFlushCache = (0, _debounce.default)(function () {
+      this._runFlushCache = (0, _debounce["default"])(function () {
         _this15._customLoaderByQuery = new Map();
         _this15._runFlushCache = null;
 
@@ -695,7 +703,7 @@ function (_BaseODataDAO) {
     value: function _rebuildMap(map, set, onUpdate) {
       var savedItems = Array.from(set).map(function (queryOptionString) {
         onUpdate(JSON.parse(queryOptionString));
-        var loader = (0, _nullthrows.default)(map.get(queryOptionString));
+        var loader = (0, _nullthrows["default"])(map.get(queryOptionString));
         return [queryOptionString, loader];
       });
       return new Map(savedItems);
@@ -707,7 +715,7 @@ function (_BaseODataDAO) {
 
       var cacheKey = this._getCacheKey(queryOptions);
 
-      var initialLoader = this._entityIDsLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._entityIDsLoaderByQuery.get(cacheKey)).updating() : _LoadObject.default.loading();
+      var initialLoader = this._entityIDsLoaderByQuery.has(cacheKey) ? (0, _nullthrows["default"])(this._entityIDsLoaderByQuery.get(cacheKey)).updating() : _LoadObject["default"].loading();
 
       this._entityIDsLoaderByQuery.set(cacheKey, initialLoader);
 
@@ -720,17 +728,17 @@ function (_BaseODataDAO) {
       this.__resolveManyIDs(handler).then(function (ids) {
         var stringifiedIds = ids.map(String);
 
-        _this16._entityIDsLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(stringifiedIds));
+        _this16._entityIDsLoaderByQuery.set(cacheKey, _LoadObject["default"].withValue(stringifiedIds));
 
         _this16.__emitChanges();
 
         _this16.fetchByIDs(stringifiedIds);
-      }).catch(function (error) {
-        _Subscription.default.__emitError(error);
+      })["catch"](function (error) {
+        _Subscription["default"].__emitError(error);
 
         var loader = _this16._entityIDsLoaderByQuery.get(cacheKey);
 
-        _this16._entityIDsLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject.default.withError(error));
+        _this16._entityIDsLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject["default"].withError(error));
 
         _this16.__emitChanges();
       });
@@ -748,7 +756,7 @@ function (_BaseODataDAO) {
         __custom_key__: key
       }));
 
-      var initialLoader = this._countLoaderByQuery.has(cacheKey) ? (0, _nullthrows.default)(this._countLoaderByQuery.get(cacheKey)).updating() : _LoadObject.default.loading();
+      var initialLoader = this._countLoaderByQuery.has(cacheKey) ? (0, _nullthrows["default"])(this._countLoaderByQuery.get(cacheKey)).updating() : _LoadObject["default"].loading();
 
       this._countLoaderByQuery.set(cacheKey, initialLoader);
 
@@ -758,15 +766,15 @@ function (_BaseODataDAO) {
         shouldCount: true,
         take: 0
       }))).then(function (result) {
-        _this17._countLoaderByQuery.set(cacheKey, _LoadObject.default.withValue(result.inlinecount));
+        _this17._countLoaderByQuery.set(cacheKey, _LoadObject["default"].withValue(result.inlinecount));
 
         _this17.__emitChanges();
-      }).catch(function (error) {
-        _Subscription.default.__emitError(error);
+      })["catch"](function (error) {
+        _Subscription["default"].__emitError(error);
 
         var loader = _this17._countLoaderByQuery.get(cacheKey);
 
-        _this17._countLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject.default.withError(error));
+        _this17._countLoaderByQuery.set(cacheKey, loader ? loader.setError(error) : _LoadObject["default"].withError(error));
 
         _this17.__emitChanges();
       });
@@ -793,7 +801,7 @@ function (_BaseODataDAO) {
     value: function _updateCacheForEntity(entity) {
       var shouldEmitChanges = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      this._entityLoaderByID.set(entity.id.toString(), _LoadObject.default.withValue(entity));
+      this._entityLoaderByID.set(entity.id.toString(), _LoadObject["default"].withValue(entity));
 
       if (shouldEmitChanges) {
         this.__emitChanges();
@@ -804,7 +812,7 @@ function (_BaseODataDAO) {
     value: function _updateCacheForError(id, error) {
       var shouldEmitChanges = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-      this._entityLoaderByID.set(id.toString(), _LoadObject.default.withError(error));
+      this._entityLoaderByID.set(id.toString(), _LoadObject["default"].withError(error));
 
       if (shouldEmitChanges) {
         this.__emitChanges();
@@ -813,9 +821,9 @@ function (_BaseODataDAO) {
   }]);
 
   return ODataDAO;
-}(_BaseODataDAO2.default);
+}(_BaseODataDAO2["default"]);
 
 _defineProperty(ODataDAO, "_clientID", 0);
 
 var _default = ODataDAO;
-exports.default = _default;
+exports["default"] = _default;

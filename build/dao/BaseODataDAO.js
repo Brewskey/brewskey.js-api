@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _odata = _interopRequireDefault(require("odata"));
 
@@ -13,21 +13,21 @@ var _constants = require("../constants");
 
 var _Config = _interopRequireDefault(require("../Config"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -35,23 +35,31 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -71,26 +79,27 @@ var parseNavProp = function parseNavProp(_ref) {
   return "".concat(name, "(").concat(selectString).concat(expandString, ")");
 };
 
-var BaseODataDAO =
-/*#__PURE__*/
-function (_Subscription) {
+var BaseODataDAO = /*#__PURE__*/function (_Subscription) {
   _inherits(BaseODataDAO, _Subscription);
+
+  var _super = _createSuper(BaseODataDAO);
 
   function BaseODataDAO(config) {
     var _this;
 
     _classCallCheck(this, BaseODataDAO);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(BaseODataDAO).call(this));
+    _this = _super.call(this);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "__config", void 0);
+    _defineProperty(_assertThisInitialized(_this), "__config", void 0);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "__reformatIDValue", function (value // eslint-disable-next-line no-restricted-globals
-    ) {
-      return isNaN(value) || value === '' ? "'".concat(value, "'") : value;
+    _defineProperty(_assertThisInitialized(_this), "__reformatIDValue", function (value) {
+      return (// eslint-disable-next-line no-restricted-globals
+        isNaN(value) || value === '' ? "'".concat(value, "'") : value
+      );
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "__reformatQueryValue", function (value) {
+    _defineProperty(_assertThisInitialized(_this), "__reformatQueryValue", function (value) {
       return typeof value === 'string' && !Date.parse(value) ? "'".concat(encodeURIComponent(value), "'") : value;
     });
 
@@ -114,7 +123,7 @@ function (_Subscription) {
     value: function __buildHandler() {
       var queryOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var shouldSelectExpand = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      var handler = (0, _odata.default)(this.getEntityName());
+      var handler = (0, _odata["default"])(this.getEntityName());
       return this.__setupHandler(handler, queryOptions, shouldSelectExpand);
     }
   }, {
@@ -168,8 +177,8 @@ function (_Subscription) {
         handler.customParam('$apply', apply);
       }
 
-      if (_Config.default.organizationId) {
-        handler.customParam('organizationID', _Config.default.organizationId.toString());
+      if (_Config["default"].organizationId) {
+        handler.customParam('organizationID', _Config["default"].organizationId.toString());
       }
 
       return handler;
@@ -242,9 +251,7 @@ function (_Subscription) {
   }, {
     key: "__resolveMany",
     value: function () {
-      var _resolveMany = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(handler, params) {
+      var _resolveMany = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
         var _this4 = this;
 
         var method,
@@ -281,9 +288,7 @@ function (_Subscription) {
   }, {
     key: "__resolveManyIDs",
     value: function () {
-      var _resolveManyIDs = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2(handler, params) {
+      var _resolveManyIDs = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(handler, params) {
         var idSelector,
             method,
             result,
@@ -320,9 +325,7 @@ function (_Subscription) {
   }, {
     key: "__resolve",
     value: function () {
-      var _resolve = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3(handler) {
+      var _resolve = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(handler) {
         var params,
             method,
             request,
@@ -357,7 +360,7 @@ function (_Subscription) {
                 request = handler.get();
 
               case 14:
-                return _context3.abrupt("return", request.catch(function (error) {
+                return _context3.abrupt("return", request["catch"](function (error) {
                   window.console.error(method || 'get', error, handler, params);
                   throw error;
                 }));
@@ -367,7 +370,7 @@ function (_Subscription) {
                 return _context3.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee3);
       }));
 
       function __resolve(_x5) {
@@ -379,7 +382,7 @@ function (_Subscription) {
   }]);
 
   return BaseODataDAO;
-}(_Subscription2.default);
+}(_Subscription2["default"]);
 
 var _default = BaseODataDAO;
-exports.default = _default;
+exports["default"] = _default;

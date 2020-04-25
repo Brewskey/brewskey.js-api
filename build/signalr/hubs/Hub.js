@@ -3,15 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _reactNativeSignalr = _interopRequireDefault(require("react-native-signalr"));
 
 var _Config = _interopRequireDefault(require("../../Config"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -23,13 +25,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var PING_INTERVAL = 60000;
 
-var Hub =
-/*#__PURE__*/
-function () {
+var Hub = /*#__PURE__*/function () {
   _createClass(Hub, null, [{
     key: "initNewConnection",
     value: function initNewConnection(rootPath) {
-      return rootPath ? _reactNativeSignalr.default.hubConnection(rootPath) : _reactNativeSignalr.default.hubConnection();
+      return rootPath ? _reactNativeSignalr["default"].hubConnection(rootPath) : _reactNativeSignalr["default"].hubConnection();
     }
   }, {
     key: "getConnection",
@@ -82,8 +82,8 @@ function () {
     value: function connect() {
       var _connection = this._connection,
           _transport = this._transport;
-      _connection.qs = _objectSpread({}, _connection.qs || {}, {
-        access_token: _Config.default.token
+      _connection.qs = _objectSpread({}, _connection.qs || {}, {}, {
+        access_token: _Config["default"].token
       });
       this._connectionPromise = _transport ? _connection.start({
         pingInterval: PING_INTERVAL,
@@ -138,4 +138,4 @@ function () {
 _defineProperty(Hub, "CONNECTIONS", {});
 
 var _default = Hub;
-exports.default = _default;
+exports["default"] = _default;
