@@ -14,25 +14,10 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var startAll = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return _TapHub["default"].connect();
-
-          case 2:
-            _context.next = 4;
-            return _TapHub["default"].subscribe('*');
-
-          case 4:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
+  var _ref = _asyncToGenerator(function* () {
+    yield _TapHub["default"].connect();
+    yield _TapHub["default"].subscribe('*');
+  });
 
   return function startAll() {
     return _ref.apply(this, arguments);
@@ -40,24 +25,11 @@ var startAll = /*#__PURE__*/function () {
 }();
 
 var stopAll = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.next = 2;
-            return _TapHub["default"].unsubscribe('*');
+  var _ref2 = _asyncToGenerator(function* () {
+    yield _TapHub["default"].unsubscribe('*');
 
-          case 2:
-            _TapHub["default"].disconnect();
-
-          case 3:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
+    _TapHub["default"].disconnect();
+  });
 
   return function stopAll() {
     return _ref2.apply(this, arguments);

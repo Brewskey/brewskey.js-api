@@ -64,99 +64,57 @@ var parseError = function parseError(error) {
 };
 
 var _default = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(path) {
-    var options,
-        reformatError,
-        _options$headers,
-        optionsHeaders,
-        fetchOptions,
-        headers,
-        organizationId,
-        pathWithOrganization,
-        response,
-        responseJson,
-        _args = arguments;
+  var _ref = _asyncToGenerator(function* (path) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            options = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
-            reformatError = options.reformatError, _options$headers = options.headers, optionsHeaders = _options$headers === void 0 ? [] : _options$headers, fetchOptions = _objectWithoutProperties(options, ["reformatError", "headers"]);
+    var reformatError = options.reformatError,
+        _options$headers = options.headers,
+        optionsHeaders = _options$headers === void 0 ? [] : _options$headers,
+        fetchOptions = _objectWithoutProperties(options, ["reformatError", "headers"]);
 
-            if (_Config["default"].host) {
-              _context.next = 4;
-              break;
-            }
+    if (!_Config["default"].host) {
+      throw new Error('DAOApi: no host set');
+    }
 
-            throw new Error('DAOApi: no host set');
+    var headers = new Headers();
 
-          case 4:
-            headers = new Headers();
+    if (_Config["default"].token) {
+      headers.append('Authorization', "Bearer ".concat(_Config["default"].token));
+    }
 
-            if (_Config["default"].token) {
-              headers.append('Authorization', "Bearer ".concat(_Config["default"].token));
-            }
+    [].concat(_toConsumableArray(_StandardHeaders["default"]), _toConsumableArray(optionsHeaders)).forEach(function (_ref2) {
+      var name = _ref2.name,
+          value = _ref2.value;
+      return headers.append(name, value);
+    });
+    var organizationId = _Config["default"].organizationId;
+    var pathWithOrganization = path;
 
-            [].concat(_toConsumableArray(_StandardHeaders["default"]), _toConsumableArray(optionsHeaders)).forEach(function (_ref2) {
-              var name = _ref2.name,
-                  value = _ref2.value;
-              return headers.append(name, value);
-            });
-            organizationId = _Config["default"].organizationId;
-            pathWithOrganization = path;
+    if (organizationId) {
+      pathWithOrganization = "".concat(path).concat(path.includes('?') ? '&' : '?', "organizationID=").concat(organizationId);
+    }
 
-            if (organizationId) {
-              pathWithOrganization = "".concat(path).concat(path.includes('?') ? '&' : '?', "organizationID=").concat(organizationId);
-            }
+    var response = yield fetch("".concat((0, _nullthrows["default"])(_Config["default"].host), "/").concat(pathWithOrganization), _objectSpread({}, fetchOptions, {
+      headers: headers
+    }));
+    var responseJson;
 
-            _context.next = 12;
-            return fetch("".concat((0, _nullthrows["default"])(_Config["default"].host), "/").concat(pathWithOrganization), _objectSpread({}, fetchOptions, {
-              headers: headers
-            }));
+    try {
+      responseJson = yield response.json();
+    } catch (error) {
+      responseJson = null;
+    }
 
-          case 12:
-            response = _context.sent;
-            _context.prev = 13;
-            _context.next = 16;
-            return response.json();
-
-          case 16:
-            responseJson = _context.sent;
-            _context.next = 22;
-            break;
-
-          case 19:
-            _context.prev = 19;
-            _context.t0 = _context["catch"](13);
-            responseJson = null;
-
-          case 22:
-            if (response.ok) {
-              _context.next = 26;
-              break;
-            }
-
-            if (!(responseJson && reformatError)) {
-              _context.next = 25;
-              break;
-            }
-
-            throw new Error(reformatError(responseJson));
-
-          case 25:
-            throw new Error(responseJson ? parseError(responseJson) : 'Whoops! Error!');
-
-          case 26:
-            return _context.abrupt("return", responseJson);
-
-          case 27:
-          case "end":
-            return _context.stop();
-        }
+    if (!response.ok) {
+      if (responseJson && reformatError) {
+        throw new Error(reformatError(responseJson));
       }
-    }, _callee, null, [[13, 19]]);
-  }));
+
+      throw new Error(responseJson ? parseError(responseJson) : 'Whoops! Error!');
+    }
+
+    return responseJson;
+  });
 
   return function (_x) {
     return _ref.apply(this, arguments);

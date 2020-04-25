@@ -251,33 +251,15 @@ var BaseODataDAO = /*#__PURE__*/function (_Subscription) {
   }, {
     key: "__resolveMany",
     value: function () {
-      var _resolveMany = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(handler, params) {
+      var _resolveMany = _asyncToGenerator(function* (handler, params) {
         var _this4 = this;
 
-        var method,
-            result,
-            _args = arguments;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                method = _args.length > 2 && _args[2] !== undefined ? _args[2] : 'GET';
-                _context.next = 3;
-                return this.__resolve(handler, params, method);
-
-              case 3:
-                result = _context.sent;
-                return _context.abrupt("return", (result.data || []).map(function (item) {
-                  return _this4.getTranslator().fromApi(item);
-                }));
-
-              case 5:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
+        var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'GET';
+        var result = yield this.__resolve(handler, params, method);
+        return (result.data || []).map(function (item) {
+          return _this4.getTranslator().fromApi(item);
+        });
+      });
 
       function __resolveMany(_x, _x2) {
         return _resolveMany.apply(this, arguments);
@@ -288,33 +270,14 @@ var BaseODataDAO = /*#__PURE__*/function (_Subscription) {
   }, {
     key: "__resolveManyIDs",
     value: function () {
-      var _resolveManyIDs = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(handler, params) {
-        var idSelector,
-            method,
-            result,
-            _args2 = arguments;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                idSelector = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : function (item) {
-                  return item.id;
-                };
-                method = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : 'GET';
-                _context2.next = 4;
-                return this.__resolve(handler, params, method);
-
-              case 4:
-                result = _context2.sent;
-                return _context2.abrupt("return", (result.data || []).map(idSelector));
-
-              case 6:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
+      var _resolveManyIDs = _asyncToGenerator(function* (handler, params) {
+        var idSelector = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (item) {
+          return item.id;
+        };
+        var method = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'GET';
+        var result = yield this.__resolve(handler, params, method);
+        return (result.data || []).map(idSelector);
+      });
 
       function __resolveManyIDs(_x3, _x4) {
         return _resolveManyIDs.apply(this, arguments);
@@ -325,53 +288,47 @@ var BaseODataDAO = /*#__PURE__*/function (_Subscription) {
   }, {
     key: "__resolve",
     value: function () {
-      var _resolve = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(handler) {
-        var params,
-            method,
-            request,
-            _args3 = arguments;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                params = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : null;
-                method = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : 'GET';
-                _context3.t0 = method;
-                _context3.next = _context3.t0 === 'delete' ? 5 : _context3.t0 === 'patch' ? 7 : _context3.t0 === 'post' ? 9 : _context3.t0 === 'put' ? 11 : 13;
-                break;
+      var _resolve = _asyncToGenerator(function* (handler) {
+        var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+        var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'GET';
+        var request;
 
-              case 5:
-                request = handler.remove().save();
-                return _context3.abrupt("break", 14);
-
-              case 7:
-                request = handler.patch(params).save();
-                return _context3.abrupt("break", 14);
-
-              case 9:
-                request = handler.post(params).save();
-                return _context3.abrupt("break", 14);
-
-              case 11:
-                request = handler.put(params).save();
-                return _context3.abrupt("break", 14);
-
-              case 13:
-                request = handler.get();
-
-              case 14:
-                return _context3.abrupt("return", request["catch"](function (error) {
-                  window.console.error(method || 'get', error, handler, params);
-                  throw error;
-                }));
-
-              case 15:
-              case "end":
-                return _context3.stop();
+        switch (method) {
+          case 'delete':
+            {
+              request = handler.remove().save();
+              break;
             }
-          }
-        }, _callee3);
-      }));
+
+          case 'patch':
+            {
+              request = handler.patch(params).save();
+              break;
+            }
+
+          case 'post':
+            {
+              request = handler.post(params).save();
+              break;
+            }
+
+          case 'put':
+            {
+              request = handler.put(params).save();
+              break;
+            }
+
+          default:
+            {
+              request = handler.get();
+            }
+        }
+
+        return request["catch"](function (error) {
+          window.console.error(method || 'get', error, handler, params);
+          throw error;
+        });
+      });
 
       function __resolve(_x5) {
         return _resolve.apply(this, arguments);
