@@ -82,9 +82,9 @@ var Hub = /*#__PURE__*/function () {
     value: function connect() {
       var _connection = this._connection,
           _transport = this._transport;
-      _connection.qs = _objectSpread({}, _connection.qs || {}, {}, {
+      _connection.qs = _objectSpread({}, _connection.qs || {}, {}, _Config["default"].token != null ? {
         access_token: _Config["default"].token
-      });
+      } : {});
       this._connectionPromise = _transport ? _connection.start({
         pingInterval: PING_INTERVAL,
         transport: _transport
