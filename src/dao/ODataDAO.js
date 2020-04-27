@@ -24,12 +24,16 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   _customLoaderByQuery: Map<string, LoadObject<any>> = new Map();
 
+  _customLoaderHandlerByQuery: Map<string, OHandler<TEntity>> = new Map();
+
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
 
   // Sets used for tracking current queries
   _runFlushCache = null;
 
   _currentCountQueries: Set<string> = new Set();
+
+  _currentEntityQueries: Set<string> = new Set();
 
   _currentEntityIDsQueries: Set<string> = new Set();
 
@@ -101,17 +105,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   fetchByID(id: EntityID): LoadObject<TEntity> {
     const stringifiedID = id.toString();
+    this._currentEntityQueries.add(stringifiedID);
+
     if (!this._entityLoaderByID.has(stringifiedID)) {
-      this._entityLoaderByID.set(stringifiedID, LoadObject.loading());
-      this.__emitChanges();
-      this.__resolveSingle(
-        this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
-      )
-        .then((result: TEntity): void => this._updateCacheForEntity(result))
-        .catch((error: Error) => {
-          Subscription.__emitError(error);
-          this._updateCacheForError(stringifiedID, error);
-        });
+      this._hydrateSingle(stringifiedID);
     }
 
     return nullthrows(this._entityLoaderByID.get(stringifiedID));
@@ -135,9 +132,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this.__resolveMany(handler)
         .then((results: Array<TEntity>) => {
           const entitiesByID = new Map(
-            results.map(
-              (item: TEntity): [EntityID, TEntity] => [item.id, item],
-            ),
+            results.map((item: TEntity): [EntityID, TEntity] => [
+              item.id,
+              item,
+            ]),
           );
 
           idsToLoad.forEach((id: EntityID) => {
@@ -158,8 +156,8 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
         })
         .catch((error: Error) => {
           Subscription.__emitError(error);
-          stringifiedIds.forEach(
-            (id: EntityID): void => this._updateCacheForError(id, error, false),
+          stringifiedIds.forEach((id: EntityID): void =>
+            this._updateCacheForError(id, error, false),
           );
 
           this.__emitChanges();
@@ -167,12 +165,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     }
 
     return new Map(
-      stringifiedIds.map(
-        (id: string): [string, LoadObject<TEntity>] => [
-          id,
-          nullthrows(this._entityLoaderByID.get(id)),
-        ],
-      ),
+      stringifiedIds.map((id: string): [string, LoadObject<TEntity>] => [
+        id,
+        nullthrows(this._entityLoaderByID.get(id)),
+      ]),
     );
   }
 
@@ -195,16 +191,13 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
     return loader.map(count =>
       nullthrows(this._entityIDsLoaderByQuery.get(cacheKey))
-        .map(
-          (ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
-            const resultMap = this.fetchByIDs(ids);
+        .map((ids: Array<EntityID>): Array<LoadObject<TEntity>> => {
+          const resultMap = this.fetchByIDs(ids);
 
-            return ids.map(
-              (id: EntityID): LoadObject<TEntity> =>
-                nullthrows(resultMap.get(id.toString())),
-            );
-          },
-        )
+          return ids.map((id: EntityID): LoadObject<TEntity> =>
+            nullthrows(resultMap.get(id.toString())),
+          );
+        })
         .map(loaders => {
           const { take = 100 } = queryOptions;
 
@@ -269,7 +262,6 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   flushCache() {
-    this._entityLoaderByID = new Map();
     this._flushQueryCaches();
     this.__emitChanges();
   }
@@ -409,38 +401,34 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
             return;
           }
 
-          loader = loader.map(
-            (result: $FlowFixMe): $FlowFixMe => {
-              const isMap = result instanceof Map;
-              if (!Array.isArray(result) && !isMap) {
-                return result;
-              }
+          loader = loader.map((result: $FlowFixMe): $FlowFixMe => {
+            const isMap = result instanceof Map;
+            if (!Array.isArray(result) && !isMap) {
+              return result;
+            }
 
-              const entries = isMap ? Array.from(result.values()) : result;
-              if (
-                entries.some(
-                  (item: $FlowFixMe): boolean =>
-                    item instanceof LoadObject ? item.hasOperation() : false,
-                )
-              ) {
-                return LoadObject.loading();
-              }
+            const entries = isMap ? Array.from(result.values()) : result;
+            if (
+              entries.some((item: $FlowFixMe): boolean =>
+                item instanceof LoadObject ? item.hasOperation() : false,
+              )
+            ) {
+              return LoadObject.loading();
+            }
 
-              if (isMap) {
-                return new Map(
-                  Array.from(result.entries()).map(([key, value]) => [
-                    key,
-                    value.getValue(),
-                  ]),
-                );
-              }
-
-              return result.map(
-                (item: $FlowFixMe): $FlowFixMe =>
-                  item instanceof LoadObject ? item.getValue() : item,
+            if (isMap) {
+              return new Map(
+                Array.from(result.entries()).map(([key, value]) => [
+                  key,
+                  value.getValue(),
+                ]),
               );
-            },
-          );
+            }
+
+            return result.map((item: $FlowFixMe): $FlowFixMe =>
+              item instanceof LoadObject ? item.getValue() : item,
+            );
+          });
 
           if (loader.hasOperation()) {
             return;
@@ -521,24 +509,10 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       __custom_key__: key,
     });
     this._currentCustomQueries.add(cacheKey);
+    this._customLoaderHandlerByQuery.set(cacheKey, handler);
 
     if (!this._customLoaderByQuery.has(cacheKey)) {
-      this._customLoaderByQuery.set(cacheKey, LoadObject.loading());
-      this.__emitChanges();
-
-      this.__resolve(handler)
-        .then((result: Object) => {
-          this._customLoaderByQuery.set(
-            cacheKey,
-            LoadObject.withValue(result.data),
-          );
-          this.__emitChanges();
-        })
-        .catch((error: Error) => {
-          Subscription.__emitError(error);
-          this._customLoaderByQuery.set(cacheKey, LoadObject.withError(error));
-          this.__emitChanges();
-        });
+      this._hydrateCustom(queryOptions, key);
     }
 
     return nullthrows(this._customLoaderByQuery.get(cacheKey));
@@ -554,15 +528,19 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       return;
     }
 
+    this._currentEntityQueries.clear();
     this._currentCountQueries.clear();
     this._currentCustomQueries.clear();
     this._currentEntityIDsQueries.clear();
 
+    this._setLoadersToUpdating(this._entityLoaderByID);
     this._setLoadersToUpdating(this._entityIDsLoaderByQuery);
     this._setLoadersToUpdating(this._countLoaderByQuery);
     this._setLoadersToUpdating(this._customLoaderByQuery);
 
     this._runFlushCache = debounce(() => {
+      this._currentEntityQueries.forEach(id => this._hydrateSingle(id));
+
       this._entityIDsLoaderByQuery = this._rebuildMap(
         this._entityIDsLoaderByQuery,
         this._currentEntityIDsQueries,
@@ -580,8 +558,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
           ),
       );
 
-      // TODO
-      this._customLoaderByQuery = new Map();
+      this._rehydrateCustom();
 
       this._runFlushCache = null;
       this.__emitChanges();
@@ -601,13 +578,20 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
     this._setLoadersToUpdating(this._customLoaderByQuery);
     this._runFlushCache = debounce(() => {
-      this._customLoaderByQuery = new Map();
+      this._rehydrateCustom();
 
       this._runFlushCache = null;
       this.__emitChanges();
     }, 10);
 
     this._runFlushCache();
+  }
+
+  _rehydrateCustom() {
+    this._customLoaderHandlerByQuery.forEach((_, key) => {
+      const { __custom_key__: customKey, ...queryParams } = JSON.parse(key);
+      this._hydrateCustom(queryParams, customKey);
+    });
   }
 
   _setLoadersToUpdating(map: Map<string, LoadObject<any>>) {
@@ -627,6 +611,23 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     });
 
     return new Map(savedItems);
+  }
+
+  _hydrateSingle(stringifiedID: string): void {
+    const initialLoader = this._entityLoaderByID.has(stringifiedID)
+      ? nullthrows(this._entityLoaderByID.get(stringifiedID)).updating()
+      : LoadObject.loading();
+
+    this._entityLoaderByID.set(stringifiedID, initialLoader);
+    this.__emitChanges();
+    this.__resolveSingle(
+      this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
+    )
+      .then((result: TEntity): void => this._updateCacheForEntity(result))
+      .catch((error: Error) => {
+        Subscription.__emitError(error);
+        this._updateCacheForError(stringifiedID, error);
+      });
   }
 
   _hydrateMany(queryOptions?: QueryOptions): void {
@@ -703,6 +704,36 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
           cacheKey,
           loader ? loader.setError(error) : LoadObject.withError(error),
         );
+        this.__emitChanges();
+      });
+  }
+
+  _hydrateCustom(
+    queryOptions?: QueryOptions,
+    key?: string = '',
+  ): LoadObject<TResult> {
+    const cacheKey = this._getCacheKey({
+      ...queryOptions,
+      __custom_key__: key,
+    });
+    const initialLoader = this._customLoaderByQuery.has(cacheKey)
+      ? nullthrows(this._customLoaderByQuery.get(cacheKey)).updating()
+      : LoadObject.loading();
+
+    this._customLoaderByQuery.set(cacheKey, initialLoader);
+    this.__emitChanges();
+
+    this.__resolve(this._customLoaderHandlerByQuery.get(cacheKey))
+      .then((result: Object) => {
+        this._customLoaderByQuery.set(
+          cacheKey,
+          LoadObject.withValue(result.data),
+        );
+        this.__emitChanges();
+      })
+      .catch((error: Error) => {
+        Subscription.__emitError(error);
+        this._customLoaderByQuery.set(cacheKey, LoadObject.withError(error));
         this.__emitChanges();
       });
   }
