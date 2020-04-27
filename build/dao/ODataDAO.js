@@ -95,7 +95,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
     _defineProperty(_assertThisInitialized(_this), "_customLoaderByQuery", new Map());
 
-    _defineProperty(_assertThisInitialized(_this), "_customLoaderHandlerByQuery", new Map());
+    _defineProperty(_assertThisInitialized(_this), "_customHandlerByQuery", new Map());
 
     _defineProperty(_assertThisInitialized(_this), "_entityLoaderByID", new Map());
 
@@ -590,7 +590,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       this._currentCustomQueries.add(cacheKey);
 
-      this._customLoaderHandlerByQuery.set(cacheKey, handler);
+      this._customHandlerByQuery.set(cacheKey, handler);
 
       if (!this._customLoaderByQuery.has(cacheKey)) {
         this._hydrateCustom(queryOptions, key);
@@ -684,12 +684,26 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
     value: function _rehydrateCustom() {
       var _this14 = this;
 
-      this._customLoaderHandlerByQuery.forEach(function (_, key) {
+      var toRemove = [];
+
+      this._customHandlerByQuery.forEach(function (_, key) {
+        // Remove any queryies that aren't currently in use
+        if (!_this14._currentCustomQueries.has(key)) {
+          toRemove.push(key);
+          return;
+        }
+
         var _JSON$parse = JSON.parse(key),
             customKey = _JSON$parse.__custom_key__,
             queryParams = _objectWithoutProperties(_JSON$parse, ["__custom_key__"]);
 
         _this14._hydrateCustom(queryParams, customKey);
+      });
+
+      toRemove.forEach(function (key) {
+        _this14._customLoaderByQuery.remove(key);
+
+        _this14._customHandlerByQuery.remove(key);
       });
     }
   }, {
@@ -816,7 +830,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       this.__emitChanges();
 
-      this.__resolve(this._customLoaderHandlerByQuery.get(cacheKey)).then(function (result) {
+      this.__resolve(this._customHandlerByQuery.get(cacheKey)).then(function (result) {
         _this18._customLoaderByQuery.set(cacheKey, _LoadObject["default"].withValue(result.data));
 
         _this18.__emitChanges();

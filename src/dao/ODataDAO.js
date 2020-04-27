@@ -24,7 +24,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   _customLoaderByQuery: Map<string, LoadObject<any>> = new Map();
 
-  _customLoaderHandlerByQuery: Map<string, OHandler<TEntity>> = new Map();
+  _customHandlerByQuery: Map<string, OHandler<TEntity>> = new Map();
 
   _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
 
@@ -509,7 +509,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       __custom_key__: key,
     });
     this._currentCustomQueries.add(cacheKey);
-    this._customLoaderHandlerByQuery.set(cacheKey, handler);
+    this._customHandlerByQuery.set(cacheKey, handler);
 
     if (!this._customLoaderByQuery.has(cacheKey)) {
       this._hydrateCustom(queryOptions, key);
@@ -588,9 +588,21 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   _rehydrateCustom() {
-    this._customLoaderHandlerByQuery.forEach((_, key) => {
+    const toRemove = [];
+    this._customHandlerByQuery.forEach((_, key) => {
+      // Remove any queryies that aren't currently in use
+      if (!this._currentCustomQueries.has(key)) {
+        toRemove.push(key);
+        return;
+      }
+
       const { __custom_key__: customKey, ...queryParams } = JSON.parse(key);
       this._hydrateCustom(queryParams, customKey);
+    });
+
+    toRemove.forEach(key => {
+      this._customLoaderByQuery.remove(key);
+      this._customHandlerByQuery.remove(key);
     });
   }
 
@@ -723,7 +735,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     this._customLoaderByQuery.set(cacheKey, initialLoader);
     this.__emitChanges();
 
-    this.__resolve(this._customLoaderHandlerByQuery.get(cacheKey))
+    this.__resolve(this._customHandlerByQuery.get(cacheKey))
       .then((result: Object) => {
         this._customLoaderByQuery.set(
           cacheKey,
