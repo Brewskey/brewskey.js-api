@@ -1,6 +1,7 @@
 // @flow
 
 export type FilterOperator =
+  | 'any'
   | 'contains'
   | 'endswith'
   | 'eq'
@@ -72,34 +73,28 @@ export const doesSatisfyQueryFilters = (
   item: Object,
   queryFilters: Array<QueryFilter>,
 ): boolean =>
-  queryFilters.every(
-    (queryFilter: QueryFilter): boolean => {
-      const { params, values, operator } = queryFilter;
+  queryFilters.every((queryFilter: QueryFilter): boolean => {
+    const { params, values, operator } = queryFilter;
 
-      return params.some(
-        (param: string): boolean => {
-          const itemValue = getIn(param.split('/'), item);
+    return params.some((param: string): boolean => {
+      const itemValue = getIn(param.split('/'), item);
 
-          return values.some(
-            (value: any): boolean => {
-              switch (operator) {
-                // todo add other cases
-                case FILTER_OPERATORS.CONTAINS: {
-                  return itemValue.toString().includes(value.toString());
-                }
-                case FILTER_OPERATORS.EQUALS: {
-                  return value === itemValue;
-                }
-                case FILTER_OPERATORS.NOT_EQUALS: {
-                  return value !== itemValue;
-                }
-                default: {
-                  return false;
-                }
-              }
-            },
-          );
-        },
-      );
-    },
-  );
+      return values.some((value: any): boolean => {
+        switch (operator) {
+          // todo add other cases
+          case FILTER_OPERATORS.CONTAINS: {
+            return itemValue.toString().includes(value.toString());
+          }
+          case FILTER_OPERATORS.EQUALS: {
+            return value === itemValue;
+          }
+          case FILTER_OPERATORS.NOT_EQUALS: {
+            return value !== itemValue;
+          }
+          default: {
+            return false;
+          }
+        }
+      });
+    });
+  });

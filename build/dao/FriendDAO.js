@@ -82,7 +82,7 @@ var FriendDAO = /*#__PURE__*/function (_ODataDAO) {
           name: 'Content-Type',
           value: 'application/json'
         }],
-        method: 'post'
+        method: 'POST'
       });
     }
   }]);

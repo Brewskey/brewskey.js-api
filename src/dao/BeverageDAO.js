@@ -2,6 +2,7 @@
 
 import type { EntityID, QueryOptions, ShortenedEntity } from '../types';
 import type { Srm } from './SrmDAO';
+import type LoadObject from '../LoadObject';
 
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';

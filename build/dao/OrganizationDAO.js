@@ -79,7 +79,7 @@ var OrganizationDAO = /*#__PURE__*/function (_ODataDAO) {
 
       var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID)).func(funcString);
 
-      return this.__mutateCustom(handler, 'post', stringifiedID, {
+      return this.__mutateCustom(handler, 'POST', stringifiedID, {
         partner: partner
       });
     }

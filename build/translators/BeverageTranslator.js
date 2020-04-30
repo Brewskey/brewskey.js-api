@@ -78,10 +78,9 @@ var BeverageTranslator = /*#__PURE__*/function (_DefaultTranslator) {
     value: function toForm(_ref2) {
       var availability = _ref2.availability,
           glass = _ref2.glass,
-          location = _ref2.location,
           srm = _ref2.srm,
           style = _ref2.style,
-          props = _objectWithoutProperties(_ref2, ["availability", "glass", "location", "srm", "style"]);
+          props = _objectWithoutProperties(_ref2, ["availability", "glass", "srm", "style"]);
 
       return _objectSpread({}, props, {
         availableId: availability && availability.id,

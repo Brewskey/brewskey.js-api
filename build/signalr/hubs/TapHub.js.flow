@@ -1,5 +1,7 @@
 // @flow
 
+import type { Options } from './Hub';
+
 import Hub from './Hub';
 
 class TapHub extends Hub {
@@ -17,10 +19,17 @@ class TapHub extends Hub {
     'unsubscribeMany',
   );
 
-  constructor() {
-    super('tapHub', {
-      logging: true,
-    });
+  constructor(options?: Options) {
+    super(
+      'tapHub',
+      options ?? {
+        logging: true,
+      },
+    );
+  }
+
+  withOptions(options: Options): TapHub {
+    return new TapHub(options);
   }
 }
 

@@ -6,8 +6,8 @@ import Config from './Config';
 
 export type SSESubscriptionOptions = {|
   eventNamePrefix?: string,
-  onError?: (error: Error) => any,
-  onOpen?: () => any,
+  onError?: (event: MessageEvent) => mixed,
+  onOpen?: (event: MessageEvent) => mixed,
   particleId?: string,
 |};
 
@@ -31,9 +31,9 @@ class CloudSSEManager extends Subscription {
 
     const session = new EventSource(CloudSSEManager._getUrl(subscribeOptions));
 
-    session.addEventListener('message', sseEvent => {
+    session.addEventListener('message', (sseEvent: MessageEvent): void => {
       try {
-        const cloudEventStr = sseEvent.data;
+        const cloudEventStr: any = sseEvent.data;
         const cloudEvent = JSON.parse(cloudEventStr);
 
         const {
@@ -60,7 +60,9 @@ class CloudSSEManager extends Subscription {
       session.addEventListener('error', onError);
     }
 
-    session.addEventListener('error', CloudSSEManager.__emitError);
+    session.addEventListener('error', (event: Event) => {
+      CloudSSEManager.__emitError(new Error(JSON.stringify(event)));
+    });
 
     CloudSSEManager._sessionByHandler.set(handler, session);
   }
@@ -79,7 +81,9 @@ class CloudSSEManager extends Subscription {
 
     return `${nullthrows(
       Config.host,
-    )}/api/v2/${devicesUrl}${eventNamePrefix}/?access_token=${Config.token}`;
+    )}/api/v2/${devicesUrl}${eventNamePrefix}/?access_token=${nullthrows(
+      Config.token,
+    )}`;
   }
 }
 

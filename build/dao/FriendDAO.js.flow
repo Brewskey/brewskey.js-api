@@ -55,7 +55,7 @@ class FriendDAO extends ODataDAO<Friend, Friend> {
         { name: 'Accept', value: 'application/json' },
         { name: 'Content-Type', value: 'application/json' },
       ],
-      method: 'post',
+      method: 'POST',
     });
   }
 }

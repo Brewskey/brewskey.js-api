@@ -133,51 +133,46 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       return handler;
     }
     const renderedFilters = queryOptions.filters
-      .map(
-        (queryFilter: QueryFilter): string => {
-          const { operator, params, values } = queryFilter;
-          const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
-            (op: string): boolean => op === operator,
-          );
-          const isAnyOperator = operator === FILTER_OPERATORS.ANY;
+      .map((queryFilter: QueryFilter): string => {
+        const { operator, params, values } = queryFilter;
+        const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
+          (op: string): boolean => op === operator,
+        );
+        const isAnyOperator = operator === FILTER_OPERATORS.ANY;
 
-          const filters = values.map(
-            (value: string): Array<string> =>
-              params.map(
-                (param: string): string => {
-                  // Any operator should have the value pre-formatted
-                  if (isAnyOperator) {
-                    return `(${param}/any(${value}))`;
-                  }
+        const filters = values.map((value: string): Array<string> =>
+          params.map((param: string): string => {
+            // Any operator should have the value pre-formatted
+            if (isAnyOperator) {
+              return `(${param}/any(${value}))`;
+            }
 
-                  // we have to use two reformat functions because of the issue:
-                  // https://github.com/Brewskey/brewskey.admin/issues/371
-                  // this is not ideal though, because it doesn't resolve
-                  // situations when we get stringified value from front-end
-                  // which is stored as number on the server.
-                  const reformattedValue = ID_REG_EXP.test(param)
-                    ? this.__reformatIDValue(value)
-                    : this.__reformatQueryValue(value);
+            // we have to use two reformat functions because of the issue:
+            // https://github.com/Brewskey/brewskey.admin/issues/371
+            // this is not ideal though, because it doesn't resolve
+            // situations when we get stringified value from front-end
+            // which is stored as number on the server.
+            const reformattedValue = ID_REG_EXP.test(param)
+              ? this.__reformatIDValue(value)
+              : this.__reformatQueryValue(value);
 
-                  if (isValidOperator) {
-                    return `(${operator}(${param}, ${reformattedValue}))`;
-                  }
+            if (isValidOperator) {
+              return `(${operator}(${param}, ${reformattedValue}))`;
+            }
 
-                  return `(${param} ${operator} ${reformattedValue})`;
-                },
-              ),
-          );
+            return `(${param} ${operator} ${reformattedValue})`;
+          }),
+        );
 
-          return filters
-            .reduce(
-              (
-                previousFilter: Array<string>,
-                currentFilters: Array<string>,
-              ): Array<string> => [...previousFilter, ...currentFilters],
-            )
-            .join(' or ');
-        },
-      )
+        return filters
+          .reduce(
+            (
+              previousFilter: Array<string>,
+              currentFilters: Array<string>,
+            ): Array<string> => [...previousFilter, ...currentFilters],
+          )
+          .join(' or ');
+      })
       .map((filter: string): string => `(${filter})`)
       .join(' and ');
     return handler.filter(renderedFilters);
@@ -188,9 +183,12 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     params?: Object,
     method?: RequestMethod = 'GET',
   ): Promise<TEntity> {
-    return this.__resolve(handler, params, method).then(
-      (result: ODataDAOResult): TEntity =>
-        this.getTranslator().fromApi(result.data),
+    return this.__resolve(
+      handler,
+      params,
+      method,
+    ).then((result: ODataDAOResult): TEntity =>
+      this.getTranslator().fromApi(result.data),
     );
   }
 
@@ -200,8 +198,8 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     method?: RequestMethod = 'GET',
   ): Promise<Array<TEntity>> {
     const result = await this.__resolve(handler, params, method);
-    return (result.data || []).map(
-      (item: Object): TEntity => this.getTranslator().fromApi(item),
+    return (result.data || []).map((item: Object): TEntity =>
+      this.getTranslator().fromApi(item),
     );
   }
 
@@ -223,19 +221,19 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
   ): Promise<ODataDAOResult> {
     let request;
     switch (method) {
-      case 'delete': {
+      case 'DELETE': {
         request = handler.remove().save();
         break;
       }
-      case 'patch': {
+      case 'PATCH': {
         request = handler.patch(params).save();
         break;
       }
-      case 'post': {
+      case 'POST': {
         request = handler.post(params).save();
         break;
       }
-      case 'put': {
+      case 'PUT': {
         request = handler.put(params).save();
         break;
       }

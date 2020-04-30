@@ -102,7 +102,7 @@ var KegDAO = /*#__PURE__*/function (_ODataDAO) {
 
       var handler = this.__buildHandler({}, false).find(this.__reformatIDValue(stringifiedID)).func(funcString);
 
-      return this.__mutateCustom(handler, 'put', tapID, null);
+      return this.__mutateCustom(handler, 'PUT', tapID, null);
     }
   }]);
 

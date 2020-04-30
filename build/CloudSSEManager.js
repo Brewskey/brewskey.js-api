@@ -85,7 +85,9 @@ var CloudSSEManager = /*#__PURE__*/function (_Subscription) {
         session.addEventListener('error', onError);
       }
 
-      session.addEventListener('error', CloudSSEManager.__emitError);
+      session.addEventListener('error', function (event) {
+        CloudSSEManager.__emitError(new Error(JSON.stringify(event)));
+      });
 
       CloudSSEManager._sessionByHandler.set(handler, session);
     }
@@ -109,7 +111,7 @@ var CloudSSEManager = /*#__PURE__*/function (_Subscription) {
           eventNamePrefix = _ref$eventNamePrefix === void 0 ? '' : _ref$eventNamePrefix,
           particleId = _ref.particleId;
       var devicesUrl = particleId ? "devices/".concat(particleId, "/events/") : 'events/';
-      return "".concat((0, _nullthrows["default"])(_Config["default"].host), "/api/v2/").concat(devicesUrl).concat(eventNamePrefix, "/?access_token=").concat(_Config["default"].token);
+      return "".concat((0, _nullthrows["default"])(_Config["default"].host), "/api/v2/").concat(devicesUrl).concat(eventNamePrefix, "/?access_token=").concat((0, _nullthrows["default"])(_Config["default"].token));
     }
   }]);
 

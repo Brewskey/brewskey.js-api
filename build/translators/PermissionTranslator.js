@@ -69,9 +69,7 @@ var PermissionTranslator = /*#__PURE__*/function (_DefaultTranslator) {
     value: function toApi(_ref) {
       var entityId = _ref.entityId,
           entityType = _ref.entityType,
-          user = _ref.user,
-          organization = _ref.organization,
-          props = _objectWithoutProperties(_ref, ["entityId", "entityType", "user", "organization"]);
+          props = _objectWithoutProperties(_ref, ["entityId", "entityType"]);
 
       return _objectSpread({}, props, {
         deviceId: entityType === 'devices' ? entityId : null,

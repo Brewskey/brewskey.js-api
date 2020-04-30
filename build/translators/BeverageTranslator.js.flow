@@ -20,7 +20,6 @@ class BeverageTranslator extends DefaultTranslator<Beverage, BeverageMutator> {
   toForm({
     availability,
     glass,
-    location,
     srm,
     style,
     ...props

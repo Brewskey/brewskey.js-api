@@ -25,25 +25,25 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -131,7 +131,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
       /* params */
-      {}, 'delete').then(function () {
+      {}, 'DELETE').then(function () {
         _this2._entityLoaderByID.set(clientID, _LoadObject["default"].empty());
 
         _this2._entityLoaderByID.set(id, _LoadObject["default"].empty());
@@ -266,29 +266,38 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       var loader = this._countLoaderByQuery.get(countQueryKey) || _LoadObject["default"].withValue(-1);
 
-      return loader.map(function (count) {
-        return (0, _nullthrows["default"])(_this5._entityIDsLoaderByQuery.get(cacheKey)).map(function (ids) {
-          var resultMap = _this5.fetchByIDs(ids);
-
-          return ids.map(function (id) {
-            return (0, _nullthrows["default"])(resultMap.get(id.toString()));
-          });
-        }).map(function (loaders) {
-          var _queryOptions$take = queryOptions.take,
-              take = _queryOptions$take === void 0 ? 100 : _queryOptions$take;
-          var delta = count % take - loaders.length;
-
-          if (count === -1 || loaders.length === take || delta <= 0) {
-            return loaders;
-          }
-
-          var missedLoaders = _toConsumableArray(Array(delta)).map(function () {
-            return _LoadObject["default"].loading();
-          });
-
-          return [].concat(_toConsumableArray(loaders), _toConsumableArray(missedLoaders));
-        });
+      var idsLoader = (0, _nullthrows["default"])(this._entityIDsLoaderByQuery.get(cacheKey));
+      var resultMapLoader = idsLoader.map(function (ids) {
+        return _this5.fetchByIDs(ids);
       });
+
+      var resultsLoader = _LoadObject["default"].merge([loader, idsLoader, resultMapLoader]).map(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 3),
+            count = _ref2[0],
+            ids = _ref2[1],
+            resultMap = _ref2[2];
+
+        var entities = ids.map(function (id) {
+          var _resultMap$get;
+
+          return (_resultMap$get = resultMap.get(id.toString())) !== null && _resultMap$get !== void 0 ? _resultMap$get : _LoadObject["default"].empty();
+        });
+        var _queryOptions$take = queryOptions.take,
+            take = _queryOptions$take === void 0 ? 100 : _queryOptions$take;
+        var delta = count % take - entities.length;
+
+        if (count === -1 || entities.length === take || delta <= 0) {
+          return entities;
+        }
+
+        var missedLoaders = _toConsumableArray(Array(delta)).map(function () {
+          return _LoadObject["default"].loading();
+        });
+
+        return [].concat(_toConsumableArray(entities), _toConsumableArray(missedLoaders));
+      });
+
+      return resultsLoader;
     }
   }, {
     key: "fetchAll",
@@ -381,7 +390,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       this.__emitChanges();
 
-      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'patch').then(function (result) {
+      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'PATCH').then(function (result) {
         _this7._flushQueryCaches();
 
         _this7._updateCacheForEntity(result, false);
@@ -406,7 +415,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       this._entityLoaderByID.set(clientID, _LoadObject["default"].creating());
 
-      this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'post').then(function (result) {
+      this.__resolveSingle(this.__buildHandler(), this.getTranslator().toApi(mutator), 'POST').then(function (result) {
         _this8._flushQueryCaches();
 
         _this8._updateCacheForEntity(result, false); // The clientID has a reference to the load object
@@ -442,7 +451,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       this.__emitChanges();
 
-      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'put').then(function (result) {
+      this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID)), this.getTranslator().toApi(mutator), 'PUT').then(function (result) {
         _this9._flushQueryCaches();
 
         _this9._updateCacheForEntity(result, false); // The clientID has a reference to the load object
@@ -478,54 +487,58 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
         }, timeout);
 
         var fetchAndResolve = function fetchAndResolve() {
-          var loader = _LoadObject["default"].withValue(fn(_this10));
+          var fnResult = fn(_this10);
 
-          if (loader.hasOperation()) {
-            return;
-          }
-
-          loader = loader.map(function (result) {
-            var isMap = result instanceof Map;
-
-            if (!Array.isArray(result) && !isMap) {
-              return result;
-            }
-
-            var entries = isMap ? Array.from(result.values()) : result;
+          if (fnResult instanceof Map) {
+            var entries = Array.from(fnResult.values());
 
             if (entries.some(function (item) {
               return item instanceof _LoadObject["default"] ? item.hasOperation() : false;
             })) {
-              return _LoadObject["default"].loading();
+              return;
             }
 
-            if (isMap) {
-              return new Map(Array.from(result.entries()).map(function (_ref) {
-                var _ref2 = _slicedToArray(_ref, 2),
-                    key = _ref2[0],
-                    value = _ref2[1];
+            resolve(new Map(Array.from(fnResult.entries()).map(function (_ref3) {
+              var _ref4 = _slicedToArray(_ref3, 2),
+                  key = _ref4[0],
+                  value = _ref4[1];
 
-                return [key, value.getValue()];
-              }));
-            }
+              return [key, value.getValueEnforcing()];
+            })));
 
-            return result.map(function (item) {
-              return item instanceof _LoadObject["default"] ? item.getValue() : item;
-            });
-          });
+            _this10.unsubscribe(fetchAndResolve);
+
+            return;
+          }
+
+          var loader = fnResult instanceof _LoadObject["default"] ? fnResult : _LoadObject["default"].withValue(fnResult);
 
           if (loader.hasOperation()) {
             return;
           }
 
-          _this10.unsubscribe(fetchAndResolve);
+          var data = loader.getValue();
 
           if (loader.hasError()) {
             reject(loader.getErrorEnforcing());
             return;
           }
 
-          resolve(loader.getValue());
+          if (Array.isArray(data)) {
+            if (data.some(function (item) {
+              return item instanceof _LoadObject["default"] ? item.hasOperation() : false;
+            })) {
+              return;
+            }
+
+            resolve(data.map(function (item) {
+              return item instanceof _LoadObject["default"] ? item.getValue() : item;
+            }));
+          } else {
+            resolve(data);
+          }
+
+          _this10.unsubscribe(fetchAndResolve);
         };
 
         _this10.subscribe(fetchAndResolve);
@@ -549,7 +562,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       var entity = this._entityLoaderByID.get(stringifiedID || clientID) || _LoadObject["default"].empty();
 
-      if (method === 'delete') {
+      if (method === 'DELETE') {
         this._entityLoaderByID.set(stringifiedID || clientID, entity.deleting());
       } else {
         this._entityLoaderByID.set(stringifiedID || clientID, entity.updating());
@@ -701,9 +714,9 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
       });
 
       toRemove.forEach(function (key) {
-        _this14._customLoaderByQuery.remove(key);
+        _this14._customLoaderByQuery["delete"](key);
 
-        _this14._customHandlerByQuery.remove(key);
+        _this14._customHandlerByQuery["delete"](key);
       });
     }
   }, {
@@ -717,7 +730,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
     key: "_rebuildMap",
     value: function _rebuildMap(map, set, onUpdate) {
       var savedItems = Array.from(set).map(function (queryOptionString) {
-        onUpdate(JSON.parse(queryOptionString));
+        onUpdate(JSON.parse(queryOptionString.toString()));
         var loader = (0, _nullthrows["default"])(map.get(queryOptionString));
         return [queryOptionString, loader];
       });
@@ -830,7 +843,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       this.__emitChanges();
 
-      this.__resolve(this._customHandlerByQuery.get(cacheKey)).then(function (result) {
+      this.__resolve((0, _nullthrows["default"])(this._customHandlerByQuery.get(cacheKey))).then(function (result) {
         _this18._customLoaderByQuery.set(cacheKey, _LoadObject["default"].withValue(result.data));
 
         _this18.__emitChanges();

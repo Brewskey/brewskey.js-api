@@ -294,25 +294,25 @@ var BaseODataDAO = /*#__PURE__*/function (_Subscription) {
         var request;
 
         switch (method) {
-          case 'delete':
+          case 'DELETE':
             {
               request = handler.remove().save();
               break;
             }
 
-          case 'patch':
+          case 'PATCH':
             {
               request = handler.patch(params).save();
               break;
             }
 
-          case 'post':
+          case 'POST':
             {
               request = handler.post(params).save();
               break;
             }
 
-          case 'put':
+          case 'PUT':
             {
               request = handler.put(params).save();
               break;

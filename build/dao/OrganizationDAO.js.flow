@@ -1,5 +1,6 @@
 // @flow
 import type { EntityID, QueryOptions } from '../types';
+import type LoadObject from '../LoadObject';
 
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
@@ -68,7 +69,7 @@ class OrganizationDAO extends ODataDAO<Organization, OrganizationMutator> {
       .find(this.__reformatIDValue(stringifiedID))
       .func(funcString);
 
-    return this.__mutateCustom(handler, 'post', stringifiedID, {
+    return this.__mutateCustom(handler, 'POST', stringifiedID, {
       partner,
     });
   }

@@ -83,7 +83,7 @@ class KegDAO extends ODataDAO<Keg, KegMutator> {
       .find(this.__reformatIDValue(stringifiedID))
       .func(funcString);
 
-    return this.__mutateCustom(handler, 'put', tapID, null);
+    return this.__mutateCustom(handler, 'PUT', tapID, null);
   }
 }
 

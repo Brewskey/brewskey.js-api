@@ -25,6 +25,7 @@ export type EntityName =
   | 'kegs'
   | 'locations'
   | 'organizations'
+  | 'payments'
   | 'permissions'
   | 'pours'
   | 'price-variants'

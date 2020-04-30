@@ -317,27 +317,23 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
             return;
           }
 
-          loader = loader.map(
-            (result: $FlowFixMe): $FlowFixMe => {
-              if (!Array.isArray(result)) {
-                return result;
-              }
+          loader = loader.map(result => {
+            if (!Array.isArray(result)) {
+              return result;
+            }
 
-              if (
-                result.some(
-                  (item: $FlowFixMe): boolean =>
-                    item instanceof LoadObject ? item.hasOperation() : false,
-                )
-              ) {
-                return LoadObject.loading();
-              }
+            if (
+              result.some(item =>
+                item instanceof LoadObject ? item.hasOperation() : false,
+              )
+            ) {
+              return LoadObject.loading();
+            }
 
-              return result.map(
-                (item: $FlowFixMe): $FlowFixMe =>
-                  item instanceof LoadObject ? item.getValue() : item,
-              );
-            },
-          );
+            return result.map(item =>
+              item instanceof LoadObject ? item.getValue() : item,
+            );
+          });
 
           if (loader.hasOperation()) {
             return;

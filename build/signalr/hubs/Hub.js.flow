@@ -5,7 +5,7 @@ import Config from '../../Config';
 
 const PING_INTERVAL = 60000;
 
-type Options = {
+export type Options = {
   logging?: boolean,
   queryParams?: Object,
   rootPath?: string,
@@ -65,9 +65,11 @@ class Hub {
     const { _connection, _transport } = this;
     _connection.qs = {
       ...(_connection.qs || {}),
-      ...{
-        access_token: Config.token,
-      },
+      ...(Config.token != null
+        ? {
+            access_token: Config.token,
+          }
+        : {}),
     };
 
     this._connectionPromise = _transport
@@ -87,8 +89,8 @@ class Hub {
   serverMethod(name: string): Function {
     return (...args: Array<any>): ?Promise<any> =>
       this._connectionPromise &&
-      this._connectionPromise.then(
-        (): Promise<any> => this._proxy.invoke(name, ...args),
+      this._connectionPromise.then((): Promise<any> =>
+        this._proxy.invoke(name, ...args),
       );
   }
 

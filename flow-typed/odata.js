@@ -78,9 +78,7 @@ declare module 'odata' {
       resource: string,
       id: string | number,
     ): OHandler<TEntity>,
-  };
+  }
 
-  declare function exports<TEntity>(args?: Options | string): OHandler<TEntity>;
-
-  declare export default typeof exports;
+  declare export default <TEntity>(args?: Options | string) => OHandler<TEntity>;
 }
