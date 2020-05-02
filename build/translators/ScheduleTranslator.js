@@ -93,10 +93,23 @@ var SchedulesTranslator = /*#__PURE__*/function (_DefaultTranslator) {
     }
   }, {
     key: "toForm",
-    value: function toForm(model) {
-      return _objectSpread({}, model, {
-        locationId: model.location ? model.location.id.toString() : null
-      });
+    value: function toForm(_ref2) {
+      var accounts = _ref2.accounts,
+          days = _ref2.days,
+          endTime = _ref2.endTime,
+          id = _ref2.id,
+          location = _ref2.location,
+          name = _ref2.name,
+          startTime = _ref2.startTime;
+      return {
+        accounts: accounts,
+        days: days,
+        endTime: endTime,
+        id: id,
+        locationId: location ? location.id.toString() : null,
+        name: name,
+        startTime: startTime
+      };
     }
   }]);
 

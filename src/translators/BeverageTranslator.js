@@ -18,18 +18,36 @@ class BeverageTranslator extends DefaultTranslator<Beverage, BeverageMutator> {
   }
 
   toForm({
+    abv,
     availability,
+    beverageType,
+    description,
     glass,
+    ibu,
+    id,
+    isOrganic,
+    name,
+    originalGravity,
+    servingTemperature,
     srm,
     style,
-    ...props
+    year,
   }: Beverage): BeverageMutator {
     return {
-      ...props,
+      abv,
       availableId: availability && availability.id,
+      beverageType,
+      description,
       glasswareId: glass && glass.id,
+      ibu,
+      id,
+      isOrganic,
+      name,
+      originalGravity,
+      servingTemperature,
       srmId: srm && srm.id,
       styleId: style && style.id,
+      year,
     };
   }
 }

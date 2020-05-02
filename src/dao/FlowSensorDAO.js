@@ -14,20 +14,20 @@ export type FlowSensorType =
   | 'SwissFlowSF800'
   | 'Titan';
 
-export type FlowSensor = {
+export type FlowSensor = {|
   flowSensorType: FlowSensorType,
   id: EntityID,
   isDeleted: boolean,
   pulsesPerGallon: number,
   tap: ShortenedTap,
-};
+|};
 
-export type FlowSensorMutator = {
+export type FlowSensorMutator = {|
   flowSensorType: FlowSensorType,
   id?: EntityID,
   pulsesPerGallon: number,
   tapId: EntityID,
-};
+|};
 
 class FlowSensorDAO extends ODataDAO<FlowSensor, FlowSensorMutator> {
   constructor() {

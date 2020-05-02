@@ -15,11 +15,27 @@ class TapsTranslator extends DefaultTranslator<Tap, TapMutator> {
     }: any): Tap);
   }
 
-  toForm({ device, location, ...props }: Tap): TapMutator {
+  toForm({
+    description,
+    device,
+    disableBadges,
+    hideLeaderboard,
+    hideStats,
+    id,
+    isPaymentEnabled,
+    location,
+    requiresPourPrivilege,
+  }: Tap): TapMutator {
     return {
-      ...props,
+      description,
       deviceId: device && device.id,
+      disableBadges,
+      hideLeaderboard,
+      hideStats,
+      id,
+      isPaymentEnabled,
       locationId: location && location.id,
+      requiresPourPrivilege,
     };
   }
 }

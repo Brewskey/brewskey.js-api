@@ -9,23 +9,23 @@ import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import TapTranslator from '../translators/TapTranslator';
 
-export type LeaderboardItem = {
+export type LeaderboardItem = {|
   lastPourDate: Date,
   totalOunces: number,
   totalPours: number,
   userID: ?EntityID,
   userName: ?string,
-};
+|};
 
-export type CurrentKeg = {
-  beverage: { id: string, name: string },
+export type CurrentKeg = {|
+  beverage: {| id: string, name: string |},
   id: string,
   kegType: KegType,
   maxOunces: number,
   ounces: number,
-};
+|};
 
-export type Tap = {
+export type Tap = {|
   createdDate: Date,
   currentKeg: CurrentKeg,
   description: ?string,
@@ -39,9 +39,9 @@ export type Tap = {
   organization: ShortenedEntity,
   requiresPourPrivilege: boolean,
   tapNumber: number,
-};
+|};
 
-export type TapMutator = {
+export type TapMutator = {|
   description: ?string,
   deviceId: ?EntityID,
   disableBadges: boolean,
@@ -51,9 +51,9 @@ export type TapMutator = {
   isPaymentEnabled: boolean,
   locationId: ?EntityID,
   requiresPourPrivilege: boolean,
-};
+|};
 
-export type ShortenedTap = { id: EntityID, isDeleted: boolean };
+export type ShortenedTap = {| id: EntityID, isDeleted: boolean |};
 
 class TapDAO extends ODataDAO<Tap, TapMutator> {
   constructor() {

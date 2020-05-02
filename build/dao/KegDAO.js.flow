@@ -17,7 +17,7 @@ export type KegType =
   | 'SixthBarrel'
   | 'SlimQuarter';
 
-export type Keg = {
+export type Keg = {|
   beverage: ShortenedEntity,
   floatedDate: Date,
   id: EntityID,
@@ -30,15 +30,15 @@ export type Keg = {
   pulses: number,
   tap: ?ShortenedTap,
   tapDate: Date,
-};
+|};
 
-export type KegMutator = {
+export type KegMutator = {|
   beverageId: EntityID,
   id?: EntityID,
   kegType: KegType,
   startingPercentage?: number,
   tapId: EntityID,
-};
+|};
 
 export const MAX_OUNCES_BY_KEG_TYPE: { [KegType]: number } = {
   Cornelius: 640,

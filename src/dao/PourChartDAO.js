@@ -12,20 +12,20 @@ export type PourChartByEntity = 'device' | 'location' | 'organization' | 'tap';
 
 export type PourChartType = 'daily' | 'hourly' | 'timeline';
 
-export type PourChartParams = {
+export type PourChartParams = {|
   beginDate?: ?Date,
   byEntity: PourChartByEntity,
   chartType: PourChartType,
   endDate?: ?Date,
   ids?: Array<EntityID>,
-};
+|};
 
 export type PourChartResult = {|
-  entityResults: Array<{ key: string, name: string }>,
-  resultSegments: Array<{
+  entityResults: Array<{| key: string, name: string |}>,
+  resultSegments: Array<{|
     dataSets: Array<{ key: string, value: number }>,
     key: string,
-  }>,
+  |}>,
 |};
 
 class PourChartDAO extends RestDAO<PourChartResult, null> {

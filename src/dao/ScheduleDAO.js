@@ -6,11 +6,11 @@ import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import ScheduleTranslator from '../translators/ScheduleTranslator';
 
-export type Schedule = {
-  accounts: Array<{
+export type Schedule = {|
+  accounts: Array<{|
     id: EntityID,
     userName: string,
-  }>,
+  |}>,
   createdDate: Date,
   days: number,
   editDate: Date,
@@ -20,20 +20,20 @@ export type Schedule = {
   location: ?ShortenedEntity,
   name: string,
   startTime: Date,
-};
+|};
 
-export type ScheduleMutator = {
-  accounts: Array<{
+export type ScheduleMutator = {|
+  accounts: Array<{|
     id: EntityID,
     userName: string,
-  }>,
+  |}>,
   days: number,
   endTime: Date,
   id: ?EntityID,
   locationId: ?string,
   name: string,
   startTime: Date,
-};
+|};
 
 class ScheduleDAO extends ODataDAO<Schedule, ScheduleMutator> {
   constructor() {

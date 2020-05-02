@@ -37,10 +37,31 @@ class LocationTranslator extends DefaultTranslator<Location, LocationMutator> {
     }: any): Location);
   }
 
-  toForm({ organization, ...props }: Location): LocationMutator {
+  toForm({
+    city,
+    description,
+    id,
+    locationType,
+    name,
+    organization,
+    squareLocationID,
+    state,
+    street,
+    suite,
+    zipCode,
+  }: Location): LocationMutator {
     return {
-      ...props,
+      city,
+      description,
+      id,
+      locationType,
+      name,
       organizationId: organization && organization.id,
+      squareLocationID,
+      state,
+      street,
+      suite,
+      zipCode,
     };
   }
 }

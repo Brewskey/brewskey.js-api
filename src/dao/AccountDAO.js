@@ -6,7 +6,7 @@ import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-export type Account = {
+export type Account = {|
   accessFailedCount: ?number,
   banned: ?boolean,
   createdDate: Date,
@@ -22,15 +22,15 @@ export type Account = {
   roles: ?Object,
   twoFactorEnabled: ?boolean,
   userName: string,
-};
+|};
 
-export type AccountMutator = {
+export type AccountMutator = {|
   email: string,
   fullName?: string,
   id?: EntityID,
   phoneNumber: string,
   userName: string,
-};
+|};
 
 class AccountDAO extends ODataDAO<Account, AccountMutator> {
   constructor() {

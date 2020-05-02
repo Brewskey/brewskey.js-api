@@ -4,7 +4,7 @@ import type { EntityID } from '../types';
 
 import RestDAO from './RestDAO';
 
-export type ProductDevice = {
+export type ProductDevice = {|
   denied: boolean,
   desiredFirmwareVersion: ?number,
   development: boolean,
@@ -19,15 +19,15 @@ export type ProductDevice = {
   quarantined: boolean,
   status: string,
   variables: ?Object,
-};
+|};
 
-export type ProductDeviceMutator = {
+export type ProductDeviceMutator = {|
   denied?: boolean,
   desiredFirmwareVersion?: ?number,
   development?: boolean,
   notes?: ?string,
   quarantined?: boolean,
-};
+|};
 
 class ProductDeviceDAO extends RestDAO<ProductDevice, ProductDeviceMutator> {
   constructor() {

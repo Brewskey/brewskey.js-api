@@ -16,8 +16,8 @@ export type DeviceStatus =
 
 export type DeviceType = 'BrewskeyBox' | 'Onsite';
 
-export type Device = {
-  createdBy: { id: EntityID, userName: string },
+export type Device = {|
+  createdBy: {| id: EntityID, userName: string |},
   deviceStatus: DeviceStatus,
   deviceType: DeviceType,
   id: EntityID,
@@ -29,18 +29,18 @@ export type Device = {
   organization: ShortenedEntity,
   particleId: string,
   temperature: number,
-};
+|};
 
-export type DeviceMutator = {
+export type DeviceMutator = {|
   deviceStatus: DeviceStatus,
   deviceType: DeviceType,
   id?: EntityID,
   locationId: ?EntityID,
   name: string,
   particleId: string,
-};
+|};
 
-export type ParticleAttributes = {
+export type ParticleAttributes = {|
   cellular: ?string,
   connected: boolean,
   currentBuildTarget: ?string,
@@ -56,7 +56,7 @@ export type ParticleAttributes = {
   productFirmwareVersion: number,
   productId: number,
   status: string,
-};
+|};
 
 class DeviceDAO extends ODataDAO<Device, DeviceMutator> {
   constructor() {

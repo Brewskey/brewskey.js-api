@@ -66,19 +66,11 @@ var CloudDeviceDAO = /*#__PURE__*/function (_RestDAO) {
         return;
       }
 
-      var loader = _this._entityLoaderById.get(particleId);
-
-      if (!loader) {
-        return;
-      }
-
-      _this._entityLoaderById.set(particleId, loader.map(function (cloudDevice) {
+      _this.__updateEntityByID(particleId, function (cloudDevice) {
         return _objectSpread({}, cloudDevice, {
           connected: data === 'online'
         });
-      }));
-
-      _this.__emitChanges();
+      });
     });
 
     return _this;

@@ -14,19 +14,19 @@ export type FriendStatus =
   | 'Pending'
   | 'Spam';
 
-export type Friend = {
+export type Friend = {|
   createdDate: Date,
-  friendAccount: {
+  friendAccount: {|
     id: EntityID,
     userName: string,
-  },
+  |},
   friendStatus: FriendStatus,
   id: EntityID,
-  owningAccount: {
+  owningAccount: {|
     id: EntityID,
     userName: string,
-  },
-};
+  |},
+|};
 
 export const FRIEND_STATUSES: { [key: string]: FriendStatus } = {
   APPROVED: 'Approved',

@@ -4,7 +4,7 @@ import type { EntityID } from '../types';
 
 import RestDAO from './RestDAO';
 
-export type ProductFirmware = {
+export type ProductFirmware = {|
   current: boolean,
   description?: string,
   deviceCount: number,
@@ -15,15 +15,15 @@ export type ProductFirmware = {
   title: string,
   updatedAt: Date,
   version: number,
-};
+|};
 
-export type ProductFirmwareMutator = {
+export type ProductFirmwareMutator = {|
   binary?: Buffer,
   description?: string,
   isCurrent?: boolean,
   title?: string,
   version?: string,
-};
+|};
 
 class ProductFirmwareDAO extends RestDAO<
   ProductFirmware,

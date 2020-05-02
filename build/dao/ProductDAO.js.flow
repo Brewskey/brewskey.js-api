@@ -15,7 +15,7 @@ export type ProductPlatformName =
 
 export type ProductType = 'Consumer' | 'Industrial' | 'Hobbyist';
 
-export type Product = {
+export type Product = {|
   configId: string,
   createdAt: Date,
   description: string,
@@ -26,7 +26,7 @@ export type Product = {
   platformId: ProductPlatformId,
   slug: string,
   type: ProductType,
-};
+|};
 
 export const PLATFORM_NAME_BY_ID: {
   [key: ProductPlatformId]: ProductPlatformName,

@@ -487,29 +487,26 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
         }, timeout);
 
         var fetchAndResolve = function fetchAndResolve() {
-          var fnResult = fn(_this10);
-
-          if (fnResult instanceof Map) {
-            var entries = Array.from(fnResult.values());
-
-            if (entries.some(function (item) {
-              return item instanceof _LoadObject["default"] ? item.hasOperation() : false;
-            })) {
-              return;
-            }
-
-            resolve(new Map(Array.from(fnResult.entries()).map(function (_ref3) {
-              var _ref4 = _slicedToArray(_ref3, 2),
-                  key = _ref4[0],
-                  value = _ref4[1];
-
-              return [key, value.getValueEnforcing()];
-            })));
-
-            _this10.unsubscribe(fetchAndResolve);
-
-            return;
-          }
+          var fnResult = fn(_this10); // if (fnResult instanceof Map) {
+          //   const entries = Array.from(fnResult.values());
+          //   if (
+          //     entries.some(item =>
+          //       item instanceof LoadObject ? item.hasOperation() : false,
+          //     )
+          //   ) {
+          //     return;
+          //   }
+          //   resolve(
+          //     new Map(
+          //       Array.from(fnResult.entries()).map(([key, value]) => [
+          //         key,
+          //         value.getValueEnforcing(),
+          //       ]),
+          //     ),
+          //   );
+          //   this.unsubscribe(fetchAndResolve);
+          //   return;
+          // }
 
           var loader = fnResult instanceof _LoadObject["default"] ? fnResult : _LoadObject["default"].withValue(fnResult);
 

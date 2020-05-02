@@ -80,19 +80,10 @@ class CloudDeviceDAO extends RestDAO<CloudDevice, CloudDevice> {
       return;
     }
 
-    const loader = this._entityLoaderById.get(particleId);
-    if (!loader) {
-      return;
-    }
-
-    this._entityLoaderById.set(
-      particleId,
-      loader.map(cloudDevice => ({
-        ...cloudDevice,
-        connected: data === 'online',
-      })),
-    );
-    this.__emitChanges();
+    this.__updateEntityByID(particleId, cloudDevice => ({
+      ...cloudDevice,
+      connected: data === 'online',
+    }));
   };
 }
 

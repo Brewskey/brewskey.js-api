@@ -6,11 +6,11 @@ import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-export type Srm = {
+export type Srm = {|
   hex: string,
   id: EntityID,
   name: string,
-};
+|};
 
 class SrmDAO extends ODataDAO<Srm, Srm> {
   constructor() {

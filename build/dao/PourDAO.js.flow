@@ -11,19 +11,19 @@ import debounce from 'debounce';
 
 const POURS_ACCUMULATE_TIMEOUT = 700;
 
-export type Pour = {
+export type Pour = {|
   beverage: ?ShortenedEntity,
   id: EntityID,
   isDeleted: boolean,
-  keg: { id: EntityID },
+  keg: {| id: EntityID |},
   location: ?ShortenedEntity,
   organization: ShortenedEntity,
   ounces: number,
-  owner: { id: EntityID, userName: string },
+  owner: {| id: EntityID, userName: string |},
   pourDate: string,
   pulses: number,
   tap: ?ShortenedTap,
-};
+|};
 
 class PourDAO extends ODataDAO<Pour, Pour> {
   isAutoflushToggled: boolean = true;

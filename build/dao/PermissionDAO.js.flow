@@ -19,18 +19,18 @@ export type PermissionType =
   | 'Read'
   | 'BannedFromTap';
 
-export type Permission = {
-  createdBy: {
+export type Permission = {|
+  createdBy: {|
     id: EntityID,
     userName: string,
-  },
+  |},
   createdDate: Date,
   device: ?ShortenedEntity,
   expiresDate: ?Date,
-  forUser: {
+  forUser: {|
     id: EntityID,
     userName: string,
-  },
+  |},
   id: EntityID,
   invalid: boolean,
   isDeleted: boolean,
@@ -39,7 +39,7 @@ export type Permission = {
   permissionType: PermissionType,
   startDate: ?Date,
   tap: ?ShortenedTap,
-};
+|};
 
 export type PermissionMutator = {
   entityId: EntityID,

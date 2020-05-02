@@ -14,10 +14,21 @@ class DeviceTranslator extends DefaultTranslator<Device, DeviceMutator> {
     }: any): Device);
   }
 
-  toForm({ location, ...props }: Device): DeviceMutator {
+  toForm({
+    deviceStatus,
+    deviceType,
+    id,
+    location,
+    name,
+    particleId,
+  }: Device): DeviceMutator {
     return {
-      ...props,
+      deviceStatus,
+      deviceType,
+      id,
       locationId: location && location.id,
+      name,
+      particleId,
     };
   }
 }

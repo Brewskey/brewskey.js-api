@@ -12,10 +12,15 @@ import arrayFlatten from 'array-flatten';
 
 const STANDARD_PAGE_SIZE = 40;
 
-class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
+type TEntityBase<TEntity> = {|
+  ...TEntity,
+  id: EntityID,
+|}
+
+class ODataDAO<
   TEntity,
   TEntityMutator,
-> {
+> extends BaseODataDAO<TEntityBase<TEntity>, TEntityMutator> {
   static _clientID: number = 0;
 
   _countLoaderByQuery: Map<string, LoadObject<number>> = new Map();
@@ -26,7 +31,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   _customHandlerByQuery: Map<string, OHandler<any>> = new Map();
 
-  _entityLoaderByID: Map<EntityID, LoadObject<TEntity>> = new Map();
+  _entityLoaderByID: Map<EntityID, LoadObject<TEntityBase<TEntity>>> = new Map();
 
   // Sets used for tracking current queries
   _runFlushCache = null;
@@ -72,7 +77,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   count(queryOptions?: QueryOptions): LoadObject<number> {
     return this.__countCustom(
-      (countQueryOptions: QueryOptions): OHandler<TEntity> =>
+      (countQueryOptions: QueryOptions): OHandler<TEntityBase<TEntity>> =>
         this.__buildHandler({ ...countQueryOptions }),
       queryOptions,
     );
@@ -99,11 +104,11 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return nullthrows(this._countLoaderByQuery.get(cacheKey));
   }
 
-  getEntitiesCache(): Array<LoadObject<TEntity>> {
+  getEntitiesCache(): Array<LoadObject<TEntityBase<TEntity>>> {
     return Array.from(this._entityLoaderByID.values());
   }
 
-  fetchByID(id: EntityID): LoadObject<TEntity> {
+  fetchByID(id: EntityID): LoadObject<TEntityBase<TEntity>> {
     const stringifiedID = id.toString();
     this._currentEntityQueries.add(stringifiedID);
 
@@ -114,7 +119,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return nullthrows(this._entityLoaderByID.get(stringifiedID));
   }
 
-  fetchByIDs(ids: Array<EntityID>): Map<string, LoadObject<TEntity>> {
+  fetchByIDs(ids: Array<EntityID>): Map<string, LoadObject<TEntityBase<TEntity>>> {
     const stringifiedIds = ids.map(String);
     const idsToLoad = stringifiedIds.filter(
       (id: EntityID): boolean => !this._entityLoaderByID.has(id),
@@ -130,9 +135,9 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       handler.customParam('ids', idsToLoad.join(','));
 
       this.__resolveMany(handler)
-        .then((results: Array<TEntity>) => {
+        .then((results: Array<TEntityBase<TEntity>>) => {
           const entitiesByID = new Map(
-            results.map((item: TEntity): [EntityID, TEntity] => [
+            results.map((item: TEntityBase<TEntity>): [EntityID, TEntityBase<TEntity>] => [
               item.id,
               item,
             ]),
@@ -165,7 +170,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     }
 
     return new Map(
-      stringifiedIds.map((id: string): [string, LoadObject<TEntity>] => [
+      stringifiedIds.map((id: string): [string, LoadObject<TEntityBase<TEntity>>] => [
         id,
         nullthrows(this._entityLoaderByID.get(id)),
       ]),
@@ -174,7 +179,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   fetchMany(
     queryOptions?: QueryOptions = {},
-  ): LoadObject<Array<LoadObject<TEntity>>> {
+  ): LoadObject<Array<LoadObject<TEntityBase<TEntity>>>> {
     const cacheKey = this._getCacheKey(queryOptions);
     this._currentEntityIDsQueries.add(cacheKey);
 
@@ -193,7 +198,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this._entityIDsLoaderByQuery.get(cacheKey),
     );
     const resultMapLoader: LoadObject<
-      Map<string, LoadObject<TEntity>>,
+      Map<string, LoadObject<TEntityBase<TEntity>>>,
     > = idsLoader.map(ids => this.fetchByIDs(ids));
 
     const resultsLoader = LoadObject.merge([
@@ -201,7 +206,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       idsLoader,
       resultMapLoader,
     ]).map(([count, ids, resultMap]) => {
-      const entities: Array<LoadObject<TEntity>> = ids.map(
+      const entities: Array<LoadObject<TEntityBase<TEntity>>> = ids.map(
         id => resultMap.get(id.toString()) ?? LoadObject.empty(),
       );
 
@@ -213,7 +218,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       }
 
       const missedLoaders = [...Array(delta)].map(() =>
-        LoadObject.loading<TEntity>(),
+        LoadObject.loading<TEntityBase<TEntity>>(),
       );
 
       return [...entities, ...missedLoaders];
@@ -224,7 +229,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
 
   fetchAll(
     queryOptions?: QueryOptions,
-  ): LoadObject<Array<LoadObject<TEntity>>> {
+  ): LoadObject<Array<LoadObject<TEntityBase<TEntity>>>> {
     return this.count(queryOptions).map(count =>
       arrayFlatten(
         [...Array(Math.ceil(count / STANDARD_PAGE_SIZE))].map((_, index) => {
@@ -255,7 +260,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     );
   }
 
-  fetchSingle(queryOptions?: QueryOptions): LoadObject<TEntity> {
+  fetchSingle(queryOptions?: QueryOptions): LoadObject<TEntityBase<TEntity>> {
     const combinedQueryOptions = {
       orderBy: [{ column: 'id', direction: 'desc' }],
       ...queryOptions,
@@ -263,7 +268,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     };
 
     return this.fetchMany(combinedQueryOptions).map(
-      (items: Array<LoadObject<TEntity>>): LoadObject<TEntity> =>
+      (items: Array<LoadObject<TEntityBase<TEntity>>>): LoadObject<TEntityBase<TEntity>> =>
         items[0] || LoadObject.empty(),
     );
   }
@@ -303,7 +308,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this.getTranslator().toApi(mutator),
       'PATCH',
     )
-      .then((result: TEntity) => {
+      .then((result: TEntityBase<TEntity>) => {
         this._flushQueryCaches();
         this._updateCacheForEntity(result, false);
         this._entityLoaderByID.set(
@@ -329,7 +334,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this.getTranslator().toApi(mutator),
       'POST',
     )
-      .then((result: TEntity) => {
+      .then((result: TEntityBase<TEntity>) => {
         this._flushQueryCaches();
         this._updateCacheForEntity(result, false);
         // The clientID has a reference to the load object
@@ -363,7 +368,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
       this.getTranslator().toApi(mutator),
       'PUT',
     )
-      .then((result: TEntity) => {
+      .then((result: TEntityBase<TEntity>) => {
         this._flushQueryCaches();
         this._updateCacheForEntity(result, false);
         // The clientID has a reference to the load object
@@ -382,21 +387,21 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   waitForLoaded<TResponse>(
-    fn: this => LoadObject<TResponse> | Map<string, LoadObject<TEntity>>,
+    fn: this => LoadObject<TResponse>,
     timeout?: number,
-  ): Promise<TResponse | Map<string, TEntity>> {
+  ): Promise<TResponse> {
     return this.waitForLoadedNullable(fn, timeout).then(result =>
       nullthrows(result),
     );
   }
 
   waitForLoadedNullable<TResponse>(
-    fn: this => LoadObject<TResponse> | Map<string, LoadObject<TEntity>>,
+    fn: this => LoadObject<TResponse>,
     timeout?: number = 10000,
-  ): Promise<?TResponse | Map<string, TEntity>> {
+  ): Promise<?TResponse> {
     return new Promise(
       (
-        resolve: (response: ?TResponse | Map<string, TEntity>) => void,
+        resolve: (response: ?TResponse) => void,
         reject: (error: Error) => void,
       ) => {
         setTimeout((): void => reject(new Error('Timeout!')), timeout);
@@ -404,27 +409,27 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
         const fetchAndResolve = () => {
           const fnResult = fn(this);
 
-          if (fnResult instanceof Map) {
-            const entries = Array.from(fnResult.values());
-            if (
-              entries.some(item =>
-                item instanceof LoadObject ? item.hasOperation() : false,
-              )
-            ) {
-              return;
-            }
+          // if (fnResult instanceof Map) {
+          //   const entries = Array.from(fnResult.values());
+          //   if (
+          //     entries.some(item =>
+          //       item instanceof LoadObject ? item.hasOperation() : false,
+          //     )
+          //   ) {
+          //     return;
+          //   }
 
-            resolve(
-              new Map(
-                Array.from(fnResult.entries()).map(([key, value]) => [
-                  key,
-                  value.getValueEnforcing(),
-                ]),
-              ),
-            );
-            this.unsubscribe(fetchAndResolve);
-            return;
-          }
+          //   resolve(
+          //     new Map(
+          //       Array.from(fnResult.entries()).map(([key, value]) => [
+          //         key,
+          //         value.getValueEnforcing(),
+          //       ]),
+          //     ),
+          //   );
+          //   this.unsubscribe(fetchAndResolve);
+          //   return;
+          // }
 
           const loader: LoadObject<TResponse> =
             fnResult instanceof LoadObject
@@ -468,7 +473,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
   }
 
   __mutateCustom(
-    handler: OHandler<TEntity>,
+    handler: OHandler<TEntityBase<TEntity>>,
     method: RequestMethod,
     id: ?string,
     mutator: ?Object = null,
@@ -652,7 +657,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     this.__resolveSingle(
       this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
     )
-      .then((result: TEntity): void => this._updateCacheForEntity(result))
+      .then((result: TEntityBase<TEntity>): void => this._updateCacheForEntity(result))
       .catch((error: Error) => {
         Subscription.__emitError(error);
         this._updateCacheForError(stringifiedID, error);
@@ -773,7 +778,7 @@ class ODataDAO<TEntity: { id: EntityID }, TEntityMutator> extends BaseODataDAO<
     return (countQueryOptions: any);
   }
 
-  _updateCacheForEntity(entity: TEntity, shouldEmitChanges: boolean = true) {
+  _updateCacheForEntity(entity: TEntityBase<TEntity>, shouldEmitChanges: boolean = true) {
     this._entityLoaderByID.set(
       entity.id.toString(),
       LoadObject.withValue(entity),

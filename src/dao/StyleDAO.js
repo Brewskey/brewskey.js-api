@@ -6,7 +6,7 @@ import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-export type Style = {
+export type Style = {|
   abvMax: number,
   abvMin: number,
   createDate: Date,
@@ -22,7 +22,7 @@ export type Style = {
   srmMax: number,
   srmMin: number,
   updateDate: Date,
-};
+|};
 
 class StyleDAO extends ODataDAO<Style, Style> {
   constructor() {

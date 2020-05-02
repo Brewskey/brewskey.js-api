@@ -26,6 +26,16 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     return this._entityName;
   }
 
+  __updateEntityByID(id: EntityID, cb: TEntity => TEntity): void {
+    const loader = this._entityLoaderById.get(id);
+    if (!loader) {
+      return;
+    }
+
+    this._entityLoaderById.set(id, loader.map(cb));
+    this.__emitChanges();
+  }
+
   __count<TQueryParams: Object>(
     path: string,
     queryParams?: TQueryParams,

@@ -28,16 +28,16 @@ export type AchievementType =
   | 'SevenDaysStraight'
   | 'Welcome';
 
-export type Achievement = {
+export type Achievement = {|
   achievementType: AchievementType,
   createdDate: Date,
   id: EntityID,
-};
+|};
 
-export type AchievementCounter = {
+export type AchievementCounter = {|
   achievementType: AchievementType,
   total: number,
-};
+|};
 
 class AchievementDAO extends ODataDAO<Achievement, Achievement> {
   constructor() {

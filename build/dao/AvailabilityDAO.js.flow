@@ -6,11 +6,11 @@ import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import DefaultTranslator from '../translators/DefaultTranslator';
 
-export type Availability = {
+export type Availability = {|
   description: ?string,
   id: EntityID,
   name: string,
-};
+|};
 
 class AvailabilityDAO extends ODataDAO<Availability, Availability> {
   constructor() {

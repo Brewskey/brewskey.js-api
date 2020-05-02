@@ -77,6 +77,19 @@ var RestDAO = /*#__PURE__*/function (_Subscription) {
       return this._entityName;
     }
   }, {
+    key: "__updateEntityByID",
+    value: function __updateEntityByID(id, cb) {
+      var loader = this._entityLoaderById.get(id);
+
+      if (!loader) {
+        return;
+      }
+
+      this._entityLoaderById.set(id, loader.map(cb));
+
+      this.__emitChanges();
+    }
+  }, {
     key: "__count",
     value: function __count(path, queryParams) {
       var _this2 = this;

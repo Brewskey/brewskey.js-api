@@ -19,16 +19,16 @@ export type ServingTemperature =
   | 'very_cold'
   | 'warm';
 
-export type Beverage = {
+export type Beverage = {|
   abv: number,
   availability: ?ShortenedEntity,
   beerVariationId: ?string,
   beverageType: BeverageType,
   createDate: Date,
-  createdBy: {
+  createdBy: {|
     id: EntityID,
     userName: string,
-  },
+  |},
   description: ?string,
   externalId: ?string,
   foodPairings: ?string,
@@ -37,11 +37,11 @@ export type Beverage = {
   id: EntityID,
   isDeleted: boolean,
   isOrganic: boolean,
-  labels: {
+  labels: {|
     icon: string,
     large: string,
     medium: string,
-  },
+  |},
   name: string,
   originalGravity: ?number,
   servingTemperature: ?ServingTemperature,
@@ -50,9 +50,9 @@ export type Beverage = {
   style: ?ShortenedEntity,
   updateDate: Date,
   year: ?number,
-};
+|};
 
-export type BeverageMutator = {
+export type BeverageMutator = {|
   abv: ?number,
   availableId: ?EntityID,
   beverageType: BeverageType,
@@ -67,7 +67,7 @@ export type BeverageMutator = {
   srmId: ?EntityID,
   styleId: ?EntityID,
   year: ?number,
-};
+|};
 
 class BeverageDAO extends ODataDAO<Beverage, BeverageMutator> {
   constructor() {

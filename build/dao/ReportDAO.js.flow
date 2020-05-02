@@ -7,7 +7,7 @@ import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import ReportTranslator from '../translators/ReportTranslator';
 
-export type Report = {
+export type Report = {|
   createdDate: Date,
   devices: Array<ShortenedEntity>,
   id: EntityID,
@@ -19,9 +19,9 @@ export type Report = {
   reportCadenceTimeStamp: Date,
   sendToEmails: Array<string>,
   taps: Array<ShortenedTap>,
-};
+|};
 
-export type ReportMutator = {
+export type ReportMutator = {|
   devices?: Array<ShortenedEntity>,
   id?: EntityID,
   locations?: Array<ShortenedEntity>,
@@ -30,7 +30,7 @@ export type ReportMutator = {
   reportCadenceTimeStamp: Date,
   sendToEmails: Array<{ email: string }>,
   taps?: Array<ShortenedTap>,
-};
+|};
 
 export type ReportCadence =
   | 'OneTime'

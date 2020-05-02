@@ -43,10 +43,23 @@ class SchedulesTranslator extends DefaultTranslator<Schedule, ScheduleMutator> {
     };
   }
 
-  toForm(model: Schedule): ScheduleMutator {
+  toForm({
+    accounts,
+    days,
+    endTime,
+    id,
+    location,
+    name,
+    startTime,
+  }: Schedule): ScheduleMutator {
     return {
-      ...model,
-      locationId: model.location ? model.location.id.toString() : null,
+      accounts,
+      days,
+      endTime,
+      id,
+      locationId: location ? location.id.toString() : null,
+      name,
+      startTime,
     };
   }
 }

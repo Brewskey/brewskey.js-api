@@ -11,18 +11,18 @@ export type Coordinates = {
   longitude: number,
 };
 
-export type Location = {
+export type Location = {|
   city: string,
   createdDate: Date,
   description: ?string,
-  geolocation?: {
+  geolocation?: {|
     coordinates: Coordinates,
-    geography: {
+    geography: {|
       coordinateSystemId: number,
       wellKnownBinary: ?Object,
       wellKnownText: string,
-    },
-  },
+    |},
+  |},
   id: EntityID,
   isDeleted: boolean,
   locationType: string,
@@ -34,9 +34,9 @@ export type Location = {
   suite: string,
   timeZone: string,
   zipCode: number,
-};
+|};
 
-export type LocationMutator = {
+export type LocationMutator = {|
   city: string,
   description: ?string,
   id: ?EntityID,
@@ -48,7 +48,7 @@ export type LocationMutator = {
   street: string,
   suite: string,
   zipCode: number,
-};
+|};
 
 class LocationDAO extends ODataDAO<Location, LocationMutator> {
   constructor() {
