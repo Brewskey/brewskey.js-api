@@ -15,20 +15,18 @@ class DeviceTranslator extends DefaultTranslator<Device, DeviceMutator> {
   }
 
   toForm({
-    deviceStatus,
-    deviceType,
-    id,
+    createdBy: _,
+    isDeleted: _1,
+    lastEdited: _2,
+    lastEditedBy: _3,
     location,
-    name,
-    particleId,
+    organization: _4,
+    temperature: _5,
+    ...otherProps
   }: Device): DeviceMutator {
     return {
-      deviceStatus,
-      deviceType,
-      id,
+      ...otherProps,
       locationId: location && location.id,
-      name,
-      particleId,
     };
   }
 }

@@ -11,6 +11,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -62,20 +66,18 @@ var DeviceTranslator = /*#__PURE__*/function (_DefaultTranslator) {
   }, {
     key: "toForm",
     value: function toForm(_ref) {
-      var deviceStatus = _ref.deviceStatus,
-          deviceType = _ref.deviceType,
-          id = _ref.id,
+      var _ = _ref.createdBy,
+          _1 = _ref.isDeleted,
+          _2 = _ref.lastEdited,
+          _3 = _ref.lastEditedBy,
           location = _ref.location,
-          name = _ref.name,
-          particleId = _ref.particleId;
-      return {
-        deviceStatus: deviceStatus,
-        deviceType: deviceType,
-        id: id,
-        locationId: location && location.id,
-        name: name,
-        particleId: particleId
-      };
+          _4 = _ref.organization,
+          _5 = _ref.temperature,
+          otherProps = _objectWithoutProperties(_ref, ["createdBy", "isDeleted", "lastEdited", "lastEditedBy", "location", "organization", "temperature"]);
+
+      return _objectSpread({}, otherProps, {
+        locationId: location && location.id
+      });
     }
   }]);
 

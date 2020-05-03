@@ -16,28 +16,44 @@ export type DeviceStatus =
 
 export type DeviceType = 'BrewskeyBox' | 'Onsite';
 
+export type NFCStatus = 'PhoneOnly' | 'CardOnly' | 'PhoneAndCard' | 'Disabled';
+
 export type Device = {|
   createdBy: {| id: EntityID, userName: string |},
   deviceStatus: DeviceStatus,
   deviceType: DeviceType,
   id: EntityID,
   isDeleted: boolean,
+  isScreenDisabled: boolean,
+  isTotpDisabled: boolean,
   lastEdited: Date,
   lastEditedBy: { id: EntityID, userName: string },
+  ledBrightness: number,
   location?: ShortenedEntity,
   name: string,
+  nfcStatus: NFCStatus,
   organization: ShortenedEntity,
   particleId: string,
+  secondsToStayOpen: number,
+  shouldInvertScreen: boolean,
   temperature: number,
+  timeForValveOpen: number,
 |};
 
 export type DeviceMutator = {|
   deviceStatus: DeviceStatus,
   deviceType: DeviceType,
   id?: EntityID,
+  isScreenDisabled: boolean,
+  isTotpDisabled: boolean,
+  ledBrightness: number,
   locationId: ?EntityID,
   name: string,
+  nfcStatus: NFCStatus,
   particleId: string,
+  secondsToStayOpen: number,
+  shouldInvertScreen: boolean,
+  timeForValveOpen: number,
 |};
 
 export type ParticleAttributes = {|
