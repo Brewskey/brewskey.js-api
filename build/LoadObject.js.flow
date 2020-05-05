@@ -31,12 +31,13 @@ const CACHE: Map<
   any,
   Map<boolean, Map<?LoadObjectOperation, LoadObject<any>>>,
 > = new Map(
-  VALUES_TO_CACHE.map(
-    (value: any): any => [
-      value,
-      new Map([[true, new Map()], [false, new Map()]]),
-    ],
-  ),
+  VALUES_TO_CACHE.map((value: any): any => [
+    value,
+    new Map([
+      [true, new Map()],
+      [false, new Map()],
+    ]),
+  ]),
 );
 
 /**
@@ -362,62 +363,64 @@ class LoadObject<TValue> {
   static merge<
     T1,
     T2,
-    T3,
-    T4,
-    T5,
-    T6,
-    T7,
-    T8,
-    T9,
+    // T3,
+    // T4,
+    // T5,
+    // T6,
+    // T7,
+    // T8,
+    // T9,
     T:
       | [LoadObject<T1>, LoadObject<T2>]
-      | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>]
-      | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>, LoadObject<T4>]
-      | [
-          LoadObject<T1>,
-          LoadObject<T2>,
-          LoadObject<T3>,
-          LoadObject<T4>,
-          LoadObject<T5>,
-        ]
-      | [
-          LoadObject<T1>,
-          LoadObject<T2>,
-          LoadObject<T3>,
-          LoadObject<T4>,
-          LoadObject<T5>,
-          LoadObject<T6>,
-        ]
-      | [
-          LoadObject<T1>,
-          LoadObject<T2>,
-          LoadObject<T3>,
-          LoadObject<T4>,
-          LoadObject<T5>,
-          LoadObject<T6>,
-          LoadObject<T7>,
-        ]
-      | [
-          LoadObject<T1>,
-          LoadObject<T2>,
-          LoadObject<T3>,
-          LoadObject<T4>,
-          LoadObject<T5>,
-          LoadObject<T6>,
-          LoadObject<T7>,
-          LoadObject<T8>,
-        ]
-      | [
-          LoadObject<T1>,
-          LoadObject<T2>,
-          LoadObject<T3>,
-          LoadObject<T4>,
-          LoadObject<T5>,
-          LoadObject<T6>,
-          LoadObject<T7>,
-          LoadObject<T8>,
-          LoadObject<T9>,
-        ],
+      | [LoadObject<T1>, LoadObject<T2>, LoadObject<any>]
+      | [LoadObject<T1>, LoadObject<T2>, LoadObject<any>, LoadObject<any>],
+    // | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>]
+    // | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>, LoadObject<T4>]
+    // | [
+    //     LoadObject<T1>,
+    //     LoadObject<T2>,
+    //     LoadObject<T3>,
+    //     LoadObject<T4>,
+    //     LoadObject<T5>,
+    //   ]
+    // | [
+    //     LoadObject<T1>,
+    //     LoadObject<T2>,
+    //     LoadObject<T3>,
+    //     LoadObject<T4>,
+    //     LoadObject<T5>,
+    //     LoadObject<T6>,
+    //   ]
+    // | [
+    //     LoadObject<T1>,
+    //     LoadObject<T2>,
+    //     LoadObject<T3>,
+    //     LoadObject<T4>,
+    //     LoadObject<T5>,
+    //     LoadObject<T6>,
+    //     LoadObject<T7>,
+    //   ]
+    // | [
+    //     LoadObject<T1>,
+    //     LoadObject<T2>,
+    //     LoadObject<T3>,
+    //     LoadObject<T4>,
+    //     LoadObject<T5>,
+    //     LoadObject<T6>,
+    //     LoadObject<T7>,
+    //     LoadObject<T8>,
+    //   ]
+    // | [
+    //     LoadObject<T1>,
+    //     LoadObject<T2>,
+    //     LoadObject<T3>,
+    //     LoadObject<T4>,
+    //     LoadObject<T5>,
+    //     LoadObject<T6>,
+    //     LoadObject<T7>,
+    //     LoadObject<T8>,
+    //     LoadObject<T9>,
+    //   ],
   >(loadObjects: T): LoadObject<$TupleMap<T, Unwrap>> {
     const values = [];
     let error = null;
