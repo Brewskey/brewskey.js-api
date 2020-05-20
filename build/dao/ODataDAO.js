@@ -726,12 +726,20 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
   }, {
     key: "_rebuildMap",
     value: function _rebuildMap(map, set, onUpdate) {
-      var savedItems = Array.from(set).map(function (queryOptionString) {
+      var savedItems = this._filterClientIDs(Array.from(set)).map(function (queryOptionString) {
         onUpdate(JSON.parse(queryOptionString.toString()));
         var loader = (0, _nullthrows["default"])(map.get(queryOptionString));
         return [queryOptionString, loader];
       });
+
       return new Map(savedItems);
+    }
+  }, {
+    key: "_filterClientIDs",
+    value: function _filterClientIDs(items) {
+      return items.filter(function (queryOptionString) {
+        return queryOptionString.toString().indexOf('CLIENT_ID:') === 0;
+      });
     }
   }, {
     key: "_hydrateSingle",

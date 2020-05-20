@@ -643,14 +643,23 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     set: Set<TKey>,
     onUpdate: (queryOptions?: QueryOptions) => void,
   ): Map<TKey, LoadObject<TType>> {
-    const savedItems = Array.from(set).map(queryOptionString => {
-      onUpdate(JSON.parse(queryOptionString.toString()));
+    const savedItems = this._filterClientIDs(Array.from(set)).map(
+      queryOptionString => {
+        onUpdate(JSON.parse(queryOptionString.toString()));
 
-      const loader = nullthrows(map.get(queryOptionString));
-      return [queryOptionString, loader];
-    });
+        const loader = nullthrows(map.get(queryOptionString));
+        return [queryOptionString, loader];
+      },
+    );
 
     return new Map(savedItems);
+  }
+
+  _filterClientIDs<TKey: string>(items: Array<TKey>): Array<TKey> {
+    return items.filter(
+      queryOptionString =>
+        queryOptionString.toString().indexOf('CLIENT_ID:') === 0,
+    );
   }
 
   _hydrateSingle(stringifiedID: string): void {
