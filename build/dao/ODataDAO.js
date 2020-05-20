@@ -640,10 +640,11 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
       this._setLoadersToUpdating(this._customLoaderByQuery);
 
       this._runFlushCache = (0, _debounce["default"])(function () {
-        _this12._currentEntityQueries.forEach(function (id) {
+        Array.from(_this12._currentEntityQueries).filter(function (id) {
+          return id.toString().indexOf('CLIENT_ID:') !== 0;
+        }).forEach(function (id) {
           return _this12._hydrateSingle(id);
         });
-
         _this12._entityIDsLoaderByQuery = _this12._rebuildMap(_this12._entityIDsLoaderByQuery, _this12._currentEntityIDsQueries, function (queryOptions) {
           return _this12._hydrateMany(queryOptions);
         });
@@ -720,23 +721,14 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
     key: "_setLoadersToUpdating",
     value: function _setLoadersToUpdating(map) {
       map.forEach(function (value, key) {
-        if (key.toString().indexOf('CLIENT_ID:') === 0) {
-          return;
-        }
-
-        map.set(key, value.updating());
+        return map.set(key, value.updating());
       });
     }
   }, {
     key: "_rebuildMap",
     value: function _rebuildMap(map, set, onUpdate) {
       var savedItems = Array.from(set).map(function (queryOptionString) {
-        var stringValue = queryOptionString.toString();
-
-        if (stringValue.indexOf('CLIENT_ID:') !== 0) {
-          onUpdate(JSON.parse(stringValue));
-        }
-
+        onUpdate(JSON.parse(queryOptionString.toString()));
         var loader = (0, _nullthrows["default"])(map.get(queryOptionString));
         return [queryOptionString, loader];
       });

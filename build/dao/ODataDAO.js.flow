@@ -567,7 +567,9 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     this._setLoadersToUpdating(this._customLoaderByQuery);
 
     this._runFlushCache = debounce(() => {
-      this._currentEntityQueries.forEach(id => this._hydrateSingle(id));
+      Array.from(this._currentEntityQueries)
+        .filter(id => id.toString().indexOf('CLIENT_ID:') !== 0)
+        .forEach(id => this._hydrateSingle(id));
 
       this._entityIDsLoaderByQuery = this._rebuildMap(
         this._entityIDsLoaderByQuery,
@@ -635,13 +637,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
   }
 
   _setLoadersToUpdating<TKey, TType>(map: Map<TKey, LoadObject<TType>>) {
-    map.forEach((value, key) => {
-      if ((key: any).toString().indexOf('CLIENT_ID:') === 0) {
-        return;
-      }
-
-      map.set(key, value.updating());
-    });
+    map.forEach((value, key) => map.set(key, value.updating()));
   }
 
   _rebuildMap<TKey: string | number, TType>(
@@ -650,10 +646,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     onUpdate: (queryOptions?: QueryOptions) => void,
   ): Map<TKey, LoadObject<TType>> {
     const savedItems = Array.from(set).map(queryOptionString => {
-      const stringValue = queryOptionString.toString();
-      if (stringValue.indexOf('CLIENT_ID:') !== 0) {
-        onUpdate(JSON.parse(stringValue));
-      }
+      onUpdate(JSON.parse(queryOptionString.toString()));
 
       const loader = nullthrows(map.get(queryOptionString));
       return [queryOptionString, loader];
