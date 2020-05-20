@@ -720,26 +720,27 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
     key: "_setLoadersToUpdating",
     value: function _setLoadersToUpdating(map) {
       map.forEach(function (value, key) {
-        return map.set(key, value.updating());
+        if (key.toString().indexOf('CLIENT_ID:') === 0) {
+          return;
+        }
+
+        map.set(key, value.updating());
       });
     }
   }, {
     key: "_rebuildMap",
     value: function _rebuildMap(map, set, onUpdate) {
-      var savedItems = this._filterClientIDs(Array.from(set)).map(function (queryOptionString) {
-        onUpdate(JSON.parse(queryOptionString.toString()));
+      var savedItems = Array.from(set).map(function (queryOptionString) {
+        var stringValue = queryOptionString.toString();
+
+        if (stringValue.indexOf('CLIENT_ID:') !== 0) {
+          onUpdate(JSON.parse(stringValue));
+        }
+
         var loader = (0, _nullthrows["default"])(map.get(queryOptionString));
         return [queryOptionString, loader];
       });
-
       return new Map(savedItems);
-    }
-  }, {
-    key: "_filterClientIDs",
-    value: function _filterClientIDs(items) {
-      return items.filter(function (queryOptionString) {
-        return queryOptionString.toString().indexOf('CLIENT_ID:') === 0;
-      });
     }
   }, {
     key: "_hydrateSingle",
