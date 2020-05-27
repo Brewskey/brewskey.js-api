@@ -45,7 +45,7 @@
     "prettier": "^1.15.2"
   },
   "dependencies": {
-    "array-flatten": "^2.1.1",
+    "array-flatten": "^3.0.0",
     "debounce": "^1.2.0",
     "nullthrows": "^1.1.0",
     "odata": "git+https://github.com/Brewskey/o.js.git",
