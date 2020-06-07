@@ -64,7 +64,7 @@ const CACHE: Map<
  *
  */
 class LoadObject<TValue> {
-  _operation: ?LoadObjectOperation;
+  _operation: LoadObjectOperation;
 
   _value: ?TValue;
 
@@ -77,7 +77,7 @@ class LoadObject<TValue> {
    */
   constructor(
     secret: string,
-    operation: ?LoadObjectOperation,
+    operation: LoadObjectOperation,
     value: ?TValue,
     error: ?Error,
     hasValue: boolean,
@@ -95,7 +95,7 @@ class LoadObject<TValue> {
   }
 
   static _create(
-    operation: ?LoadObjectOperation,
+    operation: LoadObjectOperation,
     value: ?TValue,
     error: ?Error,
     hasValue: boolean,
@@ -112,7 +112,7 @@ class LoadObject<TValue> {
   }
 
   static _getFromCache(
-    operation: ?LoadObjectOperation,
+    operation: LoadObjectOperation,
     value: ?TValue,
     error: ?Error,
     hasValue: boolean,
@@ -133,7 +133,7 @@ class LoadObject<TValue> {
 
   // Convenient getters
 
-  getOperation(): ?LoadObjectOperation {
+  getOperation(): LoadObjectOperation {
     return this._operation;
   }
 
@@ -363,88 +363,117 @@ class LoadObject<TValue> {
   static merge<
     T1,
     T2,
-    // T3,
-    // T4,
-    // T5,
-    // T6,
-    // T7,
-    // T8,
-    // T9,
+    T3,
+    T4,
+    T5,
+    T6,
+    T7,
+    T8,
+    T9,
     T:
       | [LoadObject<T1>, LoadObject<T2>]
-      | [LoadObject<T1>, LoadObject<T2>, LoadObject<any>]
-      | [LoadObject<T1>, LoadObject<T2>, LoadObject<any>, LoadObject<any>],
-    // | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>]
-    // | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>, LoadObject<T4>]
-    // | [
-    //     LoadObject<T1>,
-    //     LoadObject<T2>,
-    //     LoadObject<T3>,
-    //     LoadObject<T4>,
-    //     LoadObject<T5>,
-    //   ]
-    // | [
-    //     LoadObject<T1>,
-    //     LoadObject<T2>,
-    //     LoadObject<T3>,
-    //     LoadObject<T4>,
-    //     LoadObject<T5>,
-    //     LoadObject<T6>,
-    //   ]
-    // | [
-    //     LoadObject<T1>,
-    //     LoadObject<T2>,
-    //     LoadObject<T3>,
-    //     LoadObject<T4>,
-    //     LoadObject<T5>,
-    //     LoadObject<T6>,
-    //     LoadObject<T7>,
-    //   ]
-    // | [
-    //     LoadObject<T1>,
-    //     LoadObject<T2>,
-    //     LoadObject<T3>,
-    //     LoadObject<T4>,
-    //     LoadObject<T5>,
-    //     LoadObject<T6>,
-    //     LoadObject<T7>,
-    //     LoadObject<T8>,
-    //   ]
-    // | [
-    //     LoadObject<T1>,
-    //     LoadObject<T2>,
-    //     LoadObject<T3>,
-    //     LoadObject<T4>,
-    //     LoadObject<T5>,
-    //     LoadObject<T6>,
-    //     LoadObject<T7>,
-    //     LoadObject<T8>,
-    //     LoadObject<T9>,
-    //   ],
-  >(loadObjects: T): LoadObject<$TupleMap<T, Unwrap>> {
+      | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>]
+      | [LoadObject<T1>, LoadObject<T2>, LoadObject<T3>, LoadObject<T4>]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+          LoadObject<T8>,
+        ]
+      | [
+          LoadObject<T1>,
+          LoadObject<T2>,
+          LoadObject<T3>,
+          LoadObject<T4>,
+          LoadObject<T5>,
+          LoadObject<T6>,
+          LoadObject<T7>,
+          LoadObject<T8>,
+          LoadObject<T9>,
+        ],
+  >(
+    loadObjects: T,
+    shouldReturnAllValues: boolean = false,
+  ): LoadObject<$TupleMap<T, Unwrap>> {
     const values = [];
     let error = null;
-    let operation = null;
+    let operation = 'NONE';
+    let hasAllValues = true;
 
-    loadObjects.forEach((loadObject: LoadObject<any>) => {
-      error = error || loadObject.getError();
-
+    // eslint-disable-next-line no-restricted-syntax
+    for (const loadObject of loadObjects) {
       if (loadObject.hasOperation()) {
-        operation = operation || loadObject.getOperation();
+        const loadObjectOperation = loadObject.getOperation();
+
+        if (!shouldReturnAllValues) {
+          return LoadObject.empty().setOperation(loadObjectOperation);
+        }
+        operation = operation || loadObjectOperation;
+        values.push(loadObject.getValue());
+      } else if (loadObject.hasError()) {
+        if (!shouldReturnAllValues) {
+          return LoadObject.withError(loadObject.getErrorEnforcing());
+        }
+
+        values.push(loadObject.getValue());
+        error = error || loadObject.getErrorEnforcing();
+      } else if (loadObject.isEmpty()) {
+        values.push(undefined);
+        hasAllValues = false;
+      } else if (loadObject.hasValue()) {
+        values.push(loadObject.getValueEnforcing());
+      } else {
+        throw new Error("This shouldn't happen");
+      }
+    }
+
+    if (!shouldReturnAllValues) {
+      if (error) {
+        return LoadObject.withError(error);
+      }
+      if (operation !== 'NONE') {
+        return LoadObject.empty().setOperation(operation);
       }
 
-      values.push(loadObject.getValue());
-    });
+      if (!hasAllValues) {
+        return LoadObject.empty();
+      }
+    }
 
+    let output = LoadObject.withValue((values: any));
     if (error) {
-      return LoadObject.withError(error);
+      output = output.setError(error);
     }
 
-    if (operation) {
-      return LoadObject.empty().setOperation(operation);
-    }
-
-    return LoadObject.withValue(((values: any): $TupleMap<T, Unwrap>));
+    return output.setOperation(operation);
   }
 }
 

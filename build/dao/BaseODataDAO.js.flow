@@ -114,7 +114,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       handler.customParam('$apply', apply);
     }
 
-    if (Config.organizationId) {
+    if (Config.organizationId && !queryOptions.shouldIgnoreOrganizationID) {
       handler.customParam('organizationID', Config.organizationId.toString());
     }
 
@@ -242,7 +242,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       }
     }
 
-    return (request: any).catch(error => {
+    return (request: any).catch((error) => {
       window.console.error(method || 'get', error, handler, params);
       throw error;
     });

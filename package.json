@@ -35,18 +35,18 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-sorting": "^0.3.0",
-    "flow-bin": "0.113.0",
     "flow-copy-source": "^2.0.2",
     "form-data": "^2.3.3",
     "husky": "^1.2.0",
     "lint-staged": "^8.0.4",
     "minimist": "^1.2.0",
     "node-fetch": "^2.2.1",
-    "prettier": "^1.15.2"
+    "prettier": "^2.0.5"
   },
   "dependencies": {
     "array-flatten": "^3.0.0",
     "debounce": "^1.2.0",
+    "flow-bin": "^0.126.1",
     "nullthrows": "^1.1.0",
     "odata": "git+https://github.com/Brewskey/o.js.git",
     "qs": "^6.6.0",

@@ -68,6 +68,7 @@ export type QueryOptions = {
   orderBy?: Array<QueryOrderBy>,
   search?: string,
   shouldCount?: boolean,
+  shouldIgnoreOrganizationID?: true,
   shouldRefresh?: boolean,
   skip?: number,
   take?: number,

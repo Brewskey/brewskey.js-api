@@ -177,7 +177,7 @@ var BaseODataDAO = /*#__PURE__*/function (_Subscription) {
         handler.customParam('$apply', apply);
       }
 
-      if (_Config["default"].organizationId) {
+      if (_Config["default"].organizationId && !queryOptions.shouldIgnoreOrganizationID) {
         handler.customParam('organizationID', _Config["default"].organizationId.toString());
       }
 

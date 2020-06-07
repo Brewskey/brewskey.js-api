@@ -357,7 +357,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
   }, {
     key: "flushCacheForEntity",
     value: function flushCacheForEntity(entityID) {
-      this._entityLoaderByID["delete"](entityID);
+      this._hydrateSingle(entityID.toString());
 
       this.__emitChanges();
     }
@@ -631,8 +631,6 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
 
       this._currentEntityIDsQueries.clear();
 
-      this._setLoadersToUpdating(this._entityLoaderByID);
-
       this._setLoadersToUpdating(this._entityIDsLoaderByQuery);
 
       this._setLoadersToUpdating(this._countLoaderByQuery);
@@ -643,7 +641,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
         Array.from(_this12._currentEntityQueries).filter(function (id) {
           return id.toString().indexOf('CLIENT_ID:') !== 0;
         }).forEach(function (id) {
-          return _this12._hydrateSingle(id);
+          return _this12._hydrateSingle(id, false);
         });
         _this12._entityIDsLoaderByQuery = _this12._rebuildMap(_this12._entityIDsLoaderByQuery, _this12._currentEntityIDsQueries, function (queryOptions) {
           return _this12._hydrateMany(queryOptions);
@@ -739,6 +737,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
     value: function _hydrateSingle(stringifiedID) {
       var _this15 = this;
 
+      var shouldEmitChanges = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       var initialLoader = this._entityLoaderByID.has(stringifiedID) ? (0, _nullthrows["default"])(this._entityLoaderByID.get(stringifiedID)).updating() : _LoadObject["default"].loading();
 
       this._entityLoaderByID.set(stringifiedID, initialLoader);
@@ -746,7 +745,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
       this.__emitChanges();
 
       this.__resolveSingle(this.__buildHandler().find(this.__reformatIDValue(stringifiedID))).then(function (result) {
-        return _this15._updateCacheForEntity(result);
+        return _this15._updateCacheForEntity(result, shouldEmitChanges);
       })["catch"](function (error) {
         _Subscription["default"].__emitError(error);
 
