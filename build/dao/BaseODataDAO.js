@@ -325,7 +325,7 @@ var BaseODataDAO = /*#__PURE__*/function (_Subscription) {
         }
 
         return request["catch"](function (error) {
-          window.console.error(method || 'get', error, handler, params);
+          // window.console.error(method || 'get', error, handler, params);
           throw error;
         });
       });
