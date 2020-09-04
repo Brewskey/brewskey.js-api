@@ -15,8 +15,6 @@ var _LoadObject = _interopRequireDefault(require("../LoadObject"));
 
 var _Subscription = _interopRequireDefault(require("./Subscription"));
 
-var _arrayFlatten = _interopRequireDefault(require("array-flatten"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -305,7 +303,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
       var _this6 = this;
 
       return this.count(queryOptions).map(function (count) {
-        return (0, _arrayFlatten["default"])(_toConsumableArray(Array(Math.ceil(count / STANDARD_PAGE_SIZE))).map(function (_, index) {
+        return _toConsumableArray(Array(Math.ceil(count / STANDARD_PAGE_SIZE))).map(function (_, index) {
           var skip = STANDARD_PAGE_SIZE * index;
 
           var loader = _this6.fetchMany(_objectSpread({}, queryOptions, {
@@ -328,7 +326,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
           }
 
           return loader.getValueEnforcing();
-        }));
+        }).flat();
       });
     }
   }, {
