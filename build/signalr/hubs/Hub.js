@@ -11,7 +11,7 @@ var _Config = _interopRequireDefault(require("../../Config"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -26,29 +26,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var PING_INTERVAL = 60000;
 
 var Hub = /*#__PURE__*/function () {
-  _createClass(Hub, null, [{
-    key: "initNewConnection",
-    value: function initNewConnection(rootPath) {
-      return rootPath ? _reactNativeSignalr["default"].hubConnection(rootPath) : _reactNativeSignalr["default"].hubConnection();
-    }
-  }, {
-    key: "getConnection",
-    value: function getConnection(rootPath, shareConnection) {
-      if (!shareConnection) {
-        return Hub.initNewConnection(rootPath);
-      }
-
-      var connection = Hub.CONNECTIONS[rootPath];
-
-      if (!connection) {
-        connection = Hub.initNewConnection(rootPath);
-        Hub.CONNECTIONS[rootPath] = connection;
-      }
-
-      return connection;
-    }
-  }]);
-
   function Hub(name) {
     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
         _ref$logging = _ref.logging,
@@ -82,7 +59,7 @@ var Hub = /*#__PURE__*/function () {
     value: function connect() {
       var _connection = this._connection,
           _transport = this._transport;
-      _connection.qs = _objectSpread({}, _connection.qs || {}, {}, _Config["default"].token != null ? {
+      _connection.qs = _objectSpread(_objectSpread({}, _connection.qs || {}), _Config["default"].token != null ? {
         access_token: _Config["default"].token
       } : {});
       this._connectionPromise = _transport ? _connection.start({
@@ -129,6 +106,27 @@ var Hub = /*#__PURE__*/function () {
     key: "registerErrorHandler",
     value: function registerErrorHandler(handler) {
       this._connection.error(handler);
+    }
+  }], [{
+    key: "initNewConnection",
+    value: function initNewConnection(rootPath) {
+      return rootPath ? _reactNativeSignalr["default"].hubConnection(rootPath) : _reactNativeSignalr["default"].hubConnection();
+    }
+  }, {
+    key: "getConnection",
+    value: function getConnection(rootPath, shareConnection) {
+      if (!shareConnection) {
+        return Hub.initNewConnection(rootPath);
+      }
+
+      var connection = Hub.CONNECTIONS[rootPath];
+
+      if (!connection) {
+        connection = Hub.initNewConnection(rootPath);
+        Hub.CONNECTIONS[rootPath] = connection;
+      }
+
+      return connection;
     }
   }]);
 
