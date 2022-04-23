@@ -43,6 +43,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var MAX_OUNCES_BY_KEG_TYPE = {
   Cornelius: 640,
+  FiftyLitre: 1690.7,
   HalfBarrel: 1984,
   Mini: 169,
   QuarterBarrel: 992,
