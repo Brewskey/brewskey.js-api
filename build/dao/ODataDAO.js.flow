@@ -8,7 +8,6 @@ import debounce from 'debounce';
 import BaseODataDAO from './BaseODataDAO';
 import LoadObject from '../LoadObject';
 import Subscription from './Subscription';
-import arrayFlatten from 'array-flatten';
 
 const STANDARD_PAGE_SIZE = 40;
 
@@ -236,8 +235,8 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntityBase<TEntity>>>> {
     return this.count(queryOptions).map((count) =>
-      arrayFlatten(
-        [...Array(Math.ceil(count / STANDARD_PAGE_SIZE))].map((_, index) => {
+      [...Array(Math.ceil(count / STANDARD_PAGE_SIZE))]
+        .map((_, index) => {
           const skip = STANDARD_PAGE_SIZE * index;
           const loader = this.fetchMany({
             ...queryOptions,
@@ -260,8 +259,8 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
           }
 
           return loader.getValueEnforcing();
-        }),
-      ),
+        })
+        .flat(),
     );
   }
 
