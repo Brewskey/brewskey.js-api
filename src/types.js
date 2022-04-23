@@ -64,10 +64,12 @@ export type QueryOrderBy = {
 
 export type QueryOptions = {
   apply?: string,
+  filter?: string,
   filters?: Array<QueryFilter>,
   orderBy?: Array<QueryOrderBy>,
   search?: string,
   shouldCount?: boolean,
+  shouldIgnoreOrganizationID?: true,
   shouldRefresh?: boolean,
   skip?: number,
   take?: number,

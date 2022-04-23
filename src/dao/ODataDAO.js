@@ -8,7 +8,6 @@ import debounce from 'debounce';
 import BaseODataDAO from './BaseODataDAO';
 import LoadObject from '../LoadObject';
 import Subscription from './Subscription';
-import arrayFlatten from 'array-flatten';
 
 const STANDARD_PAGE_SIZE = 40;
 
@@ -204,7 +203,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     );
     const resultMapLoader: LoadObject<
       Map<string, LoadObject<TEntityBase<TEntity>>>,
-    > = idsLoader.map(ids => this.fetchByIDs(ids));
+    > = idsLoader.map((ids) => this.fetchByIDs(ids));
 
     const resultsLoader = LoadObject.merge([
       loader,
@@ -212,7 +211,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
       resultMapLoader,
     ]).map(([count, ids, resultMap]) => {
       const entities: Array<LoadObject<TEntityBase<TEntity>>> = ids.map(
-        id => resultMap.get(id.toString()) ?? LoadObject.empty(),
+        (id) => resultMap.get(id.toString()) ?? LoadObject.empty(),
       );
 
       const { take = 100 } = queryOptions;
@@ -235,9 +234,9 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
   fetchAll(
     queryOptions?: QueryOptions,
   ): LoadObject<Array<LoadObject<TEntityBase<TEntity>>>> {
-    return this.count(queryOptions).map(count =>
-      arrayFlatten(
-        [...Array(Math.ceil(count / STANDARD_PAGE_SIZE))].map((_, index) => {
+    return this.count(queryOptions).map((count) =>
+      [...Array(Math.ceil(count / STANDARD_PAGE_SIZE))]
+        .map((_, index) => {
           const skip = STANDARD_PAGE_SIZE * index;
           const loader = this.fetchMany({
             ...queryOptions,
@@ -260,8 +259,8 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
           }
 
           return loader.getValueEnforcing();
-        }),
-      ),
+        })
+        .flat(),
     );
   }
 
@@ -285,7 +284,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
   }
 
   flushCacheForEntity(entityID: EntityID) {
-    this._entityLoaderByID.delete(entityID);
+    this._hydrateSingle(entityID.toString());
     this.__emitChanges();
   }
 
@@ -393,16 +392,16 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
   }
 
   waitForLoaded<TResponse>(
-    fn: this => LoadObject<TResponse>,
+    fn: (this) => LoadObject<TResponse>,
     timeout?: number,
   ): Promise<TResponse> {
-    return this.waitForLoadedNullable(fn, timeout).then(result =>
+    return this.waitForLoadedNullable(fn, timeout).then((result) =>
       nullthrows(result),
     );
   }
 
   waitForLoadedNullable<TResponse>(
-    fn: this => LoadObject<TResponse>,
+    fn: (this) => LoadObject<TResponse>,
     timeout?: number = 10000,
   ): Promise<?TResponse> {
     return new Promise(
@@ -453,7 +452,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
 
           if (Array.isArray(data)) {
             if (
-              data.some(item =>
+              data.some((item) =>
                 item instanceof LoadObject ? item.hasOperation() : false,
               )
             ) {
@@ -461,7 +460,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
             }
 
             resolve(
-              data.map(item =>
+              data.map((item) =>
                 item instanceof LoadObject ? item.getValue() : item,
               ),
             );
@@ -561,26 +560,27 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     this._currentCustomQueries.clear();
     this._currentEntityIDsQueries.clear();
 
-    this._setLoadersToUpdating(this._entityLoaderByID);
     this._setLoadersToUpdating(this._entityIDsLoaderByQuery);
     this._setLoadersToUpdating(this._countLoaderByQuery);
     this._setLoadersToUpdating(this._customLoaderByQuery);
 
     this._runFlushCache = debounce(() => {
-      this._currentEntityQueries.forEach(id => this._hydrateSingle(id));
+      Array.from(this._currentEntityQueries)
+        .filter((id) => id.toString().indexOf('CLIENT_ID:') !== 0)
+        .forEach((id) => this._hydrateSingle(id, false));
 
       this._entityIDsLoaderByQuery = this._rebuildMap(
         this._entityIDsLoaderByQuery,
         this._currentEntityIDsQueries,
-        queryOptions => this._hydrateMany(queryOptions),
+        (queryOptions) => this._hydrateMany(queryOptions),
       );
 
       this._countLoaderByQuery = this._rebuildMap(
         this._countLoaderByQuery,
         this._currentCountQueries,
-        queryOptions =>
+        (queryOptions) =>
           this._hydrateCount(
-            countQueryOptions =>
+            (countQueryOptions) =>
               this.__buildHandler({ ...queryOptions, ...countQueryOptions }),
             queryOptions,
           ),
@@ -628,7 +628,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
       this._hydrateCustom(queryParams, customKey);
     });
 
-    toRemove.forEach(key => {
+    toRemove.forEach((key) => {
       this._customLoaderByQuery.delete(key);
       this._customHandlerByQuery.delete(key);
     });
@@ -643,7 +643,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     set: Set<TKey>,
     onUpdate: (queryOptions?: QueryOptions) => void,
   ): Map<TKey, LoadObject<TType>> {
-    const savedItems = Array.from(set).map(queryOptionString => {
+    const savedItems = Array.from(set).map((queryOptionString) => {
       onUpdate(JSON.parse(queryOptionString.toString()));
 
       const loader = nullthrows(map.get(queryOptionString));
@@ -653,7 +653,10 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     return new Map(savedItems);
   }
 
-  _hydrateSingle(stringifiedID: string): void {
+  _hydrateSingle(
+    stringifiedID: string,
+    shouldEmitChanges: boolean = true,
+  ): void {
     const initialLoader = this._entityLoaderByID.has(stringifiedID)
       ? nullthrows(this._entityLoaderByID.get(stringifiedID)).updating()
       : LoadObject.loading();
@@ -664,7 +667,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
       this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
     )
       .then((result: TEntityBase<TEntity>): void =>
-        this._updateCacheForEntity(result),
+        this._updateCacheForEntity(result, shouldEmitChanges),
       )
       .catch((error: Error) => {
         Subscription.__emitError(error);

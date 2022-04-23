@@ -114,7 +114,7 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       handler.customParam('$apply', apply);
     }
 
-    if (Config.organizationId) {
+    if (Config.organizationId && !queryOptions.shouldIgnoreOrganizationID) {
       handler.customParam('organizationID', Config.organizationId.toString());
     }
 
@@ -129,10 +129,18 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     handler: OHandler<TEntity>,
     queryOptions: QueryOptions = {},
   ): OHandler<TEntity> {
-    if (!queryOptions.filters || !queryOptions.filters.length) {
+    if (
+      !queryOptions.filter &&
+      (!queryOptions.filters || !queryOptions.filters.length)
+    ) {
       return handler;
     }
-    const renderedFilters = queryOptions.filters
+
+    if (queryOptions.filters == null) {
+      return handler.filter(queryOptions.filter);
+    }
+
+    let renderedFilters = queryOptions.filters
       .map((queryFilter: QueryFilter): string => {
         const { operator, params, values } = queryFilter;
         const isValidOperator = FILTER_FUNCTION_OPERATORS.find(
@@ -175,6 +183,10 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       })
       .map((filter: string): string => `(${filter})`)
       .join(' and ');
+
+    if (queryOptions.filter != null) {
+      renderedFilters = `${queryOptions.filter} and ${renderedFilters}`;
+    }
     return handler.filter(renderedFilters);
   }
 
@@ -183,12 +195,9 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
     params?: Object,
     method?: RequestMethod = 'GET',
   ): Promise<TEntity> {
-    return this.__resolve(
-      handler,
-      params,
-      method,
-    ).then((result: ODataDAOResult): TEntity =>
-      this.getTranslator().fromApi(result.data),
+    return this.__resolve(handler, params, method).then(
+      (result: ODataDAOResult): TEntity =>
+        this.getTranslator().fromApi(result.data),
     );
   }
 
@@ -242,8 +251,8 @@ class BaseODataDAO<TEntity, TEntityMutator> extends Subscription {
       }
     }
 
-    return (request: any).catch(error => {
-      window.console.error(method || 'get', error, handler, params);
+    return (request: any).catch((error) => {
+      // window.console.error(method || 'get', error, handler, params);
       throw error;
     });
   }

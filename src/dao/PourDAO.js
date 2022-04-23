@@ -2,6 +2,7 @@
 
 import type { EntityID, ShortenedEntity } from '../types';
 import type { ShortenedTap } from './TapDAO';
+import type LoadObject from '../LoadObject';
 
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
@@ -48,6 +49,32 @@ class PourDAO extends ODataDAO<Pour, Pour> {
     Signalr.TapHub.registerListener('newPour', this._onNewPour);
   }
 
+  getPoursByBeverageIDs(
+    beverageIDs: Array<EntityID>,
+    userID?: EntityID,
+  ): LoadObject<Map<EntityID, number>> {
+    const filters = [
+      `beverage/id in (${beverageIDs.join(', ')})`,
+      userID != null ? `owner/id eq '${userID}'` : null,
+      `isDeleted eq false`,
+    ].filter(Boolean);
+    const queryOptions = {
+      apply: `filter((${filters.join(
+        ') and (',
+      )}))/groupby((beverage/id),aggregate(ounces with sum as total))`,
+      shouldIgnoreOrganizationID: true,
+    };
+    return this.__fetchCustom(
+      this.__buildHandler(queryOptions, false),
+      queryOptions,
+    ).map(
+      (results) =>
+        new Map(
+          results.map((item) => [item.beverage.id.toString(), item.total]),
+        ),
+    );
+  }
+
   startAutoflush = () => {
     if (this.isAutoflushToggled) {
       return;
@@ -72,7 +99,7 @@ class PourDAO extends ODataDAO<Pour, Pour> {
     this.fetchByIDs(Array.from(this._accumulatedIds));
 
     if (this.isAutoflushToggled) {
-      this._accumulatedIds.forEach(id => this.flushCacheForEntity(id));
+      this._accumulatedIds.forEach((id) => this.flushCacheForEntity(id));
       this.flushQueryCaches();
     }
 
