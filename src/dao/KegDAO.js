@@ -42,6 +42,7 @@ export type KegMutator = {|
 
 export const MAX_OUNCES_BY_KEG_TYPE: { [KegType]: number } = {
   Cornelius: 640,
+  FiftyLitre: 1690.7,
   HalfBarrel: 1984,
   Mini: 169,
   QuarterBarrel: 992,

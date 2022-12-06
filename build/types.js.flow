@@ -64,6 +64,7 @@ export type QueryOrderBy = {
 
 export type QueryOptions = {
   apply?: string,
+  filter?: string,
   filters?: Array<QueryFilter>,
   orderBy?: Array<QueryOrderBy>,
   search?: string,

@@ -40,7 +40,7 @@
     "husky": "^1.2.0",
     "lint-staged": "^8.0.4",
     "minimist": "^1.2.6",
-    "node-fetch": "^2.2.1",
+    "node-fetch": "^2.6.7",
     "prettier": "^2.0.5"
   },
   "dependencies": {
@@ -49,7 +49,7 @@
     "flow-bin": "^0.126.1",
     "nullthrows": "^1.1.0",
     "odata": "git+https://github.com/Brewskey/o.js.git",
-    "qs": "^6.6.0",
+    "qs": "^6.10.3",
     "react-native-signalr": "git+https://github.com/Brewskey/react-native-signalr.git"
   },
   "ava": {
