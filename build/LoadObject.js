@@ -4,25 +4,27 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-
 var _nullthrows = _interopRequireDefault(require("nullthrows"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); } /**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
 /**
  * A secret key that is used to prevent direct construction of these objects,
  * this is effectively used to ensure that the constructor is private.
@@ -32,6 +34,7 @@ var VALUES_TO_CACHE = [undefined, null, false, true, 0, ''];
 var CACHE = new Map(VALUES_TO_CACHE.map(function (value) {
   return [value, new Map([[true, new Map()], [false, new Map()]])];
 }));
+
 /**
  * Immutable Load Object. This is an immutable object that represents a
  * particular point in time for a request. Some examples:
@@ -55,36 +58,30 @@ var CACHE = new Map(VALUES_TO_CACHE.map(function (value) {
  *   return <div>{loadObject.getValue().text}</div>;
  *
  */
-
 var LoadObject = /*#__PURE__*/function () {
   /**
    * Private construtor, never call this outside of this class.
    */
   function LoadObject(secret, operation, value, error, hasValue) {
     _classCallCheck(this, LoadObject);
-
     _defineProperty(this, "_operation", void 0);
-
     _defineProperty(this, "_value", void 0);
-
     _defineProperty(this, "_error", void 0);
-
     _defineProperty(this, "_hasValue", void 0);
-
     if (secret !== SECRET) {
       throw new Error('Construct LoadObjects using static methods such as ' + 'LoadObject.loading(), LoadObject.empty()');
     }
-
     this._operation = operation;
     this._value = value;
     this._error = error;
     this._hasValue = hasValue;
   }
-
   _createClass(LoadObject, [{
     key: "getOperation",
+    value:
     // Convenient getters
-    value: function getOperation() {
+
+    function getOperation() {
       return this._operation;
     }
   }, {
@@ -97,10 +94,9 @@ var LoadObject = /*#__PURE__*/function () {
     value: function getValueEnforcing() {
       if (!this.hasValue()) {
         throw new Error('Expected load object to have a value set.');
-      } // We check hasValue and cast rather than checking if value is null so that
+      }
+      // We check hasValue and cast rather than checking if value is null so that
       // it's possible to have "null" values that are set.
-
-
       return this._value;
     }
   }, {
@@ -114,7 +110,6 @@ var LoadObject = /*#__PURE__*/function () {
       if (!this._error) {
         throw new Error('Expected load object to have an error set.');
       }
-
       return this._error;
     }
   }, {
@@ -136,15 +131,15 @@ var LoadObject = /*#__PURE__*/function () {
     key: "isEmpty",
     value: function isEmpty() {
       return !this.hasValue() && !this.hasOperation() && !this.hasError();
-    } // Convenient setters
+    }
 
+    // Convenient setters
   }, {
     key: "setOperation",
     value: function setOperation(operation) {
       if (this._operation === operation) {
         return this;
       }
-
       return LoadObject._create(operation, this.getValue(), this.getError(), this.hasValue());
     }
   }, {
@@ -153,7 +148,6 @@ var LoadObject = /*#__PURE__*/function () {
       if (this._value === value && this._hasValue === true) {
         return this;
       }
-
       return LoadObject._create(this.getOperation(), value, this.getError(), this.hasValue());
     }
   }, {
@@ -162,7 +156,6 @@ var LoadObject = /*#__PURE__*/function () {
       if (this._error === error) {
         return this;
       }
-
       return LoadObject._create(this.getOperation(), this.getValue(), error, this.hasValue());
     }
   }, {
@@ -171,7 +164,6 @@ var LoadObject = /*#__PURE__*/function () {
       if (this._operation === 'NONE') {
         return this;
       }
-
       return LoadObject._create('NONE', this.getValue(), this.getError(), this.hasValue());
     }
   }, {
@@ -180,7 +172,6 @@ var LoadObject = /*#__PURE__*/function () {
       if (this._value === undefined && this._hasValue === false) {
         return this;
       }
-
       return LoadObject._create(this.getOperation(), undefined, this.getError(), false);
     }
   }, {
@@ -189,7 +180,6 @@ var LoadObject = /*#__PURE__*/function () {
       if (this._error === undefined) {
         return this;
       }
-
       return LoadObject._create(this.getOperation(), this.getValue(), undefined, this.hasValue());
     }
   }, {
@@ -198,7 +188,6 @@ var LoadObject = /*#__PURE__*/function () {
       if (!this.hasValue()) {
         return this;
       }
-
       var output = fn(this.getValueEnforcing());
       var loader = output instanceof LoadObject ? output : this.setValue(output);
       return loader;
@@ -209,12 +198,12 @@ var LoadObject = /*#__PURE__*/function () {
       if (!this.hasError()) {
         return this;
       }
-
       var output = fn(this.getErrorEnforcing());
       var loader = output instanceof LoadObject ? output : this.setValue(output);
       return loader;
-    } //  some helper methods to check specific operations
+    }
 
+    //  some helper methods to check specific operations
   }, {
     key: "isDone",
     value: function isDone() {
@@ -239,8 +228,9 @@ var LoadObject = /*#__PURE__*/function () {
     key: "isDeleting",
     value: function isDeleting() {
       return this.getOperation() === 'DELETING';
-    } // Provide some helpers for mutating the operations
+    }
 
+    // Provide some helpers for mutating the operations
   }, {
     key: "done",
     value: function done() {
@@ -265,13 +255,13 @@ var LoadObject = /*#__PURE__*/function () {
     key: "deleting",
     value: function deleting() {
       return this.setOperation('DELETING');
-    } // Static helpers for creating LoadObjects
+    }
 
+    // Static helpers for creating LoadObjects
   }], [{
     key: "_create",
     value: function _create(operation, value, error, hasValue) {
       var cachedItem = LoadObject._getFromCache(operation, value, error, hasValue);
-
       return cachedItem || new LoadObject(SECRET, operation, value, error, hasValue);
     }
   }, {
@@ -280,15 +270,12 @@ var LoadObject = /*#__PURE__*/function () {
       if (error !== undefined || !CACHE.has(value)) {
         return null;
       }
-
       var operationMapByHasValue = (0, _nullthrows["default"])(CACHE.get(value));
       var loaderByOperation = (0, _nullthrows["default"])(operationMapByHasValue.get(hasValue));
-
       if (!loaderByOperation.has(operation)) {
         var object = new LoadObject(SECRET, operation, value, error, hasValue);
         loaderByOperation.set(operation, object);
       }
-
       return (0, _nullthrows["default"])(loaderByOperation.get(operation));
     }
   }, {
@@ -327,7 +314,6 @@ var LoadObject = /*#__PURE__*/function () {
       if (value instanceof LoadObject) {
         return value;
       }
-
       return LoadObject._create('NONE', value, undefined, true);
     }
   }, {
@@ -337,29 +323,25 @@ var LoadObject = /*#__PURE__*/function () {
       var values = [];
       var error = null;
       var operation = 'NONE';
-      var hasAllValues = true; // eslint-disable-next-line no-restricted-syntax
+      var hasAllValues = true;
 
+      // eslint-disable-next-line no-restricted-syntax
       var _iterator = _createForOfIteratorHelper(loadObjects),
-          _step;
-
+        _step;
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var _loadObject = _step.value;
-
           if (_loadObject.hasOperation()) {
             var loadObjectOperation = _loadObject.getOperation();
-
             if (!shouldReturnAllValues) {
               return LoadObject.empty().setOperation(loadObjectOperation);
             }
-
             operation = operation || loadObjectOperation;
             values.push(_loadObject.getValue());
           } else if (_loadObject.hasError()) {
             if (!shouldReturnAllValues) {
               return LoadObject.withError(_loadObject.getErrorEnforcing());
             }
-
             values.push(_loadObject.getValue());
             error = error || _loadObject.getErrorEnforcing();
           } else if (_loadObject.isEmpty()) {
@@ -376,33 +358,24 @@ var LoadObject = /*#__PURE__*/function () {
       } finally {
         _iterator.f();
       }
-
       if (!shouldReturnAllValues) {
         if (error) {
           return LoadObject.withError(error);
         }
-
         if (operation !== 'NONE') {
           return LoadObject.empty().setOperation(operation);
         }
-
         if (!hasAllValues) {
           return LoadObject.empty();
         }
       }
-
       var output = LoadObject.withValue(values);
-
       if (error) {
         output = output.setError(error);
       }
-
       return output.setOperation(operation);
     }
   }]);
-
   return LoadObject;
 }();
-
-var _default = LoadObject;
-exports["default"] = _default;
+var _default = exports["default"] = LoadObject;

@@ -48,9 +48,9 @@
     "debounce": "^1.2.0",
     "flow-bin": "^0.126.1",
     "nullthrows": "^1.1.0",
-    "odata": "git+https://github.com/Brewskey/o.js.git",
+    "odata": "github:Brewskey/o.js",
     "qs": "^6.10.3",
-    "react-native-signalr": "git+https://github.com/Brewskey/react-native-signalr.git"
+    "react-native-signalr": "github:Brewskey/react-native-signalr"
   },
   "ava": {
     "verbose": true,

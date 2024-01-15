@@ -4,15 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.doesSatisfyQueryFilters = exports.createFilter = void 0;
-
 var _constants = require("./constants");
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var FILTERS = {
   any: _constants.FILTER_OPERATORS.ANY,
   contains: _constants.FILTER_OPERATORS.CONTAINS,
@@ -27,13 +25,11 @@ var FILTERS = {
   notStartsWith: _constants.FILTER_OPERATORS.NOT_STARTS_WITH,
   startsWith: _constants.FILTER_OPERATORS.STARTS_WITH
 };
-
 var getIn = function getIn(props, object) {
   return props.reduce(function (previousObjectValue, prop) {
     return previousObjectValue && previousObjectValue[prop] ? previousObjectValue[prop] : null;
   }, object);
 };
-
 var makeFilter = function makeFilter(operator, params) {
   return function (values) {
     return {
@@ -43,21 +39,18 @@ var makeFilter = function makeFilter(operator, params) {
     };
   };
 };
-
-var createFilter = function createFilter(params) {
+var createFilter = exports.createFilter = function createFilter(params) {
   return Object.keys(FILTERS).reduce(function (filters, filter) {
-    return _objectSpread({}, filters, _defineProperty({}, filter, makeFilter(FILTERS[filter], params)));
+    return _objectSpread(_objectSpread({}, filters), {}, _defineProperty({}, filter, makeFilter(FILTERS[filter], params)));
   }, {});
-}; // todo make unit tests
+};
 
-
-exports.createFilter = createFilter;
-
-var doesSatisfyQueryFilters = function doesSatisfyQueryFilters(item, queryFilters) {
+// todo make unit tests
+var doesSatisfyQueryFilters = exports.doesSatisfyQueryFilters = function doesSatisfyQueryFilters(item, queryFilters) {
   return queryFilters.every(function (queryFilter) {
     var params = queryFilter.params,
-        values = queryFilter.values,
-        operator = queryFilter.operator;
+      values = queryFilter.values,
+      operator = queryFilter.operator;
     return params.some(function (param) {
       var itemValue = getIn(param.split('/'), item);
       return values.some(function (value) {
@@ -67,17 +60,14 @@ var doesSatisfyQueryFilters = function doesSatisfyQueryFilters(item, queryFilter
             {
               return itemValue.toString().includes(value.toString());
             }
-
           case _constants.FILTER_OPERATORS.EQUALS:
             {
               return value === itemValue;
             }
-
           case _constants.FILTER_OPERATORS.NOT_EQUALS:
             {
               return value !== itemValue;
             }
-
           default:
             {
               return false;
@@ -87,5 +77,3 @@ var doesSatisfyQueryFilters = function doesSatisfyQueryFilters(item, queryFilter
     });
   });
 };
-
-exports.doesSatisfyQueryFilters = doesSatisfyQueryFilters;
