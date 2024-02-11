@@ -26,13 +26,14 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     return this._entityName;
   }
 
-  __updateEntityByID(id: EntityID, cb: TEntity => TEntity): void {
-    const loader = this._entityLoaderById.get(id);
+  __updateEntityByID(id: EntityID, cb: (TEntity) => TEntity): void {
+    const stringifiedId = id.toString();
+    const loader = this._entityLoaderById.get(stringifiedId);
     if (!loader) {
       return;
     }
 
-    this._entityLoaderById.set(id, loader.map(cb));
+    this._entityLoaderById.set(stringifiedId, loader.map(cb));
     this.__emitChanges();
   }
 
@@ -54,7 +55,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
           );
           this.__emitChanges();
         })
-        .catch(error => {
+        .catch((error) => {
           Subscription.__emitError(error);
           this._countLoaderByQuery.set(cacheKey, LoadObject.withError(error));
           this.__emitChanges();
@@ -75,17 +76,20 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
       this.__emitChanges();
 
       fetch(path, { method: 'GET', ...queryParams })
-        .then(items => {
-          const ids = nullthrows(items).map(({ id }) => id);
+        .then((items) => {
+          const ids = nullthrows(items).map(({ id }) => id.toString());
 
-          nullthrows(items).forEach(item =>
-            this._entityLoaderById.set(item.id, LoadObject.withValue(item)),
+          nullthrows(items).forEach((item) =>
+            this._entityLoaderById.set(
+              item.id.toString(),
+              LoadObject.withValue(item),
+            ),
           );
 
           this._entityIdsLoaderByQuery.set(cacheKey, LoadObject.withValue(ids));
           this.__emitChanges();
         })
-        .catch(error => {
+        .catch((error) => {
           Subscription.__emitError(error);
           this._entityIdsLoaderByQuery.set(
             cacheKey,
@@ -96,8 +100,8 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     }
 
     const result = nullthrows(this._entityIdsLoaderByQuery.get(cacheKey)).map(
-      ids =>
-        ids.map(id => {
+      (ids) =>
+        ids.map((id) => {
           const loader: LoadObject<TEntity> = nullthrows(
             this._entityLoaderById.get(id.toString()),
           );
@@ -127,14 +131,14 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
         method: 'GET',
         ...queryParams,
       })
-        .then(result => {
+        .then((result) => {
           this._entityLoaderById.set(
             stringifiedId,
             LoadObject.withValue(result),
           );
           this.__emitChanges();
         })
-        .catch(error => {
+        .catch((error) => {
           Subscription.__emitError(error);
           this._entityLoaderById.set(
             stringifiedId,
@@ -157,11 +161,11 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     this.__emitChanges();
 
     fetch(path, { method: 'GET', ...queryParams })
-      .then(result => {
+      .then((result) => {
         this._entityLoaderById.set(clientId, LoadObject.withValue(result));
         this.__emitChanges();
       })
-      .catch(error => {
+      .catch((error) => {
         Subscription.__emitError(error);
         this._entityLoaderById.set(clientId, LoadObject.withError(error));
         this.__emitChanges();
@@ -188,7 +192,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
       method: 'POST',
       ...queryParams,
     })
-      .then(item => {
+      .then((item) => {
         this._flushQueryCaches();
         this._entityLoaderById.set(
           nullthrows(item).id,
@@ -200,7 +204,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
         );
         this.__emitChanges();
       })
-      .catch(error => {
+      .catch((error) => {
         Subscription.__emitError(error);
         this._entityLoaderById.set(clientId, LoadObject.withError(error));
         this.__emitChanges();
@@ -234,7 +238,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
       ...queryParams,
       method: 'PUT',
     })
-      .then(item => {
+      .then((item) => {
         this._flushQueryCaches();
         this._entityLoaderById.set(stringifiedID, LoadObject.withValue(item));
         this._entityLoaderById.set(
@@ -243,7 +247,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
         );
         this.__emitChanges();
       })
-      .catch(error => {
+      .catch((error) => {
         Subscription.__emitError(error);
         this._entityLoaderById.set(clientId, LoadObject.withError(error));
         this.__emitChanges();
@@ -270,11 +274,11 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     fetch(path, { method: 'DELETE', ...queryParams })
       .then(() => {
         this._entityLoaderById.set(clientId, LoadObject.empty());
-        this._entityLoaderById.set(id, LoadObject.empty());
+        this._entityLoaderById.set(stringifiedId, LoadObject.empty());
         this._flushQueryCaches();
         this.__emitChanges();
       })
-      .catch(error => {
+      .catch((error) => {
         Subscription.__emitError(error);
         this._entityLoaderById.set(clientId, LoadObject.withError(error));
         this.__emitChanges();
@@ -302,16 +306,16 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
   }
 
   waitForLoaded<TResponse>(
-    fn: this => LoadObject<TResponse>,
+    fn: (this) => LoadObject<TResponse>,
     timeout?: number,
   ): Promise<TResponse> {
-    return this.waitForLoadedNullable(fn, timeout).then(result =>
+    return this.waitForLoadedNullable(fn, timeout).then((result) =>
       nullthrows(result),
     );
   }
 
   waitForLoadedNullable<TResponse>(
-    fn: this => LoadObject<TResponse>,
+    fn: (this) => LoadObject<TResponse>,
     timeout?: number = 10000,
   ): Promise<?TResponse> {
     return new Promise(
@@ -327,20 +331,20 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
             return;
           }
 
-          loader = loader.map(result => {
+          loader = loader.map((result) => {
             if (!Array.isArray(result)) {
               return result;
             }
 
             if (
-              result.some(item =>
+              result.some((item) =>
                 item instanceof LoadObject ? item.hasOperation() : false,
               )
             ) {
               return LoadObject.loading();
             }
 
-            return result.map(item =>
+            return result.map((item) =>
               item instanceof LoadObject ? item.getValue() : item,
             );
           });

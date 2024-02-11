@@ -27,12 +27,13 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
   }
 
   __updateEntityByID(id: EntityID, cb: TEntity => TEntity): void {
-    const loader = this._entityLoaderById.get(id);
+    const stringifiedId = id.toString();
+    const loader = this._entityLoaderById.get(stringifiedId);
     if (!loader) {
       return;
     }
 
-    this._entityLoaderById.set(id, loader.map(cb));
+    this._entityLoaderById.set(stringifiedId, loader.map(cb));
     this.__emitChanges();
   }
 
@@ -76,10 +77,10 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
 
       fetch(path, { method: 'GET', ...queryParams })
         .then(items => {
-          const ids = nullthrows(items).map(({ id }) => id);
+          const ids = nullthrows(items).map(({ id }) => id.toString());
 
           nullthrows(items).forEach(item =>
-            this._entityLoaderById.set(item.id, LoadObject.withValue(item)),
+            this._entityLoaderById.set(item.id.toString(), LoadObject.withValue(item)),
           );
 
           this._entityIdsLoaderByQuery.set(cacheKey, LoadObject.withValue(ids));
@@ -270,7 +271,7 @@ class RestDAO<TEntity, TEntityMutator> extends Subscription {
     fetch(path, { method: 'DELETE', ...queryParams })
       .then(() => {
         this._entityLoaderById.set(clientId, LoadObject.empty());
-        this._entityLoaderById.set(id, LoadObject.empty());
+        this._entityLoaderById.set(stringifiedId, LoadObject.empty());
         this._flushQueryCaches();
         this.__emitChanges();
       })

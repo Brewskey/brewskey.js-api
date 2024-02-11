@@ -48,11 +48,12 @@ var RestDAO = /*#__PURE__*/function (_Subscription) {
   }, {
     key: "__updateEntityByID",
     value: function __updateEntityByID(id, cb) {
-      var loader = this._entityLoaderById.get(id);
+      var stringifiedId = id.toString();
+      var loader = this._entityLoaderById.get(stringifiedId);
       if (!loader) {
         return;
       }
-      this._entityLoaderById.set(id, loader.map(cb));
+      this._entityLoaderById.set(stringifiedId, loader.map(cb));
       this.__emitChanges();
     }
   }, {
@@ -89,10 +90,10 @@ var RestDAO = /*#__PURE__*/function (_Subscription) {
         }, queryParams)).then(function (items) {
           var ids = (0, _nullthrows["default"])(items).map(function (_ref2) {
             var id = _ref2.id;
-            return id;
+            return id.toString();
           });
           (0, _nullthrows["default"])(items).forEach(function (item) {
-            return _this3._entityLoaderById.set(item.id, _LoadObject["default"].withValue(item));
+            return _this3._entityLoaderById.set(item.id.toString(), _LoadObject["default"].withValue(item));
           });
           _this3._entityIdsLoaderByQuery.set(cacheKey, _LoadObject["default"].withValue(ids));
           _this3.__emitChanges();
@@ -233,7 +234,7 @@ var RestDAO = /*#__PURE__*/function (_Subscription) {
         method: 'DELETE'
       }, queryParams)).then(function () {
         _this8._entityLoaderById.set(clientId, _LoadObject["default"].empty());
-        _this8._entityLoaderById.set(id, _LoadObject["default"].empty());
+        _this8._entityLoaderById.set(stringifiedId, _LoadObject["default"].empty());
         _this8._flushQueryCaches();
         _this8.__emitChanges();
       })["catch"](function (error) {
