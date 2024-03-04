@@ -472,7 +472,7 @@ var ODataDAO = /*#__PURE__*/function (_BaseODataDAO) {
         Array.from(_this12._currentEntityQueries).filter(function (id) {
           return id.toString().indexOf('CLIENT_ID:') !== 0;
         }).forEach(function (id) {
-          return _this12._hydrateSingle(id, false);
+          return _this12._hydrateSingle(id.toString(), false);
         });
         _this12._entityIDsLoaderByQuery = _this12._rebuildMap(_this12._entityIDsLoaderByQuery, _this12._currentEntityIDsQueries, function (queryOptions) {
           return _this12._hydrateMany(queryOptions);

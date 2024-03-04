@@ -30,10 +30,8 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
 
   _customHandlerByQuery: Map<string, OHandler<any>> = new Map();
 
-  _entityLoaderByID: Map<
-    EntityID,
-    LoadObject<TEntityBase<TEntity>>,
-  > = new Map();
+  _entityLoaderByID: Map<EntityID, LoadObject<TEntityBase<TEntity>>> =
+    new Map();
 
   // Sets used for tracking current queries
   _runFlushCache = null;
@@ -141,10 +139,11 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
       this.__resolveMany(handler)
         .then((results: Array<TEntityBase<TEntity>>) => {
           const entitiesByID = new Map(
-            results.map((item: TEntityBase<TEntity>): [
-              EntityID,
-              TEntityBase<TEntity>,
-            ] => [item.id, item]),
+            results.map(
+              (
+                item: TEntityBase<TEntity>,
+              ): [EntityID, TEntityBase<TEntity>] => [item.id, item],
+            ),
           );
 
           idsToLoad.forEach((id: EntityID) => {
@@ -174,10 +173,12 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     }
 
     return new Map(
-      stringifiedIds.map((id: string): [
-        string,
-        LoadObject<TEntityBase<TEntity>>,
-      ] => [id, nullthrows(this._entityLoaderByID.get(id))]),
+      stringifiedIds.map(
+        (id: string): [string, LoadObject<TEntityBase<TEntity>>] => [
+          id,
+          nullthrows(this._entityLoaderByID.get(id)),
+        ],
+      ),
     );
   }
 
@@ -567,7 +568,7 @@ class ODataDAO<TEntity, TEntityMutator> extends BaseODataDAO<
     this._runFlushCache = debounce(() => {
       Array.from(this._currentEntityQueries)
         .filter((id) => id.toString().indexOf('CLIENT_ID:') !== 0)
-        .forEach((id) => this._hydrateSingle(id, false));
+        .forEach((id) => this._hydrateSingle(id.toString(), false));
 
       this._entityIDsLoaderByQuery = this._rebuildMap(
         this._entityIDsLoaderByQuery,
