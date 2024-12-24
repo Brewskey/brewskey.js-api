@@ -6,7 +6,7 @@ import { DAO_ENTITIES } from '../constants';
 import PermissionTranslator, {
   ApiPermissionMutator,
 } from '../translators/PermissionTranslator';
-import { createFilter } from 'filters';
+import { createFilter } from '../filters';
 
 export type PermissionEntityKeysType =
   | 'device'

@@ -1,17 +1,15 @@
-import type {EntityName} from './types';
+import type { EntityName } from './types';
 import type { FilterOperator } from './filters';
 import type { PermissionType } from './dao/PermissionDAO';
 
-export const PERMISSIONS_MAP: Partial<Record<PermissionType, number>> = {
+export const PERMISSIONS_MAP = {
   Administrator: 4,
   BannedFromTap: 1,
   Edit: 3,
   Read: 2,
-};
+} as const;
 
-export const DAO_ENTITIES: {
-  [key: string]: EntityName
-} = {
+export const DAO_ENTITIES = {
   ACCOUNTS: 'accounts',
   ACHIEVEMENTS: 'achievements',
   BEVERAGE_AVAILABILITIES: 'beverage-availabilities',
@@ -33,11 +31,9 @@ export const DAO_ENTITIES: {
   SCHEDULE_GROUPS: 'schedule-groups',
   SCHEDULES: 'schedules',
   TAPS: 'taps',
-};
+} as const;
 
-const FILTER_OPERATORS: {
-  [key: string]: FilterOperator
-} = {
+const FILTER_OPERATORS = {
   ANY: 'any',
   CONTAINS: 'contains',
   ENDS_WITH: 'endswith',
@@ -50,7 +46,7 @@ const FILTER_OPERATORS: {
   NOT_EQUALS: 'ne',
   NOT_STARTS_WITH: 'not startswith',
   STARTS_WITH: 'startswith',
-};
+} as const;
 
 const FILTER_FUNCTION_OPERATORS = [
   FILTER_OPERATORS.CONTAINS,
@@ -58,6 +54,6 @@ const FILTER_FUNCTION_OPERATORS = [
   FILTER_OPERATORS.NOT_ENDS_WITH,
   FILTER_OPERATORS.NOT_STARTS_WITH,
   FILTER_OPERATORS.STARTS_WITH,
-];
+] as const;
 
 export { FILTER_OPERATORS, FILTER_FUNCTION_OPERATORS };
