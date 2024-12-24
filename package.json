@@ -1,5 +1,5 @@
 {
-  "name": "brewskey.js-api",
+  "name": "@brewskey/js-api",
   "version": "2.0.0",
   "main": "./dist/index.js",
   "repository": "https://github.com/Brewskey/brewskey.js-api.git",
