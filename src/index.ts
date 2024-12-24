@@ -1,6 +1,6 @@
 import type { EntityID } from './types';
 
-import oHandler from 'odata';
+import oHandler, { Options } from 'odata';
 import { CADENCE_MAP } from './translators/ReportTranslator';
 import Subscription from './dao/Subscription';
 
