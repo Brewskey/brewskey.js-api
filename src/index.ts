@@ -32,6 +32,10 @@ const setToken = (token: string) => {
   });
 };
 
+const setupOHandler = (options: Options) => {
+  oHandler().config(options);
+};
+
 const setOrganizationID = (organizationID?: EntityID | null) => {
   Config.organizationId = organizationID;
 };
@@ -80,4 +84,5 @@ export default {
   onError: Subscription.onError,
   setOrganizationID,
   setToken,
+  setupOHandler,
 };

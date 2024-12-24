@@ -8,9 +8,20 @@ declare module 'odata' {
     json?: boolean;
     version?: number;
     strictMode?: boolean;
-    start?: () => void;
-    ready?: () => void;
-    error?: () => void;
+    /**
+     * A function which is called on each start of a request
+     */
+    onStart: (oHandler: OHandler) => null;
+
+    /**
+     * A function which is called when a request has finished
+     */
+    onFinish: (oHandler: OHandler, res?: Response) => null;
+
+    /**
+     * A function which is called when a request has a error
+     */
+    onError: (oHandler: OHandler, res: Response) => null;
     headers?: Header[];
     username?: string;
     password?: string;
