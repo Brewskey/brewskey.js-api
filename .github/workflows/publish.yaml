@@ -10,6 +10,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: 'v2'
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v4
         with:
