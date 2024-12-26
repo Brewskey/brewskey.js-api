@@ -3,6 +3,7 @@ import type { EntityID, QueryOptions, ShortenedEntity } from '../types';
 import ODataDAO from './ODataDAO';
 import { DAO_ENTITIES } from '../constants';
 import LocationTranslator from '../translators/LocationTranslator';
+import { KegType } from './KegDAO';
 
 export type Coordinates = {
   latitude: number;
@@ -48,6 +49,30 @@ export type LocationMutator = {
   zipCode: number;
 };
 
+export type NearbyLocation = {
+  id: EntityID;
+  name: string;
+  summary: string | null | undefined;
+  taps: Array<NearbyTap>;
+};
+
+export type NearbyTap = {
+  currentKeg: {
+    beverageId: number; // not translated to string,
+    beverageName: string;
+    kegType: KegType;
+    maxOunces: number;
+    ounces: number;
+  };
+  device: {
+    id: number; // not translated to string,
+    name: string;
+  };
+  id: EntityID;
+  name: string;
+  tapNumber: number;
+};
+
 class LocationDAOImpl extends ODataDAO<Location, LocationMutator> {
   constructor() {
     super({
@@ -59,16 +84,22 @@ class LocationDAOImpl extends ODataDAO<Location, LocationMutator> {
     });
   }
 
-  getNearbyLocations(
-    queryOptions: {
-      latitude: number;
-      longitude: number;
-      radius: number;
-    } & QueryOptions,
-  ): Promise<Location[]> {
+  getNearbyLocations({
+    latitude,
+    longitude,
+    radius,
+    ...queryOptions
+  }: {
+    latitude: number;
+    longitude: number;
+    radius: number;
+  } & QueryOptions): Promise<NearbyLocation[]> {
     const funcString = 'Default.nearby()';
 
     const handler = this.__buildHandler(queryOptions, false);
+    handler.customParam('latitude', latitude.toString());
+    handler.customParam('longitude', longitude.toString());
+    handler.customParam('radius', radius.toString());
     handler.func(funcString);
 
     return this.__fetchCustom(handler, queryOptions);
