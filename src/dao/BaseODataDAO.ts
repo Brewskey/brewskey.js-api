@@ -15,6 +15,7 @@ import oHandler from 'odata';
 import Subscription from './Subscription';
 import { FILTER_FUNCTION_OPERATORS, FILTER_OPERATORS } from '../constants';
 import Config from '../Config';
+import { Auth } from '../Auth';
 
 const ID_REG_EXP = /\bid\b/;
 
@@ -252,25 +253,47 @@ class BaseODataDAO<
     method: RequestMethod = 'GET',
   ): Promise<ODataDAOResult<TResult>> {
     let request: Promise<ODataDAOResult<TResult>>;
+
+    const refetchAuthTokenOn403 = (
+      fn: () => Promise<ODataDAOResult<TResult>>,
+    ): Promise<ODataDAOResult<TResult>> => {
+      if (Config.refreshToken == null) {
+        return fn();
+      }
+
+      return fn().catch(async (error: Error & { status: number }) => {
+        if (error.status === 403 && Config.refreshToken != null) {
+          const newSession = await Auth.refreshToken(Config.refreshToken);
+          Config.token = newSession.accessToken;
+          Config.refreshToken = newSession.refreshToken;
+
+          Config.onSessionUpdated?.(newSession);
+
+          return fn();
+        }
+        throw error;
+      });
+    };
+
     switch (method) {
       case 'DELETE': {
-        request = handler.remove().save();
+        request = refetchAuthTokenOn403(() => handler.remove().save());
         break;
       }
       case 'PATCH': {
-        request = handler.patch(params).save();
+        request = refetchAuthTokenOn403(() => handler.patch(params).save());
         break;
       }
       case 'POST': {
-        request = handler.post(params).save();
+        request = refetchAuthTokenOn403(() => handler.post(params).save());
         break;
       }
       case 'PUT': {
-        request = handler.put(params).save();
+        request = refetchAuthTokenOn403(() => handler.put(params).save());
         break;
       }
       default: {
-        request = handler.get();
+        request = refetchAuthTokenOn403(() => handler.get());
       }
     }
 

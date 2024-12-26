@@ -1,6 +1,6 @@
 import type { EntityID } from './types';
 
-import oHandler, { Options } from 'odata';
+import oHandler from 'odata';
 import { CADENCE_MAP } from './translators/ReportTranslator';
 import Subscription from './dao/Subscription';
 
@@ -9,6 +9,7 @@ import { createFilter, doesSatisfyQueryFilters } from './filters';
 import StandardHeaders from './StandardHeaders';
 
 import Config from './Config';
+import { AuthResponse } from './Auth';
 
 const initialize = (host: string) => {
   Config.host = host;
@@ -32,8 +33,14 @@ const setToken = (token: string) => {
   });
 };
 
-const setupOHandler = (options: Options) => {
-  oHandler().config(options);
+const setRefreshToken = (refreshToken: string) => {
+  Config.refreshToken = refreshToken;
+};
+
+const setOnSessionUpdated = (
+  callback: (refreshToken: AuthResponse) => void,
+) => {
+  Config.onSessionUpdated = callback;
 };
 
 const setOrganizationID = (organizationID?: EntityID | null) => {
@@ -84,5 +91,6 @@ export default {
   onError: Subscription.onError,
   setOrganizationID,
   setToken,
-  setupOHandler,
+  setRefreshToken,
+  setOnSessionUpdated,
 };
