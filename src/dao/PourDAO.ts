@@ -1,4 +1,4 @@
-import type { EntityID, ShortenedEntity } from '../types';
+import type { EntityID, QueryOptions, ShortenedEntity } from '../types';
 import type { ShortenedTap } from './TapDAO';
 
 import ODataDAO from './ODataDAO';
@@ -64,7 +64,10 @@ class PourDAOImpl extends ODataDAO<Pour, Pour> {
       )}))/groupby((beverage/id),aggregate(ounces with sum as total))`,
       shouldIgnoreOrganizationID: true,
     } as const;
-    return this.fetchMany(queryOptions).then(
+    return this.__fetchCustom<Pour[], QueryOptions>(
+      this.__buildHandler(queryOptions, false),
+      queryOptions,
+    ).then(
       (results) =>
         new Map(
           results.map((item) => [

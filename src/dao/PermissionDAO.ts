@@ -76,14 +76,14 @@ class PermissionDAOImpl extends ODataDAO<
   }
 
   async fetchForEntityId(
-    permissionEntityType: PermissionEntityType,
+    permissionEntityType: PermissionEntityKeysType,
     entityID: EntityID,
   ): Promise<Permission> {
     const result = await this.fetchMany({
       filters: [createFilter(`${permissionEntityType}/id`).equals(entityID)],
       orderBy: [
         {
-          column: 'tapDate',
+          column: 'createdDate',
           direction: 'desc',
         },
       ],

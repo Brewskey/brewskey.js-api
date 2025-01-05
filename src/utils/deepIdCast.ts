@@ -17,7 +17,10 @@ export const deepIdCast = <TInput extends { id: EntityID }>(
           [key]: value.toString(),
         };
       }
-      return acc;
+      return {
+        ...acc,
+        [key]: value,
+      };
     },
     {} as TInput & { id: string },
   );

@@ -61,15 +61,20 @@ class ODataDAO<
   fetchByIDs(ids: Array<EntityID>): Promise<Array<TEntity>> {
     const stringifiedIds = ids.map(String);
 
-    const handler = this.__buildHandler();
+    const handler = this.__buildHandler(undefined, false);
     handler.customParam('ids', stringifiedIds.join(','));
 
     return this.__resolveMany(handler);
   }
 
   fetchMany(queryOptions: QueryOptions = {}): Promise<TEntity[]> {
-    const handler = this.__buildHandler(queryOptions, false);
+    const handler = this.__buildHandler(queryOptions, true);
     return this.__resolveMany(handler, queryOptions);
+  }
+
+  fetchManyIDs(queryOptions: QueryOptions = {}): Promise<EntityID[]> {
+    const handler = this.__buildHandler(queryOptions, false);
+    return this.__resolveManyIDs(handler, queryOptions);
   }
 
   async fetchSingle(queryOptions?: QueryOptions): Promise<TEntity> {
