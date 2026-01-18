@@ -15,7 +15,7 @@ import oHandler from 'odata';
 import Subscription from './Subscription';
 import { FILTER_FUNCTION_OPERATORS, FILTER_OPERATORS } from '../constants';
 import Config from '../Config';
-import { Auth } from '../Auth';
+import { Auth, AuthResponse } from '../Auth';
 
 const ID_REG_EXP = /\bid\b/;
 
@@ -247,6 +247,8 @@ class BaseODataDAO<
     return result.data.map(({ id }) => id);
   }
 
+  private refreshTokenPromise: Promise<AuthResponse> | null = null;
+
   protected async __resolve<TResult, TQueryOptions extends QueryOptions>(
     handler: OHandler<TEntity>,
     params: TQueryOptions | null = null,
@@ -254,7 +256,7 @@ class BaseODataDAO<
   ): Promise<ODataDAOResult<TResult>> {
     let request: Promise<ODataDAOResult<TResult>>;
 
-    const refetchAuthTokenOn403 = (
+    const refetchAuthTokenOn401 = (
       fn: () => Promise<ODataDAOResult<TResult>>,
     ): Promise<ODataDAOResult<TResult>> => {
       if (Config.refreshToken == null) {
@@ -262,38 +264,51 @@ class BaseODataDAO<
       }
 
       return fn().catch(async (error: Error & { status: number }) => {
-        if (error.status === 403 && Config.refreshToken != null) {
-          const newSession = await Auth.refreshToken(Config.refreshToken);
-          Config.token = newSession.accessToken;
-          Config.refreshToken = newSession.refreshToken;
-
-          Config.onSessionUpdated?.(newSession);
-
-          return fn();
+        if (error.status !== 401 || Config.refreshToken == null) {
+          throw error;
         }
-        throw error;
+
+        if (this.refreshTokenPromise == null) {
+          this.refreshTokenPromise = Auth.refreshToken(Config.refreshToken);
+          try {
+            const newSession = await this.refreshTokenPromise;
+            this.refreshTokenPromise = null;
+            Config.token = newSession.accessToken;
+            Config.refreshToken = newSession.refreshToken;
+
+            Config.onSessionUpdated?.(newSession, null);
+          } catch (refreshTokenError) {
+            console.log(refreshTokenError);
+            Config.onSessionUpdated?.(null, refreshTokenError as Error);
+            throw refreshTokenError;
+          }
+        } else {
+          await this.refreshTokenPromise;
+        }
+
+        return fn();
       });
     };
 
     switch (method) {
       case 'DELETE': {
-        request = refetchAuthTokenOn403(() => handler.remove().save());
+        request = refetchAuthTokenOn401(() => handler.remove().save());
         break;
       }
       case 'PATCH': {
-        request = refetchAuthTokenOn403(() => handler.patch(params).save());
+        request = refetchAuthTokenOn401(() => handler.patch(params).save());
         break;
       }
       case 'POST': {
-        request = refetchAuthTokenOn403(() => handler.post(params).save());
+        request = refetchAuthTokenOn401(() => handler.post(params).save());
         break;
       }
       case 'PUT': {
-        request = refetchAuthTokenOn403(() => handler.put(params).save());
+        request = refetchAuthTokenOn401(() => handler.put(params).save());
         break;
       }
       default: {
-        request = refetchAuthTokenOn403(() => handler.get());
+        request = refetchAuthTokenOn401(() => handler.get());
       }
     }
 

@@ -10,7 +10,9 @@ class Config {
 
   static refreshToken: string | null | undefined = null;
 
-  static onSessionUpdated: ((session: AuthResponse) => void) | null;
+  static onSessionUpdated:
+    | ((session: AuthResponse | null, error: Error | null) => void)
+    | null;
 }
 
 export default Config;

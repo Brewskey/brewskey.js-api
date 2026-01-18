@@ -37,9 +37,7 @@ const setRefreshToken = (refreshToken: string) => {
   Config.refreshToken = refreshToken;
 };
 
-const setOnSessionUpdated = (
-  callback: (refreshToken: AuthResponse) => void,
-) => {
+const setOnSessionUpdated = (callback: typeof Config.onSessionUpdated) => {
   Config.onSessionUpdated = callback;
 };
 
