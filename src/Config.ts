@@ -9,6 +9,8 @@ class Config {
   static token: string | null | undefined = null;
 
   static refreshToken: string | null | undefined = null;
+  
+  static userId: EntityID | null | undefined = null;
 
   static onSessionUpdated:
     | ((session: AuthResponse | null, error: Error | null) => void)

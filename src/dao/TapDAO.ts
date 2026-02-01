@@ -91,7 +91,7 @@ class TapDAOImpl extends ODataDAO<Tap, TapMutator> {
             ...countQueryOptions,
           },
           false,
-        ).find(this.__reformatIDValue(stringifiedID));
+        ).find(this.__reformatValue(stringifiedID));
         handler.func(funcString);
 
         return handler;
@@ -109,7 +109,7 @@ class TapDAOImpl extends ODataDAO<Tap, TapMutator> {
     const stringifiedID = tapID.toString();
 
     const handler = this.__buildHandler(queryOptions, false).find(
-      this.__reformatIDValue(stringifiedID),
+      this.__reformatValue(stringifiedID),
     );
     handler.func(funcString);
 

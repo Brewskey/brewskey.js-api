@@ -88,15 +88,56 @@ export default async <TResult>(
     },
   );
 
-  const responseJson = await response.json();
-
-  if (!response.ok) {
-    if (responseJson && reformatError) {
-      throw new Error(reformatError(responseJson));
+  const text = await response.text();
+  let responseJson: TResult | string | null = null;
+  if (text.length > 0) {
+    const contentType = response.headers.get('Content-Type') ?? '';
+    const looksLikeJson =
+      contentType.includes('application/json') || /^\s*[\{[[]/.test(text);
+    if (looksLikeJson) {
+      try {
+        responseJson = JSON.parse(text) as TResult;
+      } catch {
+        responseJson = text;
+      }
+    } else {
+      responseJson = text;
     }
-
-    throw new Error(responseJson ? parseError(responseJson) : 'Whoops! Error!');
   }
 
-  return responseJson;
+  if (!response.ok) {
+    const errorPayload =
+      responseJson && typeof responseJson === 'object'
+        ? (responseJson as unknown as Error & {
+            ModelState?: Record<string, Array<string>>;
+            error_description?: string;
+            Message?: string;
+            error?: string;
+            invalidDeviceIds?: string[];
+          })
+        : null;
+    const message =
+      errorPayload && reformatError
+        ? reformatError(
+            errorPayload as Error & { error: string } & {
+              invalidDeviceIds: string[];
+            },
+          )
+        : errorPayload
+          ? parseError(
+              errorPayload as Error & {
+                ModelState?: Record<string, Array<string>>;
+                error_description?: string;
+                Message?: string;
+              },
+            )
+          : typeof responseJson === 'string'
+            ? responseJson
+            : 'Whoops! Error!';
+    const error = new Error(message) as Error & { status: number };
+    error.status = response.status;
+    throw error;
+  }
+
+  return responseJson as TResult;
 };

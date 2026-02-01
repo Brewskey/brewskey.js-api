@@ -47,7 +47,7 @@ class OrganizationDAOImpl extends ODataDAO<Organization, OrganizationMutator> {
     const stringifiedID = organizationID.toString();
 
     const handler = this.__buildHandler(queryOptions, false).find(
-      this.__reformatIDValue(stringifiedID),
+      this.__reformatValue(stringifiedID),
     );
     handler.func(funcString);
 
@@ -62,7 +62,7 @@ class OrganizationDAOImpl extends ODataDAO<Organization, OrganizationMutator> {
     const stringifiedID = organizationID.toString();
 
     const handler = this.__buildHandler({}, false)
-      .find(this.__reformatIDValue(stringifiedID))
+      .find(this.__reformatValue(stringifiedID))
       .func(funcString);
 
     return this.__mutateCustom(handler, 'POST', {

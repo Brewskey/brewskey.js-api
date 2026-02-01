@@ -73,6 +73,13 @@ class KegDAOImpl extends ODataDAO<Keg, KegMutator> {
       ],
       take: 1,
     });
+
+    if (!result[0]) {
+      const error = new Error('Not found') as Error & { status: number };
+      error.status = 404;
+      throw error;
+    }
+
     return result[0];
   }
 
@@ -81,7 +88,7 @@ class KegDAOImpl extends ODataDAO<Keg, KegMutator> {
     const stringifiedID = tapID.toString();
 
     const handler = this.__buildHandler({}, false)
-      .find(this.__reformatIDValue(stringifiedID))
+      .find(this.__reformatValue(stringifiedID))
       .func(funcString);
 
     return this.__mutateCustom(handler, 'PUT');

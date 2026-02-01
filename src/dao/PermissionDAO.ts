@@ -7,6 +7,7 @@ import PermissionTranslator, {
   ApiPermissionMutator,
 } from '../translators/PermissionTranslator';
 import { createFilter } from '../filters';
+import Config from '../Config';
 
 export type PermissionEntityKeysType =
   | 'device'
@@ -78,9 +79,10 @@ class PermissionDAOImpl extends ODataDAO<
   async fetchForEntityId(
     permissionEntityType: PermissionEntityKeysType,
     entityID: EntityID,
+    forUser?: EntityID,
   ): Promise<Permission> {
     const result = await this.fetchMany({
-      filters: [createFilter(`${permissionEntityType}/id`).equals(entityID)],
+      filters: [createFilter(`${permissionEntityType}/id`).equals(entityID), createFilter('forUser/id').equals(forUser ?? Config.userId)],
       orderBy: [
         {
           column: 'createdDate',
@@ -89,6 +91,13 @@ class PermissionDAOImpl extends ODataDAO<
       ],
       take: 1,
     });
+
+    if (!result[0]) {
+      const error = new Error('Not found') as Error & { status: number };
+      error.status = 404;
+      throw error;
+    }
+
     return result[0];
   }
 }

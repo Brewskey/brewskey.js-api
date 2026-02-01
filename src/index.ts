@@ -19,26 +19,29 @@ const initialize = (host: string) => {
   });
 };
 
-const setToken = (token: string) => {
-  Config.token = token;
+const initializeForSession = (authResponse: AuthResponse | null) => {
+  Config.token = authResponse?.accessToken ?? '';
+  Config.refreshToken = authResponse?.refreshToken ?? '';
+  Config.userId = authResponse?.id ?? '';
 
   oHandler().config({
     headers: [
       ...StandardHeaders,
       {
         name: 'Authorization',
-        value: `Bearer ${token}`,
+        value: `Bearer ${Config.token}`,
       },
     ],
   });
 };
 
-const setRefreshToken = (refreshToken: string) => {
-  Config.refreshToken = refreshToken;
-};
-
 const setOnSessionUpdated = (callback: typeof Config.onSessionUpdated) => {
-  Config.onSessionUpdated = callback;
+  Config.onSessionUpdated = (session: AuthResponse | null, error: Error | null) => {
+    if (session != null) {
+      initializeForSession(session);
+    }
+    callback?.(session, error);
+  };
 };
 
 const setOrganizationID = (organizationID?: EntityID | null) => {
@@ -88,7 +91,6 @@ export default {
   initialize,
   onError: Subscription.onError,
   setOrganizationID,
-  setToken,
-  setRefreshToken,
+  initializeForSession,
   setOnSessionUpdated,
 };

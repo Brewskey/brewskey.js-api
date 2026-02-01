@@ -22,7 +22,7 @@ class ODataDAO<
     const stringifiedID = id.toString();
 
     return this.__resolveSingle(
-      this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
+      this.__buildHandler().find(this.__reformatValue(stringifiedID)),
       /* params */ {},
       'DELETE',
     );
@@ -48,13 +48,13 @@ class ODataDAO<
       take: 0,
     });
     const result = await this.__resolve<number, TQueryOptions>(handler);
-    return result.data;
+    return result.inlinecount ?? 0;
   }
 
   fetchByID(id: EntityID): Promise<TEntity> {
     const stringifiedID = id.toString();
     return this.__resolveSingle(
-      this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
+      this.__buildHandler().find(this.__reformatValue(stringifiedID)),
     );
   }
 
@@ -86,6 +86,12 @@ class ODataDAO<
 
     const result = await this.fetchMany(combinedQueryOptions);
 
+    if (!result[0]) {
+      const error = new Error('Not found') as Error & { status: number };
+      error.status = 404;
+      throw error;
+    }
+
     return result[0];
   }
 
@@ -93,7 +99,7 @@ class ODataDAO<
     const stringifiedID = id.toString();
 
     return this.__resolveSingle(
-      this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
+      this.__buildHandler().find(this.__reformatValue(stringifiedID)),
       this.getTranslator().toApi(mutator),
       'PATCH',
     );
@@ -111,7 +117,7 @@ class ODataDAO<
     const stringifiedID = id.toString();
 
     return this.__resolveSingle(
-      this.__buildHandler().find(this.__reformatIDValue(stringifiedID)),
+      this.__buildHandler().find(this.__reformatValue(stringifiedID)),
       this.getTranslator().toApi(mutator),
       'PUT',
     );

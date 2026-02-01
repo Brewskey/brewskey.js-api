@@ -96,7 +96,7 @@ class DeviceDAOImpl extends ODataDAO<Device, DeviceMutator> {
     const stringifiedID = deviceID.toString();
 
     const handler = this.__buildHandler({}, false).find(
-      this.__reformatIDValue(stringifiedID),
+      this.__reformatValue(stringifiedID),
     );
     handler.func(funcString);
 

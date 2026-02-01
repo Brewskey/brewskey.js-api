@@ -64,14 +64,26 @@ class BaseODataDAO<
     return this.__config.translator;
   }
 
-  // todo figure out if we can remove that completly
-  protected __reformatIDValue = (value: string | number): string | number =>
-    Number.isNaN(value) || value === '' ? `'${value}'` : value;
 
-  protected __reformatQueryValue = (value: string | number): string | number =>
-    typeof value === 'string' && !Date.parse(value)
-      ? `'${encodeURIComponent(value)}'`
-      : value;
+  protected __reformatValue = (value: string | number): string | number => {
+    if (typeof value === 'number') {
+      return value;
+    }
+    
+    // Check if string is numeric (including negative numbers and decimals)
+    const numericValue = Number(value);
+    if (!isNaN(numericValue) && isFinite(numericValue) && value.trim() !== '') {
+      return numericValue;
+    }
+    
+    // Check if string is a date
+    if (Date.parse(value)) {
+      return value;
+    }
+    
+    // Otherwise, treat as string and encode
+    return `'${encodeURIComponent(value)}'`;
+  };
 
   protected __buildHandler(
     queryOptions: QueryOptions = {},
@@ -178,9 +190,7 @@ class BaseODataDAO<
               // this is not ideal though, because it doesn't resolve
               // situations when we get stringified value from front-end
               // which is stored as number on the server.
-              const reformattedValue = ID_REG_EXP.test(param)
-                ? this.__reformatIDValue(value)
-                : this.__reformatQueryValue(value);
+              const reformattedValue = this.__reformatValue(value);
 
               if (isValidOperator) {
                 return `(${operator}(${param}, ${reformattedValue}))`;
@@ -278,7 +288,6 @@ class BaseODataDAO<
 
             Config.onSessionUpdated?.(newSession, null);
           } catch (refreshTokenError) {
-            console.log(refreshTokenError);
             Config.onSessionUpdated?.(null, refreshTokenError as Error);
             throw refreshTokenError;
           }

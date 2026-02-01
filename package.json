@@ -1,6 +1,6 @@
 {
   "name": "@brewskey/js-api",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "main": "./dist/index.js",
   "repository": "https://github.com/Brewskey/brewskey.js-api.git",
   "author": "Brewskey",
@@ -30,6 +30,7 @@
     "prettier": "^3.2.5"
   },
   "dependencies": {
+    "@playwright/mcp": "^0.0.56",
     "array-flatten": "^3.0.0",
     "debounce": "^1.2.0",
     "nullthrows": "^1.1.0",

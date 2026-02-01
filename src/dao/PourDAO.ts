@@ -9,6 +9,7 @@ import nullthrows from 'nullthrows';
 export type Pour = {
   total: number;
   beverage: ShortenedEntity | null | undefined;
+  device: ShortenedEntity | null | undefined;
   id: EntityID;
   isDeleted: boolean;
   keg: {
