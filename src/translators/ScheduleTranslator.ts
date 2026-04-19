@@ -37,12 +37,13 @@ class SchedulesTranslator extends DefaultTranslator<
   ApiScheduleMutator
 > {
   fromApi(apiValue: ApiSchedule): Schedule {
+    const cast = super.fromApi(apiValue);
     return {
-      ...super.fromApi(apiValue),
+      ...cast,
       days: getCombinedFlag(
         apiValue.days.split(', ').map((value) => Number.parseInt(value)),
       ),
-      location: apiValue.location?.isDeleted ? null : apiValue.location,
+      location: this.getEntityIfNotDeleted(cast.location),
     };
   }
 

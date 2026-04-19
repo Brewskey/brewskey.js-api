@@ -18,7 +18,7 @@ export type Schedule = {
   endTime: Date;
   id: EntityID;
   isDeleted: boolean;
-  location: ShortenedEntity | null | undefined;
+  location: ShortenedEntity | undefined;
   name: string;
   startTime: Date;
 };

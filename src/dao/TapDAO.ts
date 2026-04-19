@@ -35,7 +35,7 @@ export type Tap = {
   hideStats: boolean;
   id: EntityID;
   isPaymentEnabled: boolean;
-  location: ShortenedEntity | null | undefined;
+  location: ShortenedEntity | undefined;
   organization: ShortenedEntity;
   requiresPourPrivilege: boolean;
   tapNumber: number;

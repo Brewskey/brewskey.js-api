@@ -4,12 +4,10 @@ import DefaultTranslator from './DefaultTranslator';
 
 class DeviceTranslator extends DefaultTranslator<Device, DeviceMutator> {
   fromApi(apiValue: Device): Device {
+    const cast = super.fromApi(apiValue);
     return {
-      ...super.fromApi(apiValue),
-      location:
-        apiValue.location && apiValue.location.isDeleted
-          ? undefined
-          : apiValue.location,
+      ...cast,
+      location: this.getEntityIfNotDeleted(cast.location),
     };
   }
 

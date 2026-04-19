@@ -8,14 +8,14 @@ import nullthrows from 'nullthrows';
 
 export type Pour = {
   total: number;
-  beverage: ShortenedEntity | null | undefined;
+  beverage: ShortenedEntity | undefined;
   device: ShortenedEntity | null | undefined;
   id: EntityID;
   isDeleted: boolean;
   keg: {
     id: EntityID;
   };
-  location: ShortenedEntity | null | undefined;
+  location: ShortenedEntity | undefined;
   organization: ShortenedEntity;
   ounces: number;
   owner: {
@@ -24,7 +24,7 @@ export type Pour = {
   };
   pourDate: string;
   pulses: number;
-  tap: ShortenedTap | null | undefined;
+  tap: ShortenedTap | undefined;
 };
 
 class PourDAOImpl extends ODataDAO<Pour, Pour> {

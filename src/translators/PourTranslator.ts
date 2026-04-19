@@ -4,11 +4,12 @@ import DefaultTranslator from './DefaultTranslator';
 
 class PourTranslator extends DefaultTranslator<Pour, Pour> {
   fromApi(apiValue: Pour): Pour {
+    const cast = super.fromApi(apiValue);
     return {
-      ...super.fromApi(apiValue),
-      beverage: apiValue.beverage?.isDeleted ? null : apiValue.beverage,
-      location: apiValue.location?.isDeleted ? null : apiValue.location,
-      tap: apiValue.tap?.isDeleted ? null : apiValue.tap,
+      ...cast,
+      beverage: this.getEntityIfNotDeleted(cast.beverage),
+      location: this.getEntityIfNotDeleted(cast.location),
+      tap: this.getEntityIfNotDeleted(cast.tap),
     };
   }
 }

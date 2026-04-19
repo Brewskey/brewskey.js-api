@@ -21,12 +21,12 @@ export type Keg = {
   id: EntityID;
   isDeleted: boolean;
   kegType: KegType;
-  location: ShortenedEntity | null | undefined;
+  location: ShortenedEntity | undefined;
   maxOunces: number;
   organization: ShortenedEntity;
   ounces: number;
   pulses: number;
-  tap: ShortenedTap | null | undefined;
+  tap: ShortenedTap | undefined;
   tapDate: Date;
 };
 

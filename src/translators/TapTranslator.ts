@@ -4,12 +4,10 @@ import DefaultTranslator from './DefaultTranslator';
 
 class TapsTranslator extends DefaultTranslator<Tap, TapMutator, Tap> {
   fromApi(apiValue: Tap): Tap {
+    const cast = super.fromApi(apiValue);
     return {
-      ...super.fromApi(apiValue),
-      location:
-        apiValue.location && apiValue.location.isDeleted
-          ? null
-          : apiValue.location,
+      ...cast,
+      location: this.getEntityIfNotDeleted(cast.location),
     };
   }
 

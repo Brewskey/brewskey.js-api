@@ -25,14 +25,18 @@ const parseLocationCoordinates = (wellKnownText: string): Coordinates => {
 
 class LocationTranslator extends DefaultTranslator<Location, LocationMutator> {
   fromApi(apiValue: Location): Location {
+    const cast = super.fromApi(apiValue);
     return {
-      ...super.fromApi(apiValue),
-      geolocation: apiValue.geolocation && {
-        ...apiValue.geolocation,
-        coordinates: parseLocationCoordinates(
-          apiValue.geolocation.geography.wellKnownText,
-        ),
-      },
+      ...cast,
+      geolocation:
+        apiValue.geolocation && cast.geolocation
+          ? {
+              ...cast.geolocation,
+              coordinates: parseLocationCoordinates(
+                apiValue.geolocation.geography.wellKnownText,
+              ),
+            }
+          : cast.geolocation,
     };
   }
 
