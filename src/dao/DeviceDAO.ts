@@ -32,6 +32,8 @@ export type Device = {
     userName: string;
   };
   ledBrightness: number;
+  /** Present when `location` is omitted (e.g. deleted); needed for forms and mutations. */
+  locationId?: EntityID;
   location?: ShortenedEntity;
   name: string;
   nfcStatus: NFCStatus;
