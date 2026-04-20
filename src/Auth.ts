@@ -90,6 +90,27 @@ class AuthImpl {
     }).then(reformatLoginResponse);
   }
 
+  /**
+   * Exchanges a Google ID token for a Brewskey AuthResponse via the
+   * `google_id_token` custom OAuth grant on the backend (handled in
+   * `ApplicationOAuthProvider.GrantCustomExtension`). The backend validates
+   * the token's signature & audience, then either looks up an existing
+   * Google-linked Account, links the Google identity to an existing local
+   * account by verified email, or auto-provisions a new Account.
+   *
+   * @param idToken JWT issued by Google (e.g. from
+   *   `@react-native-google-signin/google-signin`'s `signIn()` result).
+   */
+  loginWithGoogle(idToken: string): Promise<AuthResponse> {
+    return fetch<LoginResponse>('token/', {
+      body: `grant_type=google_id_token&id_token=${encodeURIComponent(idToken)}`,
+      headers: [
+        { name: 'Content-type', value: 'application/x-www-form-urlencoded' },
+      ],
+      method: 'POST',
+    }).then(reformatLoginResponse);
+  }
+
   refreshToken(refreshToken: string): Promise<AuthResponse> {
     return fetch<LoginResponse>('token/', {
       body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
