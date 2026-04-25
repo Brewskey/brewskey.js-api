@@ -1,17 +1,28 @@
 name: Publish package to GitHub Packages
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to create. Defaults to package.json version prefixed with v.
+        required: false
+        type: string
+      prerelease:
+        description: Mark the GitHub Release as a prerelease.
+        required: false
+        default: false
+        type: boolean
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
+      pull-requests: read
     steps:
       - uses: actions/checkout@v4
         with:
           ref: 'v2'
+          fetch-depth: 0
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v4
         with:
@@ -21,6 +32,25 @@ jobs:
           scope: '@brewskey'
       - run: npm ci
       - run: npm run build
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish package
+        id: publish
+        uses: JS-DevTools/npm-publish@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: https://npm.pkg.github.com
+          access: public
+          strategy: all
+      - name: Fail if package version was already published
+        if: ${{ !steps.publish.outputs.type }}
+        run: |
+          echo "${{ steps.publish.outputs.id }} has already been published."
+          exit 1
+      - name: Create GitHub Release with PR release notes
+        if: ${{ steps.publish.outputs.type }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag || format('v{0}', steps.publish.outputs.version) }}
+          target_commitish: v2
+          name: ${{ inputs.tag || format('v{0}', steps.publish.outputs.version) }}
+          generate_release_notes: true
+          prerelease: ${{ inputs.prerelease }}
