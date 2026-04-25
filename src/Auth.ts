@@ -35,6 +35,35 @@ export type RegisterArgs = {
   userName: string;
 };
 
+export type ExternalLoginProvider = 'Google' | 'Apple';
+
+export type LinkExternalArgs = {
+  provider: ExternalLoginProvider;
+  idToken: string;
+  /** Apple-only — forwarded so the backend can exchange it for an Apple
+   * refresh token on first sign-in (used later for token revocation). */
+  authorizationCode?: string | null;
+  /** Apple-only — Apple sends the user's full name only on first sign-in. */
+  fullName?: string | null;
+};
+
+export type LinkResult = {
+  merged: boolean;
+  mergedFromAccountId?: EntityID;
+  alreadyLinked?: boolean;
+};
+
+export type UserLoginInfo = {
+  loginProvider: string;
+  providerKey: string;
+};
+
+export type ManageInfo = {
+  userName: string;
+  localLoginProvider: string;
+  logins: Array<UserLoginInfo>;
+};
+
 type LoginResponse = {
   email: string;
   id: string;
@@ -50,6 +79,20 @@ type LoginResponse = {
   userLogins: string;
 };
 
+// Wire format from /api/Account/ManageInfo (Pascal-cased ASP.NET response).
+type ManageInfoResponse = {
+  LocalLoginProvider: string;
+  UserName: string;
+  Logins: Array<{ LoginProvider: string; ProviderKey: string }>;
+};
+
+// Wire format from /api/account/link-external (Pascal-cased ASP.NET response).
+type LinkResultResponse = {
+  Merged: boolean;
+  MergedFromAccountId?: EntityID;
+  AlreadyLinked?: boolean;
+};
+
 const reformatLoginResponse = (response: LoginResponse): AuthResponse => ({
   ...response,
   accessToken: response.access_token,
@@ -61,6 +104,49 @@ const reformatLoginResponse = (response: LoginResponse): AuthResponse => ({
   tokenType: response.token_type,
   userLogins: JSON.parse(response.userLogins),
 });
+
+const reformatManageInfoResponse = (
+  response: ManageInfoResponse,
+): ManageInfo => ({
+  userName: response.UserName,
+  localLoginProvider: response.LocalLoginProvider,
+  logins: (response.Logins ?? []).map((login) => ({
+    loginProvider: login.LoginProvider,
+    providerKey: login.ProviderKey,
+  })),
+});
+
+const reformatLinkResultResponse = (
+  response: LinkResultResponse,
+): LinkResult => ({
+  merged: response.Merged,
+  mergedFromAccountId: response.MergedFromAccountId,
+  alreadyLinked: response.AlreadyLinked,
+});
+
+/**
+ * Thrown by `Auth.unlinkLogin` when the backend rejects the unlink because
+ * removing the specified login would leave the account with no remaining
+ * sign-in method (no other external login and no local password). The mobile
+ * client uses the typed error to render a "Set a password first" CTA instead
+ * of a generic error toast.
+ *
+ * The backend signals this case with a `400` response body of
+ * `{ error: "last_login_method", Message: "..." }`. We detect the
+ * discriminator inside a `reformatError` callback so it short-circuits the
+ * generic `parseError` fallback (which only inspects `ModelState` /
+ * `error_description` / `Message`, not the bare `error` field).
+ */
+export class LastLoginMethodError extends Error {
+  status: number;
+
+  constructor(message: string) {
+    super(message);
+    this.name = 'LastLoginMethodError';
+    this.status = 400;
+    Object.setPrototypeOf(this, LastLoginMethodError.prototype);
+  }
+}
 
 class AuthImpl {
   changePassword(
@@ -76,13 +162,133 @@ class AuthImpl {
     });
   }
 
+  /**
+   * Permanently anonymizes the current user's account (`DELETE /api/account`).
+   * The backend scrubs PII in place (email/username/phone/name), clears the
+   * password hash, regenerates the security stamp (invalidating outstanding
+   * tokens), removes all linked external logins, and — if the account had
+   * previously signed in with Apple — calls Apple's `/auth/revoke` endpoint
+   * with the stored Apple refresh token (required by App Review).
+   *
+   * Past pours / achievements / breakdowns remain attached to the now-
+   * anonymized Account row so leaderboards and shared history stay intact;
+   * the deleted user just renders as anonymous in the UI.
+   */
+  deleteAccount(): Promise<void> {
+    return fetch('api/account', {
+      method: 'DELETE',
+    });
+  }
+
   fetchRoles(): Promise<Array<UserRole>> {
     return fetch('api/v2/roles/');
+  }
+
+  /**
+   * Returns the current user's linked-account info (local login + external
+   * provider logins). Wraps the existing `GET /api/Account/ManageInfo`
+   * endpoint, transforming its Pascal-cased response into the camelCase
+   * shape used by the rest of the js-api.
+   */
+  getManageInfo(): Promise<ManageInfo> {
+    return fetch<ManageInfoResponse>('api/Account/ManageInfo').then(
+      reformatManageInfoResponse,
+    );
+  }
+
+  /**
+   * Links an external sign-in identity (Google or Apple) to the currently
+   * signed-in Brewskey account via `POST /api/account/link-external`.
+   *
+   * If the (provider, sub) is not yet associated with any Brewskey account,
+   * the backend simply adds the login. If it already belongs to a different
+   * Brewskey account, the backend re-parents all of that other account's
+   * data (pours, achievements, friends, audit FKs, identity rows...) onto
+   * the current account in a single transaction and deletes the source —
+   * this lets users silently merge an auto-provisioned duplicate profile.
+   *
+   * @returns `{ merged }` plus `mergedFromAccountId` when a merge occurred
+   *   and `alreadyLinked: true` when the provider was already linked to the
+   *   current account (no-op).
+   */
+  linkExternal(args: LinkExternalArgs): Promise<LinkResult> {
+    return fetch<LinkResultResponse>('api/account/link-external', {
+      body: JSON.stringify({
+        provider: args.provider,
+        idToken: args.idToken,
+        authorizationCode: args.authorizationCode ?? null,
+        fullName: args.fullName ?? null,
+      }),
+      headers: [{ name: 'Content-type', value: 'application/json' }],
+      method: 'POST',
+    }).then(reformatLinkResultResponse);
+  }
+
+  /** Thin wrapper over {@link linkExternal} so calling code reads naturally. */
+  linkGoogle(idToken: string): Promise<LinkResult> {
+    return this.linkExternal({ provider: 'Google', idToken });
+  }
+
+  /** Thin wrapper over {@link linkExternal} so calling code reads naturally. */
+  linkApple(
+    idToken: string,
+    fullName?: string | null,
+    authorizationCode?: string | null,
+  ): Promise<LinkResult> {
+    return this.linkExternal({
+      provider: 'Apple',
+      idToken,
+      fullName,
+      authorizationCode,
+    });
   }
 
   login({ password, userName }: UserCredentials): Promise<AuthResponse> {
     return fetch<LoginResponse>('token/', {
       body: `grant_type=password&userName=${userName}&password=${password}`,
+      headers: [
+        { name: 'Content-type', value: 'application/x-www-form-urlencoded' },
+      ],
+      method: 'POST',
+    }).then(reformatLoginResponse);
+  }
+
+  /**
+   * Exchanges an Apple identity token for a Brewskey AuthResponse via the
+   * `apple_id_token` custom OAuth grant on the backend (handled in
+   * `ApplicationOAuthProvider.GrantCustomExtension`). The backend validates
+   * the JWT signature against Apple's JWKS, checks audience/issuer, then
+   * either looks up an existing Apple-linked Account, links the Apple
+   * identity to an existing local account by verified email, or
+   * auto-provisions a new Account.
+   *
+   * @param identityToken JWT issued by Apple (from `expo-apple-authentication`'s
+   *   `signInAsync()` result).
+   * @param fullName Apple sends the user's full name only on the very first
+   *   sign-in; pass it through so the backend can populate `Account.FullName`.
+   * @param authorizationCode Apple's short-lived authorization code, also only
+   *   present on first sign-in. The backend exchanges it for a refresh token
+   *   on first sign-in (when `Account.AppleRefreshToken` is null) and stores
+   *   it for the eventual token-revocation call required by App Review when
+   *   the account is deleted. Subsequent sign-ins ignore it.
+   */
+  loginWithApple(
+    identityToken: string,
+    fullName?: string | null,
+    authorizationCode?: string | null,
+  ): Promise<AuthResponse> {
+    const params = new URLSearchParams({
+      grant_type: 'apple_id_token',
+      id_token: identityToken,
+    });
+    if (fullName) {
+      params.set('full_name', fullName);
+    }
+    if (authorizationCode) {
+      params.set('authorization_code', authorizationCode);
+    }
+    return fetch<LoginResponse>('token/', {
+      body: params.toString(),
       headers: [
         { name: 'Content-type', value: 'application/x-www-form-urlencoded' },
       ],
@@ -134,6 +340,44 @@ class AuthImpl {
       body: JSON.stringify({ email }),
       headers: [{ name: 'Content-type', value: 'application/json' }],
       method: 'POST',
+    });
+  }
+
+  /**
+   * Removes the specified external login from the current account
+   * (`POST /api/Account/RemoveLogin`).
+   *
+   * Throws {@link LastLoginMethodError} when the backend returns
+   * `400 { error: 'last_login_method' }` because removing this login would
+   * leave the account with no remaining way to sign in. The reformatError
+   * callback throws the typed error from inside the fetch pipeline so
+   * callers can pattern-match on it (e.g. to render a "Set a password
+   * first" CTA) instead of treating it as a generic network error.
+   */
+  unlinkLogin(loginProvider: string, providerKey: string): Promise<void> {
+    return fetch('api/Account/RemoveLogin', {
+      body: JSON.stringify({
+        loginProvider,
+        providerKey,
+      }),
+      headers: [{ name: 'Content-type', value: 'application/json' }],
+      method: 'POST',
+      reformatError: (errorPayload) => {
+        if (errorPayload.error === 'last_login_method') {
+          throw new LastLoginMethodError(
+            errorPayload.Message ||
+              errorPayload.message ||
+              'Set a password before unlinking your last sign-in method.',
+          );
+        }
+        return (
+          errorPayload.error_description ||
+          errorPayload.Message ||
+          errorPayload.message ||
+          errorPayload.error ||
+          "Whoa! Brewskey had an error. We'll try to get it fixed soon."
+        );
+      },
     });
   }
 }

@@ -37,6 +37,15 @@ const parseError = (
   return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
 };
 
+export type ReformatErrorPayload = Error & {
+  error: string;
+  error_description?: string;
+  invalidDeviceIds: string[];
+  Message?: string;
+  message?: string;
+  ModelState?: Record<string, Array<string>>;
+};
+
 export type FetchOptions = {
   body?: BodyInit;
   headers?: Array<{
@@ -44,9 +53,7 @@ export type FetchOptions = {
     value: string;
   }>;
   method?: RequestMethod;
-  reformatError?: (
-    error: Error & { error: string } & { invalidDeviceIds: string[] },
-  ) => string;
+  reformatError?: (error: ReformatErrorPayload) => string;
 };
 
 export default async <TResult>(
@@ -118,11 +125,7 @@ export default async <TResult>(
         : null;
     const message =
       errorPayload && reformatError
-        ? reformatError(
-            errorPayload as Error & { error: string } & {
-              invalidDeviceIds: string[];
-            },
-          )
+        ? reformatError(errorPayload as ReformatErrorPayload)
         : errorPayload
           ? parseError(
               errorPayload as Error & {
