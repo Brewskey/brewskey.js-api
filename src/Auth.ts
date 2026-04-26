@@ -16,6 +16,7 @@ export type AuthResponse = {
   expiresIn: number;
   id: EntityID;
   issuedAt: Date;
+  isNewAccount: boolean;
   phoneNumber: string;
   refreshToken: string;
   roles: Array<UserRole>;
@@ -27,6 +28,10 @@ export type AuthResponse = {
 export type ChangePasswordArgs = {
   newPassword: string;
   oldPassword: string;
+};
+
+export type SetPasswordArgs = {
+  newPassword: string;
 };
 
 export type RegisterArgs = {
@@ -74,6 +79,7 @@ type LoginResponse = {
   expires_in: number;
   '.issued': Date;
   refresh_token: string;
+  isNewAccount?: boolean | string;
   roles: string;
   token_type: string;
   userLogins: string;
@@ -99,6 +105,7 @@ const reformatLoginResponse = (response: LoginResponse): AuthResponse => ({
   expiresAt: response['.expires'],
   expiresIn: response.expires_in,
   issuedAt: response['.issued'],
+  isNewAccount: response.isNewAccount === true || response.isNewAccount === 'true',
   refreshToken: response.refresh_token,
   roles: JSON.parse(response.roles),
   tokenType: response.token_type,
@@ -156,6 +163,17 @@ class AuthImpl {
       body: JSON.stringify({
         ...changePasswordArgs,
         confirmPassword: changePasswordArgs.newPassword,
+      }),
+      headers: [{ name: 'Content-type', value: 'application/json' }],
+      method: 'POST',
+    });
+  }
+
+  setPassword(setPasswordArgs: SetPasswordArgs): Promise<Record<string, never>> {
+    return fetch('api/Account/SetPassword', {
+      body: JSON.stringify({
+        newPassword: setPasswordArgs.newPassword,
+        confirmPassword: setPasswordArgs.newPassword,
       }),
       headers: [{ name: 'Content-type', value: 'application/json' }],
       method: 'POST',
