@@ -172,8 +172,8 @@ class AuthImpl {
   setPassword(setPasswordArgs: SetPasswordArgs): Promise<Record<string, never>> {
     return fetch('api/Account/SetPassword', {
       body: JSON.stringify({
-        newPassword: setPasswordArgs.newPassword,
-        confirmPassword: setPasswordArgs.newPassword,
+        NewPassword: setPasswordArgs.newPassword,
+        ConfirmPassword: setPasswordArgs.newPassword,
       }),
       headers: [{ name: 'Content-type', value: 'application/json' }],
       method: 'POST',
@@ -209,7 +209,7 @@ class AuthImpl {
    * shape used by the rest of the js-api.
    */
   getManageInfo(): Promise<ManageInfo> {
-    return fetch<ManageInfoResponse>('api/Account/ManageInfo').then(
+    return fetch<ManageInfoResponse>('api/Account/ManageInfo?returnUrl=%2F').then(
       reformatManageInfoResponse,
     );
   }
@@ -375,7 +375,7 @@ class AuthImpl {
   unlinkLogin(loginProvider: string, providerKey: string): Promise<void> {
     return fetch('api/Account/RemoveLogin', {
       body: JSON.stringify({
-        loginProvider,
+        providerName: loginProvider,
         providerKey,
       }),
       headers: [{ name: 'Content-type', value: 'application/json' }],
