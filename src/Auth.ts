@@ -131,29 +131,16 @@ const reformatLinkResultResponse = (
   alreadyLinked: response.AlreadyLinked,
 });
 
-/**
- * Thrown by `Auth.unlinkLogin` when the backend rejects the unlink because
- * removing the specified login would leave the account with no remaining
- * sign-in method (no other external login and no local password). The mobile
- * client uses the typed error to render a "Set a password first" CTA instead
- * of a generic error toast.
- *
- * The backend signals this case with a `400` response body of
- * `{ error: "last_login_method", Message: "..." }`. We detect the
- * discriminator inside a `reformatError` callback so it short-circuits the
- * generic `parseError` fallback (which only inspects `ModelState` /
- * `error_description` / `Message`, not the bare `error` field).
- */
-export class LastLoginMethodError extends Error {
-  status: number;
+export const LAST_LOGIN_METHOD_ERROR = 'last_login_method' as const;
 
-  constructor(message: string) {
-    super(message);
-    this.name = 'LastLoginMethodError';
-    this.status = 400;
-    Object.setPrototypeOf(this, LastLoginMethodError.prototype);
-  }
-}
+export const EXTERNAL_LOGIN_ALREADY_LINKED_ERROR =
+  'external_login_already_linked' as const;
+export const EXTERNAL_PROVIDER_ALREADY_LINKED_ERROR =
+  'external_provider_already_linked' as const;
+
+export type ExternalLoginConflictCode =
+  | typeof EXTERNAL_LOGIN_ALREADY_LINKED_ERROR
+  | typeof EXTERNAL_PROVIDER_ALREADY_LINKED_ERROR;
 
 class AuthImpl {
   changePassword(
@@ -365,12 +352,9 @@ class AuthImpl {
    * Removes the specified external login from the current account
    * (`POST /api/Account/RemoveLogin`).
    *
-   * Throws {@link LastLoginMethodError} when the backend returns
-   * `400 { error: 'last_login_method' }` because removing this login would
-   * leave the account with no remaining way to sign in. The reformatError
-   * callback throws the typed error from inside the fetch pipeline so
-   * callers can pattern-match on it (e.g. to render a "Set a password
-   * first" CTA) instead of treating it as a generic network error.
+   * On failure the thrown {@link Error} includes `status` and `body` (see
+   * `fetch.ts`) so callers can inspect e.g.
+   * `400 { error: 'last_login_method', Message: '...' }` near the UI.
    */
   unlinkLogin(loginProvider: string, providerKey: string): Promise<void> {
     return fetch('api/Account/RemoveLogin', {
@@ -380,22 +364,6 @@ class AuthImpl {
       }),
       headers: [{ name: 'Content-type', value: 'application/json' }],
       method: 'POST',
-      reformatError: (errorPayload) => {
-        if (errorPayload.error === 'last_login_method') {
-          throw new LastLoginMethodError(
-            errorPayload.Message ||
-              errorPayload.message ||
-              'Set a password before unlinking your last sign-in method.',
-          );
-        }
-        return (
-          errorPayload.error_description ||
-          errorPayload.Message ||
-          errorPayload.message ||
-          errorPayload.error ||
-          "Whoa! Brewskey had an error. We'll try to get it fixed soon."
-        );
-      },
     });
   }
 }

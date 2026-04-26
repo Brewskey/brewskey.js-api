@@ -137,8 +137,15 @@ export default async <TResult>(
           : typeof responseJson === 'string'
             ? responseJson
             : 'Whoops! Error!';
-    const error = new Error(message) as Error & { status: number };
+    const error = new Error(message) as Error & {
+      status: number;
+      /** Parsed JSON body or raw text when the error response had a body. */
+      body?: unknown;
+    };
     error.status = response.status;
+    if (responseJson !== null) {
+      error.body = responseJson;
+    }
     throw error;
   }
 
